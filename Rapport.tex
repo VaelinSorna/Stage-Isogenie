@@ -490,7 +490,7 @@ Dans la suite, on désigne un ordre $\OR$ de discriminant $\Delta$ par $\OR_{\De
 
 \begin{Prop}
 	
-	Soit $f = (a,b)$ binaire primitive de discriminant $\Delta$. l'application :
+	Soit $f = (a,b)$ binaire primitive de discriminant $\Delta$. L'application :
 	\begin{equation*}
 		I : (a,b)\mapsto\left[ a, \frac{b + \sqrt{\Delta}}{2}\right] 
 	\end{equation*}
@@ -513,14 +513,79 @@ Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les
 	
 	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux.
 	
-	L'écriture est unique avec $b$ défini modulo $2a$. 
-	
-	Un idéal $\LR$ est sous forme standard si il est donné sous cette forme. 
+	L'écriture est unique avec $b$ défini modulo $2a$ : on peut choisir $-a<b\leq a$.
 	
 \end{Prop}
 
+\begin{Def}
+	Un idéal $\LR$ est sous forme standard s'il est donné sous la forme précédente. 
+	
+	Lorsque $\Delta$ est connue, on notera $\LR = (m,a,b)$ une écriture standard de $\LR$. 
+	
+	On dira que $\LR$ est primitif si $\LR = (1,a,b)$.
+	
+\end{Def}
+
 On peut en déduire une écriture standard d'un idéal fractionnaire $\IR$ en utilisant le fait qu'il existe $d\in\N$ minimal tel que $d\IR = \LR$. 
 
+\begin{Coro}
+	Soit $\LR = (m,a,b)$ sous forme standard. L'application
+	
+	\begin{equation*}
+		F : (m,a,b)\mapsto (a,b) = ax^2 + bxy + cy^2
+	\end{equation*}
+	
+	associe à $\LR$ une forme quadratique binaire primitive de même discriminant. 
+	
+	I et F induise une bijection entre les idéaux primitifs et les formes quadratiques binaires primitives.
+	
+\end{Coro}
+
+On peut aussi associé une forme quadratique à un idéal fractionnaire. Deux idéaux $\LR$ et $\LR'$ ont la même image par $F$ si et seulement si il existe un entier $q\in\Q\cap\OR_{\Delta}$ tel que $\LR'$ = $q\LR$. 
+
+\begin{Prop}
+	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$. 
+	\begin{enumerate}
+		\item $N(\LR) = m^2a$
+		\item $\LR^{-1} = (m/N(\LR),a,-b)$
+	\end{enumerate}
+\end{Prop}
+
+On note $\CL$ la classe de $\LR$ dans $Cl(\OR_{\Delta})$. On cherche à trouver un représentant de la classe de façon systématique et pratique pour l'implémentation. Prendre un idéal primitif ne suffit pas : Il peut y avoir plusieurs idéaux primitif dans la même classe. 
+
+\begin{Def}
+	Deux formes quadratiques binaires primitives sont équivalentes si leurs idéaux primitifs associés sont dans la même classe.
+	
+	On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
+\end{Def}
+
+
+La bijection précédente est un isomorphisme de groupe, et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. 
+
+Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être défini sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet : (CF Cox)
+
+\begin{Def}
+	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante :
+	
+	Soit $B$ défini modulo $2aa'$ par
+	
+	\begin{enumerate}
+		\item $B = b [2a]$
+		\item $B = b' [2a']$
+		\item $B^2 = \Delta [4aa']$
+	\end{enumerate}
+	
+	Alors $f*f' = (aa', B)$ est une forme quadratique binaire primitive.
+\end{Def}
+
+\begin{Prop}
+	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$
+	
+	Et ces opérations induisent des morphismes de groupes entre groupes de classes.
+\end{Prop}
+
+à faire : m représenté ssi idéal de norme m
+forme réduite, représentant de classe
 
 \subsection{Corps de classe de Hilbert}
  def du corps de classe, lien groupe de classe, avec Artin. 
@@ -1287,7 +1352,7 @@ C'est exactement ce que l'on cherche à améliorer : On va utiliser tout ce qui 
 \subsection{Méthode générale de calculs d'isogénies}
 Structure des idéaux et conséquences, vélu. compléxité, sqrt(vélu)
 
-\subsection{Générateur d'un groupe de Torsion}
+\subsection{Générateur d'un groupe de torsion}
 Idée naïve, problème de l'extension coûteuse, solution ?
 
 \subsection{Factorisation dans le groupe de classes}
