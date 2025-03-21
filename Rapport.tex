@@ -37,6 +37,7 @@
 \newcommand{\LR}[0]{\mathcal{L}}
 \newcommand{\PR}[0]{\mathcal{P}}
 \newcommand{\IR}[0]{\mathcal{I}}
+\newcommand{\HR}[0]{\mathcal{H}}
 \newcommand{\CL}[0]{\tilde{\LR}}
 \newcommand{\F}[0]{\mathbb{F}}
 \newcommand{\A}[0]{\mathbb{A}}
@@ -84,23 +85,14 @@
 
 \section{Rappels de théorie des nombres}
 
-\subsection{Ordres quadratiques imaginaires}
-
-ordre maximal : 
-def, structure, idéaux, groupe de classe, structure des idéaux
-
-def Ok, structure Ok, Dedekind, idéaux fractionnaires, Factorisation d'idéaux, Groupe de classe 
-
-ordre général :
-def, structure pas Dedekind, idéaux propre, idéaux premier avec le conducteur, factorisation d'idéaux pac, lien avec l'anneau des entiers, groupe de classe
-
+\subsection{Ordres dans un corps de nombre}
 
 Dans cette section, on énonce des résultats généraux de théorie des nombres. Pour les démonstrations on se réfère à 
 
 %insérer lien cox
 
 \begin{Def}
-	Soit $\K$ un corps de nombre quadratique. Un ordre de $\K$ est un sous anneaux unitaire de $\K$, finement engendré comme $\Z$-module et contenant une $\Q$-base de $\K$.
+	 $\K$ est un corps de nombre si c'est une extension finie de $\Q$. Un ordre de $\K$ est un sous anneaux unitaire de $\K$, finement engendré comme $\Z$-module et contenant une $\Q$-base de $\K$.
 \end{Def}
 
 \begin{Ex}
@@ -110,12 +102,12 @@ Dans cette section, on énonce des résultats généraux de théorie des nombres
 \begin{Prop}
 	Soit $\OR$ un ordre de $\K$. 
 	
-	Alors $\OR$ est un $\Z$-module libre de rang 2, inclus dans $\OR_{\K}$.
+	Alors $\OR$ est un $\Z$-module libre de rang $\left[ \K : \Q\right] $, inclus dans $\OR_{\K}$.
 	
 	De plus $\K = Frac(\OR)$
 \end{Prop}
 
-$\OR_{\K}$ est donc un ordre maximal. On commence par décrire sa structure :
+$\OR_{\K}$ est donc un ordre maximal. Dans la suite, le cas où $\K$ est une extension quadratique imaginaire joue un rôle clef. On commence par décrire la structure des ordres dans ce cas:
 
 \begin{Def}
 	On pose $\K = \Q(\sqrt{D})$ avec $D$ entier négatif sans facteur carré. 
@@ -143,13 +135,21 @@ $\OR_{\K}$ est donc un ordre maximal. On commence par décrire sa structure :
 On peut maintenant décrire la structure des ordres inclus dans $\OR_{\K}$ :
 
 \begin{Prop}
-	Soit $\OR$ un ordre de $\K$.
+	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ .
 	
 	 $\OR\subset\OR_{\K}$ et on note $f = \left[ \OR_{\K} : \OR\right]$.
 	
 	Alors $\OR = \Z\left[ fw_{\K}\right] $. $f$ est appelé le conducteur de $\OR$. 
 	
 	On défini de plus $\Delta = f^2d_{\K}$ le discriminant de $\OR$. 
+\end{Prop}
+
+La notion de conducteur est multiplicative :
+
+\begin{Prop}
+	Soit $\OR$, $\OR'$ deux ordres de $\K$ de conducteurs $f$ et $f'$.
+	
+	Si $\OR'\subset\OR$ alors $f$ divise $f'$
 \end{Prop}
 
 \begin{Rem}
@@ -159,16 +159,17 @@ On peut maintenant décrire la structure des ordres inclus dans $\OR_{\K}$ :
 	$\OR_{\K} = \left[1 , w_{\K}\right]$, et $\OR = \left[ 1, fw_{\K}\right]$
 \end{Rem}
 
-Ces anneaux ne sont pas factoriel en général. On peut cependant obtenir des résultats de factorisation au niveau des idéaux.
+Les ordres d'un corps de nombre $\K$ ne sont pas factoriel en général. On peut cependant obtenir des résultats de factorisation au niveau des idéaux.
+
 On énonce d'abord les premiers résultats sur les idéaux. On pourra préciser leur structure plus tard.
 
 \begin{Prop}
 	
-	Soit $\LR\subset\OR$ un idéal d'un ordre quadratique.
+	Soit $\LR\subset\OR$ un idéal d'un ordre de $\K$.
 	
 	\begin{enumerate}
 		\item Il existe $m\in\Z$ appartenant à $\LR$
-		\item $\LR$ est un $\Z$-module libre de rang $2$
+		\item $\LR$ est un $\Z$-module libre de rang $\left[ \K : \Q\right] $
 		\item Le quotient $\OR/\LR$ est fini, de cardinal $N(\LR)$
 		\item Si $\LR$ est premier, alors $\LR$ est maximal. 
 	\end{enumerate}
@@ -177,10 +178,16 @@ On énonce d'abord les premiers résultats sur les idéaux. On pourra préciser 
 	
 \end{Prop}
 
+On en déduit la structure des idéaux dans le cas quadratique :
+
 \begin{Coro}
+	
+	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ .
+	
 	Tout idéal $\LR$ de $\OR$ est un réseaux de $\C$ de la forme $\left[ a, b + cfw_{\K}\right]$ avec $a$, $b$, $c\in\Z$ . 
 	
 	On peut aussi l'écrire sous la forme $\left[ a, (b' + c'f\sqrt{d_{\K}})/2\right]$ ou $\left[ a, (b' + c'\sqrt{\Delta})/2\right]$ avec $b'$, $c'\in\Z$.
+	
 \end{Coro}
 
 Les résultats de factorisation sur les idéaux sont très généraux dans $\OR_{\K}$ : C'est un anneaux de Dedekind, et ce genre d'anneaux admet une unique factorisation au niveau des idéaux
@@ -411,7 +418,7 @@ On peut alors obtenir une correspondance entre $I(\OR, f)$ et $I_{\K}(f)$:
 
 \subsection{Ramification des nombres premiers}
 
-Dans $\Z$, l'idéal engendré par un nombre premier $p$ est lui même premier. Cependant dans un ordre quadratique imaginaire $\OR$, l'idéal $p\OR$ associé à $p$ peut ne plus être premier. 
+Dans $\Z$, l'idéal engendré par un nombre premier $p$ est lui même premier. Cependant dans un ordre imaginaire $\OR$, l'idéal $p\OR$ associé à $p$ peut ne plus être premier. 
 
 On regroupe ici des résultats décrivant les différentes possibilités pour le comportement de $p$ vu dans $\OR$ :
 
@@ -429,24 +436,54 @@ On regroupe ici des résultats décrivant les différentes possibilités pour le
 	Les coefficients $f_{i}$ sont les degrés d'inerties de $p$
 \end{Def}
 
+
+
 \begin{Prop}
-	$N(p\OR) = p^{2}$ et les coefficients $e_{i}$ et $f_{i}$ ne dépendent pas de $i$. 
 	
-	On note $e$ et $f$ leur valeur. Alors $efg = 2$.
+	Soit $n = \left[ \K : \Q\right] $. 
+	
+	Alors $N(p\OR) = p^{n}$ et $\sum_{i = 1}^{g}e_{i}f_{i} = n$
+	
+	Si l'extension $\K/\Q$ est galoisienne, alors les coefficients $e_{i}$ et $f_{i}$ ne dépendent pas de $i$. 
+	
+	On note $e$ et $f$ leur valeur. Alors $efg = n$.
 \end{Prop}
 
-Ces résultats se généralisent au cas où $\K$ n'est pas quadratiques, mais sont particulièrement simple dans le cas qui nous intéresse. On distingue $3$ cas possible pour le comportement de $p$ dans $\OR$ :
+On peut alors décrire la factorisation de $p\OR$ avec le théorème de Kummer : (CF Biasse)
+
+\begin{The}(Kummer)
+	
+	Soit $\K = \Q[\alpha]$ un corps de nombre. Soit $\OR$ un ordre contenant $\alpha$. 
+	
+	Soit $T(X)$ le polynôme minimal de $\alpha$, et $p$ premier ne divisant pas $\left[ \OR : \Z\left[ \alpha\right] \right] $.
+	
+	On note $T(X) = T_{1}(X)T_{2}(X)\ldots T_{r}(X)$ la factorisation  de $T(X)$ sur $\F_{p}$.
+	
+	Alors $r = g$ et $p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}$ avec
+	
+	\begin{equation*}
+		\PR_{i} = p\OR + T_{i}(\sqrt{\alpha})\OR 
+	\end{equation*}
+	
+	De plus $deg(T_{i}) = f_{i}$
+	
+\end{The}
+
+Ainsi pour $\K$ quadratique, on distingue $3$ cas possibles pour le comportement de $p$ dans $\OR$ :
 
 \begin{Def}
+	
+	Soit $\K$ une extension quadratique de $\Q$.
 	Avec les notations précédentes, on dira que $p$ est
 	\begin{enumerate}
 		\item ramifié si $e = 2$, $f = g = 1$
 		\item inerte si $f = 2$, $e = g = 1$
 		\item décomposé, ou "split", si $g = 2$, $e = f = 1$
 	\end{enumerate}
+	
 \end{Def}
 
-Si $\OR$ est de discriminant $\Delta$, le comportement de $p$ dépend de si $\Delta$ est un carré ou non dans $\F_{p}$:
+Si $\OR$ est de discriminant $\Delta$, $\sqrt{\Delta}\in\OR$ et le comportement de $p$ ne dépend que du résidus quadratique de $\Delta$ dans $\F_{p}$:
 
 \begin{Prop}
 	Soit $T(X) = X^2 - \Delta \in\F_{p}\left[ X\right] $. 
@@ -465,130 +502,11 @@ Si $\OR$ est de discriminant $\Delta$, le comportement de $p$ dépend de si $\De
 	\end{enumerate}
 \end{Prop}
 
-Le comportement de $p$ dans $\OR$ est déterminé le symbole de Legendre $\left( \frac{\Delta}{p}\right)$.
-
-\subsection{Forme standard des idéaux et forme quadratique binaire}
-
-On va étudier une correspondance entre des idéaux de $\OR$ et des formes quadratiques définie positive de discriminant $\Delta$. L'intérêt principal est l'application à l’implémentation du groupe de classe de $\OR$, que l'on détaillera dans la section sur l'algorithme de Broker. 
-
-\begin{Def}
-	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique.
-	
-	$f$ est binaire si elle est définie positive et à coefficient dans $\Z$.
-	
-	Son discriminant est $\Delta = b^2 - 4ac$.
-	
-	On notera $f = (a,b,c)$ pour désigner une forme quadratique binaire,
-	ou $f = (a,b)$ si le discriminant $\Delta$ est connu.  
-	
-	$f$ est dite primitive si $a,b,c$ son premier dans leur ensemble.
-	
-	$m\in\N$ est représenté par $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
-\end{Def}
-
-Dans la suite, on désigne un ordre $\OR$ de discriminant $\Delta$ par $\OR_{\Delta}$.
-
-\begin{Prop}
-	
-	Soit $f = (a,b)$ binaire primitive de discriminant $\Delta$. L'application :
-	\begin{equation*}
-		I : (a,b)\mapsto\left[ a, \frac{b + \sqrt{\Delta}}{2}\right] 
-	\end{equation*}
-	
-	associe à $f$ un idéal propre de $\OR_{\Delta}$.
-	
-	Un idéal entier $\LR\subset\OR_{\Delta}$ est dit primitif s'il est de la forme $I(a,b)$. 
-	
-\end{Prop}
-
-Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les coefficients $a$ et $b$ à partir d'une écriture adéquate de $\LR$ :
-
-\begin{Prop}
-	
-	Tout idéal $\LR\subset\OR_{\Delta}$ s'écrit 
-	
-	\begin{equation*}
-		\LR = m\left[ a , \frac{b + \sqrt{\Delta}}{2}\right] 
-	\end{equation*}
-	
-	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux.
-	
-	L'écriture est unique avec $b$ défini modulo $2a$ : on peut choisir $-a<b\leq a$.
-	
-\end{Prop}
-
-\begin{Def}
-	Un idéal $\LR$ est sous forme standard s'il est donné sous la forme précédente. 
-	
-	Lorsque $\Delta$ est connue, on notera $\LR = (m,a,b)$ une écriture standard de $\LR$. 
-	
-	On dira que $\LR$ est primitif si $\LR = (1,a,b)$.
-	
-\end{Def}
-
-On peut en déduire une écriture standard d'un idéal fractionnaire $\IR$ en utilisant le fait qu'il existe $d\in\N$ minimal tel que $d\IR = \LR$. 
-
-\begin{Coro}
-	Soit $\LR = (m,a,b)$ sous forme standard. L'application
-	
-	\begin{equation*}
-		F : (m,a,b)\mapsto (a,b) = ax^2 + bxy + cy^2
-	\end{equation*}
-	
-	associe à $\LR$ une forme quadratique binaire primitive de même discriminant. 
-	
-	I et F induise une bijection entre les idéaux primitifs et les formes quadratiques binaires primitives.
-	
-\end{Coro}
-
-On peut aussi associé une forme quadratique à un idéal fractionnaire. Deux idéaux $\LR$ et $\LR'$ ont la même image par $F$ si et seulement si il existe un entier $q\in\Q\cap\OR_{\Delta}$ tel que $\LR'$ = $q\LR$. 
-
-\begin{Prop}
-	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$. 
-	\begin{enumerate}
-		\item $N(\LR) = m^2a$
-		\item $\LR^{-1} = (m/N(\LR),a,-b)$
-	\end{enumerate}
-\end{Prop}
-
-On note $\CL$ la classe de $\LR$ dans $Cl(\OR_{\Delta})$. On cherche à trouver un représentant de la classe de façon systématique et pratique pour l'implémentation. Prendre un idéal primitif ne suffit pas : Il peut y avoir plusieurs idéaux primitif dans la même classe. 
-
-\begin{Def}
-	Deux formes quadratiques binaires primitives sont équivalentes si leurs idéaux primitifs associés sont dans la même classe.
-	
-	On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
-\end{Def}
-
-
-La bijection précédente est un isomorphisme de groupe, et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. 
-
-Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être défini sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet : (CF Cox)
-
-\begin{Def}
-	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante :
-	
-	Soit $B$ défini modulo $2aa'$ par
-	
-	\begin{enumerate}
-		\item $B = b [2a]$
-		\item $B = b' [2a']$
-		\item $B^2 = \Delta [4aa']$
-	\end{enumerate}
-	
-	Alors $f*f' = (aa', B)$ est une forme quadratique binaire primitive.
-\end{Def}
-
-\begin{Prop}
-	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$
-	
-	Et ces opérations induisent des morphismes de groupes entre groupes de classes.
-\end{Prop}
-
-à faire : m représenté ssi idéal de norme m
-forme réduite, représentant de classe
 
 \subsection{Corps de classe de Hilbert}
+
  def du corps de classe, lien groupe de classe, avec Artin. 
+ Admis pour l'instant ? Enoncer plus tard ?
 
 \section{Généralité sur les courbes elliptiques}
 
@@ -842,6 +760,14 @@ Si $E\in E_{\Lambda}$ est une courbe elliptique, on peut déterminer sont anneau
 	Soit $R =  \left\lbrace\alpha\in\C, \alpha\Lambda\subset\lambda\right\rbrace$, de sorte que $End(E)\simeq R$. $\alpha\in R$ vérifie $\alpha\in\Lambda$ et $\alpha\tau\in\Lambda$. On en déduit que $\alpha$ est racine d'un polynôme de degrés deux à coefficient dans $\Z$ : $R$ est une extension entière de $Z$. De plus si $\alpha$ n'est pas dans $\Z$, on déduit de l'existence d'un tel alpha un polynôme annulateur de degrés 2 pour $\tau$, qui est complexe. Donc $\Q\left(\tau\right)$ est un corps quadratique imaginaire dons $R$ est un ordre. 
 \end{proof}
 
+
+
+
+
+
+
+
+
 \subsection{Normalisation de l'anneau d'endomorphisme}
 
 
@@ -945,6 +871,10 @@ On montre enfin la cohérence entre la normalisation et la correspondance avec l
 
 
 
+
+
+
+
 \section{Courbes elliptiques à multiplication complexe}
 
 On se concentre désormais sur les courbes $E$ définies sur $\C$ d'anneaux d'endomorphismes isomorphes à un ordre quadratique imaginaire. 
@@ -954,6 +884,13 @@ La structure d'ordre quadratique imaginaire est la seule à être autorisée en 
 On cherche maintenant à décrire les isogénies possibles et décrivant leurs noyaux, grâce à la correspondance normalisé avec les tores complexes. Le but étant de pouvoir calculer une isogénie à partir de son noyau avec la formule de Vélu. 
 
 On n'arrivera pas à la description de toutes les isogénies, mais seulement de celles "horizontales", c'est à dire qui ne change pas l’anneau d'endomorphisme entre la courbe de départ et son image. 
+
+
+
+
+
+
+
 
 \subsection{Courbes d'anneaux d'endomorphismes donné}
 
@@ -1215,19 +1152,122 @@ On énonce alors un résultat dû à Kohel : la structure de volcan d'isogénie.
 
 
 
+
+
+
+
+
+
+
 \subsection{Courbes ordinaires d'anneaux d'endomorphisme donné}
 
-
+Dans toute la suite, $\F$ désigne un corps fini de caractéristique différente de $2$ et $3$.
 
 \begin{Def}
-	Une courbe elliptique définie sur $\K$ de caractéristique non nulle est dite ordinaire si son anneaux d'endomorphisme est un ordre dans un corps quadratique imaginaire. 
-	On note $ELL_{\K}(\OR_{\Delta})$ l'ensemble des classe d'équivalences sur $\Kb$ de courbes elliptiques ordinaire d'anneaux d'endomorphisme $\OR_{\Delta}$.
-	On notera dans cette section $ELL_{\C}(\OR_{\Delta})$ l'ensemble précédemment noté $ELL(\OR_{\Delta})$ sur $\C$. 
+	Une courbe elliptique définie sur $\F$ est dite ordinaire si son anneaux d'endomorphisme est un ordre dans un corps quadratique imaginaire. 
+	
+	Pour tout corps $\K$, on note $ELL_{\K}(\OR_{\Delta})$ l'ensemble des classe d'équivalences sur $\Kb$ de courbes elliptiques d'anneaux d'endomorphisme $\OR_{\Delta}$.
+	
+	On notera ainsi $ELL_{\C}(\OR_{\Delta})$ l'ensemble précédemment noté $ELL(\OR_{\Delta})$ sur $\C$. 
 \end{Def}
 
-On souhaite comparer $ELL_{\C}(\OR_{\Delta})$ et $ELL_{\K}(\OR_{\Delta})$ lorsque $\K$ est fini. Plus précisément, on cherche $\K$ tel que ces ensembles soit égaux. Si un tel $\K$ peut être déterminé connaissant seulement $\OR_{\Delta}$, on voudra étudier des courbes ordinaires définies sur $\K$. 
+On souhaite comparer $ELL_{\C}(\OR_{\Delta})$ et $ELL_{\F}(\OR_{\Delta})$. Plus précisément, on cherche $\F$ tel que ces ensembles soit isomorphes. Si un tel $\F$ peut être déterminé connaissant seulement $\OR_{\Delta}$, on voudra étudier des courbes ordinaires définies sur $\F$. 
 
-On commence par normalisé l'isomorphisme $End_{\Kb}(E)\simeq\OR_{\Delta}$. Le problème vient de l'existence d'endomorphisme inséparable : le morphisme de Frobenius $\pi_{q}$ par exemple, lorsque $E$ est définie sur $\F_{q}$. L'application $f$ du corollaire 4.9 n'est plus injective:
+D'abord on réduit l'étude de $ELL_{\C}(\OR_{\Delta})$ à un sous-corps de $\C$ :
+
+\begin{Prop}
+	Soit $j\neq 0$, $1728\in\C$. Il existe une courbe elliptique $E$ définie sur $\Q[j]$ de $j$-invariant $j$:
+	
+	\begin{equation*}
+		E : y^2 = x^3 - \frac{36}{j - 1728}x^2 - \frac{1}{j - 1728}
+	\end{equation*}
+	
+	De plus il existe des courbes elliptiques de $j$-invariant $0$ ou $1728$ définies sur $\Z$.
+	
+\end{Prop}
+
+Chaque classe de $ELL_{\C}(\OR_{\Delta})$ peut être décrit par son $j$-invariant. Ceux-ci sont alors liés entre eux :
+
+\begin{Prop}
+	Soit $j\in ELL_{\C}(\OR_{\Delta})$. Alors $j$ est algébrique sur $\Q$.
+	
+	De plus tout les $j$-invariant de $ELL_{\C}(\OR_{\Delta})$ sont conjugués entre eux.
+	
+	Leur corps de décomposition est le groupe de classe de Hilbert de $\K = Frac(\OR_{\Delta})$, noté $\HR$.
+	
+	Enfin, $j$ est un entier algébrique et $j\in\OR_{\HR}$
+\end{Prop}
+
+Ces résultats sont loin d'être évident et admis (voir Syl2). Comme il suffit de se placer sur un corps contenant $j$ pour pouvoir définir une courbe de $j$-invariant $j$, on en déduit :
+
+\begin{Coro}
+	Avec les notations précédentes, $ELL_{\C}(\OR_{\Delta})\simeq ELL_{\HR}(\OR_{\Delta})$
+\end{Coro}
+
+Soit $p$ premier non ramifié (donc inerte ou décomposé) dans $\OR_{\K}$. Alors $p$ n'est pas ramifié dans $\OR_{\HR}$. Soit $f$ son degré d'inertie ($f$ est bien défini car $\HR$ est une extension galoisienne de $\Q$). Soit $\PR$ un idéal premier de $\OR_{\HR}$. Alors $\OR_{\HR}/\PR\simeq\F_{q}$ avec $q = p^f$.
+
+Cette réduction à l'avantage de se comporter parfaitement au niveau des isogénie :
+
+\begin{Def}
+	Soit $E$ une courbe elliptique défini sur $\Q[j]\subset\HR$ de $j$-invariant $j$.
+	
+	Avec les notations précédentes, on suppose que $j - 1728$ n'est pas dans $\PR$.
+	
+	On note $\tilde{E}$ la réduction de $E$ modulo $\PR$. 
+\end{Def}
+
+Avec ces notations, $\tilde{E}$ est définie sur $\F_{q}$. Il reste à voir que l'on a un isomorphisme $End(E)\simeq End(\tilde{E})$ :
+
+\begin{Prop}
+	Soit $E_{1}$, $E_{2}$ deux courbes elliptiques de $ELL_{\HR}(\OR_{\Delta})$. 
+	
+	(Elles peuvent avoir le même $j$-invariant, voir même être égales).
+	
+	L'application $Hom(E_{1}, E_{2})\rightarrow Hom(\tilde{E_{1}}, \tilde{E_{2}})$, $\phi\mapsto\tilde{\phi}$ est injective
+	
+	De plus elle conserve le degré.
+\end{Prop}
+
+(voir SYl2 II 4)
+
+On peut montrer qu'avec certaine condition sur $p$ on a la surjectivité en plus :
+
+\begin{The} (Lang, 13.12)
+	
+	Soit $E$ définie sur $\HR$, avec $End(E)\simeq\OR_{\Delta}$ de conducteur $f$.
+	
+	Avec les notations précédents, si $p$ est ramifié ou inerte dans $\K$, alors $\tilde{E}$ n'est pas ordinaire. 
+	
+	Si $p$ est décomposé dans $\K$, on note $f = p^r f_{0}$ où $p$ ne divise pas $f_{0}$
+	
+	Alors $End(\tilde{E})$ est un ordre de $\K$ de conducteur $f_{0}$
+	
+	De plus si $p$ de divise pas $f$, $End(E)\simeq End(\tilde{E})$,
+	
+	et $End(E)\rightarrow End(\tilde{E})$, $\phi\mapsto\tilde{\phi}$ est un isomorphisme.
+	
+\end{The}
+
+Ainsi on choisira $p$ premier avec $f$ et décomposé dans $\K$. On pourra alors étudier $E$ sur $\F_{q}$ où $q$ dépend du degré d'inertie de $p$ dans $\HR$.
+
+On voudrait maintenant vérifier que $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. Ce qui précède permet de définir une injection, il nous manque la surjectivité.
+
+On cite pour cela un théorème dû à Deuring:
+
+\begin{The}
+	Soit $E_{0}$ une courbe elliptique défini sur un corps fini $\F_{q}$, et $\alpha_{0}$ un endomorphisme autre qu'une multiplication scalaire.
+	
+	Il existe une courbe $E$ définie sur un corps de nombre, munie d'un endomorphisme $\alpha$, telle qu'il existe une réduction définie précédemment donnant $\tilde{E}$ définie sur $\F_{q}$, et $\tilde{E}\simeq E_{0}$.
+\end{The}
+
+Ainsi $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. On admet de plus que l'isomorphisme respecte l'action de $Cl(\OR_{\Delta})$.
+
+
+
+
+\subsection{Normalisation d'endomorphisme de courbes ordinaires}
+
+On souhaite normaliser l'isomorphisme $End(\tilde{E})\simeq\OR_{\Delta}$. Le problème vient de l'existence d'endomorphisme inséparable : le morphisme de Frobenius $\pi_{q}$ par exemple. L'application du corollaire 4.9 n'est plus injective:
 
 
 \begin{Prop}
@@ -1271,7 +1311,7 @@ On va se servir de ce fait pour décrire $End(E)$ uniquement à partir d'endomor
 	 
 	Ainsi $Z[\pi_{q}] \simeq Z[\alpha] \subset \K$.
 	
-	Avec les notations de (??? section 2):
+	Avec les notations de la proposition 2.5 :
 	
 	Soit $\OR_{\K} = \left[ 1, w_{\K}\right] $ de sorte que $\OR_{\Delta} = \left[ 1, fw_{\K}\right] $ et $Z[\alpha] = \left[ 1, f_{m}w_{\K}\right] $.
 	
@@ -1314,14 +1354,28 @@ Dans toutes la suite, on représente $\pi_{q}$ avec $\alpha = \frac{t + f_{m}\sq
 \end{proof}
 	
 
-Si on se donne $E_{\Lambda}\in ELL_{\C}(\OR_{\Delta})$, alors $\OR_{\Delta} $ peut être normalisé comme précédemment : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$.
+Si on se donne $E\in ELL_{\C}(\OR_{\Delta})$, alors $\OR_{\Delta} $ peut être normalisé par la méthode de la section 4 : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$.
 
-Supposons que l'on arrive à associer à chaque endomorphisme de $E$ un endomorphisme d'une courbe elliptique à multiplication complexe $(E_{\Lambda},[.])$ normalisée. 
+Alors l'application 
+\begin{equation*}
+	\frac{x + y\pi_{q}}{f_{m}} \in \OR_{\Delta}\mapsto\ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] \in End(E)\mapsto \widetilde{\left[ \frac{x + y\pi_{q}}{f_{m}}\right]} \in End(\tilde{E})
+\end{equation*}  
 
-Alors l'application $\frac{x + y\pi_{q}}{f_{m}} \in \OR_{\Delta}\mapsto\ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] \in End(E) $ est bien définie, et en notant $\omega$ l'invariant différentiel de $E$, on voudrait que
-$\left[ \frac{x + y\pi_{q}}{f_{m}}\right] ^{*} (\omega) = \frac{x}{f_{m}}\omega$ soit vrai dans $\F_{q}$
+est bien définie, et en notant $\omega$ l'invariant différentiel de $E$, on voudrait que
 
-En particulier l'endomorphisme $\phi = \left[ \frac{x}{f_{m}}\right] $ vérifie $\phi\circ\left[ f_{m}\right] =\left[ x\right] $.
+\begin{equation*}
+	\widetilde{ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] } ^{*} (\omega) = \widetilde{\left( \frac{x}{f_{m}}\right)} \omega
+\end{equation*}
+
+Ceci a un sens si $f_{m}$ n'est pas dans l'idéal de réduction $\PR$. Cependant $x$ et $y$ peuvent ne pas être premier avec $f_{m}$, ce qui réduit le problème à un diviseur de $f_{m}$. 
+
+
+
+
+
+
+
+
 
 
 \subsection{Structure du graphe d'isogénie}
@@ -1355,9 +1409,187 @@ Structure des idéaux et conséquences, vélu. compléxité, sqrt(vélu)
 \subsection{Générateur d'un groupe de torsion}
 Idée naïve, problème de l'extension coûteuse, solution ?
 
+
+
+
+
+
+
 \subsection{Factorisation dans le groupe de classes}
 Enoncé du problème, algo connue. Méthode de Jao
 algo de Mcurley Hafney
+
+\subsubsection{Forme standard des idéaux et formes quadratiques binaires}
+
+On va étudier une correspondance entre des idéaux de $\OR$ et des formes quadratiques définie positive de discriminant $\Delta$. L'intérêt principal est l'application à l’implémentation du groupe de classe de $\OR$. 
+
+\begin{Def}
+	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique.
+	
+	$f$ est binaire si elle est définie positive et à coefficient dans $\Z$.
+	
+	Son discriminant est $\Delta = b^2 - 4ac$.
+	
+	On notera $f = (a,b,c)$ pour désigner une forme quadratique binaire,
+	ou $f = (a,b)$ si le discriminant $\Delta$ est connu.  
+	
+	$f$ est dite primitive si $a,b,c$ son premier dans leur ensemble.
+	
+	$m\in\N$ est représenté par $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
+\end{Def}
+
+Dans la suite, on désigne un ordre $\OR$ de discriminant $\Delta$ par $\OR_{\Delta}$.
+
+\begin{Prop}
+	
+	Soit $f = (a,b)$ binaire primitive de discriminant $\Delta$. L'application :
+	\begin{equation*}
+		I : (a,b)\mapsto\left[ a, \frac{b + \sqrt{\Delta}}{2}\right] 
+	\end{equation*}
+	
+	associe à $f$ un idéal propre de $\OR_{\Delta}$.
+	
+	Un idéal entier $\LR\subset\OR_{\Delta}$ est dit primitif s'il est de la forme $I(a,b)$. 
+	
+\end{Prop}
+
+Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les coefficients $a$ et $b$ à partir d'une écriture adéquate de $\LR$ :
+
+\begin{Prop}
+	
+	Tout idéal $\LR\subset\OR_{\Delta}$ s'écrit 
+	
+	\begin{equation*}
+		\LR = m\left[ a , \frac{b + \sqrt{\Delta}}{2}\right] 
+	\end{equation*}
+	
+	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux.
+	
+	L'écriture est unique avec $b$ défini modulo $2a$ : on peut choisir $-a<b\leq a$.
+	
+\end{Prop}
+
+\begin{Def}
+	Un idéal $\LR$ est sous forme standard s'il est donné sous la forme précédente. 
+	
+	Lorsque $\Delta$ est connue, on notera $\LR = (m,a,b)$ une écriture standard de $\LR$. 
+	
+	On dira que $\LR$ est primitif si $\LR = (1,a,b)$.
+	
+\end{Def}
+
+On peut en déduire une écriture standard d'un idéal fractionnaire $\IR$ en utilisant le fait qu'il existe $d\in\N$ minimal tel que $d\IR = \LR$. 
+
+\begin{Coro}
+	Soit $\LR = (m,a,b)$ sous forme standard. L'application
+	
+	\begin{equation*}
+		F : (m,a,b)\mapsto (a,b) = ax^2 + bxy + cy^2
+	\end{equation*}
+	
+	associe à $\LR$ une forme quadratique binaire primitive de même discriminant. 
+	
+	I et F induise une bijection entre les idéaux primitifs et les formes quadratiques binaires primitives.
+	
+\end{Coro}
+
+On peut de même associé une forme quadratique à un idéal fractionnaire. Deux idéaux $\LR$ et $\LR'$ ont la même image par $F$ si et seulement si il existe $q\in\Q\cap\OR_{\Delta}$ tel que $\LR'$ = $q\LR$. 
+
+\begin{Prop}
+	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$. 
+	\begin{enumerate}
+		\item $N(\LR) = m^2a$
+		\item $\LR^{-1} = (m/N(\LR),a,-b)$
+	\end{enumerate}
+\end{Prop}
+
+On note $\CL$ la classe de $\LR$ dans $Cl(\OR_{\Delta})$. On cherche à trouver un représentant de la classe de façon systématique et pratique pour l'implémentation. Prendre un idéal primitif ne suffit pas : Il peut y avoir plusieurs idéaux primitifs dans la même classe. 
+
+\begin{Def}
+	Deux formes quadratiques binaires primitives sont équivalentes si leurs idéaux primitifs associés sont dans la même classe.
+	
+	On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
+\end{Def}
+
+La bijection précédente est un isomorphisme de groupe, et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. 
+
+Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être défini sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet : (CF Cox)
+
+\begin{Def}
+	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante :
+	
+	Soit $B$ défini modulo $2aa'$ par
+	
+	\begin{enumerate}
+		\item $B = b [2a]$
+		\item $B = b' [2a']$
+		\item $B^2 = \Delta [4aa']$
+	\end{enumerate}
+	
+	Alors $f*f' = (aa', B)$ est une forme quadratique binaire primitive.
+\end{Def}
+
+\begin{Prop}
+	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$
+	
+	Et ces opérations induisent des isomorphismes entre groupes de classes.
+\end{Prop}
+
+On peut donc représenter une classe d'idéaux par une forme quadratique représentant la classe de formes correspondante.
+
+Enfin on défini une notion de forme réduite, qui aura l'avantage d'être unique dans chaque classe :
+
+\begin{Def}
+	Soit $\LR = (1,a,b)$ un idéal primitif sous forme standard.
+	
+	Soit $c = (\Delta - b^2)/4a$. En particulier $c\geq0$.
+	
+	$\LR$ est réduit si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$.
+	
+	$F(\LR)$ est aussi dites réduites dans ce cas
+\end{Def}
+
+\begin{Prop}
+	Toute classe d'idéaux (ou de formes) contient un unique élément réduit. 
+	
+	De plus à partir d'un représentant $\LR$ (ou $f$), il existe un algorithme donnant l'élément réduit de la classe en $\OR(\log(\Delta)^{2} )$
+\end{Prop}
+
+La forme réduite vérifie de plus $a,|b| \leq \sqrt{|\Delta|}$. On peut donc représenter chaque classe par un élément de taille raisonnable en mémoire.
+
+\subsubsection{Représentant de classe premier avec le conducteur}
+
+La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant par la suite se ramener à des idéaux toujours premier avec le conducteur, ce qui n'est pas garanti pour l'idéal réduit.
+
+On pourra cependant toujours s'adapter :
+
+\begin{Prop}
+	$m\in\N$ est représenté par une forme quadratique binaire primitive si et seulement s'il existe $\LR\in Cl(I(f))$ tel que $N(\LR) = m$
+\end{Prop}
+
+La preuve de cette proposition n'est pas effective, cependant si $m$ est premier on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après l'étude précédente. 
+
+\begin{Prop}
+	Soit $M\in\N$. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$.
+	
+	Ainsi toutes classes d'idéaux possède un idéal premier avec $M$
+\end{Prop}
+
+Ainsi on peut toujours se ramener à des représentant de classe premier avec le conducteur. 
+
+Pour rendre cela effectif, on va fixer une convention sur les idéaux de normes $p$ premier décomposé:
+
+\begin{Def}
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. 
+	
+	La forme de Seysen de discriminant $\Delta$ associé à $p$ est $(p,b)$ où $b\in\N$ est le plus petit entier positif tel que $b^2 = \Delta [4p]$
+	
+	L'idéal de Seysen associé à $p$ est alors $I_{p} = I((p,b))$. En particulier $N(I_{p}) = p$
+\end{Def}
+
+$I_{p}$ est donc l'un des deux idéaux de la factorisation de $p\OR_{\Delta}$. Le choix de l'idéal de Seysen aura plusieurs avantage lors de l'implémentation
+
+
 
 \subsection{Problème de l'Idéal Principal}
 Enoncé du problème, cas quadratique et Cornacchia
