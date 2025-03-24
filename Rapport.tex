@@ -1303,7 +1303,7 @@ On cite pour cela un théorème dû à Deuring:
 \begin{The}
 	Soit $E_{0}$ une courbe elliptique défini sur un corps fini $\F_{q}$, et $\alpha_{0}$ un endomorphisme autre qu'une multiplication scalaire.
 	
-	Il existe une courbe $E$ définie sur un corps de nombre, munie d'un endomorphisme $\alpha$, telle qu'il existe une réduction définie précédemment donnant $\tilde{E}$ définie sur $\F_{q}$, et $\tilde{E}\simeq E_{0}$.
+	Il existe une courbe $E$ définie sur un corps de nombre, munie d'un endomorphisme $\alpha$, telle qu'il existe une réduction définie précédemment donnant $\tilde{E}$ définie sur $\F_{q}$, et $\tilde{E}\simeq E_{0}$ avec $\tilde{\alpha} = \alpha_{0}$
 \end{The}
 
 Ainsi $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. On admet de plus que l'isomorphisme respecte l'action de $Cl(\OR_{\Delta})$.
@@ -1381,7 +1381,7 @@ On va se servir de ce fait pour décrire $End(E)$ uniquement à partir d'endomor
 	Avec $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$, on obtient une représentation de $\pi_{q}$ dans $\C$ telle que $\pi_{q}$ et $f_{m}w_{\K}$ soient égaux à un entier prêt. Mais ce n'est pas le cas avec la seconde racine.
 \end{Rem}
 
-Dans toutes la suite, on représente $\pi_{q}$ avec $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$. Par abus de notation, on écrira $\pi_{q} = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$
+Dans toutes la suite, on représente $\pi_{q}$ avec $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$. Par abus de notation, on écrira parfois $\pi_{q} = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$
 
 \begin{Prop}
 	
@@ -1399,21 +1399,32 @@ Dans toutes la suite, on représente $\pi_{q}$ avec $\alpha = \frac{t + f_{m}\sq
 	Ces résultats découles de l'égalité $w_{\K} = \frac{\pi_{q} - s}{f_{m}}$
 \end{proof}
 	
+\begin{center}
+	
+Pour normaliser une courbe $E_0$ définie sur $\F_{q}$ donnée, on procède ainsi : 
 
-Si on se donne $E\in ELL_{\C}(\OR_{\Delta})$, alors $\OR_{\Delta} $ peut être normalisé par la méthode de la section 4 : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$.
+\end{center}
 
-Alors l'application 
+On applique d'abord le théorème de During qui nous donne $E$ défini sur un corps de nombre (donc sur $\C$) et $\alpha\in End(E)$ tels que sous une réduction par un idéal $\PR$, $\tilde{E} = E_{0}$ et $\tilde{\alpha} = \pi_{q}$.
+
+Alors $ End(E) = \OR_{\Delta} $ peut être normalisé par la méthode de la section 4 : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$. L'endomorphisme $\alpha$ a le même polynôme caractéristique que $\pi_{q}$ et peut donc être représenté par $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2} \in\OR_{\Delta}\subset\C$.
+
+Ainsi l'application 
 \begin{equation*}
 	\frac{x + y\pi_{q}}{f_{m}} \in \OR_{\Delta}\mapsto\ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] \in End(E)\mapsto \widetilde{\left[ \frac{x + y\pi_{q}}{f_{m}}\right]} \in End(\tilde{E})
 \end{equation*}  
 
-est bien définie, et en notant $\omega$ l'invariant différentiel de $E$, on voudrait que
+est bien définie, et en notant $\omega$ l'invariant différentiel de $E$, comme $\pi_{q}\in\PR$ :
 
 \begin{equation*}
 	\widetilde{ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] } ^{*} (\omega) = \widetilde{\left( \frac{x}{f_{m}}\right)} \omega
 \end{equation*}
 
-Ceci a un sens si $f_{m}$ n'est pas dans l'idéal de réduction $\PR$. Cependant $x$ et $y$ peuvent ne pas être premier avec $f_{m}$, ce qui réduit le problème à un diviseur de $f_{m}$. 
+D'après le théorème de Kummer, $\PR$ étant un idéal contenant $p\OR_{\Delta}$, les entiers qu'il contient sont exactement les multiples de $p = N(\PR)$. Donc si $f_{m}$ est premier avec $p$ : $\widetilde{\left( \frac{x}{f_{m}}\right)} = xf_{m}^{-1} [p]$.
+
+Cette dernière équation pourra servir à normaliser dès que $p$ ne divise pas $f_{m}$. Dans le cas contraire la réduction est quand même bien défini \textbf{(?)}. 
+
+On peut remarquer que la condition du théorème $6.7$ pour que la réduction conserve l'anneau d'endomorphisme implique déjà que $p$ est premier avec $f$. 
 
 
 
@@ -1426,7 +1437,9 @@ Ceci a un sens si $f_{m}$ n'est pas dans l'idéal de réduction $\PR$. Cependant
 
 \subsection{Structure du graphe d'isogénie}
 
-Dans sa thèse, Kohel décrit la structure des graphes de $l$-isogénies, avec $l$ premier, comme des "volcans d'isogénies". Nous allons cités les résultats sur cette structure, en les admettant. 
+Dans cette section $E$ est une courbe elliptique ordinaire définie sur $\F_{q}$ de caractéristique $p$.
+
+Dans sa thèse, Kohel décrit la structure des graphes de $l$-isogénies, avec $l$ premier, $l\neq p$, comme des "volcans d'isogénies". Nous allons citer les résultats sur cette structure, en les admettant. 
 
 On distingue d'abord les isogénies "horizontales" et "verticales" :
 
@@ -1439,7 +1452,9 @@ On distingue d'abord les isogénies "horizontales" et "verticales" :
 \end{Def}
 
 \begin{Prop}
-	Avec les notations précédentes, si $\phi$ est de degré $l$ premier, alors :
+	Soit $l$ un nombre premier différent de $p$.
+	
+	Avec les notations précédentes, si $\phi$ est de degré $l$, alors :
 	\begin{enumerate}
 		\item Soit $O = O'$ et $\phi$ est horizontale
 		\item Soit $O'\subset O$, $\left[ O : O' \right] = l$ et $\phi$ est "descendante"
@@ -1457,12 +1472,12 @@ Dans la suite on reprend certaines notations de la section 6.2 : $f$ désigne le
 
 \begin{Prop}
 	
-	Avec les notations précédentes, soir $r = f_{m}/f$. On distingues les cas suivants :
+	Avec les notations précédentes, soit $r = f_{m}/f$. On distingues les cas suivants :
 	
-	D'abord selon si $l$ est un nombre premier divisant $f$ :
+	D'abord selon si $l$ divise $f$ ou non :
 	
 	\begin{enumerate}
-		\item Si $l$ ne divise pas $f$, alors il existe exactement $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales définies sur $\F_{q}$.
+		\item Si $l$ ne divise pas $f$, il existe exactement $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales définies sur $\F_{q}$.
 		\item Si $l$ divise $f$, il existe exactement une $l$-isogénie ascendante
 	\end{enumerate}
 	
@@ -1483,7 +1498,7 @@ Puisqu'il existe au plus une $l$-isogénie ascendante, toutes les isogénies des
 Partant du "sommet" du graphe, c'est à dire $Ell(\OR_{\K})$, on a donc de plus en plus d'isogénie à chaque "niveau", jusque au niveau minimal $Ell(\Z\left[ \pi_{q}\right] )$. D'où le nom de "volcan de $l$-isogénies".
 
 \begin{Rem}
-	Pour tout nombre premier $l$ ne divisant pas $f_{m}$, il existe $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales, c'est à dire $0$, $1$ ou $2$, et aucune ascendante ni descendante.
+	Pour tout nombre premier $l$ ne divisant pas $f_{m}$, et $l\neq p$, il existe $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales, c'est à dire $0$, $1$ ou $2$, et aucune ascendante ni descendante.
 	
 	On peut faire le lien avec le comportement de $l$ dans $\OR_{\Delta}$. En effet $l$ est ici premier avec $f$, donc les idéaux de normes $l$ sont premier avec le conducteur, donc propre. Ainsi la théorie des groupes de torsions détaillés à la section 5.2. s'applique et on peut calculer des groupes de torsions à partir d'idéaux de norme $l$ :
 	
@@ -1529,7 +1544,7 @@ Plus précisément on suppose connaître :
 \begin{enumerate}
 	\item Une courbe elliptique $E$ ordinaire, donnée par une équation sur un corps $\F_{q}$
 	\item L'anneau d'endomorphisme $End(E)$ donné par son discriminant $\Delta$. On connaît donc l'extension quadratique $\K$ et le conducteur $f$
-	\item Un nombre premier $l$.
+	\item Un nombre premier $l$ différent de la caractéristique $p$.
 \end{enumerate} 
 
 Et on cherche une courbe $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$. 
@@ -1554,7 +1569,7 @@ Cette condition nous oblige à éviter des nombres premiers. Elle a cependant pl
 	
 \end{enumerate}
 
-On s'intéresse d'abord à une procédure naïve à partir de la formule de Vélu est la suivante :
+On déduit une procédure naïve à partir de la formule de Vélu :
 
 \begin{enumerate}
 		
@@ -1564,22 +1579,17 @@ On s'intéresse d'abord à une procédure naïve à partir de la formule de Vél
 
 \end{enumerate}
 
-Dans la section 7.2 on étudie comment appliquer efficacement la formule de Vélu, et la complexité obtenue. Ensuite on s'intéresse en 7.3 au calcul d'un générateur de $E\left[ \LR\right]$.
+Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes : l'idée est d'engendré $Cl(\OR_{\Delta})$ par des classes représenté par des idéaux de petites normes, puis factoriser $\CL$ dans cette famille génératrice.
 
-On obtiendra une complexité en $l$ insatisfaisante. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes : l'idée est d'engendré $Cl(\OR_{\Delta})$ par des classes représenté par des idéaux de petites normes, puis factoriser $\CL$ dans cette famille génératrice. 
+On a donc besoin d'outil pour manipuler $Cl(\OR_{\Delta})$ : on étudie cela dans la section 7.2. On utilise des formes quadratiques pour manipuler les idéaux, et l'on applique cela au problème de factorisation.
 
-On étudie cela dans la section 7.4. On obtiendra $\LR$ sous forme d'un produit de petit idéaux, mais à un idéal principal prêt. Il faudra trouver un générateur d'un idéal, ce que l'on étudiera en section 7.5.
+On obtiendra $\LR$ sous forme d'un produit de petit idéaux, mais à un idéal principal prêt. Il faudra trouver un générateur d'un idéal, ce que l'on étudiera en section 7.5.
+
+On aura tout de même besoin de la formule de Vélu: Dans la section 7.3 on étudie comment l'appliquer efficacement, et on analyse la complexité obtenue. 
+
+Ensuite on s'intéresse en 7.4 au calcul d'un générateur de $E\left[ \LR\right]$. On revient avec plus de rigueur sur la méthode présenté par Broker Charle et Lauter, réutilisée sans modification dans l'article de Jao Soukharev. 
 
 La procédure de Broker Charle Lauter sera énoncé en section 7.6, puis la compléxité sera étudié en section 7.7. L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
-
-\subsection{Algorithme SquareVélu}
- compléxité, sqrt(vélu)
-
-
-
-
-\subsection{Générateur d'un groupe de torsion}
-Idée naïve, problème de l'extension coûteuse, solution ?
 
 
 
@@ -1729,6 +1739,11 @@ Enfin on défini une notion de forme réduite, qui aura l'avantage d'être uniqu
 
 La forme réduite vérifie de plus $a,|b| \leq \sqrt{|\Delta|}$. On peut donc représenter chaque classe par un élément de taille raisonnable en mémoire.
 
+
+
+
+
+
 \subsubsection{Représentant de classe premier avec le conducteur}
 
 La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant par la suite se ramener à des idéaux toujours premier avec le conducteur, ce qui n'est pas garanti pour l'idéal réduit.
@@ -1762,6 +1777,107 @@ Pour rendre cela effectif, on va fixer une convention sur les idéaux de normes 
 $I_{p}$ est donc l'un des deux idéaux de la factorisation de $p\OR_{\Delta}$. Le choix de l'idéal de Seysen aura plusieurs avantage lors de l'implémentation
 
 
+
+
+
+\subsection{Algorithme SquareVélu}
+compléxité, sqrt(vélu)
+
+
+
+
+
+
+
+
+
+\subsection{Générateur d'un groupe de torsion}
+
+Dans cette partie, on suppose connue un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ et on cherche un générateur de $E\left[ \LR\right]$. on suppose $l$ premier, et premier avec $f_{m}$.
+
+Supposons $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$. $\LR$ est primitif car de norme premier. Il est facile de passer à une écriture dépendant de $w_{\K}$ au lieu de $\sqrt{d_{K}}$, et la proposition 6.12 permet alors d'obtenir en quelques calculs $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+
+On sait alors que $E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ est du noyau de$\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$
+
+Dans $E[l]$, à partir d'une base $P$, $Q$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible. On peut alors tester lequel est dans $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$
+
+Dans l'exemple "small" de l'article de Broker, Charle, Lauter, $f_{m} = 1$ est l'isogénie $c + d\pi_{q}$ est facile à évaluer. Cela arrive dès que $E$ est au plus bas niveau du volcan d'isogénie. 
+
+En général le dénominateur nous empêche de réellement connaître l'isogénie sans avoir une façon effective de calculer $\alpha\mapsto\left[ \alpha\right]$. Cependant la proposition suivante nous ramène à un calcul effectif.
+
+
+\begin{Prop}
+	les isogénies $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right] $ restreinte à $E\left[ l\right] $ ont même noyau.
+\end{Prop}
+
+\begin{proof}
+	Puisque $f_{m}$ et $l$ sont premier entre eux, $\left[ f_{m} \right]$ restreinte à $\left[ f_{m} \right]$ est bijective. 
+	
+	Or l'application $\left[ \right] $ est un morphisme d'anneau, 
+	
+	donc $\left[  \frac{c + d\pi_{q}}{f_{m}}\right] \circ \left[ f_{m }\right] =  \left[ c + d\pi_{q}\right] $, d'où la proposition.
+\end{proof}
+
+Un premier algorithme pour calculer le noyau est le suivant :
+\begin{enumerate}
+	\item Calculer le polynôme de $l$ division sur $E$.
+	\item En déduire une extension $\F_{q^r}$ telle que $E(\F_{q^r})$ contienne $E[l]$.
+	\item Calculer une base $P$, $Q$ de $E\left[ l\right] $ à l'aide du polynôme de $l$ division. 
+	\item Pour $i$ allant de $0$ à $l - 1$, vérifier $\left[ c + d\pi_{q}\right](P) = 0$
+	\item Dès qu'un test est vérifier, retourner la valeur $P + iQ$ testée
+	\item Sinon, retourner $Q$.
+\end{enumerate}
+
+Cette procédure peut être implémenté sur sage, mais pose plusieurs problème : 
+
+\begin{enumerate}
+	\item La recherche exhaustive sur $l$ points peut être lourde, mais on souhaite appliquer cette algorithme sur des petits nombres premiers.
+	\item L'extension $\F_{q^r}$ peut être très grande, Broker Charle et Lauter affirme que $r$ est en général de l'ordre de $l$. 
+	\item Le polynôme de $l$-division est degré $\frac{l^2 - 1}{2}$ et peut être lourd à calculer.
+\end{enumerate}
+
+En pratique sur l'exemple "small" de Broker Charle et Lauter, $l = 31$ mais le calcul prend déjà quelques secondes. Dans leur article il propose une autre méthode, utilisant la théorie des formes modulaires pour obtenir la courbe d'arrivée $E'$ sans calculer de noyau. Ensuite ils mènent les calculs sur les éléments du noyau sans passer par une extension : il utilise une écriture formelle dans un quotient d'anneau de polynôme.
+
+On propose ici une amélioration de la première méthode : le but est de trouver le générateur du noyau directement dans la plus petite extension qui le contient. 
+
+On remarque d'abord que, partant de la forme standard, on peut toujours se ramener à $d = 1$ (voir les algorithmes base\_wk et base\_fq1). 
+
+Si $P$ convient, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On connaît la trace de $E$ (et son cardinal) donc on déduit le polynôme caractéristique de $E$. On se ramène donc à une étude du comportement du morphisme de Frobenius sur $E[l]$.
+
+On trouve dans l'article de Miret, Moreno, Sadornil, Tena, et Valls (cite l'article), on trouve les résultats suivant :
+
+\begin{Prop}
+	(Proposition 1 de l'article)
+	
+	Soit $E$ définie sur $\F_{q}$ de $j$-invariant différent de $0$, $1728$.
+	
+	\begin{enumerate}
+		\item $E$ admet une unique $l$-isogénies définie sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a un unique espace propre de dimension $1$.
+		\item $E$ admet exactement deux $l$-isogénies définies sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a deux valeurs propres distinctes .
+		\item $E$ admet $l+1$ isogénies définies sur sur$\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a une valeur propre double.
+	\end{enumerate}
+	
+cas 0 ??
+	
+\end{Prop}
+
+On sait que l'on se trouve dans le cas où il existe exactement $2$ isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$. 
+
+\begin{Prop}
+	(Proposition 2 de l'article)
+	
+	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. 
+	
+	Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $.
+	
+	Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$, et $r_{i}$ divise $l-1$.
+	
+	De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
+\end{Prop}
+
+On sait donc directement dans quelle extension chercher les générateurs des noyaux. On sait aussi que celui qui nous intéresse correspond à la valeurs propres $-c$. 
+
+On calcule l'ordre $r$ de $-c$ dans $\F_{l}^{*}$. Si les deux ordres sont différents, $E(\F_{q^r})$ ne contient pas toutes la $l$ torsion. En prenant un point $P$ au hasard dans $E(\F_{q^r})$ de cardinal $n$, $(n/l)P$ sera sûrement non nul et d'ordre $l$, et on peut tester s'il est générateur du noyaux en testant s'il est vecteurs propre pour $-c$. 
 
 \subsection{Problème de l'Idéal Principal}
 Enoncé du problème, cas quadratique et Cornacchia
