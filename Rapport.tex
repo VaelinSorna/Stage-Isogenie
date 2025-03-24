@@ -507,6 +507,13 @@ Si $\OR$ est de discriminant $\Delta$, $\sqrt{\Delta}\in\OR$ et le comportement 
 
  def du corps de classe, lien groupe de classe, avec Artin. 
  Admis pour l'instant ? Enoncer plus tard ?
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 \section{Généralité sur les courbes elliptiques}
 
@@ -516,12 +523,19 @@ Dans un premier on explique comment déterminer une isogénie grâce à son noya
 
 Enfin on énonce le lien entre les courbes elliptiques et les tores complexes. Dan cette correspondance l’anneau d'endomorphisme d'une courbe peut être vu de différentes manières : l'invariant différentiel va à nouveaux nous servir à fixer une convention. 
 
+
+
+
+
+
+
+
 \subsection{Noyaux d'isogénie}
-Galois sur les isogénies, Lien isogénie noyaux, formule de vélu
+
 
 Si $P\in E$, on désigne par $\tau_{P}$ la translation par $P$. Si $\phi : E\rightarrow E'$ est une isogénie, on note $\phi^{*} : \Kb(E') \rightarrow \Kb(E)$ son application contravariante (ou Pullback), et par $\hat{\phi} : E'\rightarrow E$ son isogénie duale.
 
-On sait que l'on peut associé à une isogénie $\phi : E\mapsto E'$ une extension $\left[ \Kb(E) : \phi^{*}\left( \Kb(E')\right) \right]$ . Par exemple les notions de degré ou de séparabilité de $\phi$ correspondent aux mêmes notions sur cette extension. On commence ici par appliquer la théorie de Galois dans ce cas, notamment pour montrer le lien entre cette extension et le noyau de $\phi$
+On sait que l'on peut associé à une isogénie $\phi : E\mapsto E'$ une extension $\left[ \Kb(E) : \phi^{*}\left( \Kb(E')\right) \right]$. Par exemple les notions de degré ou de séparabilité de $\phi$ correspondent aux mêmes notions sur cette extension. On commence ici par appliquer la théorie de Galois dans ce cas, notamment pour montrer le lien entre cette extension et le noyau de $\phi$
 
 
 \begin{The}
@@ -565,7 +579,39 @@ Le problème du calcul d'isogénie à partir de son noyau a donc toujours une so
 	
 \end{Prop}
 
+On dira que $\phi$ est une $l$-isogénie si elle est de degré $l$. 
 
+\begin{Prop}
+	Si $\phi$ est une $l$-isogénie, alors $Ker(\phi)\subset E\left[ l\right] $
+\end{Prop}
+
+\begin{proof}
+	Cela découle du fait que $\left[ l\right] = \hat{\phi}\circ\phi$.
+\end{proof}
+
+On en déduit le nombre exacte de $l$-isogénie séparable sur $E$ définie sur $\Kb$ :
+
+\begin{Prop}
+	Il existe exactement $l+1$ sous groupes d'ordre $l$ dans $\Z/l\Z\times\Z/l\Z$.
+\end{Prop}
+
+\begin{Coro}
+	Il existe exactement $l+1$ $l$-isogénie séparable sur $E$ définie sur $\Kb$
+\end{Coro}
+
+\begin{proof}
+	Soit $P$, $Q$ une base de $E\left[ l\right]$ comme $\Z/l\Z$ module.
+	
+	Pour tout $i\in\left[ 0 , l - 1\right] $, $P + iQ$ est d'ordre $l$ car $P$ et $Q$ le sont. 
+	
+	Puisque $P$, $Q$ forment une base, ces points engendres des groupes disjoints (à l'exception du neutre.) 
+	
+	On a donc trouvé $l + 1$ sous groupes d'ordre $l$ qui n'ont deux à deux que le neutre en commun. Ils sont constitués au total de $1 + (l+1)*(l - 1) = l^2$ points distincts
+	
+	Comme $E[l]$ est de cardinal $l^2$, on a trouvé exactement tout les sous groupes d'ordre $l$.
+	
+	Chacun d'eux défini exactement une isogénie séparable sur $E$.
+\end{proof}
 
 \subsection{Invariant différentiel et normalisation d'isogénie}
 
@@ -1380,7 +1426,82 @@ Ceci a un sens si $f_{m}$ n'est pas dans l'idéal de réduction $\PR$. Cependant
 
 \subsection{Structure du graphe d'isogénie}
 
-Structure de volcan, condition de l'algo et conséquences (thm de l'article). Normalisation d'isogénie
+Dans sa thèse, Kohel décrit la structure des graphes de $l$-isogénies, avec $l$ premier, comme des "volcans d'isogénies". Nous allons cités les résultats sur cette structure, en les admettant. 
+
+On distingue d'abord les isogénies "horizontales" et "verticales" :
+
+\begin{Def}
+	Soit $E$, $E'$ deux courbes elliptiques d'anneaux d'endomorphismes $O$ et $O'$.
+	
+	($O$ et $O'$ sont des ordres quadratiques imaginaires).
+	
+	Une isogénie séparable $\phi : E\rightarrow E'$ est dite horizontale si $O = O'$, verticale sinon.
+\end{Def}
+
+\begin{Prop}
+	Avec les notations précédentes, si $\phi$ est de degré $l$ premier, alors :
+	\begin{enumerate}
+		\item Soit $O = O'$ et $\phi$ est horizontale
+		\item Soit $O'\subset O$, $\left[ O : O' \right] = l$ et $\phi$ est "descendante"
+		\item Soit $O\subset O'$, $\left[ O' : O \right] = l$ et $\phi$ est "ascendante" 
+	\end{enumerate}
+\end{Prop}
+
+Puisque qu'une isogénie est déterminée par son noyau, une $l$-isogénie est déterminée par l'un des sous groupes d'ordre $l$ de $E$.
+
+On a vu que cela implique l'existence d'exactement $l+1$ $l$-isogénies sur $E$ définie sur $\Kb$.
+
+Si $E$ est définie sur $\F_{q}$, on souhaitera connaître celles définies sur $\F_{q}$. Il existe des critères sur $l$ donnant le nombre et les types de ces isogénies. Tout cela ne dépend que de $End(E)$ et $\F_{q}$.
+
+Dans la suite on reprend certaines notations de la section 6.2 : $f$ désigne le conducteur de $End(E)$, $\Delta$ son discriminant; et $f_{m}$ le conducteur maximal, dépendant de $\pi_{q}$.
+
+\begin{Prop}
+	
+	Avec les notations précédentes, soir $r = f_{m}/f$. On distingues les cas suivants :
+	
+	D'abord selon si $l$ est un nombre premier divisant $f$ :
+	
+	\begin{enumerate}
+		\item Si $l$ ne divise pas $f$, alors il existe exactement $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales définies sur $\F_{q}$.
+		\item Si $l$ divise $f$, il existe exactement une $l$-isogénie ascendante
+	\end{enumerate}
+	
+	Puis il existe en plus des isogénies descendantes selon si $l$ divise $r$ :
+	
+	\begin{enumerate}
+		\item Si $l$ ne divise pas $r$, il n'existe aucune $l$-isogénie supplémentaire définie sur $\F_{q}$
+		
+		\item Si $l$ divise $r$, toutes les $l$-isogénies sont définies sur $\F_{q}$. En plus des précédentes, les isogénies supplémentaires sont toutes descendantes.
+	\end{enumerate}
+	
+\end{Prop}
+
+Ainsi "$l$ divise $r$" est une "condition d'ascension", "$l$ divise $f_{m}/f$" est une "condition de descente" tandis que "$l$ ne divise pas $f$" est une "condition d'horizontalité". 
+
+Puisqu'il existe au plus une $l$-isogénie ascendante, toutes les isogénies descendantes ont pour images des courbes non-équivalentes. 
+
+Partant du "sommet" du graphe, c'est à dire $Ell(\OR_{\K})$, on a donc de plus en plus d'isogénie à chaque "niveau", jusque au niveau minimal $Ell(\Z\left[ \pi_{q}\right] )$. D'où le nom de "volcan de $l$-isogénies".
+
+\begin{Rem}
+	Pour tout nombre premier $l$ ne divisant pas $f_{m}$, il existe $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales, c'est à dire $0$, $1$ ou $2$, et aucune ascendante ni descendante.
+	
+	On peut faire le lien avec le comportement de $l$ dans $\OR_{\Delta}$. En effet $l$ est ici premier avec $f$, donc les idéaux de normes $l$ sont premier avec le conducteur, donc propre. Ainsi la théorie des groupes de torsions détaillés à la section 5.2. s'applique et on peut calculer des groupes de torsions à partir d'idéaux de norme $l$ :
+	
+	\begin{enumerate}
+		
+		\item Si $l$ est décomposé, $\left( \frac{\Delta}{l}\right) = 1$ et il existe $2$ $l$-isogénies horizontales
+		
+		On peut expliciter leurs noyaux : c'est les groupes de torsions des deux idéaux premiers factorisant $l\OR_{\Delta}$.
+		
+		\item Si $l$ est ramifié, $\left( \frac{\Delta}{l}\right) = 0$ et il existe $1$-isogénie horizontale
+		
+		Son noyau est le groupe de torsion de l'idéal premier dont le carré est $l\OR_{\Delta}$.
+		
+		\item Si $l$ est inerte, $\left( \frac{\Delta}{l}\right) = -1$. Il n'existe pas de $l$-isogénie défini sur $\F_{q}$, tout comme il n'existe pas d'idéaux premier de norme $l$.
+		
+	\end{enumerate}
+	
+\end{Rem}
 
 
 
@@ -1399,12 +1520,63 @@ Structure de volcan, condition de l'algo et conséquences (thm de l'article). No
 
 \section{Algorithme de Bröker, Charles et Lauter}
 
-Le problème étant désormais fixé, comment le résoudre ? On énonce d'abord une méthode générale, qui n'utilise pas la modélisation le l'anneau d’endomorphisme décrite précédemment. Cette méthode est exponentielle en $log(l)$ : elle n'est pas adaptée pour le calcul d'isogénies de grands degrés.
+\subsection{Enoncé et contexte}
 
-C'est exactement ce que l'on cherche à améliorer : On va utiliser tout ce qui précède pour ramener le calcul d'une isogénie de grand degré $l$ à un enchaînement de calculs d'isogénie de petits degrés. On décrira ainsi l’algorithme énoncé par Bröker, Charles et Lauter. 
+On souhaite utiliser la théorie précédente pur établir une procédure de calcul d'isogénie plus rapide que la méthode naïve donnée par la formule de Vélu.
 
-\subsection{Méthode générale de calculs d'isogénies}
-Structure des idéaux et conséquences, vélu. compléxité, sqrt(vélu)
+Plus précisément on suppose connaître :
+
+\begin{enumerate}
+	\item Une courbe elliptique $E$ ordinaire, donnée par une équation sur un corps $\F_{q}$
+	\item L'anneau d'endomorphisme $End(E)$ donné par son discriminant $\Delta$. On connaît donc l'extension quadratique $\K$ et le conducteur $f$
+	\item Un nombre premier $l$.
+\end{enumerate} 
+
+Et on cherche une courbe $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$. 
+
+De plus étant donné $n\in\N$, et $P$ un point de $E\left( \F_{q^{n}}\right)$ ou souhaite pouvoir calculer $\phi(P)$. 
+
+\begin{center}
+	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $f_{m}$} 
+\end{center}
+
+Cette condition nous oblige à éviter des nombres premiers. Elle a cependant plusieurs avantage :
+
+\begin{enumerate}
+	
+	\item Sous cette condition, toutes les $l$-isogénies séparables sont horizontales. On peut donc trouver leurs noyaux par groupe de torsion puis appliquer Vélu : la méthode naïve fonctionne en connaissant seulement $l$
+	
+	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de la taille de $l$ en bits : On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
+	
+	\item Si on suppose seulement $l$ ne divise pas $f$, on peut tout de même représenter les isogénies horizontales de cette manière mais pas les potentielles descendantes. Si $l$ ne divise pas $f_{m}$ on peut représenter toutes les $l$-isogénies existante.
+	
+	\item $f_{m}$ sera inversible modulo $l$, donc sur les éléments du noyau, qui sont inclus dans $E\left[ l\right] $, on pourra calculer une isogénie agissant comme $\left[ \frac{1}{f_{m}}\right] $ en calculant $\left[ f_{m}^{-1}\right] $. 
+	
+\end{enumerate}
+
+On s'intéresse d'abord à une procédure naïve à partir de la formule de Vélu est la suivante :
+
+\begin{enumerate}
+		
+		\item Factoriser $l\OR_{\Delta}$ avec le théorème de Kummer
+		\item A partir d'un des idéaux premier $\LR$ de norme $l$, calculer le groupe de torsion $E\left[ \LR\right]$ en explicitant un générateur.
+		\item Appliquer la formule de Vélu pour trouver $E'$, et calculer l'image de $P$. 
+
+\end{enumerate}
+
+Dans la section 7.2 on étudie comment appliquer efficacement la formule de Vélu, et la complexité obtenue. Ensuite on s'intéresse en 7.3 au calcul d'un générateur de $E\left[ \LR\right]$.
+
+On obtiendra une complexité en $l$ insatisfaisante. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes : l'idée est d'engendré $Cl(\OR_{\Delta})$ par des classes représenté par des idéaux de petites normes, puis factoriser $\CL$ dans cette famille génératrice. 
+
+On étudie cela dans la section 7.4. On obtiendra $\LR$ sous forme d'un produit de petit idéaux, mais à un idéal principal prêt. Il faudra trouver un générateur d'un idéal, ce que l'on étudiera en section 7.5.
+
+La procédure de Broker Charle Lauter sera énoncé en section 7.6, puis la compléxité sera étudié en section 7.7. L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
+
+\subsection{Algorithme SquareVélu}
+ compléxité, sqrt(vélu)
+
+
+
 
 \subsection{Générateur d'un groupe de torsion}
 Idée naïve, problème de l'extension coûteuse, solution ?
