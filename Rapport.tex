@@ -39,6 +39,7 @@
 \newcommand{\IR}[0]{\mathcal{I}}
 \newcommand{\HR}[0]{\mathcal{H}}
 \newcommand{\CL}[0]{\tilde{\LR}}
+\newcommand{\CP}[0]{\tilde{\PR}}
 \newcommand{\F}[0]{\mathbb{F}}
 \newcommand{\A}[0]{\mathbb{A}}
 \newtheorem{The}{Théorème}[section]
@@ -1250,9 +1251,11 @@ Ces résultats sont loin d'être évident et admis (voir Syl2). Comme il suffit 
 	Avec les notations précédentes, $ELL_{\C}(\OR_{\Delta})\simeq ELL_{\HR}(\OR_{\Delta})$
 \end{Coro}
 
-Soit $p$ premier non ramifié (donc inerte ou décomposé) dans $\OR_{\K}$. Alors $p$ n'est pas ramifié dans $\OR_{\HR}$. Soit $f$ son degré d'inertie ($f$ est bien défini car $\HR$ est une extension galoisienne de $\Q$). Soit $\PR$ un idéal premier de $\OR_{\HR}$. Alors $\OR_{\HR}/\PR\simeq\F_{q}$ avec $q = p^f$.
+Soit $p$ premier non ramifié (donc inerte ou décomposé) dans $\OR_{\K}$. Soit $\PR_{\K}$ un idéal premier contenant $p\OR_{\K}$. Alors $\PR_{\K}\OR_{\HR}$ est non ramifié dans $\OR_{\HR}$ (l'extension $\HR/\K$ est non-ramifié, cfCox  ou compléter section 2). 
 
-Cette réduction à l'avantage de se comporter parfaitement au niveau des isogénie :
+Soit $f$ le degré d'inertie de $p$ dans $\OR_{\HR}$ ($f$ est bien défini car $\HR$ est une extension galoisienne de $\Q$). Soit $\PR$ un idéal premier de $\OR_{\HR}$ contenant $\PR_{\K}\OR_{\HR}$ (et donc $p\OR_{\HR}$). 
+
+Alors $\OR_{\HR}/\PR\simeq\F_{q}$ avec $q = p^f$. Comme le corps de fraction de $\OR_{\HR}$ est $\HR$, on peut regarder la réduction de $E$ par $\PR$ :
 
 \begin{Def}
 	Soit $E$ une courbe elliptique défini sur $\Q[j]\subset\HR$ de $j$-invariant $j$.
@@ -1262,7 +1265,7 @@ Cette réduction à l'avantage de se comporter parfaitement au niveau des isogé
 	On note $\tilde{E}$ la réduction de $E$ modulo $\PR$. 
 \end{Def}
 
-Avec ces notations, $\tilde{E}$ est définie sur $\F_{q}$. Il reste à voir que l'on a un isomorphisme $End(E)\simeq End(\tilde{E})$ :
+Avec ces notations, $\tilde{E}$ est définie sur $\F_{q}$. Il reste à voir que l'on a un isomorphisme $End(E)\simeq End(\tilde{E})$. On peut montrer l'injectivité plus généralement au niveau des isogénies :
 
 \begin{Prop}
 	Soit $E_{1}$, $E_{2}$ deux courbes elliptiques de $ELL_{\HR}(\OR_{\Delta})$. 
@@ -1276,27 +1279,25 @@ Avec ces notations, $\tilde{E}$ est définie sur $\F_{q}$. Il reste à voir que 
 
 (voir SYl2 II 4)
 
-On peut montrer qu'avec certaine condition sur $p$ on a la surjectivité en plus :
+Pour $E_{1} = E_{2} = E$, on peut montrer la surjectivité quand $p$ est décomposé dans $\OR_{\K}$:
 
 \begin{The} (Lang, 13.12)
 	
-	Soit $E$ définie sur $\HR$, avec $End(E)\simeq\OR_{\Delta}$ de conducteur $f$.
+	Soit $E$ définie sur $\HR$, avec $End(E)$ de conducteur $f$. On note $f = p^r f_{0}$ où $p$ ne divise pas $f_{0}$ 
 	
-	Avec les notations précédents, si $p$ est ramifié ou inerte dans $\K$, alors $\tilde{E}$ n'est pas ordinaire. 
-	
-	Si $p$ est décomposé dans $\K$, on note $f = p^r f_{0}$ où $p$ ne divise pas $f_{0}$
-	
-	Alors $End(\tilde{E})$ est un ordre de $\K$ de conducteur $f_{0}$
+	Si $p$ est décomposé dans $\K$, alors $End(\tilde{E})$ est un ordre de $\K$ de conducteur $f_{0}$
 	
 	De plus si $p$ de divise pas $f$, $End(E)\simeq End(\tilde{E})$,
 	
 	et $End(E)\rightarrow End(\tilde{E})$, $\phi\mapsto\tilde{\phi}$ est un isomorphisme.
 	
+	Si $p$ est ramifié ou inerte dans $\K$, alors $\tilde{E}$ n'est pas ordinaire.
+	
 \end{The}
 
 Ainsi on choisira $p$ premier avec $f$ et décomposé dans $\K$. On pourra alors étudier $E$ sur $\F_{q}$ où $q$ dépend du degré d'inertie de $p$ dans $\HR$.
 
-On voudrait maintenant vérifier que $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. Ce qui précède permet de définir une injection, il nous manque la surjectivité.
+On voudrait maintenant vérifier que $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. S'il existe une réduction compatible avec tout les $j$-invariants, ce qui précède permet de définir une injection, il nous manque la surjectivité.
 
 On cite pour cela un théorème dû à Deuring:
 
@@ -1306,7 +1307,20 @@ On cite pour cela un théorème dû à Deuring:
 	Il existe une courbe $E$ définie sur un corps de nombre, munie d'un endomorphisme $\alpha$, telle qu'il existe une réduction définie précédemment donnant $\tilde{E}$ définie sur $\F_{q}$, et $\tilde{E}\simeq E_{0}$ avec $\tilde{\alpha} = \alpha_{0}$
 \end{The}
 
-Ainsi $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. On admet de plus que l'isomorphisme respecte l'action de $Cl(\OR_{\Delta})$.
+Ainsi $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. On admet de plus que l'isomorphisme respecte l'action de $Cl(\OR_{\Delta})$: On associe à un idéal $\LR\subset\OR_{\Delta}$ le sous groupe $\tilde{E}\left[ \LR\right] = \left\lbrace P\in\tilde{E}, \tilde{\alpha}(P) = 0 \;\forall\alpha\in\LR\right\rbrace $ qui est le noyau d'une certaine isogénie. 
+
+\begin{Prop}
+	Avec les notations précédentes, 
+	
+	Si $\phi$ a pour noyau $E\left[ \LR\right]$, alors $\tilde{E}\left[ \LR\right]$ est le noyau de $\tilde{\phi}$.
+\end{Prop}
+
+On admet alors que la réduction respecte l'action de $Cl(\OR_{\Delta})$.
+
+
+
+
+
 
 
 
@@ -1407,24 +1421,33 @@ Pour normaliser une courbe $E_0$ définie sur $\F_{q}$ donnée, on procède ains
 
 On applique d'abord le théorème de During qui nous donne $E$ défini sur un corps de nombre (donc sur $\C$) et $\alpha\in End(E)$ tels que sous une réduction par un idéal $\PR$, $\tilde{E} = E_{0}$ et $\tilde{\alpha} = \pi_{q}$.
 
-Alors $ End(E) = \OR_{\Delta} $ peut être normalisé par la méthode de la section 4 : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$. L'endomorphisme $\alpha$ a le même polynôme caractéristique que $\pi_{q}$ et peut donc être représenté par $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2} \in\OR_{\Delta}\subset\C$.
+Alors $ End(E) \simeq \OR_{\Delta} $ peut être normalisé par la méthode de la section 4 : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$. L'endomorphisme $\alpha$ a le même polynôme caractéristique que $\pi_{q}$ et peut donc être représenté par $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2} \in\OR_{\Delta}\subset\C$.
 
 Ainsi l'application 
 \begin{equation*}
 	\frac{x + y\pi_{q}}{f_{m}} \in \OR_{\Delta}\mapsto\ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] \in End(E)\mapsto \widetilde{\left[ \frac{x + y\pi_{q}}{f_{m}}\right]} \in End(\tilde{E})
 \end{equation*}  
 
-est bien définie, et en notant $\omega$ l'invariant différentiel de $E$, comme $\pi_{q}\in\PR$ :
+est bien définie.
+
+De plus si $\omega$ est l'invariant différentiel de $E$:
 
 \begin{equation*}
-	\widetilde{ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] } ^{*} (\omega) = \widetilde{\left( \frac{x}{f_{m}}\right)} \omega
+	\widetilde{ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] } ^{*} (\omega) = \widetilde{\left( \frac{x + y\alpha}{f_{m}}\right)} \omega,\;avec\;\widetilde{\left( \frac{x + y\alpha}{f_{m}}\right)} = \left( \frac{x + y\alpha}{f_{m}}\right)\left[ \PR\right] 
 \end{equation*}
 
-D'après le théorème de Kummer, $\PR$ étant un idéal contenant $p\OR_{\Delta}$, les entiers qu'il contient sont exactement les multiples de $p = N(\PR)$. Donc si $f_{m}$ est premier avec $p$ : $\widetilde{\left( \frac{x}{f_{m}}\right)} = xf_{m}^{-1} [p]$.
+De plus $\left( \frac{x + y\alpha}{f_{m}}\right)\OR_{\Delta}$ et $\PR\cap\OR_{\Delta} = \PR_{\K}\OR_{\Delta} = \PR_{\Delta}$ est un idéal de $\OR_{\Delta}$ de norme $p$. Ainsi :
 
-Cette dernière équation pourra servir à normaliser dès que $p$ ne divise pas $f_{m}$. Dans le cas contraire la réduction est quand même bien défini \textbf{(?)}. 
+\begin{equation*}
+	\widetilde{\left( \frac{x + y\alpha}{f_{m}}\right)} = \left( \frac{x + y\alpha}{f_{m}}\right)\left[ \PR\right] = \left( \frac{x + y\alpha}{f_{m}}\right)\left[ \PR_{\Delta}\right]
+\end{equation*}
 
-On peut remarquer que la condition du théorème $6.7$ pour que la réduction conserve l'anneau d'endomorphisme implique déjà que $p$ est premier avec $f$. 
+
+Un endomorphisme est alors inséparable si et seulement s'il s'écrit $\tilde{\beta}$ avec $\beta\in\PR_{\Delta}$. En particulier on doit avoir $\alpha\in\PR_{\Delta}$. (On l'admet puisqu'on a admis le théorème de Deuring).
+
+D'après le théorème de Kummer, $\PR$ étant un idéal contenant $p\OR_{\Delta}$, les entiers qu'il contient sont exactement les multiples de $p = N(\PR)$. Donc si $f_{m}$ est premier avec $p$ : $\widetilde{\left[ \frac{x}{f_{m}}\right]} = \left[ xf_{m}^{-1}\right]  [p]$.
+
+Cette dernière équation pourra servir à normaliser dès que $p$ ne divise pas $f_{m}$. On peut remarquer que la condition du théorème $6.7$ pour que la réduction conserve l'anneau d'endomorphisme implique déjà que $p$ est premier avec $f$. 
 
 
 
@@ -1598,29 +1621,43 @@ La procédure de Broker Charle Lauter sera énoncé en section 7.6, puis la comp
 
 
 \subsection{Factorisation dans le groupe de classes}
-Enoncé du problème, algo connue. Méthode de Jao
-algo de Mcurley Hafney
+
+On souhaite une procédure pour obtenir un système de représentant d'une famille génératrice de $Cl(\OR_{\Delta})$, puis pour exprimer $\CL$ dans cette famille.
+
+Il faut d'abord résoudre deux problème :
+\begin{enumerate}
+	\item Pour manipuler une classe de façon effective il faut définir un représentant normal, unique dans chaque classe
+	\item On voudra appliquer calculer des isogénie associée aux idéaux représentant les générateurs de $\CL$, il faut dont qu'il vérifie aussi les conditions fixées sur $l$ : On veut pouvoir choisir des représentants de normes premier bien choisies. 
+\end{enumerate}
+
+Un outil va nous permettre de résoudre les deux problèmes en même temps : les formes quadratiques à coefficient entier. 
 
 \subsubsection{Forme standard des idéaux et formes quadratiques binaires}
 
-On va étudier une correspondance entre des idéaux de $\OR$ et des formes quadratiques définie positive de discriminant $\Delta$. L'intérêt principal est l'application à l’implémentation du groupe de classe de $\OR$. 
+On va étudier une correspondance entre des idéaux de $\OR$ et des formes quadratiques définie positive de discriminant $\Delta$. Cela permettra de définir plusieurs outils pour l'implémentation :
+
+\begin{enumerate}
+	\item Un choix standard de générateur pour représenter un idéal donné.
+	\item Un choix normalisé d'idéal pour représenté une classe de $Cl(\OR_{\Delta})$.
+	\item Une méthode pour choisir un système de représentant des classes ayant des normes premier bien choisis.
+\end{enumerate}
+
+On commence par définir les formes qui nous intéresse :
 
 \begin{Def}
 	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique.
 	
-	$f$ est binaire si elle est définie positive et à coefficient dans $\Z$.
-	
-	Son discriminant est $\Delta = b^2 - 4ac$.
+	$f$ est binaire si elle est définie positive et à coefficient dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$.
 	
 	On notera $f = (a,b,c)$ pour désigner une forme quadratique binaire,
 	ou $f = (a,b)$ si le discriminant $\Delta$ est connu.  
 	
 	$f$ est dite primitive si $a,b,c$ son premier dans leur ensemble.
 	
-	$m\in\N$ est représenté par $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
+	Un entier $m\in\N$ est représenté par $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
 \end{Def}
 
-Dans la suite, on désigne un ordre $\OR$ de discriminant $\Delta$ par $\OR_{\Delta}$.
+On peut associer à une forme bien choisie un idéal propre de $\OR_{\Delta}$.
 
 \begin{Prop}
 	
@@ -1695,7 +1732,7 @@ On note $\CL$ la classe de $\LR$ dans $Cl(\OR_{\Delta})$. On cherche à trouver 
 
 La bijection précédente est un isomorphisme de groupe, et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. 
 
-Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être défini sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet : (CF Cox)
+Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être définie sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet : (CF Cox)
 
 \begin{Def}
 	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante :
@@ -1746,7 +1783,7 @@ La forme réduite vérifie de plus $a,|b| \leq \sqrt{|\Delta|}$. On peut donc re
 
 \subsubsection{Représentant de classe premier avec le conducteur}
 
-La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant par la suite se ramener à des idéaux toujours premier avec le conducteur, ce qui n'est pas garanti pour l'idéal réduit.
+La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant par la suite se ramener à des idéaux toujours premier avec le conducteur maximal, ce qui n'est pas garanti pour l'idéal réduit.
 
 On pourra cependant toujours s'adapter :
 
@@ -1754,7 +1791,7 @@ On pourra cependant toujours s'adapter :
 	$m\in\N$ est représenté par une forme quadratique binaire primitive si et seulement s'il existe $\LR\in Cl(I(f))$ tel que $N(\LR) = m$
 \end{Prop}
 
-La preuve de cette proposition n'est pas effective, cependant si $m$ est premier on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après l'étude précédente. 
+La preuve de cette proposition n'est pas effective, cependant si $m$ est premier on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après le théorème de Kummer. 
 
 \begin{Prop}
 	Soit $M\in\N$. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$.
@@ -1762,9 +1799,9 @@ La preuve de cette proposition n'est pas effective, cependant si $m$ est premier
 	Ainsi toutes classes d'idéaux possède un idéal premier avec $M$
 \end{Prop}
 
-Ainsi on peut toujours se ramener à des représentant de classe premier avec le conducteur. 
+Ainsi on peut toujours se ramener à des représentant de classe premier avec le conducteur maximal. 
 
-Pour rendre cela effectif, on va fixer une convention sur les idéaux de normes $p$ premier décomposé:
+Comme il y a deux choix d'idéaux de norme $m$ lorsque $m$ est décomposé, on va fixer une convention nous permettant de choisir. Cette convention sera aussi utile pour le problème de factorisation.
 
 \begin{Def}
 	Soit $p$ premier décomposé dans $\OR_{\Delta}$. 
@@ -1774,7 +1811,132 @@ Pour rendre cela effectif, on va fixer une convention sur les idéaux de normes 
 	L'idéal de Seysen associé à $p$ est alors $I_{p} = I((p,b))$. En particulier $N(I_{p}) = p$
 \end{Def}
 
-$I_{p}$ est donc l'un des deux idéaux de la factorisation de $p\OR_{\Delta}$. Le choix de l'idéal de Seysen aura plusieurs avantage lors de l'implémentation
+L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b))$ est le second, et représente la classe de $(I((p,b)))^{-1}$ d'après la proposition 7.6.
+
+
+\begin{Rem}
+	Représenter un idéal $\LR$ sous la forme théorique de l'idéal de Kummer dépend d'une racine de $\Delta$ modulo $p$. Cependant la représentation de Seysen dépend d'un choix de racine de $\Delta$ modulo $4p$. 
+	
+	Traduire une représentation en une autre n'est donc pas trivial et il est plus simple de trouver directement les racines voulues plutôt que les déduire de la forme connue. 
+	
+	L'intérêt des représentations de Seysen est qu'il est plus utile de connaître une racine modulo $4p$ que modulo $p$, comme nous le verrons plus tard.
+\end{Rem}
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Famille génératrice du groupe de classe}
+
+On veut former une famille génératrice de $Cl(\OR_{\Delta})$ composé uniquement de forme de Seysen de norme $m$ adapté au calcul d'isogénie, c'est à dire $m$ différent de $p$ et ne divisant pas $f_{m}$.
+
+Une idée naïve est d'établir la liste croissante des nombres premier acceptable plus petit qu'une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir au moins un représentant de chaque classe parmi les idéaux de Seysen associés.
+
+\begin{Def}
+	On note $P_{N} = \left\lbrace I_{p} \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des $N$ premiers idéaux de Seysen. 
+\end{Def}
+
+La proposition suivante est un des arguments clef permettant d'obtenir un algorithme sous exponentielle en $|\Delta|$ : (citer article Seysen thm3.3)
+
+\begin{Prop}
+	Sous l'hypothèse de Riemann généralisée, il existe une constante $C$ telle que $Cl(\OR_{\Delta})$ soit engendré par les classes des éléments de $P_{N}$, avec 
+	\begin{equation*}
+		N = C\times \log(\Delta)^{2}
+	\end{equation*}
+\end{Prop}
+
+Comme les nombres premiers à éviter ($p$ et les diviseurs premiers de $f_{m}$) sont en nombre fini, Les conditions supplémentaires que l'on s'impose ne change pas le comportement asymptotique de la borne $N$. 
+
+En pratique, Seysen cite deux résultats proposant $C= 280$ ou même $C = 2$.
+
+\begin{Rem}
+	Dans l'article de Jao, Soukharev, une borne sous exponentielle est proposé par analyse-synthèse, et n'admet pas l’hypothèse de Riemann généralisée. Nous reverrons cela dans la section 7.7.
+\end{Rem}
+
+On peut donc appliquer la procédure naïve. En pratique on pose $N = 2\times \log(\Delta)^{2}$ en supposant $C = 2$ n'est pas optimal et que la marge d'erreur dû aux premiers ignorés ne pose pas de problème. 
+
+L'algorithme renvoie :
+
+\begin{enumerate}
+	\item Une liste $L_{id}$ égale à $P_{N}$ privés de certains éléments,
+	\item La liste $L_{pi}$ des normes $p_{i}$ des éléments de $L_id$,
+	\item la liste $L_{fi}$ des formes de Seysen associées.
+\end{enumerate}
+(les trois étant calculés simultanément).
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Écriture d'une classe dans une famille génératrice}
+
+
+Après avoir appliqué ce qui précède, on se donne un idéal $\LR$. Alors 
+
+
+\begin{equation*}
+	\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{g}^{e_{g}}
+\end{equation*}
+
+avec $\PR_{i}$ décrivant la liste des représentants de notre famille génératrice.  Ainsi, 
+
+\begin{equation*}
+	\LR = (\alpha\OR_{\Delta})\PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
+\end{equation*}
+
+avec $\alpha\in\K$, autrement dit $(\alpha\OR_{\Delta})$ est un idéal fractionnaire principal.
+
+Dans cette section on ne cherche pas $\alpha$ mais seulement une liste de $\PR_{i}$ et d'exposant $e_{i}$ fournissant une factorisation de $\CL$.
+
+Une idée naïve consiste à chercher une factorisation au hasard. Deux faits vont permettre de rendre cette idée effective :
+
+\begin{enumerate}
+	\item Certaines classes représentés par des formes réduites aux bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
+	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités de terminer en un temps sous-exponentiel.
+\end{enumerate}
+
+
+D'abord on cite le théorème de Seysen sur la factorisation :
+
+\begin{The}
+	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ est une forme réduite $(a,b)$.
+	Si $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la factorisation de $a$, alors
+	
+	\begin{enumerate}
+		\item $p_{i}$ est décomposé dans $\OR_{\Delta}$
+		\item Si $I_{p_{i}} = (1,p_{i},b_{i})$, alors $b = \pm b_{i} [2a]$
+		\item $\CL = \CP_{1}^{\pm e_{1}}\CP_{2}^{\pm e_{2}}\ldots\CP_{g}^{\pm e_{g}}$ où $\PR_{i}$ est l'idéal de Seysen de $p_{i}$
+		\item L'exposant de $\PR_{i}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$
+	\end{enumerate}
+\end{The}
+
+\begin{Coro}
+	Avec les notations précédentes, si $a$ se factorise entièrement avec des premiers $p_{i}$ de $L_{pi}$, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
+\end{Coro}
+
+Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se ramener au cas de Seysen. On procède par marche aléatoire :
+
+\begin{enumerate}
+	\item On choisit une liste au hasard d'exposants $x_{i}$ pour chaque éléments de $L_{id}$.
+	\item On calcule $\CL*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{g}^{x_{g}}$.
+	\item On calcule la forme réduite de la classe obtenue.
+	\item Si on tombe sur un cas de Seysen, on déduit une factorisation de $\CL$.
+	\item On recommence avec d'autres exposants $x_{i}$.
+\end{enumerate}
+
+Complexité ? borne exposant ? borne du nombre d'exposant ?
+
 
 
 
