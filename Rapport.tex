@@ -1935,11 +1935,46 @@ Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se 
 	\item On recommence avec d'autres exposants $x_{i}$.
 \end{enumerate}
 
-Complexité ? borne exposant ? borne du nombre d'exposant ?
+Les bonnes propriétés des marches aléatoires sur les groupes de classe rendent cette procédure envisageable. Sans rappler la théorie des graphes expanseurs (voir cours Biasse), on cite le résultat principal :
 
+\begin{Def}
+	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
+	
+	\begin{enumerate}
+		\item Les sommets sont associés chacun à un élément de G
+		\item Une arêtes relie deux sommets associés à $g$ et $g'$ si et seulement s'il existe $s\in S$ tel que $g = sg'$
+	\end{enumerate}
+	
+	(S est supposé stable par inverse pour que le graphe ne soit pas orienté)
+\end{Def}
 
+\begin{Prop}
+	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{id}\cup (L_{id})^{-1}$. 
+	
+	On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque.
+	
+	Si $t$ est en $O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})$,
+	
+	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité $\frac{S_{0}}{2|G|}$
+	
+\end{Prop}
 
+Concrètement, dès que l'on enchaîne des marches aléatoires sont de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\Delta)$
 
+Puisque le groupe est abélien, le nombre $t$ correspond à la somme des valeurs absolue des exposants, c'est à dire la norme $l1$ du vecteurs des exposants, que l'on notera $x$
+
+\begin{Coro}
+	On peut choisir des exposants aléatoire parmi les vecteurs $x$ tels que 
+	
+	$\left\| x\right\| _{1} \leq C\times\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$
+	
+\end{Coro}
+
+On peut par exemple choisir de borner par $\log(|\Delta|)$ (voir Biasse cours 6), pour une majoration large mais raisonnable. 
+
+Jao propose une majoration différente \textbf{Faire la comparaison}
+
+La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
 
 
 \subsection{Algorithme SquareVélu}
@@ -2041,8 +2076,89 @@ On sait donc directement dans quelle extension chercher les générateurs des no
 
 On calcule l'ordre $r$ de $-c$ dans $\F_{l}^{*}$. Si les deux ordres sont différents, $E(\F_{q^r})$ ne contient pas toutes la $l$ torsion. En prenant un point $P$ au hasard dans $E(\F_{q^r})$ de cardinal $n$, $(n/l)P$ sera sûrement non nul et d'ordre $l$, et on peut tester s'il est générateur du noyaux en testant s'il est vecteurs propre pour $-c$. 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 \subsection{Problème de l'Idéal Principal}
-Enoncé du problème, cas quadratique et Cornacchia
+
+Dans cette partie, on suppose connaître une factorisation de $\CL$:
+
+\begin{equation*}
+	\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{g}^{e_{g}}
+\end{equation*}
+
+Avec $\PR_{i}$ des idéaux de Seysen de normes $p_{i}$ diférent de $p$ et ne divisant pas $f_{m}$.
+
+On cherche $\alpha\in\K$ tel que 
+
+\begin{equation*}
+	\LR = (\alpha\OR_{\Delta})\PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
+\end{equation*}
+
+On commence par se ramener à chercher un élément de $\OR_{\Delta}$ : Comme $\PR_{i} = I_{p_{i}} = (p_{i},b_{i})$, la forme $(p_{i},-b_{i})$ représente $\CP_{i}^{-1}$. Ainsi si $\bar{\PR_{i}} = I((p_{i},-b_{i}))$,
+
+\begin{equation*}
+	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \beta\OR_{\Delta}
+\end{equation*}
+
+où $\beta\OR_{\HR}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
+
+\begin{Prop}
+	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$.
+	
+	Alors $\alpha = \beta/m$.
+\end{Prop}
+
+On va plutôt chercher $\beta$. On utilise les opérations sur les formes quadratiques, donc la donnée du problème est la forme standard de $\beta\OR_{\Delta}$. L'idéal n'est pas à priori primitif, mais il suffit de trouver un générateur de l'idéal primitif associé. 
+
+On se ramène donc au problème suivant : étant donné un idéal principal primitif $(1,a,b)$, trouver un générateur $\beta$.
+
+Connaître $a$ donne immédiatement la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y$ entiers.
+	
+\begin{Prop}
+	Trouver $\beta$ est équivalent à résoudre l'équation $x^2 + y^2|\Delta| = 4a$ et à vérifier que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$
+\end{Prop}
+
+\begin{proof}
+	$\frac{x + y \sqrt{\Delta}}{2}$ est de norme $a$ si et seulement si $x^2 + y^2|\Delta| = 4a$.
+	
+	On veut donc montrer que $\beta\in (1,a,b)$ est un générateur si et seulement s'il est de norme $a$. C'est une conséquence de la multiplicativité de la norme. 
+\end{proof}
+
+L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique :
+
+\begin{Prop}
+	(Cornacchia)
+	
+	$x^2 + y^2|\Delta| = 4a$ admet une unique solution au signe prêt de $x$ et $y$. 
+	
+	Si l'on connaît tout les $s$ tel que $0 < s < 2a$ et $s^2 = \Delta [4a]$, l'algorithme de Cornacchia fourni la solution à l'équation
+	
+\end{Prop}
+
+Détailler cornacchia, lien avec $b$, notion de "bonne racine", et stabilité des étape de cornacchia dans $(1,a,b)$ ?
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Application au calcul d'isogénie}
 Idée générale, suivi de l'algo et énoncé
