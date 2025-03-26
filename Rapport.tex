@@ -1627,7 +1627,7 @@ On souhaite une procédure pour obtenir un système de représentant d'une famil
 Il faut d'abord résoudre deux problème :
 \begin{enumerate}
 	\item Pour manipuler une classe de façon effective il faut définir un représentant normal, unique dans chaque classe
-	\item On voudra appliquer calculer des isogénie associée aux idéaux représentant les générateurs de $\CL$, il faut dont qu'il vérifie aussi les conditions fixées sur $l$ : On veut pouvoir choisir des représentants de normes premier bien choisies. 
+	\item On voudra calculer des isogénie associée aux idéaux représentant les générateurs de $\CL$, il faut dont que leurs normes vérifient les mêmes conditions fixées sur $l$ : On veut pouvoir choisir des représentants de normes premier bien choisies. 
 \end{enumerate}
 
 Un outil va nous permettre de résoudre les deux problèmes en même temps : les formes quadratiques à coefficient entier. 
@@ -1663,7 +1663,7 @@ On peut associer à une forme bien choisie un idéal propre de $\OR_{\Delta}$.
 	
 	Soit $f = (a,b)$ binaire primitive de discriminant $\Delta$. L'application :
 	\begin{equation*}
-		I : (a,b)\mapsto\left[ a, \frac{b + \sqrt{\Delta}}{2}\right] 
+		I : (a,b)\mapsto\left[ a, \frac{-b + \sqrt{\Delta}}{2}\right] 
 	\end{equation*}
 	
 	associe à $f$ un idéal propre de $\OR_{\Delta}$.
@@ -1679,7 +1679,7 @@ Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les
 	Tout idéal $\LR\subset\OR_{\Delta}$ s'écrit 
 	
 	\begin{equation*}
-		\LR = m\left[ a , \frac{b + \sqrt{\Delta}}{2}\right] 
+		\LR = m\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right] 
 	\end{equation*}
 	
 	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux.
@@ -1783,9 +1783,9 @@ La forme réduite vérifie de plus $a,|b| \leq \sqrt{|\Delta|}$. On peut donc re
 
 \subsubsection{Représentant de classe premier avec le conducteur}
 
-La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant par la suite se ramener à des idéaux toujours premier avec le conducteur maximal, ce qui n'est pas garanti pour l'idéal réduit.
+La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant se ramener à des idéaux toujours premier avec le conducteur maximal, ce qui n'est pas garanti pour l'idéal réduit.
 
-On pourra cependant toujours s'adapter :
+On pourra toujours s'adapter :
 
 \begin{Prop}
 	$m\in\N$ est représenté par une forme quadratique binaire primitive si et seulement s'il existe $\LR\in Cl(I(f))$ tel que $N(\LR) = m$
@@ -1806,7 +1806,7 @@ Comme il y a deux choix d'idéaux de norme $m$ lorsque $m$ est décomposé, on v
 \begin{Def}
 	Soit $p$ premier décomposé dans $\OR_{\Delta}$. 
 	
-	La forme de Seysen de discriminant $\Delta$ associé à $p$ est $(p,b)$ où $b\in\N$ est le plus petit entier positif tel que $b^2 = \Delta [4p]$
+	La forme de Seysen de discriminant $\Delta$ associée à $p$ est $(p,b)$ où $b\in\N$ est le plus petit entier positif tel que $b^2 = \Delta [4p]$
 	
 	L'idéal de Seysen associé à $p$ est alors $I_{p} = I((p,b))$. En particulier $N(I_{p}) = p$
 \end{Def}
@@ -1817,9 +1817,9 @@ L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\
 \begin{Rem}
 	Représenter un idéal $\LR$ sous la forme théorique de l'idéal de Kummer dépend d'une racine de $\Delta$ modulo $p$. Cependant la représentation de Seysen dépend d'un choix de racine de $\Delta$ modulo $4p$. 
 	
-	Traduire une représentation en une autre n'est donc pas trivial et il est plus simple de trouver directement les racines voulues plutôt que les déduire de la forme connue. 
+	Traduire une représentation en une autre n'est donc pas trivial, et il est plus simple de trouver directement les racines voulues plutôt que les déduire de la forme connue. 
 	
-	L'intérêt des représentations de Seysen est qu'il est plus utile de connaître une racine modulo $4p$ que modulo $p$, comme nous le verrons plus tard.
+	Un intérêt des représentations de Seysen est qu'il est plus utile de connaître une racine modulo $4p$ que modulo $p$ pour l’algorithme de Cornacchia que nous verrons à la section 7.5.
 \end{Rem}
 
 
@@ -1852,15 +1852,12 @@ La proposition suivante est un des arguments clef permettant d'obtenir un algori
 
 Comme les nombres premiers à éviter ($p$ et les diviseurs premiers de $f_{m}$) sont en nombre fini, Les conditions supplémentaires que l'on s'impose ne change pas le comportement asymptotique de la borne $N$. 
 
-En pratique, Seysen cite deux résultats proposant $C= 280$ ou même $C = 2$.
+Pour estimer la borne, Seysen cite deux résultats proposant $C= 280$ ou même $C = 2$. Cohen proposait $C = 6$. Cependant d'après Cohen, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
 
-\begin{Rem}
-	Dans l'article de Jao, Soukharev, une borne sous exponentielle est proposé par analyse-synthèse, et n'admet pas l’hypothèse de Riemann généralisée. Nous reverrons cela dans la section 7.7.
-\end{Rem}
 
-On peut donc appliquer la procédure naïve. En pratique on pose $N = 2\times \log(\Delta)^{2}$ en supposant $C = 2$ n'est pas optimal et que la marge d'erreur dû aux premiers ignorés ne pose pas de problème. 
+Cohen, ainsi que Jao, Soukharev, propose en plus une borne sous exponentielle optimisée par analyse synthèse, et qui n'admet pas l’hypothèse de Riemann généralisée. Elle dépend de l'optimisation et vise à optimiser la complexité de la factorisation d'un idéal. Nous reviendront donc sur l'ordre de grandeur de $N$ par la suite.
 
-L'algorithme renvoie :
+Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la procédure naïve. En pratique l'algorithme renvoie :
 
 \begin{enumerate}
 	\item Une liste $L_{id}$ égale à $P_{N}$ privés de certains éléments,
@@ -1899,11 +1896,11 @@ avec $\alpha\in\K$, autrement dit $(\alpha\OR_{\Delta})$ est un idéal fractionn
 
 Dans cette section on ne cherche pas $\alpha$ mais seulement une liste de $\PR_{i}$ et d'exposant $e_{i}$ fournissant une factorisation de $\CL$.
 
-Une idée naïve consiste à chercher une factorisation au hasard. Deux faits vont permettre de rendre cette idée effective :
+Une idée naïve consiste à chercher une factorisation au hasard. Deux faits vont permettre de rendre cela effectif :
 
 \begin{enumerate}
-	\item Certaines classes représentés par des formes réduites aux bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
-	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités de terminer en un temps sous-exponentiel.
+	\item Certaines classes représentées par des formes réduites aux bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
+	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités d'arriver en un temps sous-exponentiel à une classe facilement factorisable.
 \end{enumerate}
 
 
@@ -1925,6 +1922,8 @@ D'abord on cite le théorème de Seysen sur la factorisation :
 	Avec les notations précédentes, si $a$ se factorise entièrement avec des premiers $p_{i}$ de $L_{pi}$, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
 \end{Coro}
 
+Dans les formes réduites, on sait que $a < |\Delta|$. Factoriser $a$ est donc au pire des cas sous-exponentielle en $\log(a) \leq \log(|\Delta|)$
+
 Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se ramener au cas de Seysen. On procède par marche aléatoire :
 
 \begin{enumerate}
@@ -1935,7 +1934,7 @@ Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se 
 	\item On recommence avec d'autres exposants $x_{i}$.
 \end{enumerate}
 
-Les bonnes propriétés des marches aléatoires sur les groupes de classe rendent cette procédure envisageable. Sans rappler la théorie des graphes expanseurs (voir cours Biasse), on cite le résultat principal :
+Les bonnes propriétés des marches aléatoires sur les groupes de classe rendent cette procédure envisageable. Sans rappeler la théorie des graphes expanseurs (voir cours Biasse), on cite le résultat principal :
 
 \begin{Def}
 	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
@@ -1956,10 +1955,9 @@ Les bonnes propriétés des marches aléatoires sur les groupes de classe renden
 	Si $t$ est en $O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})$,
 	
 	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité $\frac{S_{0}}{2|G|}$
-	
 \end{Prop}
 
-Concrètement, dès que l'on enchaîne des marches aléatoires sont de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\Delta)$
+Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\Delta)$
 
 Puisque le groupe est abélien, le nombre $t$ correspond à la somme des valeurs absolue des exposants, c'est à dire la norme $l1$ du vecteurs des exposants, que l'on notera $x$
 
@@ -1967,10 +1965,39 @@ Puisque le groupe est abélien, le nombre $t$ correspond à la somme des valeurs
 	On peut choisir des exposants aléatoire parmi les vecteurs $x$ tels que 
 	
 	$\left\| x\right\| _{1} \leq C\times\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$
-	
 \end{Coro}
 
 On peut par exemple choisir de borner par $\log(|\Delta|)$ (voir Biasse cours 6), pour une majoration large mais raisonnable. 
+
+on revient sur la borne $N$ des nombres premiers utilisés.
+
+\begin{Def}
+	On défini la complexité sous exponentielle en $\Delta$ par la fonction
+	
+	$L(x) = e^{\sqrt{\log(x)\log(\log(x))}}$
+	
+	On dira qu'une procédure est sous-exponentielle en $\Delta$ s'il existe une constante $z$ telle que la complexité soit en $O(L(|\Delta|))^{z}$
+\end{Def}
+
+Si $N$ est trop petit, l'ensemble $S_{0}$ est plus petit et il est plus difficile d'y arriver. Mais si $N$ est trop grand, il est plus difficile de vérifier si $a$ se factorise entièrement sur $L_{p_{i}}$
+
+\begin{Prop}(Cohen, Jao, soukharev)
+	
+	Il existe une constante $z$ tel que choisir $N$ de l'ordre de $O(L(|\Delta|))^{z}$ optimise la complexité de l'algorithme
+	
+\end{Prop}
+
+La constante $z$ dépend de l'implémentation. Cohen la calcul pour un algorithme visant à expliciter la structure complète du groupe de classe : on a pas besoin de cette structure, mais seulement d'une relation factorisant $\LR$.
+
+Jao de son côté trouve une constante pour la procédure qui nous intéresse, mais majore différemment les exposants : au lieu de majorer la norme $l_{1}$, il impose une borne à chaque exposant et une borne sur le nombre d'exposant non nul. 
+
+Même si la borne théorique admettant l'hypothèse de Riemann généralisé est asymptotiquement meilleure, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite (Cf Cohen). 
+
+
+
+
+
+
 
 Jao propose une majoration différente \textbf{Faire la comparaison}
 
@@ -2138,15 +2165,68 @@ Connaître $a$ donne immédiatement la norme de $\beta$. On sait que $\beta = \f
 L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique :
 
 \begin{Prop}
+	
 	(Cornacchia)
+	
+	On suppose $4a$ et $\Delta$ premier entre eux.
 	
 	$x^2 + y^2|\Delta| = 4a$ admet une unique solution au signe prêt de $x$ et $y$. 
 	
-	Si l'on connaît tout les $s$ tel que $0 < s < 2a$ et $s^2 = \Delta [4a]$, l'algorithme de Cornacchia fourni la solution à l'équation
+	Si l'on connaît toutes les $s$ tel que $0 < s < 2a$ et $s^2 = \Delta [4a]$, l'algorithme de Cornacchia fourni la solution à l'équation
+	
+	\begin{enumerate}
+		\item On applique l'algorithme d'Euclide à $4a$ et $s$
+		\item On s'arrête au premier reste $r$ tel que $r < 2\sqrt(a)$
+		\item On pose $x = r$ et $y = \sqrt{\frac{4a - s^2}{|\Delta|}}$
+		\item Alors pour un certain $s$, $y$ est entier et $x$, $y$ fourni une solution.
+	\end{enumerate}
 	
 \end{Prop}
 
-Détailler cornacchia, lien avec $b$, notion de "bonne racine", et stabilité des étape de cornacchia dans $(1,a,b)$ ?
+L'idée est de prendre $-b$ comme racine. En effet la forme quadratique $ax^2 + bxy + cy^2$ ayant pour discriminant $\Delta$, $-b$ est bien une racine de $\Delta$ modulo $4a$. De plus $-a<b\leq a$ par définition de la forme standard. 
+
+\begin{Prop}
+	En appliquant l'algorithme de Cornacchia à $-b$ si $-b >0$, $-b + 2a$ sinon, on trouve $x$, $y$ tels que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$ soit de norme $a$.
+	
+	Ainsi $\beta = \frac{x + y \sqrt{\Delta}}{2}$ convient.
+\end{Prop}
+
+\begin{proof}
+	
+	On admettra une étape de la preuve. On démontre que l'algorithme de Cornacchia fonctionne sur notre exemple. 
+	
+	Si $-b >0$, on applique l'algorithme d'Euclide entre $4a$ et $-b$. Sinon, on l'applique à $-b + 2a$ qui est aussi une racine de $\Delta$ modulo $4a$. On traite le cas où $-b > 0$.
+	
+	Chaque reste $r$ obtenue au cours de l'algorithme s'écrit $r = 4at - bs$ avec $b$ et $s$ entiers.
+	
+	En particulier $r^2 = b^2s^2 [4a]$
+	
+	Soit $Y_{r} = \frac{4a - r^2}{|\Delta|}$. Tant que $r > 2\sqrt{a}$, $Y_{r} < 0$. Soit $r$ le premier reste obtenue tel que $r \leq 2\sqrt{a}$
+	
+	Alors $Y_{r} = \frac{|\Delta|s^2 + 4ak}{|\Delta|} \geq 0$ pour un certain entier $k$.
+	
+	On admet que, partant de $-b$ et pour un reste $r$ maximal tel que $r \leq 2\sqrt{a}$, on a $k = 0$. 
+	
+	Alors $Y_{r} = s^2$
+	
+	Soit $x = r$ et $y = s$. Puisque $Y_{r} = s^2$, $x$ et $y$ sont solutions de l'équation $x^2 + y^2|\Delta| = 4a$.
+	
+	De plus $\frac{x + y \sqrt{\Delta}}{2} = \frac{4at - by + y\sqrt{\Delta}}{2} = 2ta + y\dfrac{-b + \sqrt{\Delta}}{2}$
+	
+	Donc $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$.
+	
+	Partant de $-b + 2a$, on aboutit en admettant le même résultat intermédiaire.
+	
+\end{proof}
+
+Dans leurs articles, Jao et Soukharev affirment sans démonstration le résultat intermédiaire. Ils admettent aussi que la condition "$4a$ et $\Delta$ sont premier entre eux" sera respecté. (la condition n'est pas citée).
+
+ On dira que $-b$ est une "bonne racine" si cette assertion est vrai i.e si l'algorithme de Cornacchia aboutit à une solution en partant de $-b$. 
+
+\begin{Prop}
+	En admettant que $-b$ (ou $-b + 2a$) est une bonne racine, et que $4a$ est premier avec $\Delta$,
+	 à partir de l'idéal $\beta\OR_{\Delta}$, on trouve un générateur $\beta$ en $O(log(N(\beta\OR_{\Delta})))$
+\end{Prop}
 
 
 
