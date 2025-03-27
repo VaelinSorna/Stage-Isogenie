@@ -749,7 +749,7 @@ Si $G$ est un sous groupe fini de $E$, on peut alors fixer l'image $E'$ d'une is
 
 Soit $E$ une courbe elliptique définie sur un corps $\K$. Il n'existe que $3$ structure possible pour son anneaux d'endomorphisme, que l'on énonce sans démonstration (Cela est dû entre autre à l'existence de l'isogénie duale)
 
-\begin{The}
+\begin{The}\cite[Chapitre 3 proposition 7]{Sil09}
 	$End(E)$ est isomorphe à l'une de ces trois structures : $\Z$, un ordre quadratique imaginaire ou un ordre dans une algèbre de quaternions.
 	
 	Si $car(\K) = 0$, seuls les deux premiers cas sont possibles.
@@ -1212,9 +1212,7 @@ Dans toute la suite, $\F$ désigne un corps fini de caractéristique différente
 
 \begin{Def}
 	Une courbe elliptique définie sur $\F$ est dite ordinaire si son anneaux d'endomorphisme est un ordre dans un corps quadratique imaginaire. 
-	
 	Pour tout corps $\K$, on note $ELL_{\K}(\OR_{\Delta})$ l'ensemble des classe d'équivalences sur $\Kb$ de courbes elliptiques d'anneaux d'endomorphisme $\OR_{\Delta}$.
-	
 	On notera ainsi $ELL_{\C}(\OR_{\Delta})$ l'ensemble précédemment noté $ELL(\OR_{\Delta})$ sur $\C$. 
 \end{Def}
 
@@ -1586,9 +1584,9 @@ Cette condition nous oblige à éviter des nombres premiers. Elle a cependant pl
 	
 	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de la taille de $l$ en bits : On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
 	
-	\item Si on suppose seulement $l$ ne divise pas $f$, on peut tout de même représenter les isogénies horizontales de cette manière mais pas les potentielles descendantes. Si $l$ ne divise pas $f_{m}$ on peut représenter toutes les $l$-isogénies existante.
+	\item Si on suppose seulement $l$ ne divise pas $f$, on peut tout de même représenter les isogénies horizontales de cette manière mais pas les potentielles descendantes. Si $l$ ne divise pas $f_{m}$ on peut représenter toutes les $l$-isogénies définies sur $\F_{q}$.
 	
-	\item $f_{m}$ sera inversible modulo $l$, donc sur les éléments du noyau, qui sont inclus dans $E\left[ l\right] $, on pourra calculer une isogénie agissant comme $\left[ \frac{1}{f_{m}}\right] $ en calculant $\left[ f_{m}^{-1}\right] $. 
+	\item $f_{m}$ sera inversible modulo $l$, donc sur les éléments du noyau, qui sont inclus dans $E\left[ l\right] $, on pourra calculer une isogénie agissant comme "$\left[ \frac{1}{f_{m}}\right] $" en calculant $\left[ f_{m}^{-1}\right] $. 
 	
 \end{enumerate}
 
@@ -1602,11 +1600,11 @@ On déduit une procédure naïve à partir de la formule de Vélu :
 
 \end{enumerate}
 
-Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes : l'idée est d'engendré $Cl(\OR_{\Delta})$ par des classes représenté par des idéaux de petites normes, puis factoriser $\CL$ dans cette famille génératrice.
+Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes : l'idée est d'engendrer $Cl(\OR_{\Delta})$ par des classes représentées par des idéaux de petites normes, puis factoriser $\CL$ dans cette famille génératrice.
 
 On a donc besoin d'outil pour manipuler $Cl(\OR_{\Delta})$ : on étudie cela dans la section 7.2. On utilise des formes quadratiques pour manipuler les idéaux, et l'on applique cela au problème de factorisation.
 
-On obtiendra $\LR$ sous forme d'un produit de petit idéaux, mais à un idéal principal prêt. Il faudra trouver un générateur d'un idéal, ce que l'on étudiera en section 7.5.
+On obtiendra $\LR$ sous forme d'un produit de petit idéaux, mais à un idéal fractionnaire principal prêt. Il faudra trouver un générateur d'un idéal principal, ce que l'on étudiera en section 7.5.
 
 On aura tout de même besoin de la formule de Vélu: Dans la section 7.3 on étudie comment l'appliquer efficacement, et on analyse la complexité obtenue. 
 
