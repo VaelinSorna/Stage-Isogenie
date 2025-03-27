@@ -23,6 +23,7 @@
 \usepackage{mathtools}
 \usepackage{mathrsfs}
 \usepackage[backend=biber, style=alphabetic]{biblatex}
+
 \addbibresource{biblio.bib}
 
 
@@ -42,13 +43,19 @@
 \newcommand{\CP}[0]{\tilde{\PR}}
 \newcommand{\F}[0]{\mathbb{F}}
 \newcommand{\A}[0]{\mathbb{A}}
+
 \newtheorem{The}{Théorème}[section]
 \newtheorem{Prop}[The]{Proposition}
-\newtheorem{Prod}[The]{Proposition-Définition}
-\newtheorem{Def}[The]{Définition}
 \newtheorem{Coro}[The]{Corollaire}
-\newtheorem{Rem}[The]{Remarque}
-\newtheorem{Ex}[The]{Exemple}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}[section]
+\newtheorem{Def}[definition]{Définition}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remarque}[section]
+\newtheorem{Rem}[remark]{Remarque}
+\newtheorem{Ex}[remark]{Exemple}
 \tikzset{
 	curve/.style={
 		settings={#1},
@@ -80,17 +87,13 @@
 \begin{document}
 \maketitle
 \tableofcontents
-
-\section{Introduction}
-énoncé du problème, but
+\part{Calcul d'isogénies par composantes}
 
 \section{Rappels de théorie des nombres}
 
 \subsection{Ordres dans un corps de nombre}
 
-Dans cette section, on énonce des résultats généraux de théorie des nombres. Pour les démonstrations on se réfère à 
-
-%insérer lien cox
+Dans cette section, on énonce des résultats généraux de théorie des nombres. On se réfère à \cite{Coh00}[Chapitres 5, 7]
 
 \begin{Def}
 	 $\K$ est un corps de nombre si c'est une extension finie de $\Q$. Un ordre de $\K$ est un sous anneaux unitaire de $\K$, finement engendré comme $\Z$-module et contenant une $\Q$-base de $\K$.
@@ -674,7 +677,7 @@ Sur une courbe, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est co
 	Soit $w\in\Omega_{C}$, avec les notations précédentes il existe $g\in\Kb(C)$ tel que $w = gdu$. On note $\frac{w}{du} = g$
 \end{Def}
 
-\begin{Prod}
+\begin{Prop}
 	Soit $w\in\Omega_{C}$. 
 	
 	L'ordre en $P$ de $\frac{w}{du} = g$ ne dépend pas du choix d'uniformisante $u$. 
@@ -682,7 +685,13 @@ Sur une courbe, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est co
 	On note donc $ord_{P}(w) = ord_{P}(\frac{w}{du})$. 
 	
 	Alors $ord_{P}(w)$ est nul sauf pour un nombre fini de points $P$.
-	
+\end{Prop}
+
+\begin{proof}
+	syl 1 III 4.3
+\end{proof}
+
+\begin{Def}
 	On défini alors $div(w) = \sum_{P\in C} ord_{P}(w)(P) \in Div(C)$.
 	
 	On dira que $w$ est holomorphe si $div(w)\geq 0$, et sans $0$ si $div(w)\leq 0$.
@@ -690,11 +699,7 @@ Sur une courbe, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est co
 	Un invariant différentiel $w$ est une forme différentielle holomorphe sans $0$, 
 	
 	c'est à dire telle que $div(w) = 0$.
-\end{Prod}
-
-\begin{proof}
-	syl 1 III 4.3
-\end{proof}
+\end{Def}
 
 \begin{Rem}
 	On peut montrer que l'application $div$ se comporte sur $\Omega_{C}$ comme sur $\Kb(C)$, en particulier $div(fw) = div(f) + div(w)$ avec $f\in\Kb(C)$ implique que tout les diviseurs de formes différentielles sont égaux dans $Pic(C)$. On appelle cette classe la classe canonique de $Pic(C)$. 
@@ -702,7 +707,7 @@ Sur une courbe, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est co
 	S'il existe un invariant différentiel alors la classe canonique est la classe trivial. On peut montrer avec le théorème de Riemann Roch que s'il existe un invariant différentiel sur $C$, alors $C$ est de genre $1$.
 \end{Rem}
 
-\begin{Prod}
+\begin{Prop}
 	Soit $E$ une courbe elliptique d'équation réduite. Alors $w = \frac{dx}{y}$ est un invariant différentiel
 	
 	En général si $E$ n'est pas réduite, on pose $w = \frac{dx}{2y + a_{1}x + a_{3}}$
@@ -710,7 +715,7 @@ Sur une courbe, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est co
 	Alors $w$ est un invariant différentiel, appelé l'invariant différentiel associé à l'équation de $E$, et noté $w_E$.
 	
 	Dans le cas réduit, $w_E = \frac{dx}{2y} $
-\end{Prod}
+\end{Prop}
 
 \begin{proof}
 	syl 1, II 4.6
@@ -2162,9 +2167,7 @@ Connaître $a$ donne immédiatement la norme de $\beta$. On sait que $\beta = \f
 
 L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique :
 
-\begin{Prop}
-	
-	(Cornacchia)
+\begin{Prop}[Algorithme de Cornacchia]
 	
 	On suppose $4a$ et $\Delta$ premier entre eux.
 	
