@@ -49,13 +49,12 @@
 \newtheorem{Coro}[The]{Corollaire}
 
 \theoremstyle{definition}
-\newtheorem{definition}{Définition}[section]
-\newtheorem{Def}[definition]{Définition}
+\newtheorem*{Def}{Définition}
+\newtheorem*{Ex}{Exemple}
 
 \theoremstyle{remark}
-\newtheorem{remark}{Remarque}[section]
-\newtheorem{Rem}[remark]{Remarque}
-\newtheorem{Ex}[remark]{Exemple}
+\newtheorem*{Rem}{Remarque}
+
 \tikzset{
 	curve/.style={
 		settings={#1},
@@ -93,243 +92,276 @@
 
 \subsection{Ordres dans un corps de nombre}
 
-Dans cette section, on énonce des résultats généraux de théorie des nombres. On se réfère à \cite{Coh00}[Chapitres 5, 7]
+Dans cette section, on énonce des résultats généraux de théorie des nombres. On se réfère à \cite{Cox}[Ch 5, 7]
 
 \begin{Def}
-	 $\K$ est un corps de nombre si c'est une extension finie de $\Q$. Un ordre de $\K$ est un sous anneaux unitaire de $\K$, finement engendré comme $\Z$-module et contenant une $\Q$-base de $\K$.
+	
+	 Un corps $\K$ est un corps de nombre si c'est une extension finie de $\Q$. Un ordre de $\K$ est un sous anneaux unitaire de $\K$, finement engendré comme $\Z$-module et contenant une $\Q$-base de $\K$.
 \end{Def}
 
 \begin{Ex}
-	On note $\OR_{\K}$ l'anneau des entiers algébriques de $\K$. C'est un ordre de $\K$
+	On note $\OR_{\K}$ l'anneau des entiers algébriques d'un corps de nombre $\K$. C'est un ordre de $\K$.
 \end{Ex}
 
-\begin{Prop}
-	Soit $\OR$ un ordre de $\K$. 
-	
-	Alors $\OR$ est un $\Z$-module libre de rang $\left[ \K : \Q\right] $, inclus dans $\OR_{\K}$.
-	
+\begin{Prop}\cite{Cox}[Prop 5.3, 7.2]
+	Soit $\OR$ un ordre de $\K$. Alors $\OR$ est un $\Z$-module libre de rang $\left[ \K : \Q\right] $, inclus dans $\OR_{\K}$.
 	De plus $\K = Frac(\OR)$
 \end{Prop}
 
-$\OR_{\K}$ est donc un ordre maximal. Dans la suite, le cas où $\K$ est une extension quadratique imaginaire joue un rôle clef. On commence par décrire la structure des ordres dans ce cas:
+$\OR_{\K}$ est donc un ordre maximal. Dans la suite, le cas où $\K$ est une extension quadratique imaginaire de $\Q$ joue un rôle clef. On commence par décrire la structure des ordres dans ce cas:
 
 \begin{Def}
-	On pose $\K = \Q(\sqrt{D})$ avec $D$ entier négatif sans facteur carré. 
+	Un corps $\K$ est un corps quadratique imaginaire si c'est une extension quadratique imaginaire de $\Q$, c'est à dire $\K = \Q(\sqrt{D})$ avec $D$ entier négatif sans facteur carré. 
+\end{Def}
 	
-	On peut écrire $\K = \Q(\sqrt{\Delta})$ où $\Delta = 4*D$ est le discriminant de $X^{2} - D$. 
-	
-	On définie le discriminant de $\K$, noté $d_{\K}$, par :
-	
-	$d_{\K} = D$ si $D = 1$ mod $4$, $d_{\K} = \Delta$ sinon.
-	
-	EN particulier $d_{\K} = 0$ ou $1$ mod $4$
-	
+Lorsque $\K = \Q(\sqrt{D})$, on peut réécrire $\K = \Q(\sqrt{\Delta})$ où $\Delta = 4D$ est le discriminant de $X^{2} - D$. 
+
+\begin{Def}
+	Le discriminant d'une extension quadratique imaginaire $\K = \Q(\sqrt{D})$, noté $d_{\K}$, est défini par :
+	\begin{enumerate}
+		\item $d_{\K} = D$ si $D = 1 [4]$,
+		\item $d_{\K} = 4D$ sinon.
+	\end{enumerate}
+	En particulier $d_{\K} = 0 ,\;1[4]$. On pose de plus :
+	\begin{equation*}
+		w_{\K} = \frac{d_{\K} + \sqrt{d_{\K}}}{2}
+	\end{equation*}
 \end{Def}
 
-\begin{Prop}
-	Soit $w_{\K} = \frac{d_{K} + \sqrt{d_{\K}}}{2}$.
+
+\begin{Prop}\cite{Cox}[Prop 5.14, 7.2] Soit $\K$ un corps quadratique imaginaire. Alors $\OR_{\K} = \Z\left[ w_{\K}\right] $. De plus si $\K = \Q(\sqrt{D})$ avec $D$ sans facteur carré, alors
+	\begin{enumerate}
+		\item Si $D \neq 1 [4]$, $\OR_{\K} = \Z\left[ \sqrt{D}\right] $
+		\item Sinon, $\OR_{\K} = \Z\left[ \frac{1 + \sqrt{D}}{2}\right] $
+	\end{enumerate} 
 	
-	Alors $\OR_{\K} = \Z\left[ w_{\K}\right] $. En particulier :
-	
-	Si $d_{\K} = 0$ mod $4$, alors $\OR_{\K} = \Z\left[ \sqrt{d_{\K}}\right] $
-	
-	Sinon, $\OR_{\K} = \Z\left[ \frac{1 + \sqrt{d_{\K}}}{2}\right] $
 \end{Prop}
 
 On peut maintenant décrire la structure des ordres inclus dans $\OR_{\K}$ :
 
-\begin{Prop}
-	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ .
-	
-	 $\OR\subset\OR_{\K}$ et on note $f = \left[ \OR_{\K} : \OR\right]$.
-	
-	Alors $\OR = \Z\left[ fw_{\K}\right] $. $f$ est appelé le conducteur de $\OR$. 
-	
-	On défini de plus $\Delta = f^2d_{\K}$ le discriminant de $\OR$. 
+\begin{Prop}\cite{Cox}[Prop 7.2] Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ un corps quadratique imaginaire. $\OR\subset\OR_{\K}$ et on note $f = \left[ \OR_{\K} : \OR\right]$. Alors $\OR = \Z\left[ fw_{\K}\right] $.  
 \end{Prop}
+
+\begin{Def}
+	Lorsque $\K$ est un corps quadratique imaginaire, si $\OR$ est un ordre de $\K$, $f = \left[ \OR_{\K} : \OR\right]$ est le conducteur de $\OR$, et $\Delta = f^2d_{\K}$ son discriminant.
+\end{Def}
 
 La notion de conducteur est multiplicative :
 
 \begin{Prop}
-	Soit $\OR$, $\OR'$ deux ordres de $\K$ de conducteurs $f$ et $f'$.
-	
-	Si $\OR'\subset\OR$ alors $f$ divise $f'$
+	Soit $\OR$, $\OR'$ deux ordres d'un $\K$ quadratique imaginaire. Soit $f$ et $f'$ leurs conducteurs. Si $\OR'\subset\OR$ alors $f$ divise $f'$
 \end{Prop}
+
+\begin{proof}
+	D'après la proposition 1.3, $f'w_{\K}\in\OR'\subset\OR$ donc $f'w_{\K}\in Z[fw_{\K}]$. Donc $f'w_{\K} = a + bfw_{k}$ avec $a$, $b\in\Z$. Mais $f'w_{\K}\in\OR_{\K}$ admet une unique écriture dans la $\Z$-base $(1,w_{K})$ de $\OR_{\K}$. Donc $a = 0$ et $f' = bf$. Donc $f$ divise $f'$.
+\end{proof}
+
+On peut reformuler ces résultats en terme de réseau de $\C$ :
+
+\begin{Def}
+	Un réseau $\Lambda$ de $\C$ est un ensemble de la forme $\left\lbrace nz_{1} + mz_{2} , n,m\in\Z\right\rbrace$ où $z_{1},\; z_{2}\in\C$ sont linéairement indépendant sur $\R$. On note alors $\Lambda = \left[ z_{1}, z_{2}\right] $
+\end{Def}
 
 \begin{Rem}
-	Un $\Z$-module de rang 2 dans $\C$ qui n'est pas inclus dans $\R$ est aussi appelé réseau de $\C$. Les ordres quadratiques imaginaires sont donc des réseaux de $\C$, qui contiennent $1$. 
-	On donne une base d'un réseaux avec la notation suivante :
-	
-	$\OR_{\K} = \left[1 , w_{\K}\right]$, et $\OR = \left[ 1, fw_{\K}\right]$
+	Les ordres quadratiques imaginaires sont donc des réseaux de $\C$, qui contiennent $1$ : $\OR_{\K} = \left[1 , w_{\K}\right]$, et $\OR = \left[ 1, fw_{\K}\right]$
 \end{Rem}
 
-Les ordres d'un corps de nombre $\K$ ne sont pas factoriel en général. On peut cependant obtenir des résultats de factorisation au niveau des idéaux.
+Les ordres d'un corps de nombre $\K$ ne sont pas des anneaux factoriels en général. On va cependant obtenir des résultats de factorisation au niveau des idéaux.
 
-On énonce d'abord les premiers résultats sur les idéaux. On pourra préciser leur structure plus tard.
+On énonce d'abord les premières propriétés sur les idéaux des ordres de $\K$.
 
-\begin{Prop}
-	
-	Soit $\LR\subset\OR$ un idéal d'un ordre de $\K$.
-	
+\begin{Prop} Soit $\LR\subset\OR$ un idéal d'un ordre de $\K$.
 	\begin{enumerate}
-		\item Il existe $m\in\Z$ appartenant à $\LR$
+		\item Il existe $a\in\Z$ appartenant à $\LR$
 		\item $\LR$ est un $\Z$-module libre de rang $\left[ \K : \Q\right] $
-		\item Le quotient $\OR/\LR$ est fini, de cardinal $N(\LR)$
+		\item Le quotient $\OR/\LR$ est fini.
 		\item Si $\LR$ est premier, alors $\LR$ est maximal. 
 	\end{enumerate}
-	
-	On appellera norme de $\LR$ l'entier $N(\LR)$
-	
 \end{Prop}
 
-On en déduit la structure des idéaux dans le cas quadratique :
+\begin{proof}
+	On se réfère à \cite{Cox}[Prop 5.4,Ex 5.1]. L'énoncé ne porte que sur $\OR_{\K}$ mais les arguments utilisés sont aussi valable pour un ordre $\OR$ quelconque : voir \cite{Cox}[Ex 7.4]. 
+\end{proof}
+
+\begin{Def}
+	La norme d'un idéal $\LR\subset\OR$ d'un ordre d'un corps de nombre $\K$ est $N(\LR) = |\OR/\LR|$.
+\end{Def}
+
+Dans le cas des corps quadratiques imaginaires, on en déduit la structure des idéaux :
 
 \begin{Coro}
-	
-	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ .
-	
-	Tout idéal $\LR$ de $\OR$ est un réseaux de $\C$ de la forme $\left[ a, b + cfw_{\K}\right]$ avec $a$, $b$, $c\in\Z$ . 
-	
-	On peut aussi l'écrire sous la forme $\left[ a, (b' + c'f\sqrt{d_{\K}})/2\right]$ ou $\left[ a, (b' + c'\sqrt{\Delta})/2\right]$ avec $b'$, $c'\in\Z$.
-	
+	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ un corps quadratique imaginaire. Tout idéal $\LR$ de $\OR$ est un réseaux de $\C$ de la forme $\left[ a, b + cfw_{\K}\right]$ avec $a$, $b$, $c\in\Z$, $c\neq 0$ et $0 \leq b< a$. 	
 \end{Coro}
 
-Les résultats de factorisation sur les idéaux sont très généraux dans $\OR_{\K}$ : C'est un anneaux de Dedekind, et ce genre d'anneaux admet une unique factorisation au niveau des idéaux
+\begin{proof}
+	D'après la proposition 1.5, $\LR\cap\Z$ est non vide. $\LR\cap\Z$ est un idéal de $\Z$, donc principal engendré par un entier $a$. Soit $\alpha\in\LR$ linéairement indépendant de $a$. Comme $\LR$ est un sous ensemble discret de $\C$, on peut choisir $\alpha$ de norme minimale. 
+	
+	On montre par l'absurde que $\LR = \left[ a,\alpha\right]$ : soit $z\in\LR$ qui n'est pas dans le réseau $\left[ a,\alpha\right]$. On peut choisir $z$ de norme minimal. Si $z$ est entier, $z\in \LR\cap\Z = a\Z$ ce qui est exclus. Donc $z$ est linéairement indépendant de $a$. Or $|z| \leq |\alpha| + |z - \alpha|$. Si $z\neq\alpha$, $|z| < |\alpha|$, ce qui contredit la minimalité de $|\alpha|$. 
+	
+	Donc $\LR = \left[ a, \alpha\right]$. Si l'on note $\alpha = b + cfw_{\K}$, $\alpha$ n'étant pas entier on a $c \neq 0$. De plus $\LR = \left[ a, ka + \alpha\right]$ pour tout $k\in\Z$, donc on peut choisir une base telle que $0 \leq b< a$.
+\end{proof}
 
-\begin{The}
+Pour tout corps $\K$, on montre que $\OR_{\K}$ est un anneaux de Dedekind, un type d'anneaux qui admet une unique factorisation au niveau des idéaux par des idéaux premiers.
+
+\begin{The}\cite{Cox}[Prop 5.5,Cor 5.6]
 	$\OR_{\K}$ est un anneaux de Dedekind, c'est à dire :
 	\begin{enumerate}
 		\item $\OR_{\K}$ est intégralement clos
 		\item $\OR_{\K}$ est noethérien
-		\item Les idéaux premier sont maximaux 
+		\item Ses idéaux premier sont maximaux 
 	\end{enumerate}
-	
 	En particulier tout idéal $\LR$ admet une unique factorisation par des idéaux premier (à permutation prêt des facteurs)
 	\begin{equation*}
 		\LR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
 	\end{equation*}
-	
 	avec $e_{1}$, ... $e_{g}\in\N$ et $g\in\N$.
-	
 \end{The}
 
-Un ordre $\OR$ quelconque n'est pas un anneaux de Dedekind, mais "presque" : seule la clôture intégrale pose problème
+Un ordre $\OR\subset\K$ quelconque n'est pas un anneaux de Dedekind, mais "presque" : seule la clôture intégrale pose problème.
 
-\begin{Prop}
-	Un ordre $\OR$ est noethérien, et ses idéaux premiers sont maximaux.
+\begin{Prop}\cite{Cox}[5.A, Ex 7.4]
+	Un ordre $\OR$ d'un corps de nombre $\K$ est noethérien, et ses idéaux premiers sont maximaux.
 \end{Prop}
 
-Il faut introduire quelques notions supplémentaires pour trouver un résultat de factorisation dans $\OR$.
+\begin{proof}
+	Les arguments sont les mêmes que pour $\OR_{\K}$, et découlent de la proposition 1.5.\cite{Cox}[5.A, Ex 7.4]
+\end{proof}
+
+Dans la suite, nous allons préciser l'étude de $\OR_{\K}$, tenter de généraliser les résultats obtenues à un ordre quelconque $\OR$, puis déduire un résultat de factorisation d'idéaux d'ordre de corps quadratiques imaginaires. 
+
+
+
+
+
+
 
 \subsection{Idéaux fractionnaires et Groupe de classe}
 
-En plus d'être un anneaux de Dedekind, $\OR_{\K}$ est un anneaux "presque" principal. Pour définir proprement cela, on introduit une relation d'équivalence sur les idéaux: $\LR\simeq\LR'\iff\LR = \alpha\LR',\alpha\in\OR_{\K}$. Cette définition est mauvaise car la relation n'est pas à priori symétrique : $\alpha$ n'est pas inversible dans $\OR_{\K}$ en général. Il faut donc considérer $\alpha\in\K$.
+En plus d'être un anneaux de Dedekind, $\OR_{\K}$ est un anneaux "presque" principal. Pour définir proprement cela, on veut introduire une relation d'équivalence sur les idéaux: $\LR\simeq\LR'\iff\LR = \alpha\LR',\alpha\in\OR_{\K}$. Cette définition est mauvaise car la relation n'est pas à priori symétrique : $\alpha$ n'est pas inversible dans $\OR_{\K}$ en général. Il faut donc considérer $\alpha\in\K$.
 
-On défini un notion plus large d'idéaux, les idéaux fractionnaire, pour lesquels la relation est bien définie :
+On défini donc un notion plus large d'idéaux, les idéaux fractionnaire, pour lesquels cette relation d'équivalence est bien définie :
 
 \begin{Def}
-	Un idéal fractionnaire de $\OR_{\K}$ est un $\OR_{\K}$-module de $\K$ de type fini, non nul. 
-	
-	On note $I(\OR_{\K})$ l'ensemble des idéaux fractionnaires. 
-	
-	Les idéaux de $\OR_{\K}$ seront appelé "idéaux entiers" pour les distinguer des idéaux fractionnaires. 
+	Un idéal fractionnaire de $\OR_{\K}$ est un $\OR_{\K}$-module de $\K$ de type fini, non nul. On note $I(\OR_{\K})$ l'ensemble des idéaux fractionnaires. Les idéaux de $\OR_{\K}$ seront appelé "idéaux entiers" pour les distinguer des idéaux fractionnaires. 
 \end{Def}
 
-\begin{Prop}
+\begin{Prop}\cite{Cox}[5.A, Ex 5.2]
 	Les idéaux fractionnaires sont les ensembles de la forme $\alpha\LR$, où $\alpha\in\K$ et $\LR\subset\OR_{\K}$ est un idéal entier de $\OR_{\K}$.
 \end{Prop}
 
 \begin{Rem}
-	La définition et la propriété précédente se généralise sans soucis aux ordres quelconques. 
+	La définition d'idéaux fractionnaire et la proposition 1.9 précédente se généralise sans soucis aux ordres quelconques. 
 \end{Rem}
 
 
 Le nom d'idéal fractionnaire vient de l'existence d'une structure de groupe multiplicatif sur $I(\OR_{\K})$ : on peut inverser les idéaux "entier". 
 
-\begin{Prop}
+\begin{Prop}\cite{Cox}[Prop 5.7]
 	Les idéaux fractionnaire $\IR$ de $\OR_{\K}$ sont inversible :
-	
 	Il existe $\IR'$ tel que $(\IR)(\IR') = \OR_{\K}$.
 \end{Prop}
 
 Les idéaux fractionnaire sont suffisamment proche des idéaux entiers pour que l'on obtienne un résultat de factorisation :
 
-\begin{Prop}
-	Soit $\IR$ un idéal fractionnaire de $\OR_{\K}$.
-	
-	 Il existe un entier $d$ tel que $\LR = d\IR$ soit un idéal entier.
-	 
-	 L'entier $d$ minimal pour cette propriété est appelé le dénominateur de $\IR$
+\begin{Prop}\cite{Cox}[Prop 5.7]
+	Soit $\IR$ un idéal fractionnaire de $\OR_{\K}$. Il existe un entier $d$ tel que $\LR = d\IR$ soit un idéal entier. 
 \end{Prop}
 
-\begin{Prop}
+\begin{Def}
+	Si $\IR$ un idéal fractionnaire de $\OR_{\K}$, l'entier $d$ minimal tel que $\LR = d\IR$ soit entier est appelé le dénominateur de $\IR$
+\end{Def}
+
+\begin{Prop}\cite{Cox}[Prop 5.7]
 	Tout idéal fractionnaire $\IR$ admet une unique factorisation par des idéaux entiers premiers ou leurs inverses (à permutation prêt des facteurs):
 	\begin{equation*}
 		\IR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
 	\end{equation*}
-	
 	avec $e_{1}$, ... $e_{g}\in\Z$ et $g\in\N$.
-	
 \end{Prop}
 
-$I(\OR_{\K})$ contient l'ensemble $P(\OR_{\K})$ des idéaux fractionnaires principaux, i.e de la forme $\alpha\OR_{\K}$ avec $\alpha\in\K$. 
-
-L'inverse de $\alpha\OR_{\K}$ est $\alpha^{-1}\OR_{\K}$ : $P(\OR_{\K}))$ est un sous-groupe de $I(\OR_{\K})$.
-
-Le quotient $I(\OR_{\K}/P(\OR_{\K}))$ pour la loi multiplicative correspond aux classes d'équivalences de la relation précédente.
+On peut étudier les idéaux principaux parmi les idéaux fractionnaires.
 
 \begin{Def}
-	Le groupe de classe de $\OR_{\K}$ est le quotient $Cl(\OR_{\K}) =  I(\OR_{\K})/P(\OR_{\K})$
+	Pour tout corps de nombre $\K$, $I(\OR_{\K})$ contient l'ensemble $P(\OR_{\K})$ des idéaux fractionnaires principaux, i.e de la forme $\alpha\OR_{\K}$ avec $\alpha\in\K$. 
+\end{Def} 
+
+\begin{Rem}
+	L'inverse de $\alpha\OR_{\K}$ est $\alpha^{-1}\OR_{\K}$ : $P(\OR_{\K}))$ est un sous-groupe de $I(\OR_{\K})$. Le quotient $I(\OR_{\K}/P(\OR_{\K}))$ pour la loi multiplicative correspond aux classes d'équivalences de la relation $\IR\simeq\IR'\iff\IR = \alpha\IR',\alpha\in\\K$.
+\end{Rem}
+
+\begin{Def}
+	Pour tout corps de nombre $\K$, le groupe de classe de $\OR_{\K}$ est le quotient $Cl(\OR_{\K}) =  I(\OR_{\K})/P(\OR_{\K})$
 \end{Def}
 
-La propriété remarquable de $\OR_{\K}$ comparé à un anneaux de Dedekind quelconque est que $Cl(\OR_{\K})$ est fini :
+Le groupe de classe peut être défini pour tout anneaux de Dedekind, en se plaçant dans le corps de fraction. Une propriété remarquable de $\OR_{\K}$ comparé aux anneaux de Dedekind quelconque est que $Cl(\OR_{\K})$ est fini :
 
-\begin{Prop}
+\begin{Prop}\cite{Cox}[5.A]
 	$Cl(\OR_{\K})$ est fini, on note $h(\OR_{\K})$ son cardinal. 
 \end{Prop} 
 
 On parlera parfois du groupe de classe de $\K$ pour désigner $Cl(\OR_{\K})$.
 
-\subsection{Groupes de classes et factorisation dans tout ordre}
 
-On souhaite maintenant définir des notions similaires pour un ordre $\OR$ quelconque de $\K$. La notion d'idéal fractionnaire se généralise sans soucis (remarque 2.14).
 
-Le problème est que certains idéaux entiers ne vont pas être inversible dans $\OR$. Si $\LR\subset\OR$ est un idéal, $\LR$ pourrait aussi être un idéal pour un anneaux plus gros que $\OR$. 
+
+
+
+
+\subsection{Groupe de classe d'un ordre quelconque}
+
+On va maintenant définir un groupe de classe pour un ordre $\OR$ quelconque d'un corps de nombre $\K$. on en déduira un résultat de factorisation pour certains idéaux entiers de $\OR$.
+
+Certains idéaux entiers d'un ordre $\OR$ ne seront pas inversible dans $\OR$. Si $\LR\subset\OR$ est un idéal, $\LR$ pourrait aussi être un idéal d'un anneaux contenant $\OR$. 
 
 On a toujours $\OR\subset\left\lbrace \alpha\in\K, \alpha\LR\subset\LR\right\rbrace$. Cependant l'inclusion peut être stricte. On ne pourra définir une notion d'inverse pour $\LR$ qu'en le voyant comme idéal du plus gros anneaux possible. On défini donc la notion d'idéal propre :
 
 \begin{Def}
-	$\LR\subset\OR$ est un idéal propre de $\OR$ si c'est un idéal tel que $\OR = \left\lbrace \alpha\in\K, \alpha\LR\subset\LR\right\rbrace$
-	
-	$\IR$ est un idéal fractionnaire propre de $\OR$ s'il vérifie $\OR = \left\lbrace \alpha\in\K, \alpha\IR\subset\IR\right\rbrace$.
-	
-	On note $I(\OR)$ l'ensemble des idéaux fractionnaires propres.
+	$\LR\subset\OR$ est un idéal propre de l'ordre $\OR$ si c'est un idéal entier tel que $\OR = \left\lbrace \alpha\in\K, \alpha\LR\subset\LR\right\rbrace$ $\IR$ est un idéal fractionnaire propre de $\OR$ s'il vérifie $\OR = \left\lbrace \alpha\in\K, \alpha\IR\subset\IR\right\rbrace$. On note $I(\OR)$ l'ensemble des idéaux fractionnaires propres.
 \end{Def}
 
-\begin{Prop}
-	Un idéal fractionnaire $\IR$ est inversible si et seulement s'il est propre.
+\begin{Prop}\cite{Cox}[7.4]
+	Un idéal fractionnaire $\IR$ d'un ordre $\OR$ est inversible si et seulement s'il est propre.
 \end{Prop}
 
-La notion d'idéal propre ne permet pas encore d'obtenir un résultat de factorisation, mais il permet déjà de définir un groupe de classe :
-
-En effet les idéaux principaux sont tous propre car inversible, et leur ensemble $P(\OR)$ défini donc bien un sous groupe de $I(\OR)$
-
-\begin{Def}
-	Le groupe de classe de $\OR$ est le quotient $Cl(\OR) =  I(\OR)/P(\OR)$
-\end{Def}
+La restriction aux idéaux propres ne permet pas encore d'obtenir un résultat de factorisation, mais elle permet déjà de définir un groupe de classe.
 
 \begin{Prop}
+	Les idéaux fractionnaires principaux d'un ordre $\OR$ sont propres, et forment un sous groupe de $I(\OR)$
+\end{Prop}
+
+\begin{proof}
+	Les idéaux fractionnaires principaux sont inversibles, donc propre d'après la proposition 1.14. L'ensemble des idéaux fractionnaires principaux est un groupe, et on vient de montrer qu'il est inclus dans $I(\OR)$.
+\end{proof}
+
+\begin{Def}
+	Soit $\OR$ un ordre d'un corps de nombre. On note $P(\OR)$ le sous groupe de $I(\OR)$ des idéaux fractionnaires principaux. Le groupe de classe de $\OR$ est le quotient $Cl(\OR) =  I(\OR)/P(\OR)$
+\end{Def}
+
+\begin{Prop}\cite{Cox}[7.A]
 	$Cl(\OR)$ est fini, on note $h(\OR)$ son cardinal. 
 \end{Prop} 
 
-Nous étudierons plus précisément le groupe de classe par la suite, en passant par l'étude des formes quadratiques binaires. 
+\begin{Rem}
+	On sera amener à chercher des familles génératrices et des factorisations dans le groupe de classes d'ordre $\OR$ de corps $\K$ quadratique imaginaire. Cette étude sera faite plus loin dans le contexte d'un algorithme de calcul d'isogénies 
+\end{Rem}
 
-Pour obtenir un résultat de factorisation, il faut restreindre la notion d'idéal propre. Pour cela nous revenons sur les propriétés de la norme d'un idéal entier.
 
-Pour $\alpha\in\K$, on note $\bar{\alpha}$ son conjugué dans $\K$. De même on note $\bar{\LR}$ l'idéal des conjugués des éléments de $\LR$
 
-\begin{Prop}
-	Soit $\LR$ un idéal entier propre de $\OR$. 
+
+
+
+
+\subsection{Factorisation d'idéaux premier avec le conducteur}
+
+
+On se concentre désormais sur les ordres $\OR$ de corps quadratiques imaginaires $\K$. On va obtenir un résultat de factorisation de certains idéaux propres ayant des propriétés sur leur norme. Pour cela nous revenons d'abord sur les propriétés de la norme d'un idéal entier.
+	
+\begin{Def}
+	Soit $\K$ un corps quadratique imaginaire. Il admet un unique automorphisme de corps non trivial. Pour tout $\alpha\in\K$, on note $\bar{\alpha}$ son conjugué dans $\K$. Pour tout idéal $\LR$ d'un ordre $\OR$ de $\K$, on note $\bar{\LR} = \left\lbrace \bar{\alpha}, \alpha\in\LR\right\rbrace $
+\end{Def}
+	
+\begin{Prop}\cite{Cox}[Prop 7.14]
+	Soit $\LR$ un idéal entier propre d'un ordre $\OR$ d'un corps quadratique imaginaire $\K$. 
 	\begin{enumerate}
 		\item $\forall\alpha\in\OR,\; N(\alpha\OR) = N_{\Q}^{\K}(\alpha)$
 		\item $N(\LR\LR') = N(\LR)N(\LR')$ pour tout idéal entier propre $\LR'$.
@@ -337,13 +369,13 @@ Pour $\alpha\in\K$, on note $\bar{\alpha}$ son conjugué dans $\K$. De même on 
 	\end{enumerate}
 \end{Prop}
 
-On souhaite comparer les idéaux entiers propres de $\OR$ avec les idéaux entiers de $\OR_{\K}$ pour déduire une factorisation. 
+Si $\LR\subset\OR$ est un idéal, le produit $\LR_{\K} = \LR\OR_{\K}$ fourni un idéal de $\OR_{\K}$. Inversement si $\LR_{\K}\subset\OR_{\K}$ est un idéal, l'intersection $\LR = \LR_{\K}\cap\OR$ est un idéal de $\OR$
 
-Il existe un moyen simple pour passer de $\OR$ à $\OR_{\K}$ au niveau des idéaux: Si $\LR\subset\OR$, le produit $\LR_{\K} = \LR\OR_{\K}$ fourni un idéal de $\OR_{\K}$. Inversement si $\LR_{\K}\subset\OR_{\K}$, $\LR = \LR_{\K}\cap\OR$ est un idéal de $\OR$
+On va montrer que ces deux applications sont réciproque l'une de l'autre et induisent un isomorphisme entre groupe de classe. 
 
-On souhaite que ces deux applications soit réciproque l'une de l'autre et fournissent un isomorphisme, mais ce n'est pas le cas entre les ensembles $I(\OR)$ et $I(\OR_{\K})$. On va imposer une condition sur la norme des idéaux entiers de sorte qu'elle soit conservée par les applications précédentes :
+Mais ce ne sera pas un isomorphisme entre les groupes $I(\OR)$ et $I(\OR_{\K})$. Il faut se restreindre à des sous groupes en imposant une condition sur la norme des idéaux entiers de $\OR$ et de $\OR_{\K}$.
 
-\begin{Def}
+\begin{Def}\cite{Cox}[Lem 7.18]
 	Soit $\LR\subset\OR$ un idéal entier, et $f$ le conducteur de $\OR$. $\LR$ est dit premier avec le conducteur si l'une des deux conditions équivalente suivante est vérifiée :
 	\begin{enumerate}
 		\item $N(\LR)$ est premier avec $f$
@@ -351,55 +383,60 @@ On souhaite que ces deux applications soit réciproque l'une de l'autre et fourn
 	\end{enumerate}
 \end{Def}
 
-La seconde condition est analogue à une "relation de Bézout" entre $f$ et un élément de $\LR$.
+\begin{Rem}
+	La seconde formulation de la définition d'un idéal premier avec le conducteur est analogue à une "relation de Bézout" dans $\OR$ entre le conducteur $f$ et un élément de $\LR$.
+\end{Rem}
 
-\begin{Prop}
-	Si $\LR\subset\OR$ est un idéal premier avec le conducteur, alors il est propre.
-	
-	L'ensemble des idéaux premier avec le conducteur est stable par multiplication. 
-	
-	On note $I(\OR,f)$ le sous groupe de $I(\OR)$ engendré par les idéaux premier avec le conducteur, et
-	
-	$P(\OR,f)$ le sous groupe de $P(\OR)$ engendré par les idéaux principaux premier avec le conducteur. 
+\begin{Prop}\cite{Cox}[Lem 7.18]
+	Si $\LR\subset\OR$ est un idéal premier avec le conducteur, alors il est propre. L'ensemble des idéaux premier avec le conducteur est stable par multiplication et forme un sous groupe de $I(\OR)$.  
 \end{Prop}
-
-Cette restriction permet tout de même de décrire le groupe de classe :
-
-\begin{Prop}
-	Avec les notations précédentes, $Cl(\OR) =  I(\OR, f)/P(\OR, f)$
-\end{Prop}
-
-Si $\OR = \OR_{\K}$, $f = 1$ et aucune restriction n'a été faite. 
-
-Dans la suite on fixe $\OR$ de conducteur $f$, et on considère les idéaux de $\OR_{\K}$ vérifiant la même restriction par rapport à $f$ :
 
 \begin{Def}
-	Soit $f\in\N$. $\LR_{\K}\subset\OR_{\K}$ est dit premier avec $f$ si l'une des deux conditions équivalentes suivantes est vérifiées :
+	On note $I(\OR,f)$ le sous groupe de $I(\OR)$ engendré par les idéaux premier avec le conducteur, et $P(\OR,f)$ le sous groupe de $I(\OR,f)$ engendré par les idéaux principaux premier avec le conducteur.
+\end{Def}
+
+Cette restriction permet tout de même de décrire complètement le groupe de classe. 
+
+\begin{Prop}\cite{Cox}[Lem 7.19]
+	Si $\OR$ est un ordre d'un corps quadratique imaginaire, de conducteur $f$, alors $Cl(\OR) =  I(\OR, f)/P(\OR, f)$
+\end{Prop}
+
+\begin{Rem}
+	Si $\OR = \OR_{\K}$, $f = 1$ et aucune restriction n'est faite. 
+\end{Rem}
+
+Dans la suite on fixe un ordre $\OR$ de conducteur $f$, et on considère les idéaux de $\OR_{\K}$ de norme premier avec $f$.
+
+\begin{Def}\cite{Cox}[7.C, Lem 7.18]
+	Soit $f\in\N$. Un idéal entier $\LR_{\K}\subset\OR_{\K}$ est dit premier avec $f$ si l'une des deux conditions équivalentes suivantes est vérifiées :
 	
 	\begin{enumerate}
 		\item $N(\LR_{\K})$ est premier avec $f$
 		\item $\LR_{\K} + f\OR_{\K} = \OR_{\K}$
 	\end{enumerate}
 	
-	On note $I_{\K}(f)$ le sous groupe de $I(\OR_{\K})$ engendré par les idéaux entiers premier avec $f$, et $P_{\K}(f)$ sont analogue pour les idéaux principaux. 
+	On note $I_{\K}(f)$ le sous groupe de $I(\OR_{\K})$ engendré par les idéaux entiers premier avec $f$, et $P_{\K}(f)$ le sous groupe de $I_{\K}(f)$ engendré par les idéaux entiers principaux premier avec $f$
 \end{Def}
 
-On peut alors obtenir une correspondance entre $I(\OR, f)$ et $I_{\K}(f)$:
+On montre alors que $I(\OR, f)$ et $I_{\K}(f)$ sont isomorphes.
 
-\begin{The}
-	L'application $\LR\mapsto\LR\OR_{\K}$ induit un isomorphisme de groupe $I(\OR, f)\simeq I_{\K}(f)$.
-	
-	La réciproque est l'application $\LR_{\K}\mapsto\LR_{\K}\cap\OR$.
-	
-	En particulier ces applications conservent la norme des idéaux entiers. 
+\begin{The}\cite{Cox}[Prop 7.20]
+	Soit $\OR$ un ordre d'un corps quadratique imaginaire $\K$, de conducteur $f$.
+	\begin{enumerate}
+		\item Si $\LR_{\K}\subset\OR_{\K}$ est un idéal premier avec $f$, alors $\LR_{\K}\cap\OR$ est un idéal de $\OR$ premier avec le conducteur, de même norme que $\LR_{\K}$.
+		\item Si $\LR\subset\OR$ est un idéal premier avec le conducteur, alors $\LR\OR_{\K}$ est un idéal de $\OR_{\K}$ premier avec $f$, de même norme de que $\LR$.
+		\item L'application $\LR\mapsto\LR\OR_{\K}$ induit un isomorphisme entre $I(\OR,f)$ et $I_{\K}(f)$ d'inverse $\LR_{\K}\mapsto\LR_{\K}\cap\OR$
+	\end{enumerate}
 \end{The}
 
-\begin{Coro}
-	Soit $\LR\subset\OR$ premier avec $f$, alors $\OR/\LR \simeq \OR_{\K}/\LR\OR_{\K}$. En particulier l'isomorphisme précédent conserve les idéaux premiers. 
+Une première conséquence de ce théorème est l'application à la factorisation d'idéaux premier avec le conducteur.
+
+\begin{Coro}\cite{Cox}[7.C, Ex 7.26]
+	Soit $\LR\subset\OR$ premier avec $f$, alors $\OR/\LR \simeq \OR_{\K}/\LR\OR_{\K}$. En particulier l'application $\LR\mapsto\LR_{\K}$ conserve les idéaux premiers. 
 \end{Coro}
 
-\begin{Coro}
-	Un idéal $\LR\subset\OR$ premier avec $f$ admet une unique factorisation (à permutation prêt des facteurs) par des idéaux premier, et premiers avec $f$
+\begin{Coro}\cite{Cox}[7.C, Ex 7.26]
+	Un idéal $\LR\subset\OR$ premier avec le conducteur admet une unique factorisation (à permutation prêt des facteurs) par des idéaux premier, et premiers avec le conducteur.
 	
 	\begin{equation*}
 		\LR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
@@ -409,27 +446,36 @@ On peut alors obtenir une correspondance entre $I(\OR, f)$ et $I_{\K}(f)$:
 	
 \end{Coro}
 
-\begin{Coro}
-	Tout $\IR \in I(\OR,f)$ admet une unique factorisation par des idéaux entiers premier de $I(\OR,f)$, ou leurs inverses (à permutation prêt des facteurs):
+\begin{Coro}\cite{Cox}[7.C, Ex 7.26]
+	Tout idéal fractionnaire $\IR \in I(\OR,f)$ admet une unique factorisation par des idéaux entiers premier inclus de $I(\OR,f)$ et par leurs inverses (à permutation prêt des facteurs):
 	\begin{equation*}
 		\IR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
 	\end{equation*}
 		
 	avec $e_{1}$, ... $e_{g}\in\Z$ et $g\in\N$.
 		
-
 \end{Coro}
+
+Une autre conséquence du théorème précédent est la description du groupe de classe de $\OR$ à partir d'idéaux fractionnaires de $\OR_{\K}$ premier avec $f$.
+
+\begin{Prop}\cite{Cox}[Prop 7.22]
+	Si $\OR$ est un ordre d'un corps quadratique imaginaire, de conducteur $f$, alors $Cl(\OR) =  I_{\K}(f)/P_{\K}(f)$
+\end{Prop}
+
+
+
+
+
+
 
 \subsection{Ramification des nombres premiers}
 
-Dans $\Z$, l'idéal engendré par un nombre premier $p$ est lui même premier. Cependant dans un ordre imaginaire $\OR$, l'idéal $p\OR$ associé à $p$ peut ne plus être premier. 
+Dans $\Z$, l'idéal engendré par un nombre premier $p$ est un idéal premier. Cependant dans un ordre $\OR$ d'un corps de nombre, l'idéal $p\OR$ associé à $p$ peut ne plus être premier. 
 
 On regroupe ici des résultats décrivant les différentes possibilités pour le comportement de $p$ vu dans $\OR$ :
 
 \begin{Def}
-	Soit $\OR$ ordre de conducteur $f$, et $p$ premier ne divisant pas $f$.
-	
-	On note $p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}$ la factorisation de $p\OR$ dans $I(\OR,f)$. 
+	Soit $\OR$ ordre de conducteur $f$, et $p$ premier ne divisant pas $f$. On note $p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}$ la factorisation de $p\OR$ dans $I(\OR,f)$. 
 	
 	On note donc $g$ le nombre d'idéaux premiers de la factorisation.
 	
