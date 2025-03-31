@@ -33,6 +33,7 @@
 \newcommand{\R}[0]{\mathbb{R}}
 \newcommand{\C}[0]{\mathbb{C}}
 \newcommand{\K}[0]{\mathbb{K}}
+\newcommand{\Lc}[0]{\mathbb{L}}
 \newcommand{\Kb}[0]{\bar{\K}}
 \newcommand{\OR}[0]{\mathcal{O}}
 \newcommand{\LR}[0]{\mathcal{L}}
@@ -470,108 +471,151 @@ Une autre conséquence du théorème précédent est la description du groupe de
 
 \subsection{Ramification des nombres premiers}
 
-Dans $\Z$, l'idéal engendré par un nombre premier $p$ est un idéal premier. Cependant dans un ordre $\OR$ d'un corps de nombre, l'idéal $p\OR$ associé à $p$ peut ne plus être premier. 
+Dans $\Z$, l'idéal engendré par un nombre premier $p$ est un idéal premier. Cependant dans un ordre $\OR$ d'un corps de nombre, l'idéal $p\OR$ associé à $p$ peut ne plus être premier. On peut cependant factoriser de façon unique l'idéal $p\OR$ dans deux cas :
 
-On regroupe ici des résultats décrivant les différentes possibilités pour le comportement de $p$ vu dans $\OR$ :
+\begin{enumerate}
+	\item Si $\OR = \OR_{\K}$ est l'ordre maximal d'un corps de nombre $\K$
+	\item Si $\OR$ est un ordres d'un corps quadratique imaginaire, et $p$ ne divise pas le conducteur $f$.
+\end{enumerate}
+
+On énonce les différentes possibilités de factorisation de $p\OR$:
 
 \begin{Def}
-	Soit $\OR$ ordre de conducteur $f$, et $p$ premier ne divisant pas $f$. On note $p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}$ la factorisation de $p\OR$ dans $I(\OR,f)$. 
-	
-	On note donc $g$ le nombre d'idéaux premiers de la factorisation.
-	
-	Les exposants $e_{i}$ sont les indices de ramification de $p$.
-	
-	Comme $p\OR\subset\PR_{i}$, on a $\F_{p}\subset\OR/\PR_{i}$ et on note $N(\PR_{i}) = p^{f_{i}}$. 
-	
-	Les coefficients $f_{i}$ sont les degrés d'inerties de $p$
+	Soit $\OR$ un ordre d'un corps de nombre $\K$, et $p$ premier, tels que $p\OR$ admette une unique factorisation par des idéaux premier de $\OR$ :
+	\begin{equation*}
+		p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
+	\end{equation*} 
+	On note $g_{p}=g$ le nombre d'idéaux premiers de la factorisation. Les exposants $e_{i}$ sont appelés les indices de ramification de $p$ dans $\OR$.
+	Puisque $p\OR\subset\PR_{i}$ et que $\PR_{i}$ est maximal, $\OR/\PR_{i}$ est un corps de caractéristique $p$ et on note $f_{i}$ son degré. Les coefficients $f_{i}$ sont appelés les degrés d'inerties de $p$ dans $\OR$
 \end{Def}
 
+Il est possible d'expliciter les idéaux $\PR_{i}$, d'après un théorème dû à Kummer. On l'énonce d'abord dans le cas des ordre maximaux.
 
-
-\begin{Prop}
+\begin{Prop}\cite{Cox}[Th 5.8, 5.9]
 	
-	Soit $n = \left[ \K : \Q\right] $. 
-	
-	Alors $N(p\OR) = p^{n}$ et $\sum_{i = 1}^{g}e_{i}f_{i} = n$
-	
-	Si l'extension $\K/\Q$ est galoisienne, alors les coefficients $e_{i}$ et $f_{i}$ ne dépendent pas de $i$. 
-	
-	On note $e$ et $f$ leur valeur. Alors $efg = n$.
+	Soit $\K$ un corps de nombre, et $n = \left[ \K : \Q\right] $. Soit $p$ un nombre premier. Alors $N(p\OR) = p^{n}$ et $\sum_{i = 1}^{g}e_{i}f_{i} = n$.
+	De plus si l'extension $\K/\Q$ est galoisienne, alors les coefficients $e_{i}$ et $f_{i}$ ne dépendent pas de l'indice $i$ i.e. de l'idéal premier $\PR_{i}$ correspondant.  
+	On note $e_{p}$ et $f_{p}$ leur valeur. Alors $e_{p}f_{p}g_{p} = n$.
 \end{Prop}
 
-On peut alors décrire la factorisation de $p\OR$ avec le théorème de Kummer : (CF Biasse)
+\begin{Def}
+	Soit $\K$ un corps de nombre qui est une extension galoisienne de $\Q$. On note $n = \left[ \K : \Q\right] $. On dira que $p$ est
+	\begin{enumerate}
+		\item ramifié dans $\K$, si son indice de ramification $e_{p} > 1$
+		\item inerte dans $\K$, si son degré d'inertie $f_{p} = n$, ce qui implique $e_{p} = g_{p} = 1$ et $p\OR_{\K}$ maximal
+		\item décomposé dans $\K$, si $g_{p} = n$, ce qui implique $e_{p} = f_{p} = 1$
+	\end{enumerate}
+\end{Def}
 
-\begin{The}(Kummer)
+\begin{Rem}
+	Si $\K$ est un corps quadratique imaginaire, l'extension $\K/\Q$ est galoisienne, donc pour tout nombre premier $p$, $e_{p}f_{p}g_{p} = 2$ et $p$ est ramifié dans $\K$ si et seulement si $e_{p} = 2$.
+\end{Rem}
+
+\begin{The}{Théorème de Kummer}\cite{Coh00}[Th 4.8.13]
 	
-	Soit $\K = \Q[\alpha]$ un corps de nombre. Soit $\OR$ un ordre contenant $\alpha$. 
 	
-	Soit $T(X)$ le polynôme minimal de $\alpha$, et $p$ premier ne divisant pas $\left[ \OR : \Z\left[ \alpha\right] \right] $.
-	
-	On note $T(X) = T_{1}(X)T_{2}(X)\ldots T_{r}(X)$ la factorisation  de $T(X)$ sur $\F_{p}$.
-	
-	Alors $r = g$ et $p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}$ avec
-	
+	Soit $\K$ un corps de nombre. Il existe $\alpha\in\OR_{\K}$ tel que $\K = \Q(\alpha)$. Soit $T(X)$ le polynôme minimal de $\alpha$, et $p$ premier ne divisant pas $\left[ \OR_{\K} : \Z\left[ \alpha\right] \right] $. On écrit la factorisation de $T(X)$ sur $\F_{p}$:
+	\begin{equation*}
+		T(X) = T_{1}(X)T_{2}(X)\ldots T_{r}(X)
+	\end{equation*}
+	Alors $r = g_{p}$ et $p\OR = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{r}^{e_{r}}$ avec
 	\begin{equation*}
 		\PR_{i} = p\OR + T_{i}(\sqrt{\alpha})\OR 
 	\end{equation*}
-	
 	De plus $deg(T_{i}) = f_{i}$
-	
 \end{The}
 
-Ainsi pour $\K$ quadratique, on distingue $3$ cas possibles pour le comportement de $p$ dans $\OR$ :
+\begin{Rem}
+	Le théorème 1.20 et le corollaire 1.22 permettent de généraliser ce résultat à tout ordre $\OR$ d'un corps quadratique imaginaire $\K = \Q(\alpha)$ tel que $\Z\left[ \alpha\right] \subset \OR$, car dans ce cas le conducteur de $\OR$ divise $\left[ \OR_{\K} : \Z\left[ \alpha\right] \right]$ et $p\OR$ sera premier avec le conducteur. 
+\end{Rem}
 
-\begin{Def}
+ On énonce donc le théorème de Kummer dans le cas des corps quadratique imaginaire. 
+ 
+\begin{Prop}{Théorème de Kummer, cas quadratique imaginaire}
 	
-	Soit $\K$ une extension quadratique de $\Q$.
-	Avec les notations précédentes, on dira que $p$ est
-	\begin{enumerate}
-		\item ramifié si $e = 2$, $f = g = 1$
-		\item inerte si $f = 2$, $e = g = 1$
-		\item décomposé, ou "split", si $g = 2$, $e = f = 1$
-	\end{enumerate}
-	
-\end{Def}
-
-Si $\OR$ est de discriminant $\Delta$, $\sqrt{\Delta}\in\OR$ et le comportement de $p$ ne dépend que du résidus quadratique de $\Delta$ dans $\F_{p}$:
-
-\begin{Prop}
-	Soit $T(X) = X^2 - \Delta \in\F_{p}\left[ X\right] $. 
+	Soit $\K$ un corps quadratique imaginaire, et $\OR$ un ordre de $\K$ de discriminant $\Delta$. Alors $\K = \Q(\sqrt{\Delta})$. Soit $T(X) = X^2 - \Delta \in\F_{p}\left[ X\right] $. Alors
 	\begin{enumerate}
 		\item Si $T(X) = X^2$, c'est à dire $p$ divise $\Delta$, alors $p$ est ramifié.
+		\begin{equation*}
+			p\OR = \PR^{2}\; avec \; \PR = p\OR + \sqrt{\Delta}\OR
+		\end{equation*}
 		
-		$p\OR = \PR^{2}$ avec $\PR = p\OR + \sqrt{\Delta}\OR$
-		
-		\item Si $T(X)$ est irréductible, alors $p$ est inerte.
-		
-		Dans ce cas, $p\OR$ est un idéal premier de norme $p^{2}$.
+		\item Si $T(X)$ est irréductible, alors $p$ est inerte, $p\OR$ est un idéal premier de norme $p^{2}$.
 		
 		\item Si $T(X) = T_{1}(X)T_{2}(X)$ se factorise de façon non trivial, alors $p$ est décomposé.
+		\begin{equation*}
+			p\OR = \PR_{1}\PR_{2}\; avec \; \PR_{i} = p\OR + T_{i}(\sqrt{\Delta})\OR
+		\end{equation*}
 		
-		$p\OR = \PR_{1}\PR_{2}$ avec $\PR_{i} = p\OR + T_{i}(\sqrt{\Delta})\OR$
 	\end{enumerate}
 \end{Prop}
 
+Ainsi connaître le comportement de $p$ dans un ordre quadratique imaginaire $\OR$ de discriminant $\Delta$ se résume à calculer le symbole de Legendre $ \left( \frac{\Delta}{p}\right) $. Expliciter le cas décomposer demande en plus de trouver les racines de $\Delta$ dans $\F_{p}$. 
 
 \subsection{Corps de classe de Hilbert}
 
- def du corps de classe, lien groupe de classe, avec Artin. 
- Admis pour l'instant ? Enoncer plus tard ?
+Soit $\K$ un corps de nombre, $\Lc/\K$ une extension finie. On s'est intéressé au comportement des entiers premiers $p$ dans un l'ordre maximal $\OR_{\K}$. On peut de même s'intéresser aux comportement des idéaux premier de $\OR_{\K}$ vu dans $\OR_{\Lc}$. On commence par généraliser aux idéaux le vocabulaire introduit sur les nombres premiers.
+
+\begin{Def}
+	Soit $\K$ un corps de nombre, et $\PR_{\K}\subset\OR_{\K}$ un idéal premier. Soit $\Lc/\K$ une extension galoisienne. L'idéal $\PR_{\K}\OR_{\Lc}$ se factorise dans $\OR_{\Lc}$ :
+	\begin{equation*}
+		\PR_{\K}\OR_{\Lc} = \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
+	\end{equation*} 
+	On note $g$ le nombre d'idéaux premiers de la factorisation. Les exposants $e_{i}$ sont appelés les indices de ramification de $\PR_{\K}$ dans $\Lc$.
+	Puisque $\PR_{\K}\OR_{\Lc}\subset\PR_{i}$ et que $\PR_{i}$ est maximal, le corps $\OR_{\Lc}/\PR_{i}$ est une extension du corps $\OR_{\K}/\PR_{\K}$ et on note $f_{i}$ son degré. Les coefficients $f_{i}$ sont appelés les degrés d'inerties de $\PR_{\K}$ dans $\Lc$
+\end{Def}
+
+
+\begin{Prop}\cite{Cox}[Th 5.8, 5.9]
+	
+	Soit $\K$ un corps de nombre, $\Lc$ une extension galoisienne de $\K$ et $n = \left[ \Lc : \K\right] $. Soit $\PR_{\K}\subset\OR_{\K}$ un idéal premier. Alors les coefficients $e_{i}$ et $f_{i}$ de $\PR_{\K}$ dans $\Lc$ ne dépendent pas de l'indice $i$ i.e. de l'idéal premier $\PR_{i}\subset\OR_{\Lc}$ correspondant.  
+	On note $e$ et $f$ leur valeur. Alors $efg = n$.
+\end{Prop}
+
+\begin{Def}
+	Soit $\K$ un corps de nombre, $\Lc$ une extension galoisienne de $\K$. On note $n = \left[ \Lc : \K\right] $. Un idéal premier $\PR_{\K}\subset\OR_{\K}$ est dit :
+	\begin{enumerate}
+		\item ramifié dans $\Lc$, si son indice de ramification $e > 1$
+		\item inerte dans $\Lc$, si son degré d'inertie $f = n$, ce qui implique $e = g = 1$ et $p\OR_{\K}$ maximal
+		\item décomposé dans $\Lc$, si $g = n$, ce qui implique $e = f = 1$
+	\end{enumerate}
+\end{Def}
+
+Le but de ce qui suit est d'introduire le une extension particulière de $\K$, appelée son corps de classe de Hilbert, dont les propriétés sont liées au groupe de classe de $\OR_{\K}$.
+
+\begin{Def} Soit $\Lc/\K$ une extension galoisienne d'un corps de nombre  $\K$. Une injection $\sigma :\K\rightarrow\C$ est dite réelle si elle plonge $\K$ dans $\R$. Une injection réelle $\sigma$ de $\K$ est dite ramifiée dans $\Lc$ si elle peut se prolonger en une injection $\sigma :\Lc\rightarrow\C$ qui n'est pas réelle. 
+\end{Def}
+
+\begin{Rem}
+	Les injections $\sigma :\K\rightarrow\C$ sont appelées les "premiers infinis" de $\K$. \cite{Cox}[5.C]
+\end{Rem}
+
+\begin{Def}
+	Une extension $\Lc/\K$ galoisienne d'un corps de nombre $\K$ est dit abélienne si son groupe de Galois est abéliens. Une tel extension est non-ramifié si ni aucun idéal premier de $\OR_{\K}$ ni aucune injection réelle de $\K$ n'est ramifié dans $\Lc$.
+\end{Def}
  
+ \begin{The}\cite{Cox}[Th 5.18]
+ 	
+ 	Soit $\K$ un corps de nombre. Il existe une unique extension $\HR/\K$ abélienne, non-ramifiée et maximale au sens de l'inclusion, c'est à dire telle que toute extension abélienne non-ramifiée de $\K$ est incluse dans $\HR$
+ \end{The}
  
+ Cette extension de $\K$ est liée au groupe de classe de $\OR_{\K}$ par le théorème de réciprocité d'Artin. L'énoncé exacte de ce théorème demande la construction du symbole d'Artin, qui généralise le symbole de Legendre pour les idéaux premiers \cite{Cox}[Lem 5.19, Cor 5.21]. 
  
+ \begin{The}{Théorème de réciprocité d'Artin pour le corps de classe}\cite{Cox}[Th 5.23]
+ 	
+ 	Soit $\K$ un corps de nombre, $\HR$ son extension abélienne non-ramifiée maximale. Alors le groupe de Galois de l'extension $\HR/\K$ est isomorphe au groupe de classe $Cl(\OR_{\K})$
+ 	\begin{equation*}
+ 		Gal(\HR/\K)\simeq Cl(\OR_{\K})
+ 	\end{equation*}
+ \end{The} 
  
- 
- 
- 
+ \begin{Def}
+ 	Soit $\K$ un corps de nombre. Son extension abélienne non-ramifiée maximale $\HR$ est appelé corps de classe de Hilbert de $\K$.
+ \end{Def}
 
 \section{Généralité sur les courbes elliptiques}
 
-Dans cette section, on suppose connues les bases de théorie des courbes elliptiques présentent dans le cours de Mohammed Krir. On complète ces résultats avec le nécessaire pour aborder les problèmes de calculs d'isogénie. 
-
-Dans un premier on explique comment déterminer une isogénie grâce à son noyau. Elle est alors définie à équivalence prêt de la courbe d'arrivée. Ensuite on présente la notion d'invariant différentiel qui va permettre de fixer une courbe image avec une convention de normalisation. 
-
-Enfin on énonce le lien entre les courbes elliptiques et les tores complexes. Dan cette correspondance l’anneau d'endomorphisme d'une courbe peut être vu de différentes manières : l'invariant différentiel va à nouveaux nous servir à fixer une convention. 
+Dans cette section, on suppose connues les bases de théorie des courbes elliptiques présentent dans le cours de Mohammed Krir. On complète ces résultats avec le nécessaire pour aborder les algorithmes de calculs d'isogénie. 
 
 
 
