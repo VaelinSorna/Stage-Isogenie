@@ -37,9 +37,9 @@
 \newcommand{\Lc}[0]{\mathbb{L}}
 \newcommand{\Kb}[0]{\bar{\K}}
 \newcommand{\OR}[0]{\mathcal{O}}
-\newcommand{\LR}[0]{\mathcal{L}}
-\newcommand{\PR}[0]{\mathcal{P}}
-\newcommand{\IR}[0]{\mathcal{I}}
+\newcommand{\LR}[0]{\mathfrak{L}}
+\newcommand{\PR}[0]{\mathfrak{P}}
+\newcommand{\IR}[0]{\mathfrak{I}}
 \newcommand{\HR}[0]{\mathcal{H}}
 \newcommand{\CL}[0]{\tilde{\LR}}
 \newcommand{\CP}[0]{\tilde{\PR}}
@@ -1074,19 +1074,23 @@ Le théorème suivant, appelé théorème d'uniformisation, permet réciproqueme
 
 
 
-\subsection{Endomorphisme de tores}
+\subsection{Endomorphisme de tores et normalisation d'endomorphisme}
 
 \begin{Def}
-	Si $\C/\Lambda_1$, $\C/\Lambda_2$ sont deux tores, un morphisme de tores est une application 
+	Soit $\C/\Lambda_1$, $\C/\Lambda_2$ deux tores, et $\alpha\in\C$ tel que
+	\begin{equation*}
+		\alpha\in\left\lbrace \alpha\in\C : \alpha\Lambda_1 \subset \Lambda_2\right\rbrace  
+	\end{equation*} 
+	Un morphisme de tores est une application de la forme
 	\begin{equation*}
 		\phi_{\alpha} : \C/\Lambda_1 \rightarrow \C/\Lambda_2\; ,\; z \mapsto \alpha z
 	\end{equation*}
-	où $\alpha\in\left\lbrace \alpha\in\C : \alpha\Lambda_1 \subset \Lambda_2\right\rbrace $.  
-	
+
 \end{Def}
 
 \begin{Rem}
-	Si $\phi: \C/\Lambda_1 \rightarrow \C/\Lambda_2$ est une application holomorphe et nulle en $0$, alors elle de la forme $\phi_{\alpha}$ pour un certain $\alpha$. On choisit donc de définir les morphismes de tores comme étant les applications de la forme $\phi_{\alpha}$.
+	Si $\phi: \C/\Lambda_1 \rightarrow \C/\Lambda_2$ est une application holomorphe et nulle en $0$, alors elle de la forme $\phi_{\alpha}$ \cite{Sil09}[VI,4.1] pour un certain $\alpha$. On choisit donc de définir les morphismes de tores comme étant les applications de la forme $\phi_{\alpha}$.
+	
 \end{Rem}
 
 L'isomorphisme entre un réseau $\Lambda$ et sa courbe associée $E(\Lambda)$ induit un isomorphisme entre anneaux d'endomorphismes.
@@ -1103,7 +1107,7 @@ L'isomorphisme entre un réseau $\Lambda$ et sa courbe associée $E(\Lambda)$ in
 \begin{Coro}
 	Soit $\Lambda$ un réseau. Soit $R\in\C$ l'anneau des complexes représentant les endomorphisme du tore $\C/\Lambda$
 	\begin{equation*}
-		\alpha\in\left\lbrace \alpha\in\C : \alpha\Lambda \subset \Lambda\right\rbrace 
+		R = \left\lbrace \phi_{\alpha} :  \alpha\in\C ,\; \alpha\Lambda \subset \Lambda \right\rbrace 
 	\end{equation*}
 	
 	Alors on a l'isomorphisme d'anneau $R\simeq End(E_{\Lambda})$
@@ -1114,21 +1118,17 @@ L'isomorphisme entre un réseau $\Lambda$ et sa courbe associée $E(\Lambda)$ in
 \end{Coro}
 
 
+Lorsque $E$ est une courbe elliptique à multiplications complexes, $End(E)$ peut être inclus dans $\C$ de deux manières (à conjugaison prêt dans le corps quadratique imaginaire). On souhaite normaliser le choix de l'injection de $End(E)$ dans $\C$. Pour cela, on veut associer à tout $\alpha$ tel que $\alpha\Lambda\subset\Lambda$, un endomorphisme notée $[\alpha]$. Le corollaire 3.6 fourni une première convention. On va cependant définir une seconde convention de normalisation à l'aide de l'invariant différentiel, qui se généralisera plus facilement pour les courbes elliptiques à multiplication complexe définie sur des corps finis. On montrera que les deux conventions coïncident.
 
+\begin{Def}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle d'une courbe elliptique $E$, et $\phi : E\rightarrow E$. $\phi$ admet une unique forme explicite dont le départ et l'arrivé sont le modèle $E : y^2 = x^3 + ax + b$. Soit $\omega$ l'invariant différentiel de ce modèle. Il existe une constante $c\in\C$ telle que l'application contravariante de cette forme explicite de $\phi$ vérifie 
+	\begin{equation*}
+		(\phi)^{*}(\omega) = c\omega
+	\end{equation*}
+	La constante $c$ ne dépend pas du modèle de $E$ choisi, et est appelée le facteur de l'endomorphisme $\phi$.
+\end{Def}
 
-
-
-
-\subsection{Courbe elliptique à multiplication complexe}
-
-
-Lorsque $E$ est une courbe elliptique à multiplications complexes, $End(E)$ peut être inclus dans $\C$ de deux manières (à conjugaison prêt dans le corps quadratique imaginaire). On souhaite normaliser le choix de l'injection de $End(E)$ dans $\C$. Pour cela, on veut associer à tout $\alpha$ tel que $\alpha\Lambda\subset\Lambda$, un endomorphisme notée $[\alpha]$. 
-
-Si $\omega_{E}$ est un invariant différentiel de $E$, on voudra que l'application $\alpha\mapsto\left[ \alpha\right]$ soit cohérente avec l'action de $[\alpha]$ sur $\omega_{E}$. D'après le corollaire 2.16, il existe une constate $c\in\C$ telle que
-\begin{equation*}
-	[\alpha]^{*}(\omega_{E}) = c\omega_{E}
-\end{equation*}
-Comme tout les invariants différentiels de $E$ sont égaux à une constante complexe prêt, $c$ ne dépend pas du choix du modèle de $E$. On souhaite construire $\alpha\mapsto\left[ \alpha\right]$ de sorte que $c = \alpha$.
+ On souhaite construire un morphisme d'anneau $\alpha\mapsto\left[ \alpha\right]$ de sorte que le facteur de $\left[ \alpha\right]$ soit $\alpha$. On applique pour cela le corollaire 2.16 au cas où $\K = \C$.
 
 \begin{Prop}\cite{Sil09}[III, 5.6]
 	Soit $E$ une courbe elliptique sur $\C$, $\omega$ un invariant différentiel d'un modèle de $E$. Pour tout endomorphisme $\phi\in End(E)$, on note $a_{\phi}\in\Kb$ tel que $\phi^{*}(\omega) = a_{\phi}\omega$. Alors le morphisme d'anneau
@@ -1144,7 +1144,7 @@ Comme tout les invariants différentiels de $E$ sont égaux à une constante com
 Soit $\OR$ l'image de $f$ dans la proposition précédente. L'application $[.] : \OR \rightarrow End(E)$ recherchée la réciproque de $f$. 
 
 \begin{Prop}
-	Soit $E$ une courbe elliptique sur $\C$ à multiplication complexe. Il existe isomorphisme d'anneaux
+	Soit $E$ une courbe elliptique sur $\C$ à multiplication complexe. Il existe un unique isomorphisme d'anneaux
 	\begin{equation*}
 		[.] : \OR\subset\C\rightarrow End(E)
 	\end{equation*}
@@ -1155,7 +1155,7 @@ Soit $\OR$ l'image de $f$ dans la proposition précédente. L'application $[.] :
 \end{Prop}
 
 \begin{proof}
-	En choisissant $\OR$ comme l'image de l'application $f$ de la proposition 3.8, la réciproque de $f$ convient.
+	En choisissant $\OR$ comme l'image de l'application $f$ de la proposition 3.8, la réciproque de $f$ convient. Le facteur de tout endomorphisme étant unique, un tel isomorphisme est unique. 
 \end{proof}
 
 \begin{Def}
@@ -1165,15 +1165,15 @@ Soit $\OR$ l'image de $f$ dans la proposition précédente. L'application $[.] :
 \end{equation*}
 \end{Def}
 
-Cette dernière proposition permet de voir tout endomorphisme d'une corube elliptique $E$ comme un nombre complexe. On va montrer que avec cette convention de normalisation, l'image $\OR$ de $End(E)$ dans $\C$ correspond à l'anneau d'endomorphisme des tores de réseaux homothétiques associé à $E$ :
+On montre que avec cette convention de normalisation, l'image $\OR$ de $End(E)$ dans $\C$ correspond à l'anneau d'endomorphisme de tous tores équivalent à $E$ :
 
 
 \begin{Prop}\cite{Sil94}[II 1.1]
-	Soit $(E,[.])$ une courbe elliptique définie sur $\C$ à multiplication complexe normalisé. Soit $End(E)\simeq\OR\in\C$ et $\alpha\in\OR$. Si $\lambda$ est un réseau associé à $E$, alors $\alpha\Lambda\in\Lambda$ et l'isogénie $[\alpha]$ est équivalent à l'endomorphisme de tore $\phi_{\alpha}$.
 	
+	Soit $(E,[.])$ une courbe elliptique définie sur $\C$ à multiplication complexe normalisé. Soit $[\alpha]$ un endomorphisme de facteur $\alpha$. Si $\Lambda$ est un réseau associé à $E$, alors $\alpha\Lambda\in\Lambda$ et l'endomorphisme $[\alpha]$ est équivalent à l'endomorphisme de tore $\phi_{\alpha}$.
 \end{Prop}
 
-La donnée d'un réseau associé permet d'expliciter le corps quadratiques imaginaire dont l'anneau d'endomorphisme est un ordre.
+La donnée d'un réseau associé à une courbe elliptique $E$ à multiplication complexe permet d'expliciter le corps quadratiques imaginaire dont l'anneau d'endomorphisme est un ordre.
 
 \begin{Prop}
 	Soit $\Lambda = \left[ z_{1}, z_{2}\right] $ un réseau , et $E_{\Lambda}$ sa courbe elliptique associée. Si $E_{\Lambda}$ est à multiplication complexe, alors $\K = \Q\left( \frac{z_1}{z_2}\right)$ est un corps quadratique imaginaire dont $End(E)$ est un ordre. 
@@ -1193,24 +1193,13 @@ La donnée d'un réseau associé permet d'expliciter le corps quadratiques imagi
 
 \subsection{Courbes d'anneaux d'endomorphismes donné}
 
-Dans cette section, les preuves seront rédigés.
-
-
-
-
-
-
-
-Soit $E_{\Lambda}$ une courbe elliptique associée à un réseau $\Lambda$. On cherche à décrire les noyaux possibles des isogénies partant de $ E_{\Lambda}$. On supposera toujours l'isomorphisme $End(E)\simeq\OR_{\Delta}$ normalisé. Dans la suite, $\K\subset\C$ est le corps quadratiques imaginaire dont $\OR_{\Delta}$ est un ordre. 
-
-On se pose la question suivante : Partant de $\OR_{\Delta}$, comment trouver $\Lambda$ telle que $End(E_{\Lambda}) = \OR_{\Delta}$ ? 
+Dans cette section, les preuves seront rédigés. Soit $E_{\Lambda}$ une courbe elliptique associée à un réseau $\Lambda$.  On supposera toujours l'isomorphisme $End(E)\simeq\OR_{\Delta}$ normalisé. Dans la suite, $\K\subset\C$ est le corps quadratiques imaginaire dont $\OR_{\Delta}$ est un ordre.
 
 \begin{Def}
 	Soit $\OR_{\Delta}$ un ordre de discriminant $\Delta$ d'un corps quadratique imaginaire. On note $ELL(\OR_{\Delta})$ l'ensemble des courbes elliptiques à multiplication complexes d'anneaux d'endomorphismes $\OR_{\Delta}$. 
 \end{Def}
 
-
-Soit $\LR$ un idéal fractionnaire de $\OR_{\Delta}$. Un tel idéal est un $\Z$-module libre de rang $2$ qui n'est pas inclus dans $\R$, donc un réseau. On peut donc lui associer une courbe elliptique $E_{\LR}$.
+Partant d'un ordre $\OR_{\Delta}$, on peut trouver des réseaux $\Lambda$ tels que $End(E_{\Lambda}) = \OR_{\Delta}$. En effet, soit $\LR$ un idéal fractionnaire propre de $\OR_{\Delta}$. Un tel idéal est un $\Z$-module libre de rang $2$ qui n'est pas inclus dans $\R$, donc un réseau. On peut donc lui associer une courbe elliptique $E_{\LR}$.
 
 \begin{Prop}
 	Soit $\OR_{\Delta}$ un ordre de discriminant $\Delta$ d'un corps quadratique imaginaire. Soit $\LR\subset\OR_{\Delta}$ un idéal fractionnaire propre. Alors $End(E_{\LR})\simeq\OR_{\Delta}$, donc $E_{\LR}\in ELL(\OR_{\Delta})$.
@@ -1225,19 +1214,21 @@ Soit $\LR$ un idéal fractionnaire de $\OR_{\Delta}$. Un tel idéal est un $\Z$-
 	\end{align*}
 \end{proof}
 
-Puisque des réseaux homothétiques définissent des courbes équivalentes, pour tout $c\in\OR_{\Delta}$, $c\LR$ est à la fois un idéal de $\OR_{\Delta}$ et un réseau homothétique à $\LR$. On s'intéresse donc aux classes d'idéaux : Soit $Cl(\OR_{\Delta})$ le groupe de classes de $\OR_{\Delta}$, et $\CL$ la classe de $\LR$. 
-
-L'application $Cl(\OR_{\Delta})\rightarrow ELL(\OR_{\Delta})$, $\CL\mapsto E_{\LR}$ est donc bien définie. On va montrer qu'il s'agit d'une bijection
+Puisque des réseaux homothétiques définissent des courbes équivalentes, pour tout $c\in\K$, $c\LR$ est à la fois un idéal de $\OR_{\Delta}$ et un réseau homothétique à $\LR$. On s'intéresse donc aux classes d'idéaux. Soit $Cl(\OR_{\Delta})$ le groupe de classes de $\OR_{\Delta}$, et $\CL$ la classe de l'idéal fractionnaire propre $\LR$. L'application
+\begin{equation*}
+	Cl(\OR_{\Delta})\rightarrow ELL(\OR_{\Delta}),\; \CL\mapsto E_{\LR}
+\end{equation*} 
+est donc bien définie. On va montrer qu'il s'agit d'une bijection
 
 \begin{Def}
-	Soit $\Lambda$ un réseau et $\LR$ un idéal fractionnaire de $\OR_{\Delta}$. On défini le produit $\LR\Lambda$ comme l'ensemble 
+	Soit $\Lambda$ un réseau et $\LR$ un idéal fractionnaire propre de $\OR_{\Delta}$. On défini le produit $\LR\Lambda$ par
 	\begin{equation*}
 		\LR\Lambda = \left\lbrace \alpha_1\lambda_1 + \ldots + \alpha_r\lambda_r : \alpha_i\in\LR , \lambda_i\in\Lambda , r\in\N\right\rbrace 
 	\end{equation*}
 \end{Def}
 	
 \begin{Prop}
-	Soit $\Lambda$ un réseau et $\LR$ un idéal fractionnaire de $\OR_{\Delta}$. Alors $\LR\Lambda$ est un réseau de $\C$. De plus, si $E_{\Lambda}\in ELL(\OR_{\Delta})$ alors $E_{\LR\Lambda}\in ELL(\OR_{\Delta})$
+	Soit $\Lambda$ un réseau et $\LR$ un idéal fractionnaire propre de $\OR_{\Delta}$. Alors $\LR\Lambda$ est un réseau de $\C$. De plus, si $E_{\Lambda}\in ELL(\OR_{\Delta})$ alors $E_{\LR\Lambda}\in ELL(\OR_{\Delta})$
 \end{Prop}
 
 \begin{proof}\cite{Sil94}[II 1.2]
@@ -1250,10 +1241,10 @@ L'application $Cl(\OR_{\Delta})\rightarrow ELL(\OR_{\Delta})$, $\CL\mapsto E_{\L
 Soit $\Lambda$ un réseau tel que $End(E_{\Lambda}) \simeq \OR_{\Delta}$. Pour tout idéal fractionnaire propre, $End(E_{\LR\Lambda}) = End(E_{\Lambda})$, mais $\Lambda$ et $\LR\Lambda$ ne sont pas à priori homothétique. $E_{\Lambda}$ et $E_{\LR\Lambda}$ sont donc deux éléments distincts de $ELL(\OR_{\Delta})$. 
 
 \begin{Prop}
-	Soit $\Lambda$ un réseau tel que $E_{\Lambda}\in ELL(\OR_{\Delta})$, et $\LR$, $\LR'$ deux idéaux fractionnaires de $\OR_{\Delta}$. 
+	Soit $\Lambda$ un réseau tel que $E_{\Lambda}\in ELL(\OR_{\Delta})$, et $\LR$, $\LR'$ deux idéaux fractionnaires propres de $\OR_{\Delta}$. 
 	\begin{enumerate}
 		\item $E_{\LR\Lambda} = E_{\LR'\Lambda}$ si et seulement si $\CL = \CL'$
-		\item $C(\OR_{\Delta})$ agit sur $ELL(\OR_{\Delta})$ par $\CL\cdot E_{\Lambda} = E_{\LR^{-1}\Lambda}$
+		\item Le groupe $C(\OR_{\Delta})$ agit sur $ELL(\OR_{\Delta})$ par $\CL\cdot E_{\Lambda} = E_{\LR^{-1}\Lambda}$
 		\item Cette action est simplement transitive. En particulier $\left| C(\OR_{\Delta})\right| = \left| ELL(\OR_{\Delta})\right| $
 	\end{enumerate}
 \end{Prop}
@@ -1261,13 +1252,13 @@ Soit $\Lambda$ un réseau tel que $End(E_{\Lambda}) \simeq \OR_{\Delta}$. Pour t
 \begin{proof}\cite{Sil94}[II,1.2]
 	
 	\begin{enumerate}
-		\item On sait que la normalisation de $End(E)$ implique que $\OR_{\Delta}\Lambda = \Lambda$. De plus $E_{\LR\Lambda} \simeq E_{\LR'\Lambda}$ si et seulement si $\LR\Lambda = c\LR'\Lambda$ avec $c\in\C^{*}$. $\LR$ et $\LR'$ étant inversible, cela équivaut à 
+		\item On sait que la normalisation de $End(E)$ implique que $\OR_{\Delta}$ est l'ensemble des facteurs des endomorphismes de $E$, donc $\OR_{\Delta}\Lambda = \Lambda$ d'après la proposition 3.10. De plus $E_{\LR\Lambda} \simeq E_{\LR'\Lambda}$ si et seulement s'il existe $c\in\C^{*}$ tel que $\LR\Lambda = c\LR'\Lambda$. $\LR$ et $\LR'$ étant inversible, cela équivaut à 
 		\begin{equation*}
 			\Lambda = c\LR^{-1}\LR'\Lambda = c^{-1}\LR'^{-1}\LR\Lambda
 		\end{equation*}
 		Donc $c\LR^{-1}\LR'$ et $c^{-1}\LR'^{-1}\LR$ fixent $\Lambda$, donc ils sont inclus dans $\OR_{\Delta}$. Étant inverse l'un de l'autre, le seul idéal entier de $\OR_{\Delta}$ dont l'inverse est aussi entier est $\OR_{\Delta}$ lui même. Donc $c\LR^{-1}\LR' = \OR_{\Delta}$ et $\LR = c\LR'$
 		
-		\item L'action est bien définie sans difficulté, la présence de l'inverse dans la définition en fait une action à gauche.
+		\item L'action est bien définie sans difficulté, la présence de l'inverse dans la définition n'est pas nécessaire pour définir l'action, mais sera utile par la suite. 
 		
 		\item On se donne deux réseaux $\Lambda_1$ et $\Lambda_2$ dont les courbes elliptiques associées sont dans $ELL(\OR_{\Delta})$, et on cherche $\CL$ tel que $\CL\cdot E_{\Lambda_1} = E_{\Lambda_2}$. Cela équivaut à trouver un idéal fractionnaire $\LR$ tel que $\Lambda_2$ et $\LR^{-1}\Lambda_1$ soient homothétiques. Mais puisque $E_{\Lambda_1}\in ELL(\OR_{\Delta})$, $\OR_{\Delta}\Lambda_1 = \Lambda_1$ et 
 		\begin{equation*}
@@ -1279,7 +1270,7 @@ Soit $\Lambda$ un réseau tel que $End(E_{\Lambda}) \simeq \OR_{\Delta}$. Pour t
 		\end{equation*}
 		Donc si l'on trouve $\beta$ tel que $\beta\Lambda_1\subset\K$, alors $\beta\Lambda_1$ sera un idéal fractionnaire propre de $\OR_{\Delta}$. Soit $z_1$, $z_2$ des générateurs de $\Lambda_1$. D'après la proposition 3.11, si $\beta = \frac{z_1}{z_2}$ alors $\beta\Lambda_1\subset\K$ où $\K$ est le corps quadratique imaginaire dont $\OR_{\Delta}$ est un ordre. Et $\OR_{\Delta}\beta\Lambda_1 = \beta\Lambda_1$ donc $\beta\Lambda_1$ est un $\OR_{\Delta}$-module de type fini, donc c'est un idéal fractionnaire propre de $\OR_{\Delta}$. Soit $\LR_1 = \beta\Lambda_1$, et $\LR_2$ définie de la même manière à partir de $\Lambda_2$. Alors $\LR = \LR_2\LR_1^{-1}$ convient : $\LR^{-1}\Lambda_1$ est homothétique à $\Lambda_2$.
 		
-		\item pour finir, la simple transitivité découle du point 1.
+		\item Pour finir, la simple transitivité découle du point 1.
 		
 	\end{enumerate}
 	
@@ -1288,9 +1279,9 @@ Soit $\Lambda$ un réseau tel que $End(E_{\Lambda}) \simeq \OR_{\Delta}$. Pour t
 Notons que l'on peut normaliser toutes les courbes elliptiques de $ELL(\OR_{\Delta})$ de façon cohérente.
 	 
 \begin{Prop}
-	Soit $(E_1,[.]_1)$ et $(E_2,[.]_2)$ deux courbes elliptiques définient sur $\C$, à multiplication complexe, normalisées et de même anneaux d'endomorphisme $\OR_{\Delta}$. Soit $\phi : E_1 \rightarrow E_2$ une isogénie. Alors $\forall\alpha\in\OR_{\Delta}$¨
+	Soit $(E_1,[.]_1)$ et $(E_2,[.]_2)$ deux courbes elliptiques définies sur $\C$, à multiplication complexe, normalisées et de même anneaux d'endomorphisme $\OR_{\Delta}$. Soit $\phi : E_1 \rightarrow E_2$ une isogénie. Alors 
 	\begin{equation*}
-		\phi\circ[\alpha]_1 = [\alpha]_2\circ\phi
+		\forall\alpha\in\OR_{\Delta},\;\phi\circ[\alpha]_1 = [\alpha]_2\circ\phi
 	\end{equation*}
 \end{Prop}
 	 
@@ -1298,7 +1289,7 @@ Notons que l'on peut normaliser toutes les courbes elliptiques de $ELL(\OR_{\Del
 	
 	Si $\omega$ est un invariant différentiel de $E_2$, alors $\phi^{*}(\omega)$ en est un pour $E_1$. $[\alpha]_{1}^{*}$ agit dessus par multiplication par $\alpha$. Ainsi
 	\begin{align*}
-		()\phi\circ[\alpha]_1)^{*}(\omega) &= [\alpha]_{1}^{*}(\phi^{*}(\omega))\\
+		(\phi\circ[\alpha]_1)^{*}(\omega) &= [\alpha]_{1}^{*}(\phi^{*}(\omega))\\
 		&= \alpha\phi^{*}(\omega)\\
 		&= \phi^{*}(\alpha\omega)\\
 		&= \phi^{*}([\alpha]_{2}^{*}(\omega))\\
@@ -1314,7 +1305,7 @@ Notons que l'on peut normaliser toutes les courbes elliptiques de $ELL(\OR_{\Del
 	\end{equation*}
 \end{proof}
 	 
-Si $\phi : E \rightarrow E'$ est une isogénie entre deux courbes elliptiques $E$, $E'$ distinctes de même anneaux d'endomorphisme $\OR_{\Delta}$, alors $\phi$ correspond à l'action d'un unique élément $\CL\in C(\OR_{\Delta})$ sur $E$, puisque l'action est simplement transitive. On ne peut cependant pas déterminer $\phi$ à partir de $\CL$, car $\CL$ défini $\phi$ à endomorphisme prêt au départ et à l'arrivé. 
+Si $\phi : E \rightarrow E'$ est une isogénie entre deux courbes elliptiques $E$, $E'$ distinctes de même anneaux d'endomorphisme $\OR_{\Delta}$, alors $\phi$ correspond à l'action d'un unique élément $\CL\in C(\OR_{\Delta})$ sur $E$, puisque l'action est simplement transitive. On ne pourra pas déterminer $\phi$ à partir de $\CL$, car $\CL$ défini $\phi$ à endomorphisme prêt au départ et à l'arrivé (c'est dire à action d'un idéal fractionnaire prêt). 
 
 
 
@@ -1327,14 +1318,14 @@ Si $\phi : E \rightarrow E'$ est une isogénie entre deux courbes elliptiques $E
 
 \subsection{Groupes de torsions d'idéaux}
 
-On se donne une courbe elliptique $E\in Ell(\OR_{\Delta})$ et un idéal fractionnaire $\LR$. On souhaite définir à partir de $\LR$ une isogénie $\phi : E\rightarrow \CL\cdot E$ qui va nous permettre de définir une isogénie $\phi$. Pour cela, on détermine à partir de $\LR$ le noyau de $\phi$. Puisque toute classe $\CL$ contient un représentant entier, on peut supposer $\LR$ entier dans un premier temps.
+On se donne une courbe elliptique $E\in Ell(\OR_{\Delta})$ et un idéal fractionnaire propre $\LR$. On souhaite définir à partir de $\LR$ une isogénie $\phi : E\rightarrow \CL\cdot E$. Cela équivaut à définir le noyau de $\phi$ à partir de $\LR$. Lorsque $\LR$ est un idéal entier propre, on va définir un sous groupe fini de $E$ associé à $\LR$.
 
 \begin{Def}
-	Soit $(E,[.])$ une courbe elliptique définie sur $\C$ à multiplication complexe par $\OR_{\Delta}$, normalisée. Soit $\LR\in\OR_{\Delta}$ un idéal entier propre. Le groupe de $\LR$-torsion de $E$ est 
+	Soit $(E,[.])$ une courbe elliptique définie sur $\C$ à multiplication complexe par $\OR_{\Delta}$, normalisée. Soit $\LR\in\OR_{\Delta}$ un idéal entier propre. Le groupe de $\LR$-torsion d'un modèle de $E$ est 
 	\begin{equation*}
-		E\left[ \LR\right] = \left\lbrace P\in E : \left[ \alpha\right] P = \OR \; \forall\alpha\in\LR \right\rbrace 
+		E\left[ \LR\right] = \left\lbrace P\in E : \left[ \alpha\right] (P) = \OR \; \forall\alpha\in\LR \right\rbrace 
 	\end{equation*}
-	
+	Le groupe de $\LR$-torsion de $E$ est définie à isomorphisme prêt.
 \end{Def}
 
 
@@ -1342,76 +1333,52 @@ On se donne une courbe elliptique $E\in Ell(\OR_{\Delta})$ et un idéal fraction
 
 
 \begin{Ex}
+	\begin{itemize}
+		
+		\item Si $\LR = m\OR_{\Delta}$ avec $m\in\Z$, alors $E\left[ \LR\right] = E\left[ m\right] $ est le groupe de $m$-torsion.
 	
-	Si $\LR = m\OR_{\Delta}$ avec $m\in\Z$, alors $E\left[ \LR\right] = E\left[ m\right] $.
+		\item Si $\alpha\in\OR_{\Delta}$, $E[\alpha\OR_{\Delta}] = Ker([\alpha])$ (se démontre par double inclusions).
 	
-	Si $\alpha\in\OR_{\Delta}$, $E[\alpha\OR_{\Delta}] = Ker([\alpha])$ (se démontre par double inclusions).
-	
-	De plus $E\left[ \alpha\LR\right] = \left\lbrace P\in E, [\alpha]P\in E\left[ \LR\right]¨\right\rbrace = \left\lbrace P + R \; , \; P\in E\left[ \LR\right] \; , \; R\in Ker\left( \left[ \alpha \right] \right) \right\rbrace $
-	
-	Donc $E\left[ \alpha\LR\right]$ est le groupe engendré par $E[\alpha\OR_{\Delta}]$ et $E\left[ \LR\right]$.
-	
-	En particulier il est possible de définir $E\left[ \LR\right]$ à équivalence prêt. 
+	\end{itemize}
 	
 \end{Ex}
 
-Si $E\in E_{\Lambda}$ et $\LR\in\OR_{\Delta}$, alors $\LR\Lambda\subset\Lambda$. Avec $\LR$ propre, $\Lambda\subset\LR^{-1}\Lambda$ ce qui permet de définir une isogénie :
+On montre que $E[\LR]$ est le noyau de l'isogénie $\phi : E\rightarrow \CL\cdot E$. La présence d'un inverse dans la définition de $\CL\cdot E$ permet ce résultat.
 
 \begin{Def}
-	
-	Soit $\LR$ un idéal propre de $\OR_{\Delta}$, et $E_{\Lambda}\in ELL(\OR_{\Delta})$.
-	
-	On associe à $\LR$ et $E_{\Lambda}$ l'isogénie suivante :
-	
+	Soit $\LR$ un idéal entier propre de $\OR_{\Delta}$, et $\Lambda$ un réseau tel que $E_{\Lambda}\in ELL(\OR_{\Delta})$. On associe à $\LR$ le morphisme de tores
 	\begin{equation*}
 		\phi_{\LR} : \C/\Lambda\rightarrow\C/\LR^{-1}\Lambda\; , \; z\mapsto z
 	\end{equation*}
 	
-	définie à équivalence prêt. 
 	
 \end{Def}
 
-\begin{Rem}
-	D'après la proposition 5.6, $\phi_{\LR}\circ[\alpha] = [\alpha]\circ\phi_{\LR} = \phi_{\alpha\LR}$
-	Donc $\CL$ ne définie pas une isogénie mais une classe d'équivalence d'isogénie à endomorphisme prêt. 
-	Le passage de $E_{\Lambda}$ à $E_{\LR^{-1}\Lambda}$ est exactement l'action de $\CL$ sur $E_{\Lambda}$.
-\end{Rem}
-
-La proposition suivante résume le lien entre l'isogénie $\phi_{\LR}$ et le groupe de $\LR$-torsion :
-
 \begin{Prop}
-	
-	Soit $E_{\Lambda}\in ELL(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal propre. 
-	
-	Alors $E_{\LR^{-1}\Lambda} = \CL\cdot E_{\Lambda}$ est l'unique classe d'équivalence de courbes elliptiques telle qu'il existe une isogénie $\phi : E_{\Lambda}\rightarrow E_{\LR^{-1}\Lambda}$ de noyau $E\left[ \LR\right]$. Cette isogénie est $\phi_{\LR}$
+	Soit $\Lambda$ un réseau tel que $E_{\Lambda}\in ELL(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal entier propre. Alors $E_{\Lambda}\left[ \LR\right]$ est un sous groupe fini de $E_{\Lambda}$, et $E_{\LR^{-1}\Lambda} = \CL\cdot E_{\Lambda}$ est l'unique courbes elliptiques telle qu'il existe une isogénie $\phi : E_{\Lambda}\rightarrow E_{\LR^{-1}\Lambda}$ de noyau $E_{\Lambda}\left[ \LR\right]$. Cette isogénie est $\phi_{\LR}$
 	
 \end{Prop}
 
 
-\begin{proof}
-	
-	On montre que $E\left[ \LR\right]$ est le noyau de $\phi_{\LR}$
-	
+\begin{proof}\cite{Sil94}[II,1.4]
+	On montre que $E_{\Lambda}\left[ \LR\right]$ est le noyau de $\phi_{\LR}$. D'abord, en identifiant un endomorphisme à son facteur,
 	\begin{align*}
-		E\left[ \LR\right]&\simeq \left\lbrace z\in\C/\Lambda : \alpha z = 0 \;,\; \forall\alpha\in\LR\right\rbrace \\
+		E_{\Lambda}\left[ \LR\right]&\simeq \left\lbrace z\in\C/\Lambda : \alpha z = 0 \;,\; \forall\alpha\in\LR\right\rbrace \\
 		&=\left\lbrace z\in\C : \alpha z\in\Lambda \;,\;\forall\alpha\in\LR\right\rbrace / \Lambda\\
-		&=\left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace / \Lambda\\
+		&=\left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace / \Lambda
 	\end{align*}
-	
-	Or par double inclusion $\left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace = \LR^{-1}\Lambda$
-	
-	Donc $E\left[ \LR\right]\simeq\LR^{-1}\Lambda/\Lambda = Ker(\phi_{\LR})$
-	
-	En particulier $E\left[ \LR\right]$ est un sous groupe fini de $E$. On a déjà montrer l'unicité d'une classe d'équivalence d'isogénie de noyau $G$ dès que $G$ est un sous groupe fini de $E$. 
+	Or $\LR\Lambda = \Lambda$ car $\LR$ est entier, donc $ \LR^{-1}\Lambda \subset \left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace $. Inversement si $z\in\C$ est tel que $z\LR\subset\Lambda$, alors $z\OR_{\Delta}\subset\LR^{-1}\Lambda$ donc en particulier $z\in\LR^{-1}\Lambda$. Donc $ \LR^{-1}\Lambda \subset \left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace $ et
+	\begin{equation*}
+		E_{\Lambda}\left[ \LR\right]\simeq\LR^{-1}\Lambda/\Lambda = Ker(\phi_{\LR})
+	\end{equation*}
+	En particulier $E_{\Lambda}\left[ \LR\right]$ est un sous groupe fini de $E$. 
 	
 \end{proof}
 
-On montre ensuite comment la donnée de $\LR$ permet de retrouver le degré de $\phi$. On aura besoin d'admettre une version du résultat dont la preuve demande de factoriser l'idéal $\LR$ : il faut d'abord se restreindre aux idéaux premiers avec le conducteur. On montrera ensuite comment généraliser aux idéaux propres. 
+Lorsque $\LR\subset\OR_{\Delta}$ n'est plus seulement un idéal entier propre mais est un idéal premier avec le conducteurs, le degré de l'isogénie $\phi_{\LR}$ est la norme de $\LR$. 
 
 \begin{Prop}
-	
-	Soit $E_{\Lambda}\in ELL(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal premier avec le conducteur. Alors :
-	
+	Soit $\Lambda$ un réseau tel que$E_{\Lambda}\in ELL(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal entier premier avec le conducteur. Alors :
 	\begin{enumerate}
 		\item $E\left[\LR\right]$ est un $\OR_{\Delta}/\LR$-module libre de rang $1$.
 		\item $\phi_{\LR}$ est de degré $N\left( \LR\right)$ 
@@ -1420,33 +1387,28 @@ On montre ensuite comment la donnée de $\LR$ permet de retrouver le degré de $
 	
 \end{Prop}
 
-\begin{proof}
+\begin{proof}\cite{Sil94}[II, 1.4, 1.5]
 	\begin{enumerate}
-		\item (Admis) La preuve de SYL2 utilise une version du théorème des restes chinois sur les idéaux fractionnaire, sur l'anneau des entiers. La preuve ne se généralise donc qu'aux idéaux premier avec le conducteur.  
+		\item (Admis) La preuve de \cite{Sil94} utilise une version du théorème des restes chinois sur les idéaux fractionnaire, sur l'anneau des entiers $\OR_{\K}$. La preuve ne se généralise donc aux ordres quelconques $\OR_{\Delta}$ qu'en se restreignant aux idéaux entier premier avec le conducteur.  
 		
-		\item Découle de 1. car $\left| E\left[\LR\right]\right| = \left| \OR_{\Delta}/\LR\right| = N\left( \LR\right)$
-		\item En particulier si $\LR = \alpha\OR_{\Delta}$ est principal, $[\alpha]$ est l'endomorphisme de noyau $E\left[\alpha\OR_{\Delta}\right]$. 
-		Donc $deg \left( \left[\alpha \right] \right) = N\left( \alpha\OR_{\Delta}\right) = N_{\Q}^{\K}\left( \alpha\right) $ (d'après ?? section 2)
+		\item Découle de 1. car $\left| E\left[\LR\right]\right| = \left| \OR_{\Delta}/\LR\right| = N\left( \LR\right)$.
+		
+		\item En particulier si $\LR = \alpha\OR_{\Delta}$ est principal, $[\alpha]$ est l'endomorphisme de noyau $E\left[\alpha\OR_{\Delta}\right]$. Donc 
+		\begin{equation*}
+			deg \left( \left[\alpha \right] \right) = N\left( \alpha\OR_{\Delta}\right) = N_{\Q}^{\K}\left( \alpha\right) 
+		\end{equation*}
 	\end{enumerate}
 \end{proof}
 
+
+Ainsi, se donner un idéal entier propre $\LR$ de $\OR_{\Delta}$ et une courbe elliptique $E$ d'anneaux d'endomorphisme $\OR_{\Delta}$ permet de définir une isogénie $\phi_{\LR}$ et de trouver la classe d'équivalence des courbes d'arrivée. Il suffit alors d'appliquer un isomorphisme à l'arrivée pour que l'isogénie soit normalisé au sens de la proposition 2.13. 
+
+
+
 \begin{Rem}
-	
-	Si $\LR$ est propre sans être premier avec le conducteur ? On sait que $\CL$ contient un élément premier avec le conducteur (?? section 2). Notons le $\LR'$, alors $E\left[\LR\right] = E\left[ \alpha\LR'\right]$ et d'après l'exemple 5.8, 
-	
-	$deg(\phi_{\LR}) = deg(\phi_{\alpha\LR'}) = deg([\alpha])deg(\phi_{\LR'}) = N(\alpha\OR_{\Delta})N(\LR') = N(\LR)$
-	
-	Donc la proposition 5.12 reste vraie pour les idéaux propres. 
-	
+	Si $E$ est une courbe elliptique de $Ell(\OR_{\Delta})$, alors tout idéal fractionnaire propre de $\OR_{\Delta}$ défini une isogénie. On est seulement capable d'expliciter le noyau quand l'idéal est entier. En particulier tout idéal fractionnaire principal défini un endomorphisme de $E$, lui même toujours représenter par un idéal principal entier défini par son facteur. Donc deux idéaux factionnaires propres peuvent définir une même isogénie. 
 \end{Rem}
 
-Pour résumé, se donner un idéal propre (stricte) de $\OR_{\Delta}$ et une courbe $E$ d'anneaux d'endomorphisme $\OR_{\Delta}$ permet de définir une isogénie $\phi$ et de trouver la classe d'équivalence des courbes d'arrivée. On peut fixer un choix d'image par normalisation. 
-Ceci sera rendu explique dans l'explication du protocole de l'algorithme. 
-
-Tous les sous groupes finis de $E$ ne sont pas forcément de la forme $E[\LR]$ : on se limite aux isogénies qui conservent l’anneau d'endomorphisme, dites horizontales. 
-
-
-%On les as toutes ? sens contraire ?
 
 
 
@@ -1455,7 +1417,9 @@ Tous les sous groupes finis de $E$ ne sont pas forcément de la forme $E[\LR]$ :
 
 
 
-\section{Courbes ordinaires sur corps finis}
+
+
+\section{Courbes à multiplication complexe sur corps finis}
 
 
 
