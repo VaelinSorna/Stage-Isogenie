@@ -37,6 +37,8 @@
 \newcommand{\Lc}[0]{\mathbb{L}}
 \newcommand{\Kb}[0]{\bar{\K}}
 \newcommand{\Qb}[0]{\bar{\Q}}
+\newcommand{\Zb}[0]{\bar{\Z}}
+\newcommand{\Fb}[0]{\bar{\F}}
 \newcommand{\OR}[0]{\mathcal{O}}
 \newcommand{\LR}[0]{\mathfrak{L}}
 \newcommand{\PR}[0]{\mathfrak{P}}
@@ -1450,11 +1452,11 @@ Ainsi, se donner un idéal entier propre $\LR$ de $\OR_{\Delta}$ et une courbe e
 
 
 
-\section{Courbes à multiplication complexe sur corps finis}
+\section{Courbes à multiplication complexe}
 
 
 
- Étant donnée une courbe elliptique $E$ définie sur un corps fini $\F_{q}$, on souhaite calculer sous réserve d'existence une isogénie de degré $l$ donné, définie sur $\F_{q}$, partant de $E$. Pour cela on fait le lien entre $E$ et une courbe elliptique définie sur $\C$ à multiplication complexe de même anneaux d'endomorphisme. On peut alors expliciter le noyau de l'isogénie cherchée comme groupe de torsion d'un certain idéal entier $\LR$. On énoncera de plus un résultat dû à Kohel : la structure de volcan d'isogénie. Cela fournira un critère simple sur $l$ pour assurer l'existence d'une isogénie de degré $l$ définie sur $\F_{q}$.  
+ Étant donnée une courbe elliptique $E$ à multiplication complexe définie sur un corps fini $\F_{q}$, on souhaite calculer sous réserve d'existence une isogénie de degré $l$ donné, définie sur $\F_{q}$, partant de $E$. Pour cela on fait le lien entre $E$ et une courbe elliptique à multiplication complexe définie sur $\C$ de même anneaux d'endomorphisme. On peut alors expliciter le noyau de l'isogénie cherchée comme groupe de torsion d'un certain idéal entier $\LR$. On énoncera de plus un résultat dû à Kohel : la structure de volcan d'isogénie. Cela fournira un critère simple sur $l$ pour assurer l'existence d'une isogénie de degré $l$ définie sur $\F_{q}$.  
 
 
 
@@ -1472,7 +1474,7 @@ Ainsi, se donner un idéal entier propre $\LR$ de $\OR_{\Delta}$ et une courbe e
 	Pour tout corps $\K$, on note $Ell_{\K}(\OR_{\Delta})$ l'ensemble des courbes elliptiques définies sur $\K$ d'anneaux d'endomorphisme $\OR_{\Delta}$.
 \end{Def}
 
-Pour tout ordre quadratique imaginaire $\OR_{\Delta}$, On souhaite comparer $Ell_{\C}(\OR_{\Delta})$ et $Ell_{\F_{q}}(\OR_{\Delta})$. Plus précisément, on cherche les corps finis $\F_{q}$ tels que $Ell_{\C}(\OR_{\Delta})\simeq Ell_{\F_{q}}(\OR_{\Delta})$. On commence par réduire l'étude de $Ell_{\C}(\OR_{\Delta})$ à un sous-corps de $\C$.
+On va montrer que l'on peut réduire l'étude de $Ell_{\C}(\OR_{\Delta})$ à un sous-corps de $\Qb$.
 
 \begin{Def}
 	Soit $E$ une courbe elliptique définie sur un corps $\K$. On note $j(E)\in\K$ son $j$-invariant. 
@@ -1484,10 +1486,10 @@ Pour tout ordre quadratique imaginaire $\OR_{\Delta}$, On souhaite comparer $Ell
 	
 \end{Prop}
 
-Chaque élément de $Ell_{\C}(\OR_{\Delta})$ peut être décrit par son $j$-invariant.
+Chaque courbe de $Ell_{\C}(\OR_{\Delta})$ est déterminé par son $j$-invariant.
 
 \begin{Def}
-	Soit $E\in Ell_{\C}(\OR_{\Delta})$ et $sigma$ un automorphisme de $\C$. Si $E : y^2 = x^3 + ax + b$ est un modèle de $E$, on définie le modèle $E^{\sigma} : y^2 = x^3 + \sigma(a)x + \sigma(b)$. Tout les modèles obtenues à partir de $sigma$ et de modèles de $E$ sont isomorphes et définissent une courbe elliptique $E^{\sigma}$
+	Soit $E\in Ell_{\C}(\OR_{\Delta})$ et $\sigma$ un automorphisme de $\C$. Si $E : y^2 = x^3 + ax + b$ est un modèle de $E$, on définie le modèle $E^{\sigma} : y^2 = x^3 + \sigma(a)x + \sigma(b)$. Tout les modèles obtenues à partir de $\sigma$ et de modèles de $E$ sont isomorphes et définissent une courbe elliptique $E^{\sigma}$.
 \end{Def}
 
 \begin{Prop}\cite{Sil94}[II 2.1]
@@ -1509,7 +1511,7 @@ Chaque élément de $Ell_{\C}(\OR_{\Delta})$ peut être décrit par son $j$-inva
 \end{Prop}
 
 
-On n'aura pas besoin de se placer sur le corps $\Q$ tout entier, mais seulement sur le corps engendré par les $j$-invariants de $Ell_{\Qb}(\OR_{\Delta})$. En effet il suffit de se placer sur un corps qui garanti l'existence d'un modèle de chaque courbe.
+On n'aura pas besoin de se placer sur le corps $\Qb$ tout entier, mais seulement sur le sous-corps engendré par les $j$-invariants de $Ell_{\Qb}(\OR_{\Delta})$. En effet il suffit de se placer sur un corps qui garanti l'existence d'un modèle de chaque courbe.
 
 \begin{Prop}
 	
@@ -1549,67 +1551,124 @@ Lorsque $\OR_{\Delta} = \OR_{\K}$ où $\K$ est un corps quadratiques imaginaires
 \subsection{Réduction de courbes elliptiques complexes}
 
 
-Soit $E$ une courbe elliptique définie sur $\C$. D'après ce qui précède, il existe un corps de nombre $\HR$ sur lequel $E$ est défini. Quitte à prendre l'extension galoisienne de $\HR$, on pourra supposer que $\HR$ est galoisien sur $\Q$ si besoin. Soit $p$ un nombre premier. On va construire une courbe elliptique $\tilde{E}$ définie sur un corps fini $\F_{q}$ de caractéristique $p$.
+Soit $E$ une courbe elliptique à multiplication complexe définie sur $\Qb$. On veut construire une courbe elliptique $\tilde{E}$ définie sur un corps fini $\F_{q}$ de caractéristique $p$, telle que $End(E)\simeq End(\tilde{E})$. 
 
 \begin{Def}
-	Soit $\HR$ un corps de nombre, $p$ un nombre premier. Soit $\PR\subset\OR_{\HR}$ un idéal premier au dessus de $p$. On note $A_{\PR} = (\OR_{\HR})_{(\PR)}$ le localisé de $\OR_{\HR}$ en $\PR$. 
-\end{Def}
-
-\begin{Def}
-	Soit $E$ une courbe elliptique définie sur $\HR$. Soit $p$ un nombre premier, $\PR$ un idéal de premier de $\OR_{\HR}$ au dessus de $p$. $E$ admet une bonne réduction modulo $\PR$ si elle admet un modèle $E_{0}$ à coefficient dans $A_{\PR}$ dont le discriminant n'est pas un élément de $\PR$. Ce modèle n'est pas nécessairement sous forme d'équation de Weierstrass réduite. On note $\tilde{E}$ la courbe algébrique définie par le modèle $E_{0}$ modulo $\PR$. $\tilde{E}$ ne dépend pas du choix de modèle $E_{0}$. 
-
+	On note $\Zb$ l'ensemble des entiers algébriques. $\Zb$ est un anneaux. Si $\PR$ est un idéal premier de $\Zb$, on note $S_{\PR} = \Zb\setminus\PR$ et $\Zb_{\left( \PR\right) }$ le localisé de $\Zb$ en $S_{\PR}$. On note $m_{\PR}$ sont unique idéal maximal. On dira que $\PR$ est au dessus d'un nombre premier $p$ si $\PR\cap\Z = p\Z$. 
 \end{Def}
 
 \begin{Prop}
-	Soit $E$ une courbe elliptique définie sur un corps de nombre $\HR$. Soit $p$ un nombre premier, $\PR$ un idéal de premier de $\OR_{\HR}$ au dessus de $p$, et $f_{p}$ le degré d'inertie de $p$ relativement à $\PR$. Si $E$ admet une bonne réduction modulo $\PR$, alors la réduction $\tilde{E}$ est une courbe elliptique définie sur $\F_{q}$ où $q = p^{f_{p}}$
+	Soit $E$ une courbe elliptique définie sur $\Qb$, et $\PR$ un idéal premier de $\Zb$. Alors $E$ admet un modèle à coefficient dans $\Zb$. 
 \end{Prop}
 
 \begin{proof}
-	Par définition, $\tilde{E}$ est définie par une équation de Weierstrass à coefficient dans $A_{\PR}/\PR$. Or l'application
-	\begin{equation*}
-		\Psi : \widetilde{\left( \frac{a}{b}\right)}\in A_{\PR}/\PR\longmapsto \tilde{a}\tilde{b}^{-1}\in\OR_{\HR}/\PR\simeq\F_{q}
-	\end{equation*}
-	Et une bijection d'inverse
-	\begin{equation*}
-		\Psi' : \tilde{a}\in\OR_{\HR}/\PR\longmapsto \widetilde{\left( \frac{a}{1}\right)}\in A_{\PR}/\PR
-	\end{equation*}
-	Donc $\tilde{E}$ est définie par une équation de Weierstrass à coefficient dans $\F_{q}$. Comme le discriminant de $E$ n'est pas dans $\PR$ par hypothèse de bonne réduction, $\tilde{E}$ est une courbe algébrique lisse, donc une courbe elliptique.
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de $E$ définie sur $\Qb$. Pour tout $u\in\C^{*}$, on peut se ramener à isomorphisme prêt au modèle 
+	$E : y^2 = x^3 + u^4ax + u^6b$. Si $a$ et $b$ ne sont pas dans $\Zb$, puisque $\Qb$ est le corps de fraction de $\Zb$, en choisissant pour $u$ le $ppcm$ des dénominateurs de $a$ et $b$, on se ramène à un modèle définie sur $\Zb$. 
 \end{proof}
 
-\begin{Rem}
-	Lorsque $\HR$ est galoisien, le cardinal du corps finis sur lequel on défini la réduction de $E$ ne dépend pas de $\PR$. 
-\end{Rem}
+\begin{Prop}
+	Soit $\PR$ un idéal maximal de $\Zb$. Alors on a l'isomorphisme de corps
+	\begin{equation*}
+		\Zb_{\left( \PR\right) } / m_{\PR} \simeq \Zb/\PR 
+	\end{equation*}
+\end{Prop}
 
-Lorsque deux courbes $E$ et $E'$ définies sur un corps de nombre $\HR$ admette une bonne réduction modulo $\PR$ au dessus de $p$, on peut définir la réduction d'une isogénie $\phi : E\rightarrow E'$ définie sur $\HR$.
+\begin{proof}
+	L'inclusion de $\Zb$ dans $\Zb_{\left( \PR\right) }$ et la projection de $\Zb_{\left( \PR\right) }$ sur $\Zb_{\left( \PR\right) } / m_{\PR}$ définissent un morphisme 
+	\begin{equation*}
+		\psi : \Zb \rightarrow \Zb_{\left( \PR\right) } / m_{\PR}
+	\end{equation*}
+	On montre que $\psi$ est surjective. En effet $\PR$ étant maximal, pour tout $s\in S_{\PR}$ et $a\in\Zb$ , $s\Zb + \PR$ est un idéal contenant strictement $\PR$, donc $s\Zb + \PR = \Zb$. Ainsi tout élément $a$ s'écrit $sb + c$ avec $b\in\Zb$ et $c\in\PR$. Donc $\tilde{\frac{a}{s}} = \psi(b)$. Or 
+	\begin{equation*}
+		Ker (\psi) = m_{\PR}\cap\Zb = \PR
+	\end{equation*}
+	Donc $\psi$ induit un isomorphisme 
+	\begin{equation*}
+		\Zb_{\left( \PR\right) } / m_{\PR} \simeq \Zb/\PR 
+	\end{equation*}
+\end{proof}
 
 \begin{Def}
-	Soit $E$ et $E'$ deux courbes elliptiques définies sur un corps de nombre $\HR$, qui admettent une bonne réduction modulo $\PR$ au dessus de $p$. Soit $\phi : E\rightarrow E'$ une isogénie définie sur $\HR$ Alors il existe une forme explicite de $\phi$ à coefficient dans $A_{\PR}$. La réduction de $\phi$ modulo $\PR$, notée $\tilde{\phi}$, est définie en considérant cette forme explicite modulo $\PR$. On dit que $\phi$ admet une bonne réduction modulo $\PR$ si $\tilde{\phi}$ est non dégénérée.  
+	Soit $\PR$ un idéal premier de $\Zb$, $E$ une courbe elliptique définie sur $\Qb$. On définit la réduction modulo $\PR$ d'un modèle de $E$ de la façon suivante : On se donne $E : y^2 = x^3 + ax + b$ un modèle de $E$ défini sur $\Zb_{\left( \PR\right) }$. Soit $\tilde{a}$, $\tilde{b}$ les projections de $a$ et $b$ dans le corps $k = \Zb / \PR$. Le modèle réduit $\tilde{E}$ est définie sur $k$ par l'équation de Weierstrass $\tilde{E} : y^2 = x^3 + \tilde{a}x + \tilde{b}$. On dira que la réduction est bonne si le discriminant du modèle réduit est non nul, c'est à dire si le discriminant du modèle de départ est dans $S_{\PR}$.
+\end{Def}
+
+\begin{Prop}
+	
+	Soit $\PR$ un idéal premier de $\Zb$ et $E$ une courbe elliptique définie sur $\Qb$. Toutes les réduction des modèles de $E$ définis sur $\Zb_{\left( \PR\right) }$ sont isomorphes. En particulier si l'un admet une bonne réduction, toutes les réductions sont bonnes.
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[VII 1.3b]
+	
+	On admettra ce résultat. La preuve demande l'introduction de la notion de valuation discrète, qui ne nous sera pas utile par la suite.
+\end{proof}
+
+\begin{Def}
+	Soit $\PR$ un idéal premier de $\Zb$, $E$ une courbe elliptique définie sur $\Qb$. La courbe elliptique définie par réduction des modèles de $E$ modulo $\PR$ est appelé la réduction de $E$ modulo $\PR$, notée $\tilde{E}$. 
 \end{Def}
 
 \begin{Rem}
-	
-	On peut réduire des isogénie $\phi : E\rightarrow E'$ qui ne sont pas définie sur $\HR$. En effet il existe une extension finie $\Lc$ de $\HR$ sur laquelle $\phi$ est définie. Quand on réduit $E$ et $E'$ modulo $\PR$, on réduit $\phi$ modulo $\PR_{\Lc}$ un idéal premier de $\OR_{\Lc}$ au dessus de $\PR$. On peut alors considérer les réduction de $E$ et $E'$ modulo $\PR_{\Lc}$, on trouvera les mêmes réductions que celles modulo $\PR$
+	Si l'on réduit une courbe elliptique $E$ à multiplication complexe modulo $\PR$ un idéal maximal au dessus de $p$, alors on peut voir $E$ comme défini sur un corps de nombre $\HR$. $\tilde{E}$ est alors défini sur $\OR_{\HR}/\PR\cap\OR_{\HR}$. l'idéal $\PR\cap\OR_{\HR}$ est au dessus de $p$ et premier dans $\OR_{\HR}$, donc maximal et $\OR_{\HR}/\PR\cap\OR_{\HR}$ est un corps fini. $\tilde{E}$ est donc définie sur $\F_{q}$ où $q$ est déterminé par le degré d'inertie de $p$ dans $\HR$. Notamment si $p$ est décomposé dans $\HR$, $\tilde{E}$ est défini sur $\F_{p}$.
 \end{Rem}
 
-La réduction des isogénie est alors une application injective :
+On définit la réduction au niveau des points.
 
-\begin{Prop}\cite{Sil94}[II, 4.4]
+\begin{Def}
+	Soit $\PR$ un idéal premier de $\Zb$, $E$ une courbe elliptique définie sur $\Qb$. Soit $P = (x,y)$ un point d'un modèle $E : y^2 = x^3 + ax + b$ de $E(\Qb)$. On définit $\tilde{P}$ par
+	\begin{itemize}
+		\item $\tilde{P} = (\tilde{x},\tilde{y})$ si $x$, $y\in\Zb_{\left( \PR\right) }$
+		\item Sinon $\tilde{P} = \OR$, où $\OR$ est le neutre de $\tilde{E}$.
+	\end{itemize}
+\end{Def}
+
+\begin{Prop}
 	
-	Soit $E$, $E'$ deux courbes elliptiques définies sur un corps de nombre $\HR$, qui admettent une bonne réduction modulo $\PR$ au dessus de $p$. Soit $Hom_{\HR}(E, E')$ l'ensemble des isogénies définies sur $\HR$ entre $E$ et $E'$. L'application 
+	Soit $\PR$ un idéal premier de $\Zb$, $E$ une courbe elliptique définie sur $\Qb$. Soit $P$ un point de $E$. L'application $P\mapsto\tilde{P}$ est un morphisme de groupe surjectif.
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[VII 2.1]
+	
+	la preuve citée utilise une définition plus rigoureuse du morphisme de projection, sur une extension de $\Qb$. Elle utilise le lemme de Hensel. Pour nos application, on se restreint à notre définition, qui est équivalente. 
+\end{proof}
+
+On définit la réduction au niveau des isogénies. 
+
+\begin{Prop}\cite{Lang}[9 \S2]
+	
+	Soit $\phi E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. $E$ et $E'$ sont définies sur un corps de nombre $\HR$. Alors $\phi$ est définie sur une extension fini de $\HR$. Ainsi $\phi$ est définie sur $\Qb$.
+\end{Prop}
+
+\begin{Def}
+	 Une forme explicite d'une isogénie $\phi :E\rightarrow E'$ définie sur $\Qb$ est réductible modulo $\PR\subset\Zb$ idéal maximal si c'est une forme explicite définie sur $\Zb_{\left( \PR\right) }$. On définit une forme réduite de $\phi$ en considérant la même forme explicite vu dans $\Zb/\PR$. 
+\end{Def}
+
+\begin{Prop}
+	Soit $\phi E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. Soit $\PR\subset\Zb$ un idéal maximal. Alors $\phi$ admet une forme explicite réductible modulo $\PR$. Les formes réduites définissent une isogénie $\tilde{\phi} : \tilde{E}\rightarrow\tilde{E'}$ indépendante du choix de forme explicite réductible de $\phi$
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[VII 2.1]
+	
+	Ici encore la preuve est admise et utilise des notions qui ne sont pas introduite précédemment. Lors du calcul d'isogénie, nous n'aurons pas besoin d'expliciter des réductions de formes explicites d'isogénie. 
+\end{proof}
+
+La réduction des isogénie est alors une application injective. On a cependant pas la surjectivité en général. 
+
+\begin{Prop}\cite{Sil94}[II, 4.4], \cite{Lang}[9 \S2]
+	
+	Soit $E$, $E'$ deux courbes elliptiques définies sur un corps de nombre $\HR$, qui admettent une bonne réduction modulo $\PR\subset\Zb$ idéal maximal. Soit $Hom(E, E')$ l'ensemble des isogénies entre $E$ et $E'$. L'application 
 	\begin{equation*}
-		Hom_{\HR}(E, E')\rightarrow Hom_{\HR}(\tilde{E}, \tilde{E'}),\;\phi\mapsto\tilde{\phi}
+		Hom(E, E')\rightarrow Hom(\tilde{E}, \tilde{E'}),\;\phi\mapsto\tilde{\phi}
 	\end{equation*}
 	est injective, et préserve le degré : $deg(\phi) = deg(\tilde{\phi})$
 	
 \end{Prop}
 
-On cherche à savoir sous quels condition on obtient un isomorphisme $End(E)\simeq End(\tilde{E})$. On cite pour cela un critère dû à Deuring :
+On cherche à savoir sous quelles conditions on obtient un isomorphisme $End(E)\simeq End(\tilde{E})$. On cite pour cela un critère dû à Deuring :
 
 \begin{The}\cite{Lang}[13.12]
 	
-	Soit $E$ une courbe elliptique à multiplication complexe définie sur un corps de nombre galoisien $\HR$, avec $End(E)$ de conducteur $f$. Soit $\K$ le corps quadratique imaginaire dont $End(E)$ est un ordre. On note $f = p^r f_{0}$ tel que $p$ ne divise pas $f_{0}$. Soit $\PR$ un idéal premier de $\OR_{\HR}$ au dessus de $p$.
+	Soit $E$ une courbe elliptique à multiplication complexe, avec $End(E)$ de conducteur $f$. Soit $\K$ le corps quadratique imaginaire dont $End(E)$ est un ordre. On note $f = p^r f_{0}$ tel que $p$ ne divise pas $f_{0}$. Soit $\PR$ un idéal maximal de $\Zb$ au dessus de $p$.
 	\begin{enumerate}
-		\item Si $p$ est décomposé dans $\K$, alors la réduction $\tilde{E}$ modulo $\PR$ est une courbe elliptique à multiplication complexe, et $End(\tilde{E})$ est un ordre de $\K$ de conducteur $f_{0}$
+		\item Si $p$ est décomposé dans $\K$, alors la réduction $\tilde{E}$ modulo $\PR$ est une courbe elliptique à multiplication complexe, et $End(\tilde{E})$ est un ordre de $\K$ de conducteur $f_{0}$.
 		\item Si de plus $p$ de divise pas $f$, $End(E)\simeq End(\tilde{E})$, et l'application 
 		\begin{equation*}
 			End(E)\rightarrow End(\tilde{E}),\;\phi\mapsto\tilde{\phi}
@@ -1621,15 +1680,44 @@ On cherche à savoir sous quels condition on obtient un isomorphisme $End(E)\sim
 \end{The}
 
 
-Si on se donne une courbe elliptique $E$ définie sur $\C$ à multiplication complexe, on choisira $p$ premier avec $f$ et décomposé dans le corps quadratique imaginaire $\K$. On pourra alors réduire $E$ sur $\F_{q}$ où $q$ dépend du choix d'un corps de nombre $\HR$ et d'un idéal de réduction $\PR$.
+Si on se donne une courbe elliptique $E$ définie sur $\Qb$ à multiplication complexe, on choisira $p$ premier avec $f$ et décomposé dans le corps quadratique imaginaire $\K$. On pourra alors réduire $E$ modulo un idéal maximal de $\Zb$ au dessus de $p$.
+
+\begin{Def}
+	Soit $E$ une courbe elliptique à multiplication complexe et $p$ un nombre premier. On dira que $E$ se réduit complètement modulo $p$ via $\PR\subset\Zb$ si elle admet une bonne réduction modulo l'idéal maximal $\PR\subset\Zb$ au dessus de $p$ et que alors $End(E)\simeq End(\tilde{E})$.
+\end{Def}
+
+On montre dans ce cas que l'on peut étendre la normalisation de $End(E)$ à $End(\tilde{E})$
+
+\begin{Def}
+	Soit $E$ une courbe elliptique défini sur $\Qb$ et $\omega = \frac{dx}{2y}$ un invariant différentiel d'un modèle de $E$. Soit $\PR\subset\Zb$ un idéal maximal. La réduction de $\omega$ modulo $\PR$, notée $\tilde{\omega}$, est l'invariant différentiel de la réduction du modèle de $E$ associé à $\omega$. 
+\end{Def}
+
+\begin{Prop}\cite{Lang}[9 \S4]
+	
+	Soit $(E,[.])$ une courbe elliptique complexe normalisée d'anneau d'endomorphisme isomorphe à $\OR_{\Delta}$, et $\alpha\in\OR_{\Delta}$. Soit $\alpha\in\OR_{\Delta}$ et $\omega$ un invariant différentiel d'un modèle de $E$. On suppose que $E$ se réduit complètement modulo un nombre premier $p$ via $\PR\subset\Zb$. Alors l'isogénie réduite $\widetilde{\left[ \alpha\right] }$ modulo $\PR$ agit sur $\tilde{\omega}$ par un facteur $\tilde{\alpha}$, c'est à dire
+	\begin{equation*}
+		\left( \widetilde{\left[ a\right] }\right)^{*}\left( \tilde{\omega}\right) = \tilde{\alpha}\tilde{\omega}
+	\end{equation*}
+	En particulier $\widetilde{[a]}$ est séparable si et seulement si $\alpha\in S_{\PR}$
+\end{Prop}
+
+On sait que la réduction $\tilde{E}$ modulo $\PR$ est définie sur un corps fini $\F_{q}$. Le morphisme de Frobenius est inséparable.
+
+\begin{Prop}\cite{Lang}[13.5 Cor]
+	
+	Soit $E$ une courbe elliptique définie à multiplication complexe, $\OR_{\Delta}$ son anneau d'endomorphisme, vu dans le corps quadratique $\K$. On suppose que $E$ se réduit complètement modulo un nombre premier $p$ via $\PR\subset\Zb$. Il existe un corps finis $\F_{q}$ sur lequel $\tilde{E}$ est défini. Soit $\pi_{q}$ l'endomorphisme de Frobenius, et $\alpha\in\OR_{\Delta}$ tel que $\widetilde{[\alpha]} = \pi_{q}$. Alors $\alpha\in S_{\PR}\cap\OR_{\Delta}$. De plus $p$ est décomposé dans $\OR_{\Delta}$ avec $p\OR_{\Delta} = \LR\LR'$. Soit $q = p^f$. alors
+	\begin{equation*}
+		\alpha\OR_{\Delta} = \LR^f \; ou \; \alpha\OR_{\Delta} = \LR'^f 
+	\end{equation*}
+\end{Prop}
 
 \subsection{Théorème de relèvement de Deuring}
 
-On se donne désormais une courbe elliptique $E'$ définie sur un corps fini $\F_{q}$, à multiplication complexe. On souhaite voir $E'$ comme la réduction d'une certaine courbe $E$ définie sur un corps de nombre $\HR$, par un certain idéal $\PR$. Il faut d'abord que le critère du théorème 4.9 soit respecté, ce qui est toujours le cas
+On se donne désormais une courbe elliptique $E'$ à multiplication complexe définie sur un corps fini $\F_{q}$. On souhaite voir $E'$ comme la réduction d'une certaine courbe $E$ définie sur $\Qb$, modulo un certain idéal maximal $\PR\subset\Zb$. Il faut d'abord que le critère du théorème 4.14 soit respecté. C'est en réalité toujours le cas.
 
 \begin{The}\cite{Lang}[13.5]
 	
-	Soit $E'$ une courbe elliptique définie sur un corps fini $\F_{q}$ de caractéristique $p$. Si $E'$ est à multiplication complexe, soit $f$ le conducteur de $End(E')$ et $\K$ son corps quadratique imaginaire. Alors $p$ est premier avec $f$ et décomposé dans $\K$. 
+	Soit $E'$ une courbe elliptique à multiplication complexe définie sur un corps fini $\F_{q}$ de caractéristique $p$. Soit $f$ le conducteur de $End(E')$ et $\K$ son corps quadratique imaginaire. Alors $p$ est premier avec $f$ et décomposé dans $\K$. 
 	
 \end{The}
 
@@ -1637,76 +1725,89 @@ Le théorème de relèvement de Deuring énonce la surjectivité de la réductio
 
 \begin{The}{Théorème de relèvement de Deuring}\cite{Lang}[13.14]
 	
-	Soit $E'$ une courbe elliptique défini sur un corps fini $\F_{q}$, et $\alpha'$ un endomorphisme de $E'$ qui n'est pas une multiplication scalaire. Il existe une courbe $E$ définie sur un corps de nombre $\HR$, munie d'un endomorphisme $\alpha$ et d'un idéal premier $\PR$ au dessus de $p$, tels que la réduction $\tilde{E}$ modulo $\PR$ soit définie sur $\F_{q}$, et $\tilde{E}\simeq E'$ avec $\tilde{\alpha} = \alpha'$.
+	Soit $E'$ une courbe elliptique défini sur un corps fini $\F_{q}$, et $\alpha'$ un endomorphisme de $E'$ qui n'est pas une multiplication scalaire. Il existe une courbe elliptique $E$ définie sur un corps de nombre $\HR$, munie d'un endomorphisme $\alpha$ et d'un idéal maximal $\PR\subset\Zb$ au dessus de $p$, tels que la réduction $\tilde{E}$ modulo $\PR$ soit définie sur $\F_{q}$, $\tilde{E} = E'$ et $\tilde{\alpha} = \alpha'$.
+	
 \end{The}
 
-%ICI
-
-Ainsi $ELL_{\HR}(\OR_{\Delta})\simeq ELL_{\F_{q}}(\OR_{\Delta})$. On admet de plus que l'isomorphisme respecte l'action de $Cl(\OR_{\Delta})$: On associe à un idéal $\LR\subset\OR_{\Delta}$ le sous groupe $\tilde{E}\left[ \LR\right] = \left\lbrace P\in\tilde{E}, \tilde{\alpha}(P) = 0 \;\forall\alpha\in\LR\right\rbrace $ qui est le noyau d'une certaine isogénie. 
+Si $E'\in Ell_{\F_{q}}(\OR_{\Delta})$, on souhaite voir les éléments de $Ell_{\F_{q}}(\OR_{\Delta})$ comme les réductions de courbes elliptiques par un même idéal maximal $\PR\in\Zb$. On n'a pas introduit les outils nécessaire pour construire un tel idéal $\PR$ et on admet son existence. Cette propriété sous entendu, sans démonstration, dans \cite{BCL}[\S2].
 
 \begin{Prop}
-	Avec les notations précédentes, 
-	
-	Si $\phi$ a pour noyau $E\left[ \LR\right]$, alors $\tilde{E}\left[ \LR\right]$ est le noyau de $\tilde{\phi}$.
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire $\K$ de conducteur $f$, et $\F_{q}$ un corps fini de caractéristique $p$. On suppose que $p$ de divise pas $f$ et est décomposé dans $\K$. Alors il existe un idéal $\PR\subset\Zb$ maximal tel que pour tout $E'\in Ell_{\F_{q}}(\OR_{\Delta})$, il existe $E\in Ell_{\F_{q}}(\OR_{\Delta})$, $\alpha'\in End(E')$, $\alpha\in End(E)$ tels que la réduction $\tilde{E}$ de $E$ modulo $\PR$ soit définie sur $\F_{q}$ et vérifie $\tilde{E} = E'$, $\tilde{\alpha} = \alpha'$.
 \end{Prop}
 
-On admet alors que la réduction respecte l'action de $Cl(\OR_{\Delta})$.
+\begin{Coro}
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire $\K$ de conducteur $f$, et $\F_{q}$ un corps fini. On suppose que $p$ de divise pas $f$ et est décomposé dans $\K$. Alors il existe un idéal maximal $\PR\subset\Zb$ tel que la réduction modulo $\PR$ induise une bijection entre $Ell_{\Qb}(\OR_{\Delta})$ et $Ell_{\F_{q}}(\OR_{\Delta})$. 
+\end{Coro}
 
+L'action de $Cl(\OR_{\Delta})$ sur $Ell_{\Qb}(\OR_{\Delta})$ induit une action de $Cl(\OR_{\Delta})$ sur $Ell_{\F_{q}}(\OR_{\Delta})$.
 
-
-
-
-
-
-
-
-\subsection{Normalisation d'endomorphisme de courbes ordinaires}
-
-On souhaite normaliser l'isomorphisme $End(\tilde{E})\simeq\OR_{\Delta}$. Le problème vient de l'existence d'endomorphisme inséparable : le morphisme de Frobenius $\pi_{q}$ par exemple. L'application du corollaire 4.9 n'est plus injective:
-
-
-\begin{Prop}
-	Soit $E$ une courbe elliptique sur $\K$ d'invariant différentiel $w$. 
-	
-	On défini l'application :
+\begin{Def}
+	Soit $\PR\subset\Zb$ idéal maximal tel que la réduction modulo $\PR$ induit une bijection entre $Ell_{\Qb}(\OR_{\Delta})$ et $Ell_{\F_{q}}(\OR_{\Delta})$. On défini une action de $Cl(\OR_{\Delta})$ sur $Ell_{\F_{q}}(\OR_{\Delta})$ de la façon suivante : Soit $E\in Ell_{\Qb}(\OR_{\Delta})$ et $\CL\in Cl(\OR_{\Delta})$. Alors on pose
 	\begin{equation*}
-		f : End(E)\rightarrow\Kb(E) , \phi\longmapsto a_{\phi}
+		\CL\cdot\tilde{E} = \widetilde{\CL\cdot E}
 	\end{equation*}
+\end{Def}
+
+\begin{Rem}
+	Ainsi l'injectivité de la réduction au niveau des isogénies (proposition 4.13) permet d'associer à toute isogénie entre courbes de $Ell_{\Qb}(\OR_{\Delta})$ une isogénie entre les courbes réduites, éléments de $Ell_{\F_{q}}(\OR_{\Delta})$. On rappel que l'on n'a pas la surjectivité au niveau des isogénies à priori.
+\end{Rem}
+
+On peut expliciter le noyau d'une isogénie à partir d'un idéal entier propre $\LR\subset\OR_{\Delta}$ avec la notion de groupe de torsion
+
+\begin{Def}
 	
-	où $a_{\phi}\in\Kb(E)$ est tel que $\phi^{*}(w) = a_{\phi}w$. Alors:
-	
-	\begin{enumerate}
-		\item $a_{\phi}\in\Kb$ et $f: End(E)\rightarrow\Kb$ est bien définie. 
-		\item $f$ est un morphisme d'anneaux
-		\item $Ker(f)$ est exactement l'ensemble des endomorphisme inséparable de $E$
-		\item Si $car(K) = p > 0$ alors $End(E)/Ker(f)\simeq Im(f)$
-	\end{enumerate}
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire, et $(E,[.])\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui réduit complètement modulo $p$ via l'idéal maximal $\PR\subset\Zb$. On associe à un idéal $\LR\subset\OR_{\Delta}$ un sous groupe de $\tilde{E}(\Fb_{p})$
+	\begin{equation*}
+		\tilde{E}\left[ \LR\right] = \left\lbrace P\in\tilde{E} :\; \widetilde{\left[ \alpha\right] }(P) = 0 \;\forall\alpha\in\LR\right\rbrace 
+	\end{equation*} 
+
+\end{Def}
+
+\begin{Prop}
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire, et $(E,[.])\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui réduit complètement modulo $p$ via l'idéal maximal $\PR\subset\Zb$. Soit $\LR\subset\OR_{\Delta}$ un idéal entier propre, et l'isogénie
+	\begin{equation*}
+		\phi_{\LR} : E\rightarrow E/E\left[ \LR\right] = \CL\cdot E
+	\end{equation*} 
+	Alors le noyau de $\widetilde{\phi_{\LR}}$ est $\tilde{E}\left[ \LR\right]$, et
+	\begin{equation*}
+		\tilde{E}/\tilde{E}\left[ \LR\right] = \CL\cdot \tilde{E}
+	\end{equation*}
 \end{Prop}
 
-On souhaite cependant conservé la propriété $[\alpha](w) = \alpha w$ dès que $\alpha\in\OR_{\Delta}$ est associé à une isogénie séparable.
+\begin{proof}
+	A REDIGER OU TROUVER UNE SOURCE 
+\end{proof}
+	
 
 
-A REECRIRE JUSQUE ICI
 
-Soit $E$ une courbe elliptique définie sur un corps fini $\F_{q}$. Alors le morphisme de Frobenius $\pi_{q}$ est un endomorphisme de $E$, inséparable donc non entier, et $End(E)$ contient $\Z[\pi_{q}]$. Ces deux ensembles sont des ordres du même corps quadratiques imaginaires $\K$. 
+
+
+
+
+
+
+\subsection{Endomorphisme de Frobenius}
+
+Soit $E'$ une courbe elliptique définie sur un corps fini $\F_{q}$. Alors le morphisme de Frobenius $\pi_{q}$ est un endomorphisme de $E'$, inséparable donc non entier, et $End(E')$ contient $\Z[\pi_{q}]$. Ces deux ensembles sont des ordres d'un même corps quadratique imaginaire $\K$. 
 \begin{equation*}
-	\Z[\pi_{q}]\subset End(E)\simeq\OR_{\Delta}\subset\OR_{\K}
+	\Z[\pi_{q}]\subset End(E')\simeq\OR_{\Delta}\subset\OR_{\K}
 \end{equation*} 
 
 \begin{Def}
-	Soit $E$ une courbe elliptique définie sur un corps fini $\F_{q}$. On note $f_{m}$ le conducteur de l'ordre $\Z[\pi_{q}]$, que l'on appel le conducteur maximal. On notera $f$ le conducteur de $End(E)\simeq\OR_{\Delta}$, ou $f_{E}$ si besoin. On appellera $f$ le conducteur de $E$, et $f_{m}$ son conducteur maximal. 
+	Soit $E'$ une courbe elliptique à multiplication complxe définie sur un corps fini $\F_{q}$. On note $f_{m}$ le conducteur de l'ordre $\Z[\pi_{q}]$, que l'on appel le conducteur maximal. On notera $f$ le conducteur de $End(E')\simeq\OR_{\Delta}$, ou $f_{E'}$ si besoin. On appellera $f$ le conducteur de $E'$, et $f_{m}$ son conducteur maximal. 
 \end{Def}
 
 La multiplicativité des conducteurs implique la proposition suivante :
 
 \begin{Prop}
-	Soit $E$ une courbe elliptique définie sur un corps fini $\F_{q}$. Son conducteur $f$ divise son conducteur maximal $f_{m}$.
+	Soit $E'$ une courbe elliptique définie sur un corps fini $\F_{q}$. Son conducteur $f$ divise son conducteur maximal $f_{m}$.
 \end{Prop}
 
-On va se servir de ce fait pour décrire $End(E)$ uniquement à partir d'endomorphisme entier et du morphisme $\pi_{q}$.
+On va se servir de ce fait pour décrire $End(E')$ uniquement à partir d'endomorphisme entier et du morphisme $\pi_{q}$.
 
 \begin{Prop}
-	Soit $\alpha\in\C$ une racine du polynôme caractéristique de $E$. Alors $Z[\pi_{q}] \simeq Z[\alpha] \subset \K$. Avec les notations de la proposition 1.2, soit $\OR_{\K} = \left[ 1, w_{\K}\right] $, de sorte que $\OR_{\Delta} = \left[ 1, fw_{\K}\right] $ et $Z[\alpha] = \left[ 1, f_{m}w_{\K}\right] $. Alors il existe un entier $s_{\alpha}$ tel que $\pm\alpha = f_{m}w_{\K} + s_{alpha}$
+	Soit $\alpha\in\C$ une racine du polynôme caractéristique de $E'$. Alors $Z[\pi_{q}] \simeq Z[\alpha] \subset \K$. Avec les notations de la proposition 1.2, soit $\OR_{\K} = \left[ 1, w_{\K}\right] $, de sorte que $\OR_{\Delta} = \left[ 1, fw_{\K}\right] $ et $Z[\alpha] = \left[ 1, f_{m}w_{\K}\right] $. Alors il existe un entier $s_{\alpha}$ tel que $\pm\alpha = f_{m}w_{\K} + s_{alpha}$
 	
 \end{Prop}
 
@@ -1737,47 +1838,6 @@ Dans toutes la suite, on associe à $\pi_{q}$ le nombre complexe $\alpha = \frac
 \begin{proof}
 	Ces résultats découles de l'égalité $w_{\K} = \frac{\pi_{q} - s}{f_{m}}$ et des propositions 1.3 et 1.6.
 \end{proof}
-	
-	
-A REECRIRE A PARTIR D'ICI
-	
-	
-\begin{center}
-	
-Pour normaliser une courbe elliptique $E$ définie sur $\F_{q}$ donnée, on procède ainsi : 
-
-\end{center}
-
-On applique d'abord le théorème de During qui nous donne $E$ défini sur un corps de nombre (donc sur $\C$) et $\alpha\in End(E)$ tels que sous une réduction par un idéal $\PR$, $\tilde{E} = E_{0}$ et $\tilde{\alpha} = \pi_{q}$.
-
-Alors $ End(E) \simeq \OR_{\Delta} $ peut être normalisé par la méthode de la section 4 : on choisit la racine de $d_{\K}$ de sorte que $\forall\beta\in\OR_{\Delta} ,\; [\beta]^{*}(w) = \beta w$. L'endomorphisme $\alpha$ a le même polynôme caractéristique que $\pi_{q}$ et peut donc être représenté par $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2} \in\OR_{\Delta}\subset\C$.
-
-Ainsi l'application 
-\begin{equation*}
-	\frac{x + y\pi_{q}}{f_{m}} \in \OR_{\Delta}\mapsto\ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] \in End(E)\mapsto \widetilde{\left[ \frac{x + y\pi_{q}}{f_{m}}\right]} \in End(\tilde{E})
-\end{equation*}  
-
-est bien définie.
-
-De plus si $\omega$ est l'invariant différentiel de $E$:
-
-\begin{equation*}
-	\widetilde{ \left[ \frac{x + y\pi_{q}}{f_{m}}\right] } ^{*} (\omega) = \widetilde{\left( \frac{x + y\alpha}{f_{m}}\right)} \omega,\;avec\;\widetilde{\left( \frac{x + y\alpha}{f_{m}}\right)} = \left( \frac{x + y\alpha}{f_{m}}\right)\left[ \PR\right] 
-\end{equation*}
-
-De plus $\left( \frac{x + y\alpha}{f_{m}}\right)\OR_{\Delta}$ et $\PR\cap\OR_{\Delta} = \PR_{\K}\OR_{\Delta} = \PR_{\Delta}$ est un idéal de $\OR_{\Delta}$ de norme $p$. Ainsi :
-
-\begin{equation*}
-	\widetilde{\left( \frac{x + y\alpha}{f_{m}}\right)} = \left( \frac{x + y\alpha}{f_{m}}\right)\left[ \PR\right] = \left( \frac{x + y\alpha}{f_{m}}\right)\left[ \PR_{\Delta}\right]
-\end{equation*}
-
-
-Un endomorphisme est alors inséparable si et seulement s'il s'écrit $\tilde{\beta}$ avec $\beta\in\PR_{\Delta}$. En particulier on doit avoir $\alpha\in\PR_{\Delta}$. (On l'admet puisqu'on a admis le théorème de Deuring).
-
-D'après le théorème de Kummer, $\PR$ étant un idéal contenant $p\OR_{\Delta}$, les entiers qu'il contient sont exactement les multiples de $p = N(\PR)$. Donc si $f_{m}$ est premier avec $p$ : $\widetilde{\left[ \frac{x}{f_{m}}\right]} = \left[ xf_{m}^{-1}\right]  [p]$.
-
-Cette dernière équation pourra servir à normaliser dès que $p$ ne divise pas $f_{m}$. On peut remarquer que la condition du théorème $6.7$ pour que la réduction conserve l'anneau d'endomorphisme implique déjà que $p$ est premier avec $f$. 
-
 
 
 
