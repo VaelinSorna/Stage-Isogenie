@@ -198,15 +198,15 @@ On énonce d'abord les premières propriétés sur les idéaux des ordres de $\K
 Dans le cas des corps quadratiques imaginaires, on en déduit la structure des idéaux :
 
 \begin{Coro}
-	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ un corps quadratique imaginaire. Tout idéal $\LR$ de $\OR$ est un réseaux de $\C$ de la forme $\left[ a, b + cfw_{\K}\right]$ avec $a$, $b$, $c\in\Z$, $c\neq 0$ et $0 \leq b< a$. 	
+	Soit $\OR$ un ordre de $\K = \Q(\sqrt{D})$ un corps quadratique imaginaire. Tout idéal $\LR$ de $\OR$ est un réseaux de $\C$ de la forme $\left[ a, b + cfw_{\K}\right]$ avec $a = N(\LR)$, $b$, $c\in\Z$, $c\neq 0$ et $0 \leq b< a$. 	
 \end{Coro}
 
 \begin{proof}
-	D'après la proposition 1.5, $\LR\cap\Z$ est non vide. $\LR\cap\Z$ est un idéal de $\Z$, donc principal engendré par un entier $a$. Soit $\alpha\in\LR$ linéairement indépendant de $a$. Comme $\LR$ est un sous ensemble discret de $\C$, on peut choisir $\alpha$ de norme minimale. 
+	D'après la proposition 1.5, $\LR\cap\Z$ est non vide. $\LR\cap\Z$ est un idéal de $\Z$, donc principal engendré par un entier $a > 0$. Alors l'anneau $\OR/\LR$ est de caractéristique $a$, donc $a = N(\LR)$. Soit $\alpha\in\LR$ linéairement indépendant de $a$. Comme $\LR$ est un sous ensemble discret de $\C$, on peut choisir $\alpha$ de norme minimale. 
 	
 	On montre par l'absurde que $\LR = \left[ a,\alpha\right]$ : soit $z\in\LR$ qui n'est pas dans le réseau $\left[ a,\alpha\right]$. On peut choisir $z$ de norme minimal. Si $z$ est entier, $z\in \LR\cap\Z = a\Z$ ce qui est exclus. Donc $z$ est linéairement indépendant de $a$. Or $|z| \leq |\alpha| + |z - \alpha|$. Si $z\neq\alpha$, $|z| < |\alpha|$, ce qui contredit la minimalité de $|\alpha|$. 
 	
-	Donc $\LR = \left[ a, \alpha\right]$. Si l'on note $\alpha = b + cfw_{\K}$, $\alpha$ n'étant pas entier on a $c \neq 0$. De plus $\LR = \left[ a, ka + \alpha\right]$ pour tout $k\in\Z$, donc on peut choisir une base telle que $0 \leq b< a$.
+	Donc $\LR = \left[ a, \alpha\right]$. Si l'on note $\alpha = b + cfw_{\K}$, $\alpha$ n'étant pas entier on a $c \neq 0$. De plus $\LR = \left[ a, ka + \alpha\right]$ pour tout $k\in\Z$, donc on peut choisir une base telle que $0 \leq b< a$. 
 \end{proof}
 
 Pour tout corps $\K$, on montre que $\OR_{\K}$ est un anneaux de Dedekind, un type d'anneaux qui admet une unique factorisation au niveau des idéaux par des idéaux premiers.
@@ -1551,7 +1551,11 @@ Lorsque $\OR_{\Delta} = \OR_{\K}$ où $\K$ est un corps quadratiques imaginaires
 \subsection{Réduction de courbes elliptiques complexes}
 
 
-Soit $E$ une courbe elliptique à multiplication complexe définie sur $\Qb$. On veut construire une courbe elliptique $\tilde{E}$ définie sur un corps fini $\F_{q}$ de caractéristique $p$, telle que $End(E)\simeq End(\tilde{E})$. 
+Soit $E$ une courbe elliptique à multiplication complexe définie sur $\Qb$. On veut construire une courbe elliptique $\tilde{E}$ définie sur un corps fini $\F_{q}$ de caractéristique $p$, telle que $End(E)\simeq End(\tilde{E})$.
+
+\begin{Rem}
+	La théorie générale de la réduction de courbes elliptiques se ramène à des courbes définies sur une extension de $\Qb$ munie d'une valuation discrète. Cependant pour les courbes elliptiques à multiplication complexe, le fait de toujours être définie sur $\Qb$ permet de simplifier les énoncés. On ne détaillera pas la théorie général et on se contentera des applications à la multiplication complexe.
+\end{Rem}  
 
 \begin{Def}
 	On note $\Zb$ l'ensemble des entiers algébriques. $\Zb$ est un anneaux. Si $\PR$ est un idéal premier de $\Zb$, on note $S_{\PR} = \Zb\setminus\PR$ et $\Zb_{\left( \PR\right) }$ le localisé de $\Zb$ en $S_{\PR}$. On note $m_{\PR}$ sont unique idéal maximal. On dira que $\PR$ est au dessus d'un nombre premier $p$ si $\PR\cap\Z = p\Z$. 
@@ -1705,11 +1709,22 @@ On sait que la réduction $\tilde{E}$ modulo $\PR$ est définie sur un corps fin
 
 \begin{Prop}\cite{Lang}[13.5 Cor]
 	
-	Soit $E$ une courbe elliptique définie à multiplication complexe, $\OR_{\Delta}$ son anneau d'endomorphisme, vu dans le corps quadratique $\K$. On suppose que $E$ se réduit complètement modulo un nombre premier $p$ via $\PR\subset\Zb$. Il existe un corps finis $\F_{q}$ sur lequel $\tilde{E}$ est défini. Soit $\pi_{q}$ l'endomorphisme de Frobenius, et $\alpha\in\OR_{\Delta}$ tel que $\widetilde{[\alpha]} = \pi_{q}$. Alors $\alpha\in S_{\PR}\cap\OR_{\Delta}$. De plus $p$ est décomposé dans $\OR_{\Delta}$ avec $p\OR_{\Delta} = \LR\LR'$. Soit $q = p^f$. alors
+	Soit $E$ une courbe elliptique définie à multiplication complexe, $\OR_{\Delta}$ son anneau d'endomorphisme, vu dans le corps quadratique $\K$. On suppose que $E$ se réduit complètement modulo un nombre premier $p$ via $\PR\subset\Zb$. Il existe un corps finis $\F_{q}$ sur lequel $\tilde{E}$ est défini. Soit $\pi_{q}$ l'endomorphisme de Frobenius, et $\alpha\in\OR_{\Delta}$ tel que $\widetilde{[\alpha]} = \pi_{q}$. Alors $\alpha\in S_{\PR}\cap\OR_{\Delta}$. De plus $p$ est décomposé dans $\OR_{\Delta}$. L'un des deux idéaux au dessus de $p$ dans $\OR_{\Delta}$ est $\PR\cap\OR_{\Delta}$. Enfin si $q = p^f$,
+	
 	\begin{equation*}
-		\alpha\OR_{\Delta} = \LR^f \; ou \; \alpha\OR_{\Delta} = \LR'^f 
-	\end{equation*}
+		\alpha\OR_{\Delta} = \left(\PR\cap\OR_{\Delta} \right) ^{f}
+	\end{equation*} 
 \end{Prop}
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Théorème de relèvement de Deuring}
 
@@ -1807,20 +1822,26 @@ La multiplicativité des conducteurs implique la proposition suivante :
 On va se servir de ce fait pour décrire $End(E')$ uniquement à partir d'endomorphisme entier et du morphisme $\pi_{q}$.
 
 \begin{Prop}
-	Soit $\alpha\in\C$ une racine du polynôme caractéristique de $E'$. Alors $Z[\pi_{q}] \simeq Z[\alpha] \subset \K$. Avec les notations de la proposition 1.2, soit $\OR_{\K} = \left[ 1, w_{\K}\right] $, de sorte que $\OR_{\Delta} = \left[ 1, fw_{\K}\right] $ et $Z[\alpha] = \left[ 1, f_{m}w_{\K}\right] $. Alors il existe un entier $s_{\alpha}$ tel que $\pm\alpha = f_{m}w_{\K} + s_{alpha}$
+	Soit $E'$ une courbe elliptique définie sur $\F_{q}$ à multiplication complexe munit d'un isomorphisme $End(E')\simeq\OR_{\Delta}$. Soit $\alpha\in\OR_{\Delta}$ l'image du morphisme de Frobenius $\pi_{q}$.
+	Alors $\alpha\in\C$ une racine complexe du polynôme caractéristique de $E'$. Avec les notations de la proposition 1.2, soit $\OR_{\K} = \left[ 1, w_{\K}\right] $, de sorte que $\OR_{\Delta} = \left[ 1, fw_{\K}\right] $ et $Z[\alpha] = \left[ 1, f_{m}w_{\K}\right] $. Alors il existe un entier $s_{\alpha}$ tel que $\pm\alpha = f_{m}w_{\K} + s_{\alpha}$
 	
 \end{Prop}
 
 \begin{proof}
-	$\alpha$ est racine de $X^{2} - tX + q$ de discriminant $\Delta_{m} = t^{2} - 4q = f_{m}^{2}d_{\K}$. Donc $\alpha = \frac{t\pm f_{m}\sqrt{d_{\K}}}{2}$, et $w_{\K} = \frac{d_{\K} + \sqrt{d_{\K}}}{2}$. On en déduis que  $\pm\alpha = f_{m}d_{\K} - \frac{f_{m}d_{\K} \pm t}{2}$ selon le choix de $\alpha$. Or $t^{2} - f_{m}^{2}d_{\K} = 4q$ est pair, donc $t$ et $f_{m}d_{\K}$ ont même parité et $s = -\frac{f_{m}d_{\K} \pm t}{2}$ est un entier.
+	Soit $X^{2} - tX + q$ le polynôme caractéristique de $E'$. Il annule $\pi_{q}\in End(E')$. Donc $\alpha$ est racine de $X^{2} - tX + q$ de discriminant $\Delta_{m} = t^{2} - 4q = f_{m}^{2}d_{\K}$. Donc $\alpha = \frac{t\pm f_{m}\sqrt{d_{\K}}}{2}$, et $w_{\K} = \frac{d_{\K} + \sqrt{d_{\K}}}{2}$. On en déduis que  $\pm\alpha = f_{m}d_{\K} - \frac{f_{m}d_{\K} \pm t}{2}$ selon le choix de $\alpha$. Or $t^{2} - f_{m}^{2}d_{\K} = 4q$ est pair, donc $t$ et $f_{m}d_{\K}$ ont même parité et $s = -\frac{f_{m}d_{\K} \pm t}{2}$ est un entier.
 	
 \end{proof}
 
 \begin{Rem}
-	Avec $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$, on obtient un nombre complexe de même polynôme minimal annulateur que l'endomorphisme $\pi_{q}$, et tel que $\alpha$ et $f_{m}w_{\K}$ soient égaux à un entier prêt. Avec $\alpha' = \frac{t - f_{m}\sqrt{d_{\K}}}{2}$, $\alpha - f_{m}w_{\K}$ n'est pas un nombre réel. 
+	D'après le théorème de relèvement de During, il existe une courbe $\left( E,\left[ .\right] \right) $ définie sur $\C$ à multiplication complexe, munie d'un endomorphisme $\left[ \alpha\right] $ et d'un idéal maximal $\PR\subset\Zb$, de sorte que $\tilde{E} = E'$ modulo $\PR$ et $\tilde{\alpha} = \pi_{q}$. Alors $\alpha$ est l'une des deux racines complexes du polynôme caractéristique de $E'$. Sa valeur dépend de l'idéal de réduction $\PR$ : d'après la proposition 4.16, 
+	\begin{equation*}
+		\alpha\OR_{\Delta} = \left(\PR\cap\OR_{\Delta} \right) ^{f}
+	\end{equation*} 
 \end{Rem}
 
-Dans toutes la suite, on associe à $\pi_{q}$ le nombre complexe $\alpha = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$. Par abus de notation, on écrira parfois $\pi_{q} = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$.
+\begin{Def}
+	Dans toutes la suite, on note indifféremment $\pi_{q}$ et son image $\alpha\in\OR_{\Delta}$. Par abus de notation, on écrira parfois $\pi_{q} = \frac{t \pm f_{m}\sqrt{d_{\K}}}{2}$.
+\end{Def}
 
 \begin{Prop}
 	
@@ -1836,8 +1857,12 @@ Dans toutes la suite, on associe à $\pi_{q}$ le nombre complexe $\alpha = \frac
 \end{Prop}
 
 \begin{proof}
-	Ces résultats découles de l'égalité $w_{\K} = \frac{\pi_{q} - s}{f_{m}}$ et des propositions 1.3 et 1.6.
+	Ces résultats découlent de l'égalité $\pm w_{\K} = \frac{\pi_{q} - s}{f_{m}}$ où $s\in\Z$ et des propositions 1.3 et 1.6.
 \end{proof}
+
+\begin{Rem}
+	On peut ainsi représenter un idéal de tout ordre de corps quadratiques imaginaires par trois entier $a$, $c$ et $d$ tels que $\LR = \left[ a, \frac{c + d\pi_{q}}{f_{m}}\right] $. Si $\LR$ n'est pas un idéal d'un ordre maximal, $c$, $d$ et $f_{m}$ ne sont pas premier entre eux. Dans cette représentation $a$ est la norme de l'idéal (voir proposition 1.6). 
+\end{Rem}
 
 
 
@@ -1849,85 +1874,63 @@ Dans toutes la suite, on associe à $\pi_{q}$ le nombre complexe $\alpha = \frac
 
 \subsection{Structure du graphe d'isogénie}
 
-Dans cette section $E$ est une courbe elliptique ordinaire définie sur $\F_{q}$ de caractéristique $p$.
-
-Dans sa thèse, Kohel décrit la structure des graphes de $l$-isogénies, avec $l$ premier, $l\neq p$, comme des "volcans d'isogénies". Nous allons citer les résultats sur cette structure, en les admettant. 
-
-On distingue d'abord les isogénies "horizontales" et "verticales" :
+Dans cette section, $E$ est une courbe elliptique ordinaire définie sur $\F_{q}$ de caractéristique $p$. Dans sa thèse \cite{Kohel}, Kohel décrit la structure des graphes de $l$-isogénies, avec $l$ premier, $l\neq p$. Ce sont des graphes où les sommets sont les courbes elliptiques et où les arêtes représentent des isogénies. Ils sont décrits comme des "volcans d'isogénies". Nous allons citer les résultats sur cette structure, en les admettant. On distingue d'abord les isogénies "horizontales" et "verticales" :
 
 \begin{Def}
-	Soit $E$, $E'$ deux courbes elliptiques d'anneaux d'endomorphismes $O$ et $O'$.
-	
-	($O$ et $O'$ sont des ordres quadratiques imaginaires).
-	
-	Une isogénie séparable $\phi : E\rightarrow E'$ est dite horizontale si $O = O'$, verticale sinon.
+	Soit $E$, $E'$ deux courbes elliptiques à multiplication complexe définie sur $\F_{q}$, d'anneaux d'endomorphismes $\OR$ et $\OR'$. Une isogénie séparable $\phi : E\rightarrow E'$ est dite horizontale si $\OR = \OR'$, verticale sinon.
 \end{Def}
 
-\begin{Prop}
-	Soit $l$ un nombre premier différent de $p$.
+\begin{Prop}\cite{Kohel}[Prop 21]
 	
-	Avec les notations précédentes, si $\phi$ est de degré $l$, alors :
+	Soit $E$, $E'$ deux courbes elliptiques à multiplication complexe définie sur $\F_{q}$, d'anneaux d'endomorphismes $\OR$ et $\OR'$. Soit $l$ un nombre premier différent de $p$ et $\phi : E\rightarrow E'$ une $l$-isogénie séparable. Alors
 	\begin{enumerate}
-		\item Soit $O = O'$ et $\phi$ est horizontale
-		\item Soit $O'\subset O$, $\left[ O : O' \right] = l$ et $\phi$ est "descendante"
-		\item Soit $O\subset O'$, $\left[ O' : O \right] = l$ et $\phi$ est "ascendante" 
+		\item Soit $\OR = \OR'$ et $\phi$ est horizontale
+		\item Soit $\OR'\subset \OR$, $\left[ \OR : \OR' \right] = l$ et $\phi$ est "descendante"
+		\item Soit $\OR\subset \OR'$, $\left[ \OR' : \OR \right] = l$ et $\phi$ est "ascendante" 
 	\end{enumerate}
 \end{Prop}
-
-Puisque qu'une isogénie est déterminée par son noyau, une $l$-isogénie est déterminée par l'un des sous groupes d'ordre $l$ de $E$.
-
-On a vu que cela implique l'existence d'exactement $l+1$ $l$-isogénies sur $E$ définie sur $\Kb$.
-
-Si $E$ est définie sur $\F_{q}$, on souhaitera connaître celles définies sur $\F_{q}$. Il existe des critères sur $l$ donnant le nombre et les types de ces isogénies. Tout cela ne dépend que de $End(E)$ et $\F_{q}$.
-
-Dans la suite on reprend certaines notations de la section 6.2 : $f$ désigne le conducteur de $End(E)$, $\Delta$ son discriminant; et $f_{m}$ le conducteur maximal, dépendant de $\pi_{q}$.
-
-\begin{Prop}
-	
-	Avec les notations précédentes, soit $r = f_{m}/f$. On distingues les cas suivants :
-	
-	D'abord selon si $l$ divise $f$ ou non :
-	
-	\begin{enumerate}
-		\item Si $l$ ne divise pas $f$, il existe exactement $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales définies sur $\F_{q}$.
-		\item Si $l$ divise $f$, il existe exactement une $l$-isogénie ascendante
-	\end{enumerate}
-	
-	Puis il existe en plus des isogénies descendantes selon si $l$ divise $r$ :
-	
-	\begin{enumerate}
-		\item Si $l$ ne divise pas $r$, il n'existe aucune $l$-isogénie supplémentaire définie sur $\F_{q}$
-		
-		\item Si $l$ divise $r$, toutes les $l$-isogénies sont définies sur $\F_{q}$. En plus des précédentes, les isogénies supplémentaires sont toutes descendantes.
-	\end{enumerate}
-	
-\end{Prop}
-
-Ainsi "$l$ divise $r$" est une "condition d'ascension", "$l$ divise $f_{m}/f$" est une "condition de descente" tandis que "$l$ ne divise pas $f$" est une "condition d'horizontalité". 
-
-Puisqu'il existe au plus une $l$-isogénie ascendante, toutes les isogénies descendantes ont pour images des courbes non-équivalentes. 
-
-Partant du "sommet" du graphe, c'est à dire $Ell(\OR_{\K})$, on a donc de plus en plus d'isogénie à chaque "niveau", jusque au niveau minimal $Ell(\Z\left[ \pi_{q}\right] )$. D'où le nom de "volcan de $l$-isogénies".
 
 \begin{Rem}
-	Pour tout nombre premier $l$ ne divisant pas $f_{m}$, et $l\neq p$, il existe $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales, c'est à dire $0$, $1$ ou $2$, et aucune ascendante ni descendante.
+	Puisque qu'une isogénie est déterminée par son noyau, une $l$-isogénie est déterminée par l'un des sous groupes d'ordre $l$ de $E$. On a vu à la proposition 2.6 que cela implique l'existence d'exactement $l+1$ $l$-isogénies sur $E$ définie sur $\Kb$. 
+\end{Rem}
+
+On s'intéresse maintenant aux $l$-isogénies définie sur $\F_{q}$
+
+\begin{Prop}\cite{Kohel}[Prop 21, 22, 23]
 	
-	On peut faire le lien avec le comportement de $l$ dans $\OR_{\Delta}$. En effet $l$ est ici premier avec $f$, donc les idéaux de normes $l$ sont premier avec le conducteur, donc propre. Ainsi la théorie des groupes de torsions détaillés à la section 5.2. s'applique et on peut calculer des groupes de torsions à partir d'idéaux de norme $l$ :
-	
+	Soit $E$ une courbe elliptique à multiplication complexe définie sur $\F_{q}$, de conducteur $f$ et de conducteur maximal $f_{m}$. Soit
+	$r = f_{m}/f$. Alors
 	\begin{enumerate}
-		
-		\item Si $l$ est décomposé, $\left( \frac{\Delta}{l}\right) = 1$ et il existe $2$ $l$-isogénies horizontales
-		
-		On peut expliciter leurs noyaux : c'est les groupes de torsions des deux idéaux premiers factorisant $l\OR_{\Delta}$.
-		
-		\item Si $l$ est ramifié, $\left( \frac{\Delta}{l}\right) = 0$ et il existe $1$-isogénie horizontale
-		
-		Son noyau est le groupe de torsion de l'idéal premier dont le carré est $l\OR_{\Delta}$.
-		
-		\item Si $l$ est inerte, $\left( \frac{\Delta}{l}\right) = -1$. Il n'existe pas de $l$-isogénie défini sur $\F_{q}$, tout comme il n'existe pas d'idéaux premier de norme $l$.
-		
+		\item Si $l$ ne divise pas $f$, il existe exactement $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales définies sur $\F_{q}$, et aucune ascendante.
+		\item Si $l$ divise $f$, il existe une unique $l$-isogénie ascendante définie sur $\F_{q}$, et aucune horizontale.
+	\end{enumerate}
+	De plus il peut exister des isogénies supplémentaires descendantes définie sur $\F_{q}$ selon si $l$ divise $r$ 
+	\begin{enumerate}
+		\item Si $l$ ne divise pas $r$, il n'existe aucune $l$-isogénie supplémentaire définie sur $\F_{q}$
+		\item Si $l$ divise $r$, toutes les $l+1$ $l$-isogénies sont définies sur $\F_{q}$
 	\end{enumerate}
 	
+\end{Prop}
+
+\begin{Rem}
+	Ainsi "$l$ divise $r$" est une "condition d'existence d'ascension", "$l$ divise $f_{m}/f$" est une "condition d'existence de descente" tandis que "$l$ ne divise pas $f$" est une "condition d'existence d'horizontalité". 
+\end{Rem}
+
+\begin{Rem}
+	Puisqu'il existe au plus une $l$-isogénie ascendante, toutes les isogénies descendantes ont pour images des courbes elliptiques différentes. Partant du "sommet" du graphe, c'est à dire $Ell(\OR_{\K})$, on a donc de plus en plus de courbes elliptiques à chaque "niveau" $Ell(\OR_{\Delta})$, jusque au niveau minimal $Ell(\Z\left[ \pi_{q}\right] )$. D'où le nom de "volcan de $l$-isogénies".
+\end{Rem}
+
+
+
+\begin{Rem}
+	Pour tout nombre premier $l$ ne divisant pas $f_{m}$, et $l\neq p$, il existe $1 + \left( \frac{\Delta}{l}\right)$ $l$-isogénies horizontales, c'est à dire $0$, $1$ ou $2$, et aucune ascendante ni descendante. On peut faire le lien avec la ramification de $l$ dans $\OR_{\Delta}$. En effet $l$ est ici premier avec $f$, donc les idéaux de normes $l$ sont premier avec le conducteur, donc propre. Ainsi on peut calculer des groupes de torsions à partir d'idéaux de norme $l$ et utiliser la proposition 4.21 pour en déduire les noyaux des $l$-isogénies horizontales. 
+	\begin{enumerate}
+		\item Si $l$ est décomposé, $\left( \frac{\Delta}{l}\right) = 1$ et il existe $2$ $l$-isogénies horizontales. On peut expliciter leurs noyaux : c'est les groupes de torsions des deux idéaux premiers factorisant $l\OR_{\Delta}$.
+		
+		\item Si $l$ est ramifié, $\left( \frac{\Delta}{l}\right) = 0$ et il existe $1$-isogénie horizontale. Son noyau est le groupe de torsion de l'idéal premier dont le carré est $l\OR_{\Delta}$.
+		
+		\item Si $l$ est inerte, $\left( \frac{\Delta}{l}\right) = -1$. Il n'existe pas de $l$-isogénie défini sur $\F_{q}$, tout comme il n'existe pas d'idéaux premier de norme $l$.
+	\end{enumerate}
 \end{Rem}
 
 
