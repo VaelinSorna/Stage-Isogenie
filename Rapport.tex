@@ -1638,15 +1638,15 @@ On définit la réduction au niveau des isogénies.
 
 \begin{Prop}\cite{Lang}[9 \S2]
 	
-	Soit $\phi E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. $E$ et $E'$ sont définies sur un corps de nombre $\HR$. Alors $\phi$ est définie sur une extension fini de $\HR$. Ainsi $\phi$ est définie sur $\Qb$.
+	Soit $\phi : E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. $E$ et $E'$ sont définies sur un corps de nombre $\HR$. Alors $\phi$ est définie sur une extension fini de $\HR$. Ainsi $\phi$ est définie sur $\Qb$.
 \end{Prop}
 
 \begin{Def}
-	 Une forme explicite d'une isogénie $\phi :E\rightarrow E'$ définie sur $\Qb$ est réductible modulo $\PR\subset\Zb$ idéal maximal si c'est une forme explicite définie sur $\Zb_{\left( \PR\right) }$. On définit une forme réduite de $\phi$ en considérant la même forme explicite vu dans $\Zb/\PR$. 
+	 Une forme explicite d'une isogénie $\phi : E\rightarrow E'$ définie sur $\Qb$ est réductible modulo $\PR\subset\Zb$ idéal maximal si c'est une forme explicite définie sur $\Zb_{\left( \PR\right) }$. On définit une forme réduite de $\phi$ en considérant la même forme explicite vu dans $\Zb/\PR$. 
 \end{Def}
 
 \begin{Prop}
-	Soit $\phi E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. Soit $\PR\subset\Zb$ un idéal maximal. Alors $\phi$ admet une forme explicite réductible modulo $\PR$. Les formes réduites définissent une isogénie $\tilde{\phi} : \tilde{E}\rightarrow\tilde{E'}$ indépendante du choix de forme explicite réductible de $\phi$
+	Soit $\phi : E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. Soit $\PR\subset\Zb$ un idéal maximal. Alors $\phi$ admet une forme explicite réductible modulo $\PR$. Les formes réduites définissent une isogénie $\tilde{\phi} : \tilde{E}\rightarrow\tilde{E'}$ indépendante du choix de forme explicite réductible de $\phi$
 \end{Prop}
 
 \begin{proof}\cite{Sil94}[VII 2.1]
@@ -1952,59 +1952,45 @@ On s'intéresse maintenant aux $l$-isogénies définie sur $\F_{q}$
 
 \subsection{Enoncé et contexte}
 
-On souhaite utiliser la théorie précédente pur établir une procédure de calcul d'isogénie plus rapide que la méthode naïve donnée par la formule de Vélu.
-
-Plus précisément on suppose connaître :
-
+On souhaite utiliser la théorie précédente pur établir une procédure de calcul d'isogénie plus rapide que la méthode naïve donnée par la formule de Vélu. Plus précisément on suppose connaître 
 \begin{enumerate}
-	\item Une courbe elliptique $E$ ordinaire, donnée par une équation sur un corps $\F_{q}$
-	\item L'anneau d'endomorphisme $End(E)$ donné par son discriminant $\Delta$. On connaît donc l'extension quadratique $\K$ et le conducteur $f$
+	\item Une courbe elliptique $E$ ordinaire, donnée par une équation sur un corps $\F_{q}$ de caractéristique $p$.
+	\item L'anneau d'endomorphisme $End(E)$ donné par son discriminant $\Delta$. On connaît donc le corps quadratique imaginaire $\K$ et le conducteur $f$
 	\item Un nombre premier $l$ différent de la caractéristique $p$.
 \end{enumerate} 
-
-Et on cherche une courbe $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$. 
-
-De plus étant donné $n\in\N$, et $P$ un point de $E\left( \F_{q^{n}}\right)$ ou souhaite pouvoir calculer $\phi(P)$. 
+Et on cherche une courbe elliptique $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$ définie sur $\F_{q}$. De plus étant donné $n\in\N$, et $P$ un point de $E\left( \F_{q^{n}}\right)$ on souhaite pouvoir calculer $\phi(P)$. 
 
 \begin{center}
 	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $f_{m}$} 
 \end{center}
 
-Cette condition nous oblige à éviter des nombres premiers. Elle a cependant plusieurs avantage :
-
+Cette condition nous oblige à éviter certains nombres premiers. Elle a cependant plusieurs avantages :
 \begin{enumerate}
-	
-	\item Sous cette condition, toutes les $l$-isogénies séparables sont horizontales. On peut donc trouver leurs noyaux par groupe de torsion puis appliquer Vélu : la méthode naïve fonctionne en connaissant seulement $l$
-	
-	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de la taille de $l$ en bits : On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
-	
-	\item Si on suppose seulement $l$ ne divise pas $f$, on peut tout de même représenter les isogénies horizontales de cette manière mais pas les potentielles descendantes. Si $l$ ne divise pas $f_{m}$ on peut représenter toutes les $l$-isogénies définies sur $\F_{q}$.
-	
-	\item $f_{m}$ sera inversible modulo $l$, donc sur les éléments du noyau, qui sont inclus dans $E\left[ l\right] $, on pourra calculer une isogénie agissant comme "$\left[ \frac{1}{f_{m}}\right] $" en calculant $\left[ f_{m}^{-1}\right] $. 
+	\item Sous cette condition, toutes les $l$-isogénies séparables sont horizontales. On peut donc trouver leurs noyaux en calculant un groupe de torsion puis appliquer la formule de Vélu.
+	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de $l$ bits. On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
+	\item Si on suppose seulement que $l$ ne divise pas $f$, on peut tout de même représenter les isogénies horizontales de cette manière mais pas les isogénies descendantes. Ainsi si $l$ ne divise pas $f_{m}$, on peut représenter toutes les $l$-isogénies définies sur $\F_{q}$ en $O(log(l))$ bits.
+	\item $f_{m}$ sera inversible modulo $l$, ce qui sera utile par la suite pour manipuler des $l$-isogénies représentées sous la forme $\left[ \frac{c + d\pi_{q}}{f_{m}}\right] $.
 	
 \end{enumerate}
 
 On déduit une procédure naïve à partir de la formule de Vélu :
 
+ALGO 1 : VELU AVEC TORSION
 \begin{enumerate}
-		
 		\item Factoriser $l\OR_{\Delta}$ avec le théorème de Kummer
 		\item A partir d'un des idéaux premier $\LR$ de norme $l$, calculer le groupe de torsion $E\left[ \LR\right]$ en explicitant un générateur.
 		\item Appliquer la formule de Vélu pour trouver $E'$, et calculer l'image de $P$. 
-
 \end{enumerate}
 
-Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes : l'idée est d'engendrer $Cl(\OR_{\Delta})$ par des classes représentées par des idéaux de petites normes, puis factoriser $\CL$ dans cette famille génératrice.
+Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes. On le présente de la façon suivante :
 
-On a donc besoin d'outil pour manipuler $Cl(\OR_{\Delta})$ : on étudie cela dans la section 7.2. On utilise des formes quadratiques pour manipuler les idéaux, et l'on applique cela au problème de factorisation.
-
-On obtiendra $\LR$ sous forme d'un produit de petit idéaux, mais à un idéal fractionnaire principal prêt. Il faudra trouver un générateur d'un idéal principal, ce que l'on étudiera en section 7.5.
-
-On aura tout de même besoin de la formule de Vélu: Dans la section 7.3 on étudie comment l'appliquer efficacement, et on analyse la complexité obtenue. 
-
-Ensuite on s'intéresse en 7.4 au calcul d'un générateur de $E\left[ \LR\right]$. On revient avec plus de rigueur sur la méthode présenté par Broker Charle et Lauter, réutilisée sans modification dans l'article de Jao Soukharev. 
-
-La procédure de Broker Charle Lauter sera énoncé en section 7.6, puis la compléxité sera étudié en section 7.7. L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
+\begin{itemize}
+	\item On a donc besoin d'outils pour calculer dans le groupe de classe $Cl(\OR_{\Delta})$ : on étudie cela dans la section 5.2. On utilise des formes quadratiques pour manipuler les classes d'idéaux, et les exprimer dans une familles génératrices données.
+	\item Partant d'un idéal $\LR$ de norme $l$, on pourra donc exprimer sa classe $\CL$ dans une famille génératrice bien choisie. On en déduit une expression de $\LR$ à un idéal fractionnaire principal prêt. Il faudra donc savoir trouver un générateur d'un idéal principal, ce que l'on étudiera en section 5.5.
+	\item On aura tout de même besoin de la formule de Vélu au cours de l'algorithme. Dans la section 5.3, on étudie comment l'appliquer efficacement, et on analyse la complexité obtenue. 
+	\item On appliquera Velu à partir d'un générateur d'un groupe de torsion. Dans la section 5.4 on explique comment obtenir un générateur d'un groupe de torsion d'un idéal de norme premier.
+	\item La procédure de Broker Charle Lauter sera énoncé en section 5.6, puis la complexité sera étudié en section 5.7. 
+\end{itemize}
 
 
 
@@ -2012,161 +1998,137 @@ La procédure de Broker Charle Lauter sera énoncé en section 7.6, puis la comp
 
 
 
-\subsection{Factorisation dans le groupe de classes}
+\subsection{Calculs dans les groupes de classes}
 
-On souhaite une procédure pour obtenir un système de représentant d'une famille génératrice de $Cl(\OR_{\Delta})$, puis pour exprimer $\CL$ dans cette famille.
 
-Il faut d'abord résoudre deux problème :
+Pour mener des calculs dans un groupe de classe $Cl\left(\OR_{\Delta} \right)$, il nous faut d'abord résoudre deux problèmes :
 \begin{enumerate}
-	\item Pour manipuler une classe de façon effective il faut définir un représentant normal, unique dans chaque classe
-	\item On voudra calculer des isogénie associée aux idéaux représentant les générateurs de $\CL$, il faut dont que leurs normes vérifient les mêmes conditions fixées sur $l$ : On veut pouvoir choisir des représentants de normes premier bien choisies. 
+	\item Pour manipuler une classe il faut définir un représentant normal, unique dans chaque classe
+	\item On voudra calculer des isogénie associée aux idéaux représentant les générateurs d'une famille génératrice. Il faut dont que leurs normes vérifient les mêmes conditions fixées sur $l$ : On veut pouvoir manipuler une famille génératrice définie par des représentants de normes premier bien choisis. 
 \end{enumerate}
 
 Un outil va nous permettre de résoudre les deux problèmes en même temps : les formes quadratiques à coefficient entier. 
 
 \subsubsection{Forme standard des idéaux et formes quadratiques binaires}
 
-On va étudier une correspondance entre des idéaux de $\OR$ et des formes quadratiques définie positive de discriminant $\Delta$. Cela permettra de définir plusieurs outils pour l'implémentation :
-
-\begin{enumerate}
-	\item Un choix standard de générateur pour représenter un idéal donné.
-	\item Un choix normalisé d'idéal pour représenté une classe de $Cl(\OR_{\Delta})$.
-	\item Une méthode pour choisir un système de représentant des classes ayant des normes premier bien choisis.
-\end{enumerate}
-
-On commence par définir les formes qui nous intéresse :
+On va étudier une correspondance entre d'une part les idéaux d'un ordre d'un corps quadratique imaginaire $\OR_{\Delta}$, et d'autre part des formes quadratiques définies positives de discriminant $\Delta$. On commence par définir les formes quadratiques qui nous intéressent :
 
 \begin{Def}
-	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique.
 	
-	$f$ est binaire si elle est définie positive et à coefficient dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$.
-	
-	On notera $f = (a,b,c)$ pour désigner une forme quadratique binaire,
-	ou $f = (a,b)$ si le discriminant $\Delta$ est connu.  
-	
-	$f$ est dite primitive si $a,b,c$ son premier dans leur ensemble.
-	
-	Un entier $m\in\N$ est représenté par $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
+	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique. $f$ est binaire si elle est définie positive et à coefficient dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$. On notera $f = (a,b,c)$ pour désigner une forme quadratique binaire, ou $f = (a,b)$ si le discriminant $\Delta$ est connu. $f$ est dite primitive si ses coefficients $a$, $b$ et $c$ sont premiers dans leur ensemble.
 \end{Def}
 
-On peut associer à une forme bien choisie un idéal propre de $\OR_{\Delta}$.
+On peut associer à une forme quadratique binaire primitive de discriminant $\Delta$ un idéal propre de $\OR_{\Delta}$.
 
-\begin{Prop}
+\begin{Prop}\cite{Coh00}[Th 7.7]
 	
-	Soit $f = (a,b)$ binaire primitive de discriminant $\Delta$. L'application :
+	Soit $f = (a,b)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'application :
 	\begin{equation*}
 		I : (a,b)\mapsto\left[ a, \frac{-b + \sqrt{\Delta}}{2}\right] 
 	\end{equation*}
-	
 	associe à $f$ un idéal propre de $\OR_{\Delta}$.
-	
-	Un idéal entier $\LR\subset\OR_{\Delta}$ est dit primitif s'il est de la forme $I(a,b)$. 
-	
 \end{Prop}
+
+\begin{Def}
+	Un idéal entier $\LR\subset\OR_{\Delta}$ est dit primitif s'il est de la forme $I(a,b)$. 
+\end{Def}
 
 Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les coefficients $a$ et $b$ à partir d'une écriture adéquate de $\LR$ :
 
 \begin{Prop}
 	
-	Tout idéal $\LR\subset\OR_{\Delta}$ s'écrit 
-	
+	Tout idéal entier $\LR\subset\OR_{\Delta}$ s'écrit 
 	\begin{equation*}
 		\LR = m\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right] 
 	\end{equation*}
-	
-	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux.
-	
-	L'écriture est unique avec $b$ défini modulo $2a$ : on peut choisir $-a<b\leq a$.
-	
+	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux. L'écriture est unique avec $b$ défini modulo $2a$ : on peut choisir $-a<b\leq a$.
 \end{Prop}
 
+\begin{proof}\cite{Buchmann95}[2.5]
+	La preuve citée est rédigée dans le cas des corps quadratique réel, c'est à dire de discriminant positif. Mais à part un choix de convention différent pour fixer $b$, la preuve s'adapte sans difficulté au cas imaginaire.
+\end{proof}
+
 \begin{Def}
-	Un idéal $\LR$ est sous forme standard s'il est donné sous la forme précédente. 
-	
-	Lorsque $\Delta$ est connue, on notera $\LR = (m,a,b)$ une écriture standard de $\LR$. 
-	
-	On dira que $\LR$ est primitif si $\LR = (1,a,b)$.
+	Un idéal $\LR$ est sous forme standard s'il est donné par l'unique base définie par la proposition 5.2. Lorsque $\Delta$ est connue, on notera $\LR = (m,a,b)$ une écriture standard de $\LR$. On dira que $\LR$ est primitif si $\LR = (1,a,b)$.
 	
 \end{Def}
 
-On peut en déduire une écriture standard d'un idéal fractionnaire $\IR$ en utilisant le fait qu'il existe $d\in\N$ minimal tel que $d\IR = \LR$. 
+\begin{Rem}
+	On peut en déduire une écriture standard d'un idéal fractionnaire $\IR$ de $\OR_{\Delta}$. En effet d'après la proposition 1.11 il existe $d\in\N$ minimal tel que $d\IR = \LR$ soit entier, de forme standard $\LR = (m,a,b)$. Alors la forme standard de $\IR$ est
+	\begin{equation*}
+		\LR = \frac{m}{d}\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right]
+	\end{equation*}
+\end{Rem}
+ 
 
 \begin{Coro}
-	Soit $\LR = (m,a,b)$ sous forme standard. L'application
-	
+	Soit $\LR = (m,a,b)$ un idéal entier de $\OR_{\Delta}$ sous forme standard. Soit $c = \frac{\Delta - b^2}{4a}$. L'application
 	\begin{equation*}
 		F : (m,a,b)\mapsto (a,b) = ax^2 + bxy + cy^2
 	\end{equation*}
-	
 	associe à $\LR$ une forme quadratique binaire primitive de même discriminant. 
-	
-	I et F induise une bijection entre les idéaux primitifs et les formes quadratiques binaires primitives.
 	
 \end{Coro}
 
-On peut de même associé une forme quadratique à un idéal fractionnaire. Deux idéaux $\LR$ et $\LR'$ ont la même image par $F$ si et seulement si il existe $q\in\Q\cap\OR_{\Delta}$ tel que $\LR'$ = $q\LR$. 
+\begin{Prop}
+	Les applications $I$ et $F$ induisent une bijection entre les idéaux entiers primitifs et les formes quadratiques binaires primitives.
+\end{Prop}
+
+\begin{Rem}
+	On peut de même associé une forme quadratique à un idéal fractionnaire à partir de sa forme standard. 
+\end{Rem}
+
+On peut retrouver facilement la norme et l'inverse d'un idéal entier donné sous forme standard.
 
 \begin{Prop}
-	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$. 
+	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$ un idéal entier sous forme standard. Alors
 	\begin{enumerate}
 		\item $N(\LR) = m^2a$
-		\item $\LR^{-1} = (m/N(\LR),a,-b)$
+		\item $\LR^{-1} = \left( \frac{m}{N(\LR)},a,-b\right) $
 	\end{enumerate}
 \end{Prop}
 
-On note $\CL$ la classe de $\LR$ dans $Cl(\OR_{\Delta})$. On cherche à trouver un représentant de la classe de façon systématique et pratique pour l'implémentation. Prendre un idéal primitif ne suffit pas : Il peut y avoir plusieurs idéaux primitifs dans la même classe. 
+ On cherche à trouver un représentant d'un classe d'idéaux de $\OR_{\Delta}$ de façon systématique et pratique pour l'implémentation. Prendre un idéal primitif ne suffit pas : Il peut y avoir plusieurs idéaux primitifs dans la même classe. 
 
 \begin{Def}
-	Deux formes quadratiques binaires primitives sont équivalentes si leurs idéaux primitifs associés sont dans la même classe.
-	
-	On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
+	Deux formes quadratiques binaires primitives sont équivalentes si leurs idéaux primitifs associés sont dans la même classe. On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
 \end{Def}
 
-La bijection précédente est un isomorphisme de groupe, et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. 
-
-Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être définie sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet : (CF Cox)
+La bijection précédente entre les idéaux entiers primitif et les formes quadratiques binaires primitive induit une structure de groupe sur les formes quadratiques binaires primitives. L'isomorphisme passe au quotient et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être définie sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet \cite{Cox}[3.8]
 
 \begin{Def}
-	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante :
-	
-	Soit $B$ défini modulo $2aa'$ par
-	
+	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante : Soit $B$ défini modulo $2aa'$ par
 	\begin{enumerate}
 		\item $B = b [2a]$
 		\item $B = b' [2a']$
 		\item $B^2 = \Delta [4aa']$
 	\end{enumerate}
-	
 	Alors $f*f' = (aa', B)$ est une forme quadratique binaire primitive.
 \end{Def}
 
-\begin{Prop}
-	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$
+\begin{Prop}\cite{Cox}[Th 7.7]
 	
-	Et ces opérations induisent des isomorphismes entre groupes de classes.
+	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$ Et ces opérations induisent des isomorphismes entre groupes de classes.
 \end{Prop}
 
-On peut donc représenter une classe d'idéaux par une forme quadratique représentant la classe de formes correspondante.
-
-Enfin on défini une notion de forme réduite, qui aura l'avantage d'être unique dans chaque classe :
+On défini une notion de forme quadratique binaire réduite, qui aura l'avantage d'être unique dans chaque classe :
 
 \begin{Def}
-	Soit $\LR = (1,a,b)$ un idéal primitif sous forme standard.
-	
-	Soit $c = (\Delta - b^2)/4a$. En particulier $c\geq0$.
-	
-	$\LR$ est réduit si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$.
-	
-	$F(\LR)$ est aussi dites réduites dans ce cas
+	Soit $f = (a,b)$ une forme quadratique binaire primitive sous forme standard de discriminant $\Delta < 0$. Soit $c = (\Delta - b^2)/4a$. $f$ est une forme quadratique réduite si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$. Un idéal entier primitif $\LR$ de $\OR_{\Delta}$ est dit réduit si $F(\LR)$ est une forme quadratique réduite
 \end{Def}
 
 \begin{Prop}
-	Toute classe d'idéaux (ou de formes) contient un unique élément réduit. 
-	
-	De plus à partir d'un représentant $\LR$ (ou $f$), il existe un algorithme donnant l'élément réduit de la classe en $\OR(\log(\Delta)^{2} )$
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire. Toute classe de $Cl(\Delta)$ contient une unique forme quadratique réduite. Toute classe de $Cl(\OR_{\Delta})$ contient un unique idéal entier primitif réduit. 
 \end{Prop}
 
-La forme réduite vérifie de plus $a,|b| \leq \sqrt{|\Delta|}$. On peut donc représenter chaque classe par un élément de taille raisonnable en mémoire.
+\begin{Rem}
+	Une forme quadratique réduite $f = (a,b)$ vérifie $a,|b| \leq \sqrt{|\Delta|}$. On peut donc représenter chaque classe $Cl(\OR_{\Delta})$ en $O(\log(|\Delta|))$ bits.
+\end{Rem}
+
+De plus à partir d'un représentant $\LR$ (ou $f$) quelconque d'une classe, il existe un algorithme donnant l'élément réduit de la classe en $\OR(\log(\Delta)^{2} )$.
+
+ALGO 2 : REDUCTION DE FORME QUADRATIQUE (BIASSE)
+
 
 
 
@@ -2175,44 +2137,38 @@ La forme réduite vérifie de plus $a,|b| \leq \sqrt{|\Delta|}$. On peut donc re
 
 \subsubsection{Représentant de classe premier avec le conducteur}
 
-La forme réduite sera adapté pour faire des calculs dans le groupe de classe. On voudra cependant se ramener à des idéaux toujours premier avec le conducteur maximal, ce qui n'est pas garanti pour l'idéal réduit.
-
-On pourra toujours s'adapter :
-
-\begin{Prop}
-	$m\in\N$ est représenté par une forme quadratique binaire primitive si et seulement s'il existe $\LR\in Cl(I(f))$ tel que $N(\LR) = m$
-\end{Prop}
-
-La preuve de cette proposition n'est pas effective, cependant si $m$ est premier on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après le théorème de Kummer. 
-
-\begin{Prop}
-	Soit $M\in\N$. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$.
-	
-	Ainsi toutes classes d'idéaux possède un idéal premier avec $M$
-\end{Prop}
-
-Ainsi on peut toujours se ramener à des représentant de classe premier avec le conducteur maximal. 
-
-Comme il y a deux choix d'idéaux de norme $m$ lorsque $m$ est décomposé, on va fixer une convention nous permettant de choisir. Cette convention sera aussi utile pour le problème de factorisation.
+La forme réduite sera adapté pour faire des calculs dans le groupe de classe. Pour le calcul d'isogénie, on voudra cependant trouver un système de représentant de norme toujours premier avec le conducteur maximal, ce qui n'est pas garanti pour l'idéal réduit. Cependant un tel système de représentant existe.
 
 \begin{Def}
-	Soit $p$ premier décomposé dans $\OR_{\Delta}$. 
-	
-	La forme de Seysen de discriminant $\Delta$ associée à $p$ est $(p,b)$ où $b\in\N$ est le plus petit entier positif tel que $b^2 = \Delta [4p]$
-	
-	L'idéal de Seysen associé à $p$ est alors $I_{p} = I((p,b))$. En particulier $N(I_{p}) = p$
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
 \end{Def}
 
-L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b))$ est le second, et représente la classe de $(I((p,b)))^{-1}$ d'après la proposition 7.6.
-
+\begin{Prop}\cite{Cox}[Th 7.7]
+	
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe $\LR\in \widetilde{I(f)}$ tel que $N(\LR) = m$
+\end{Prop}
 
 \begin{Rem}
-	Représenter un idéal $\LR$ sous la forme théorique de l'idéal de Kummer dépend d'une racine de $\Delta$ modulo $p$. Cependant la représentation de Seysen dépend d'un choix de racine de $\Delta$ modulo $4p$. 
-	
-	Traduire une représentation en une autre n'est donc pas trivial, et il est plus simple de trouver directement les racines voulues plutôt que les déduire de la forme connue. 
-	
-	Un intérêt des représentations de Seysen est qu'il est plus utile de connaître une racine modulo $4p$ que modulo $p$ pour l’algorithme de Cornacchia que nous verrons à la section 7.5.
+	La preuve de cette proposition fournit une méthode pour trouver l'idéal $\LR$ de norme $m$ à partir de deux entiers $s$, $t$ tel que $f(s,t) = 1$.\cite{Cox}[Lem 2.3] Cependant si $m$ est premier, on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après le théorème de Kummer. Ceci permet de trouver l'idéal $\LR$ sans expliciter les entiers $s$ et $t$.
 \end{Rem}
+
+\begin{Prop}\cite{Cox}[Cor 7.17]
+	
+	Soit $M\in\N$ en entier. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$. Ainsi toutes classes d'idéaux d'un ordre quadratique imaginaire possède un idéal entier premier avec $M$. 
+\end{Prop}
+
+
+Ainsi, toute classe d'idéaux possède un représentant premier avec le conducteur maximal. Comme il y a deux choix d'idéaux de norme $m$ lorsque $m$ est décomposé, on va fixer une convention nous permettant de choisir. Cette convention sera aussi utile pour les calculs dans le groupe de classe.
+
+\begin{Def}
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. La forme quadratique de Seysen de discriminant $\Delta$ associée à $p$ est $(p,b_{p})$ où $b_{p}\in\N$ est le plus petit entier positif tel que $b_{p}^2 = \Delta [4p]$. L'idéal de Seysen associé à $p$ est alors $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
+\end{Def}
+
+\begin{Rem}
+	L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b_{p}))$ est le second, et représente la classe de $(\PR_{p})^{-1}$ d'après la proposition 5.5.
+\end{Rem}
+
+
 
 
 
@@ -2225,29 +2181,36 @@ L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\
 
 \subsubsection{Famille génératrice du groupe de classe}
 
-On veut former une famille génératrice de $Cl(\OR_{\Delta})$ composé uniquement de forme de Seysen de norme $m$ adapté au calcul d'isogénie, c'est à dire $m$ différent de $p$ et ne divisant pas $f_{m}$.
 
-Une idée naïve est d'établir la liste croissante des nombres premier acceptable plus petit qu'une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir au moins un représentant de chaque classe parmi les idéaux de Seysen associés.
+
+
+On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux de Seysen de norme $m$ adaptée au calcul d'isogénie, c'est à dire $m$ différent de la caractéristique $p$ et ne divisant pas le conducteur maximal $f_{m}$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables plus petit qu'une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir au moins un représentant de chaque classe parmi les idéaux de Seysen associés.
 
 \begin{Def}
-	On note $P_{N} = \left\lbrace I_{p} \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des $N$ premiers idéaux de Seysen. 
+	On note $P_{N} = \left\lbrace \PR_{p} : p \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des $N$ premiers idéaux de Seysen. 
 \end{Def}
 
-La proposition suivante est un des arguments clef permettant d'obtenir un algorithme sous exponentielle en $|\Delta|$ : (citer article Seysen thm3.3)
+La proposition suivante est un des arguments clef permettant d'obtenir un algorithme sous exponentielle en $|\Delta|$ : 
 
-\begin{Prop}
+\begin{Prop}\cite{Seysen}[Th 3.3]
+	
 	Sous l'hypothèse de Riemann généralisée, il existe une constante $C$ telle que $Cl(\OR_{\Delta})$ soit engendré par les classes des éléments de $P_{N}$, avec 
 	\begin{equation*}
 		N = C\times \log(\Delta)^{2}
 	\end{equation*}
 \end{Prop}
 
-Comme les nombres premiers à éviter ($p$ et les diviseurs premiers de $f_{m}$) sont en nombre fini, Les conditions supplémentaires que l'on s'impose ne change pas le comportement asymptotique de la borne $N$. 
+\begin{Rem}
+	Comme les nombres premiers à éviter ($p$ et les diviseurs premiers de $f_{m}$) sont en nombre fini, Les conditions supplémentaires que l'on s'impose ne change pas le comportement asymptotique de la borne $N$.
+\end{Rem} 
 
-Pour estimer la borne, Seysen cite deux résultats proposant $C= 280$ ou même $C = 2$. Cohen proposait $C = 6$. Cependant d'après Cohen, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
+\begin{Rem}
+	Pour estimer la borne, Seysen cite deux résultats proposant $C= 280$ ou même $C = 2$. Cohen proposait $C = 6$. Cependant d'après \cite{Coh00}, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
+\end{Rem}
 
-
-Cohen, ainsi que Jao, Soukharev, propose en plus une borne sous exponentielle optimisée par analyse synthèse, et qui n'admet pas l’hypothèse de Riemann généralisée. Elle dépend de l'optimisation et vise à optimiser la complexité de la factorisation d'un idéal. Nous reviendront donc sur l'ordre de grandeur de $N$ par la suite.
+\begin{Rem}
+	\cite{Coh00} ainsi que \cite{JaoSoukharev} propose en plus une borne pour $N$ sous exponentielle en $|\Delta|$  qui n'admet pas l’hypothèse de Riemann généralisée. Elle dépend de l'implémentation et vise à optimiser la complexité de la factorisation d'un idéal. Nous reviendront donc sur l'ordre de grandeur de $N$ par la suite.
+\end{Rem}
 
 Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la procédure naïve. En pratique l'algorithme renvoie :
 
@@ -2259,7 +2222,7 @@ Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la proc�
 (les trois étant calculés simultanément).
 
 
-
+ALGO 3 FAMILLE GENERATRICE DE SEYSEN
 
 
 
@@ -2271,50 +2234,47 @@ Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la proc�
 \subsubsection{Écriture d'une classe dans une famille génératrice}
 
 
-Après avoir appliqué ce qui précède, on se donne un idéal $\LR$. Alors 
-
-
+Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Alors 
 \begin{equation*}
-	\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{g}^{e_{g}}
+	\CL = \CL_{1}^{e_{1}}\CL_{2}^{e_{2}}\ldots\CL_{g}^{e_{g}}
 \end{equation*}
 
-avec $\PR_{i}$ décrivant la liste des représentants de notre famille génératrice.  Ainsi, 
+avec $g = |Cl(\OR_{\Delta})|$ et $\CL_{1}\ldots\CL_{g}$ les différentes classes d'idéaux donné dans par une famille quelconque de représentant. Alors il existe $\alpha\in\K$ tel que
 
 \begin{equation*}
-	\LR = (\alpha\OR_{\Delta})\PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
+	\LR = (\alpha\OR_{\Delta})\LR_{1}^{e_{1}}\LR_{2}^{e_{2}}\ldots\LR_{g}^{e_{g}}
 \end{equation*}
 
-avec $\alpha\in\K$, autrement dit $(\alpha\OR_{\Delta})$ est un idéal fractionnaire principal.
-
-Dans cette section on ne cherche pas $\alpha$ mais seulement une liste de $\PR_{i}$ et d'exposant $e_{i}$ fournissant une factorisation de $\CL$.
-
-Une idée naïve consiste à chercher une factorisation au hasard. Deux faits vont permettre de rendre cela effectif :
+Dans cette section on ne cherche pas à expliciter $\alpha$ mais seulement une liste d'exposant $e_{i}$ fournissant une factorisation de $\CL$ lorsque les représentants $\LR_{i}$ sont choisit parmi les idéaux de Seysen. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
 
 \begin{enumerate}
-	\item Certaines classes représentées par des formes réduites aux bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
+	\item Certaines classes représentées par des formes réduites ayant de bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
 	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités d'arriver en un temps sous-exponentiel à une classe facilement factorisable.
 \end{enumerate}
 
+D'abord on cite le théorème de Seysen sur la factorisation d'idéaux:
 
-D'abord on cite le théorème de Seysen sur la factorisation :
-
-\begin{The}
-	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ est une forme réduite $(a,b)$.
-	Si $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la factorisation de $a$, alors
+\begin{The}\cite{Seysen}[Th 3.1]
 	
+	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ ait une forme réduite $(a,b)$. Si $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en nombres premiers de l'entier $a$, alors
 	\begin{enumerate}
-		\item $p_{i}$ est décomposé dans $\OR_{\Delta}$
-		\item Si $I_{p_{i}} = (1,p_{i},b_{i})$, alors $b = \pm b_{i} [2a]$
-		\item $\CL = \CP_{1}^{\pm e_{1}}\CP_{2}^{\pm e_{2}}\ldots\CP_{g}^{\pm e_{g}}$ où $\PR_{i}$ est l'idéal de Seysen de $p_{i}$
-		\item L'exposant de $\PR_{i}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$
+		\item $p_{i}$ est décomposé dans $\OR_{\Delta}$.
+		\item Si $\PR_{p_{i}} = (1,p_{i},b_{p_{i}})$ est l'idéal de Seysen de $p_{i}$, alors $b = \pm b_{p_{i}} $ mod $2a$.
+		\item $\CL = \CP_{p_{1}}^{\pm e_{1}}\CP_{p_{2}}^{\pm e_{2}}\ldots\CP_{p_{g}}^{\pm e_{g}}$ 
+		\item L'exposant de $\PR_{p_{i}}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$
 	\end{enumerate}
 \end{The}
 
 \begin{Coro}
-	Avec les notations précédentes, si $a$ se factorise entièrement avec des premiers $p_{i}$ de $L_{pi}$, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
+	Avec les notations du théorème précédent, si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{pi}$, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
 \end{Coro}
 
-Dans les formes réduites, on sait que $a < |\Delta|$. Factoriser $a$ est donc au pire des cas sous-exponentielle en $\log(a) \leq \log(|\Delta|)$
+\begin{Rem}
+	Pour une forme quadratique réduite $(a,b)$, on sait que $a < |\Delta|$. Factoriser $a$ est donc au pire des cas sous-exponentielle en $\log(a) \leq \log(|\Delta|)$. De plus il suffit de vérifier que $a$ se factorise complètement parmi une famille de petit nombres premiers.
+\end{Rem}
+
+
+ALGO 4 FACTORISATION D'UNE CLASSE 
 
 Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se ramener au cas de Seysen. On procède par marche aléatoire :
 
@@ -2326,37 +2286,38 @@ Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se 
 	\item On recommence avec d'autres exposants $x_{i}$.
 \end{enumerate}
 
-Les bonnes propriétés des marches aléatoires sur les groupes de classe rendent cette procédure envisageable. Sans rappeler la théorie des graphes expanseurs (voir cours Biasse), on cite le résultat principal :
+Les bonnes propriétés des marches aléatoires sur les groupes de classe rendent cette procédure envisageable. Sans rappeler la théorie des graphes expanseurs, on cite le résultat principal :
 
 \begin{Def}
 	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
-	
 	\begin{enumerate}
 		\item Les sommets sont associés chacun à un élément de G
 		\item Une arêtes relie deux sommets associés à $g$ et $g'$ si et seulement s'il existe $s\in S$ tel que $g = sg'$
 	\end{enumerate}
-	
-	(S est supposé stable par inverse pour que le graphe ne soit pas orienté)
+	S est supposé stable par inverse pour que le graphe ne soit pas orienté.
 \end{Def}
 
-\begin{Prop}
-	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{id}\cup (L_{id})^{-1}$. 
+\begin{Prop}\cite{Jao_2009}[Lem 2.1]
 	
-	On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque.
-	
-	Si $t$ est en $O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})$,
-	
+	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{id}\cup (L_{id})^{-1}$. On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque. Si 
+	\begin{equation*}
+		t = O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})
+	\end{equation*} 
 	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité $\frac{S_{0}}{2|G|}$
 \end{Prop}
 
-Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\Delta)$
+Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$
 
-Puisque le groupe est abélien, le nombre $t$ correspond à la somme des valeurs absolue des exposants, c'est à dire la norme $l1$ du vecteurs des exposants, que l'on notera $x$
+\begin{Rem}
+	Puisque le groupe est abélien, le nombre d'étape $t$ correspond à la somme des valeurs absolue des exposants, c'est à dire la norme $l1$ du vecteurs des exposants, que l'on notera $x$
+\end{Rem}
 
 \begin{Coro}
-	On peut choisir des exposants aléatoire parmi les vecteurs $x$ tels que 
+	On peut choisir des vecteurs d'exposants aléatoire parmi les vecteurs $x$ tels que 
+	\begin{equation*}
+		\left\| x\right\| _{1} \leq C\times\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}
+	\end{equation*}
 	
-	$\left\| x\right\| _{1} \leq C\times\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$
 \end{Coro}
 
 On peut par exemple choisir de borner par $\log(|\Delta|)$ (voir Biasse cours 6), pour une majoration large mais raisonnable. 
@@ -2365,25 +2326,26 @@ on revient sur la borne $N$ des nombres premiers utilisés.
 
 \begin{Def}
 	On défini la complexité sous exponentielle en $\Delta$ par la fonction
-	
-	$L(x) = e^{\sqrt{\log(x)\log(\log(x))}}$
-	
+	\begin{equation*}
+		L(x) = e^{\sqrt{\log(x)\log(\log(x))}}
+	\end{equation*}
 	On dira qu'une procédure est sous-exponentielle en $\Delta$ s'il existe une constante $z$ telle que la complexité soit en $O(L(|\Delta|))^{z}$
 \end{Def}
 
-Si $N$ est trop petit, l'ensemble $S_{0}$ est plus petit et il est plus difficile d'y arriver. Mais si $N$ est trop grand, il est plus difficile de vérifier si $a$ se factorise entièrement sur $L_{p_{i}}$
+Si $N$ est trop petit, la partie $S_{0}$ est plus petite et la probabilité de l'atteindre avec une marche aléatoire est plus faible. Mais si $N$ est trop grand, il est plus difficile de vérifier si $a$ se factorise entièrement sur $L_{p_{i}}$. 
 
-\begin{Prop}(Cohen, Jao, soukharev)
+\begin{Prop}\cite{Coh00}[5.5.1]
 	
-	Il existe une constante $z$ tel que choisir $N$ de l'ordre de $O(L(|\Delta|))^{z}$ optimise la complexité de l'algorithme
+	Il existe une constante $z$ tel que choisir $N$ de l'ordre de $O(L(|\Delta|))^{z}$ optimise la complexité de l'algorithme 4
 	
 \end{Prop}
 
-La constante $z$ dépend de l'implémentation. Cohen la calcul pour un algorithme visant à expliciter la structure complète du groupe de classe : on a pas besoin de cette structure, mais seulement d'une relation factorisant $\LR$.
+La constante $z$ dépend de l'implémentation. \Cite{Coh00} la calcul pour un algorithme visant à expliciter la structure complète du groupe de classe : on a pas besoin de cette structure, mais seulement d'une relation factorisant $\LR$. \cite{JaoSoukharev} trouve une constante pour la procédure qui nous intéresse, mais majore différemment les exposants : au lieu de majorer la norme $l_{1}$, il impose une borne à chaque exposant et une borne sur le nombre d'exposant non nul. 
 
-Jao de son côté trouve une constante pour la procédure qui nous intéresse, mais majore différemment les exposants : au lieu de majorer la norme $l_{1}$, il impose une borne à chaque exposant et une borne sur le nombre d'exposant non nul. 
+\begin{Rem}
+	Même si la borne théorique admettant l'hypothèse de Riemann généralisé est asymptotiquement meilleure, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite\cite{Coh00}[5.5.1]. 
+\end{Rem}
 
-Même si la borne théorique admettant l'hypothèse de Riemann généralisé est asymptotiquement meilleure, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite (Cf Cohen). 
 
 
 
@@ -2394,6 +2356,9 @@ Même si la borne théorique admettant l'hypothèse de Riemann généralisé est
 Jao propose une majoration différente \textbf{Faire la comparaison}
 
 La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
+
+
+
 
 
 \subsection{Algorithme SquareVélu}
@@ -2634,6 +2599,8 @@ Dans leurs articles, Jao et Soukharev affirment sans démonstration le résultat
 Idée générale, suivi de l'algo et énoncé
 
 \subsection{Complexité obtenue}
+
+L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
 
 \printbibliography
 
