@@ -10,19 +10,21 @@
 % Useful packages
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{amsmath}
 \usepackage{tikz-cd}
 \usetikzlibrary{calc,babel} % <--- IMPORTANT!
 \usepackage{tikz}
 \usepackage{mathtools}
 \usepackage{mathrsfs}
 \usepackage[backend=biber, style=alphabetic]{biblatex}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\linespread{0.95}
+\renewcommand{\algorithmicrequire} {\textsc{INPUT:}}
+\renewcommand{\algorithmicensure}  {\textsc{OUTPUT:}}
 
 \addbibresource{biblio.bib}
 
@@ -920,7 +922,7 @@ L'existence d'un invariant différentiel est en réalité une propriété propre
 On va se servir de la proposition 2.12 pour définir une convention de normalisation des formes explicite d'isogénie.
 
 \begin{Def}
-	Soit $\phi : E\rightarrow E'$ une isogénie sous forme explicite, $\omega_{E}$ et $\omega_{E'}$ les invariants différentiels associés respectivement aux modèles de départ et d'arrivé. On dira que cette forme explicite de $\phi$ est normalisée si $\phi^{*}(w_E') = w_E$
+	Soit $\phi : E\rightarrow E'$ une isogénie sous forme explicite, $\omega_{E}$ et $\omega_{E'}$ les invariants différentiels associés respectivement aux modèles de départ et d'arrivé. On dira que cette forme explicite de $\phi$ est normalisée si $\phi^{*}(w_{E'}) = w_E$
 	
 \end{Def}
 
@@ -1973,14 +1975,24 @@ Cette condition nous oblige à éviter certains nombres premiers. Elle a cependa
 	
 \end{enumerate}
 
-On déduit une procédure naïve à partir de la formule de Vélu :
+On déduit une procédure naïve à partir de la formule de Vélu, à condition de savoir expliciter le générateur d'un groupe de torsion.
 
-ALGO 1 : VELU AVEC TORSION
-\begin{enumerate}
-		\item Factoriser $l\OR_{\Delta}$ avec le théorème de Kummer
-		\item A partir d'un des idéaux premier $\LR$ de norme $l$, calculer le groupe de torsion $E\left[ \LR\right]$ en explicitant un générateur.
-		\item Appliquer la formule de Vélu pour trouver $E'$, et calculer l'image de $P$. 
-\end{enumerate}
+\begin{algorithm}
+	\caption{Calcul d'une forme explicite normalisée de $l$-isogénie}
+	\begin{algorithmic}[1]
+		\Require Un modèle défini sur $\F_{q}$ de courbe elliptique $E$ à multiplication complexe, le discriminant $\Delta$ de son anneaux d'endomorphisme, $l$ premier ne divisant pas $p*f_{m}$ tel que $\left( \frac{\Delta}{l}\right) = 1$
+		\Ensure Une forme explicite normalisée d'une $l$-isogénie $\phi : E \rightarrow E'$ partant de $E$.
+		\State Factoriser $l\OR_{\Delta}$ avec le théorème de Kummer
+		\State Choisir un des deux idéaux $\LR$ de norme $l$ obtenu
+		\State Calculer un générateur $P$ du groupe de torsion $E\left[ \LR\right]$ (voir section 5.4)
+		\State Appliquer la formule de Vélu pour trouver une forme explicite $\phi_1 : E \rightarrow E_1$ 
+		\State Calculer l'invariant différentiel de $E_1$
+		\State Calculer la constante $c$ telle que $\phi_{1}^{*}(w_{E_{1}}) = cw_E$
+		\State Appliquer l'isomorphisme $\mu_{c} : (x,y) \mapsto (c^{-2}x, c^{-3}y)$ à la forme explicite de $\phi_1$ pour calculer $\phi = \mu_{c}\circ\phi_{1}$
+	\end{algorithmic}
+
+\end{algorithm}
+
 
 Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer cette procédure en se ramenant à des idéaux de petites normes. On le présente de la façon suivante :
 
@@ -2117,17 +2129,41 @@ On défini une notion de forme quadratique binaire réduite, qui aura l'avantage
 	Soit $f = (a,b)$ une forme quadratique binaire primitive sous forme standard de discriminant $\Delta < 0$. Soit $c = (\Delta - b^2)/4a$. $f$ est une forme quadratique réduite si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$. Un idéal entier primitif $\LR$ de $\OR_{\Delta}$ est dit réduit si $F(\LR)$ est une forme quadratique réduite
 \end{Def}
 
-\begin{Prop}
+\begin{Prop}\cite{Cox}[2.8]
+	
 	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire. Toute classe de $Cl(\Delta)$ contient une unique forme quadratique réduite. Toute classe de $Cl(\OR_{\Delta})$ contient un unique idéal entier primitif réduit. 
 \end{Prop}
 
 \begin{Rem}
-	Une forme quadratique réduite $f = (a,b)$ vérifie $a,|b| \leq \sqrt{|\Delta|}$. On peut donc représenter chaque classe $Cl(\OR_{\Delta})$ en $O(\log(|\Delta|))$ bits.
+	Une forme quadratique réduite $f = (a,b)$ vérifie 
+	\begin{equation*}
+		|b|\leq|a|\leq\sqrt{\frac{|\Delta|}{3}}
+	\end{equation*}
+	On peut donc représenter chaque classe $Cl(\OR_{\Delta})$ en $O(\log(|\Delta|))$ bits. 
 \end{Rem}
 
-De plus à partir d'un représentant $\LR$ (ou $f$) quelconque d'une classe, il existe un algorithme donnant l'élément réduit de la classe en $\OR(\log(\Delta)^{2} )$.
+La preuve citée de la proposition 5.7 fournit un algorithme donnant l'élément réduit de la classe en $\OR(\log(\Delta)^{2} )$ à partir d'un représentant quelconque.
 
-ALGO 2 : REDUCTION DE FORME QUADRATIQUE (BIASSE)
+\begin{algorithm}
+	\caption{Réduction de forme quadratique binaire primitive}
+	\begin{algorithmic}[1]
+		\Require Une forme quadratique binaire primitive $(a,b,c)$
+		\Ensure Une forme quadratique réduite équivalente.
+		\If{ $|b| > a$}
+			\State Calculer $q$, $r$ tels que $b = 2aq + r$, $-a<r\leq a$
+			\State $b \gets r$
+			\State $c \gets c - bq + aq^2$
+		\EndIf
+		\If{$a > c$}
+			\State Echanger $a$ et $c$
+		\EndIf
+		\If{$b < 0$}
+			\If{$a = -b$ OU $a = c$}
+				\State $b \gets -b$
+			\EndIf
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
 
 
 
@@ -2212,17 +2248,28 @@ La proposition suivante est un des arguments clef permettant d'obtenir un algori
 	\cite{Coh00} ainsi que \cite{JaoSoukharev} propose en plus une borne pour $N$ sous exponentielle en $|\Delta|$  qui n'admet pas l’hypothèse de Riemann généralisée. Elle dépend de l'implémentation et vise à optimiser la complexité de la factorisation d'un idéal. Nous reviendront donc sur l'ordre de grandeur de $N$ par la suite.
 \end{Rem}
 
-Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la procédure naïve. En pratique l'algorithme renvoie :
-
-\begin{enumerate}
-	\item Une liste $L_{id}$ égale à $P_{N}$ privés de certains éléments,
-	\item La liste $L_{pi}$ des normes $p_{i}$ des éléments de $L_id$,
-	\item la liste $L_{fi}$ des formes de Seysen associées.
-\end{enumerate}
-(les trois étant calculés simultanément).
+Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la procédure naïve. 
 
 
-ALGO 3 FAMILLE GENERATRICE DE SEYSEN
+\begin{algorithm}
+	\caption{Famille génératrice du groupe de classe par des idéaux de Seysen}
+	\begin{algorithmic}[1]
+		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$.
+		\Ensure Une liste $L_{premiers}$ de nombres premiers plus petit que $N$ ne divisant pas $pf_{m}$, la liste $L_{ideaux}$ de leurs idéaux de Seysen respectif, la liste $L_{formes}$ de leurs idéaux de Seysen respectif. 
+		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets \O$
+		\State $n \gets 2$
+		\While{$n < N$}
+			\If{$\left( \frac{\Delta}{n}\right) = 1$ ET $n$ ne divise pas $pf_{m}$}
+				\State Mettre $n$ dans $L_{premiers}$
+				\State Calculer $q_{n} = (n ,b_{n})$ la forme de Seysen de $n$
+				\State Mettre $q_{n}$ dans $L_{formes}$
+				\State Calculer $I_{n}$ l'idéal de Seysen de $n$
+				\State Mettre $I_{n}$ dans $L_{ideaux}$
+			\EndIf
+			\State $n \gets nextprime(n)$
+		\EndWhile
+	\end{algorithmic}
+\end{algorithm}
 
 
 
@@ -2266,27 +2313,14 @@ D'abord on cite le théorème de Seysen sur la factorisation d'idéaux:
 \end{The}
 
 \begin{Coro}
-	Avec les notations du théorème précédent, si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{pi}$, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
+	Avec les notations du théorème précédent, si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{premiers}$ obtenue par l'algorithme 3, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
 \end{Coro}
 
 \begin{Rem}
 	Pour une forme quadratique réduite $(a,b)$, on sait que $a < |\Delta|$. Factoriser $a$ est donc au pire des cas sous-exponentielle en $\log(a) \leq \log(|\Delta|)$. De plus il suffit de vérifier que $a$ se factorise complètement parmi une famille de petit nombres premiers.
 \end{Rem}
 
-
-ALGO 4 FACTORISATION D'UNE CLASSE 
-
-Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se ramener au cas de Seysen. On procède par marche aléatoire :
-
-\begin{enumerate}
-	\item On choisit une liste au hasard d'exposants $x_{i}$ pour chaque éléments de $L_{id}$.
-	\item On calcule $\CL*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{g}^{x_{g}}$.
-	\item On calcule la forme réduite de la classe obtenue.
-	\item Si on tombe sur un cas de Seysen, on déduit une factorisation de $\CL$.
-	\item On recommence avec d'autres exposants $x_{i}$.
-\end{enumerate}
-
-Les bonnes propriétés des marches aléatoires sur les groupes de classe rendent cette procédure envisageable. Sans rappeler la théorie des graphes expanseurs, on cite le résultat principal :
+On énoncé ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. Sans rappeler la théorie des graphes expanseurs, on cite les résultats principaux.
 
 \begin{Def}
 	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
@@ -2320,9 +2354,34 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 	
 \end{Coro}
 
-On peut par exemple choisir de borner par $\log(|\Delta|)$ (voir Biasse cours 6), pour une majoration large mais raisonnable. 
+On peut par exemple choisir de borner par $\log(|\Delta|)$, pour une majoration large mais raisonnable. On obtient alors l'algorithme suivant :
 
-on revient sur la borne $N$ des nombres premiers utilisés.
+
+\begin{algorithm}
+	\caption{Factorisation de la classe d'un idéal dans une famille génératrice donnée}
+	\begin{algorithmic}[1]
+		\Require 
+		\Ensure
+	\end{algorithmic}
+\end{algorithm}
+
+ALGO 4 FACTORISATION D'UNE CLASSE 
+
+Pour chercher la factorisation de $\CL$ dans le cas général, on cherche à se ramener au cas de Seysen. On procède par marche aléatoire :
+
+\begin{enumerate}
+	\item On choisit une liste au hasard d'exposants $x_{i}$ pour chaque éléments de $L_{id}$.
+	\item On calcule $\CL*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{g}^{x_{g}}$.
+	\item On calcule la forme réduite de la classe obtenue.
+	\item Si on tombe sur un cas de Seysen, on déduit une factorisation de $\CL$.
+	\item On recommence avec d'autres exposants $x_{i}$.
+\end{enumerate}
+
+
+
+
+
+Maintenant on revient sur la borne $N$ des nombres premiers utilisés. On peut chercher à l'optimisé par rapport à l'implémentation de l'algorithme 4.
 
 \begin{Def}
 	On défini la complexité sous exponentielle en $\Delta$ par la fonction
@@ -2374,31 +2433,32 @@ compléxité, sqrt(vélu)
 
 \subsection{Générateur d'un groupe de torsion}
 
-Dans cette partie, on suppose connue un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ et on cherche un générateur de $E\left[ \LR\right]$. on suppose $l$ premier, et premier avec $f_{m}$.
 
-Supposons $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$. $\LR$ est primitif car de norme premier. Il est facile de passer à une écriture dépendant de $w_{\K}$ au lieu de $\sqrt{d_{K}}$, et la proposition 6.12 permet alors d'obtenir en quelques calculs $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
 
-On sait alors que $E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ est du noyau de$\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$
 
-Dans $E[l]$, à partir d'une base $P$, $Q$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible. On peut alors tester lequel est dans $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$
+Dans cette partie, on suppose connue un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé, et une courbe elliptique $E$ définie sur $\F_{q}$ à multiplication complexe avec $End(E)\simeq\OR_{\Delta}$ normalisé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose $l$ premier avec le conducteur maximal $f_{m}$.
 
-Dans l'exemple "small" de l'article de Broker, Charle, Lauter, $f_{m} = 1$ est l'isogénie $c + d\pi_{q}$ est facile à évaluer. Cela arrive dès que $E$ est au plus bas niveau du volcan d'isogénie. 
+\begin{Rem}
+	Si $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$. $\LR$ est primitif car de norme premier. Il est facile de passer à une écriture dépendant de $w_{\K}$ au lieu de $\sqrt{d_{K}}$, et la proposition 4.23 permet alors d'obtenir en quelques calculs une base de la forme 
+	\begin{equation*}
+		\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]
+	\end{equation*}
+	On suppose $\LR$ donné sous cette forme. 
+\end{Rem}
 
-En général le dénominateur nous empêche de réellement connaître l'isogénie sans avoir une façon effective de calculer $\alpha\mapsto\left[ \alpha\right]$. Cependant la proposition suivante nous ramène à un calcul effectif.
 
+On sait alors que $E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ est du noyau de$\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. Dans $E[l]$, à partir d'une base $P$, $Q$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible. (voir proposition 2.6). On veut alors pouvoir tester lequel est dans $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. 
 
 \begin{Prop}
-	les isogénies $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right] $ restreinte à $E\left[ l\right] $ ont même noyau.
+	Avec les notations précédentes, si $l$ ne divise pas $f_{m}$, alors les isogénies $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right] $ restreintes à $E\left[ l\right] $ ont même noyau.
 \end{Prop}
 
 \begin{proof}
-	Puisque $f_{m}$ et $l$ sont premier entre eux, $\left[ f_{m} \right]$ restreinte à $\left[ f_{m} \right]$ est bijective. 
-	
-	Or l'application $\left[ \right] $ est un morphisme d'anneau, 
-	
-	donc $\left[  \frac{c + d\pi_{q}}{f_{m}}\right] \circ \left[ f_{m }\right] =  \left[ c + d\pi_{q}\right] $, d'où la proposition.
+	Puisque $f_{m}$ et $l$ sont premier entre eux, $\left[ f_{m} \right]$ restreinte à $E\left[ l \right]$ est bijective. Or l'application $\left[.\right] $ est un morphisme d'anneau, donc $\left[  \frac{c + d\pi_{q}}{f_{m}}\right] \circ \left[ f_{m }\right] =  \left[ c + d\pi_{q}\right] $, ce qui permet de conclure.
 \end{proof}
 
+
+ALGO 5 CALCUL D'UN GENERATEUR DE GROUPE DE TORSION, VERSION 1
 Un premier algorithme pour calculer le noyau est le suivant :
 \begin{enumerate}
 	\item Calculer le polynôme de $l$ division sur $E$.
@@ -2409,29 +2469,19 @@ Un premier algorithme pour calculer le noyau est le suivant :
 	\item Sinon, retourner $Q$.
 \end{enumerate}
 
-Cette procédure peut être implémenté sur sage, mais pose plusieurs problème : 
-
+Cette algorithme peut être implémenté sur sage, mais pose plusieurs problème :
 \begin{enumerate}
-	\item La recherche exhaustive sur $l$ points peut être lourde, mais on souhaite appliquer cette algorithme sur des petits nombres premiers.
 	\item L'extension $\F_{q^r}$ peut être très grande, Broker Charle et Lauter affirme que $r$ est en général de l'ordre de $l$. 
 	\item Le polynôme de $l$-division est degré $\frac{l^2 - 1}{2}$ et peut être lourd à calculer.
 \end{enumerate}
 
-En pratique sur l'exemple "small" de Broker Charle et Lauter, $l = 31$ mais le calcul prend déjà quelques secondes. Dans leur article il propose une autre méthode, utilisant la théorie des formes modulaires pour obtenir la courbe d'arrivée $E'$ sans calculer de noyau. Ensuite ils mènent les calculs sur les éléments du noyau sans passer par une extension : il utilise une écriture formelle dans un quotient d'anneau de polynôme.
+En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ mais le calcul prend déjà quelques secondes. Ils proposent une autre méthode, utilisant la théorie des formes modulaires. On propose ici une amélioration de la première méthode : le but est de trouver le générateur du noyau directement dans la plus petite extension qui le contient, sans calculer de polynôme de division.\\
 
-On propose ici une amélioration de la première méthode : le but est de trouver le générateur du noyau directement dans la plus petite extension qui le contient. 
+On remarque d'abord que, partant de la forme standard de l'idéal $\LR$, on peut toujours se ramener à $d = 1$ (il suffit d'expliciter les calculs). Si $P$ est un générateur du groupe de torsion, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On se ramène donc à une étude $\pi_{q}$ restreint à $E[l]$.
 
-On remarque d'abord que, partant de la forme standard, on peut toujours se ramener à $d = 1$ (voir les algorithmes base\_wk et base\_fq1). 
-
-Si $P$ convient, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On connaît la trace de $E$ (et son cardinal) donc on déduit le polynôme caractéristique de $E$. On se ramène donc à une étude du comportement du morphisme de Frobenius sur $E[l]$.
-
-On trouve dans l'article de Miret, Moreno, Sadornil, Tena, et Valls (cite l'article), on trouve les résultats suivant :
-
-\begin{Prop}
-	(Proposition 1 de l'article)
+\begin{Prop}\cite{MMSTV}[Prop 1]
 	
 	Soit $E$ définie sur $\F_{q}$ de $j$-invariant différent de $0$, $1728$.
-	
 	\begin{enumerate}
 		\item $E$ admet une unique $l$-isogénies définie sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a un unique espace propre de dimension $1$.
 		\item $E$ admet exactement deux $l$-isogénies définies sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a deux valeurs propres distinctes .
@@ -2442,22 +2492,19 @@ cas 0 ??
 	
 \end{Prop}
 
-On sait que l'on se trouve dans le cas où il existe exactement $2$ isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$. 
+Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait que l'on se trouve dans le cas où il existe exactement $2$ isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$. 
 
-\begin{Prop}
-	(Proposition 2 de l'article)
+\begin{Prop}\cite{MMSTV}
 	
-	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. 
-	
-	Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $.
-	
-	Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$, et $r_{i}$ divise $l-1$.
-	
-	De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
+	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $. Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$, et $r_{i}$ divise $l-1$. De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
 \end{Prop}
 
-On sait donc directement dans quelle extension chercher les générateurs des noyaux. On sait aussi que celui qui nous intéresse correspond à la valeurs propres $-c$. 
+On sait donc directement dans quelle extension chercher les générateurs des noyaux. On sait aussi que celui qui nous intéresse est un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-c$. 
 
+
+
+
+ALGO 5 CALCUL D'UN GENERATEUR DE GROUPE DE TORSION, VERSION 2 
 On calcule l'ordre $r$ de $-c$ dans $\F_{l}^{*}$. Si les deux ordres sont différents, $E(\F_{q^r})$ ne contient pas toutes la $l$ torsion. En prenant un point $P$ au hasard dans $E(\F_{q^r})$ de cardinal $n$, $(n/l)P$ sera sûrement non nul et d'ordre $l$, et on peut tester s'il est générateur du noyaux en testant s'il est vecteurs propre pour $-c$. 
 
 
@@ -2475,115 +2522,89 @@ On calcule l'ordre $r$ de $-c$ dans $\F_{l}^{*}$. Si les deux ordres sont diffé
 
 \subsection{Problème de l'Idéal Principal}
 
-Dans cette partie, on suppose connaître une factorisation de $\CL$:
-
-\begin{equation*}
-	\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{g}^{e_{g}}
-\end{equation*}
-
-Avec $\PR_{i}$ des idéaux de Seysen de normes $p_{i}$ diférent de $p$ et ne divisant pas $f_{m}$.
-
-On cherche $\alpha\in\K$ tel que 
-
-\begin{equation*}
-	\LR = (\alpha\OR_{\Delta})\PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{g}^{e_{g}}
-\end{equation*}
-
+Dans cette partie, on suppose connaître une factorisation de la classe $\CL$ obtenue avec l'algorithme 4
+\begin{equation}
+	\CL = \CP_{p_{1}}^{e_{1}}\CP_{p_{2}}^{e_{2}}\ldots\CP_{p_{g}}^{e_{g}}
+\end{equation}
+Où les idéaux $\PR_{p_{i}}$ sont des idéaux de Seysen de normes $p_{i}$ différent de $p$ et ne divisant pas $f_{m}$. On cherche alors $\alpha\in\K$ tel que 
+\begin{equation}
+	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}
+\end{equation}
 On commence par se ramener à chercher un élément de $\OR_{\Delta}$ : Comme $\PR_{i} = I_{p_{i}} = (p_{i},b_{i})$, la forme $(p_{i},-b_{i})$ représente $\CP_{i}^{-1}$. Ainsi si $\bar{\PR_{i}} = I((p_{i},-b_{i}))$,
-
-\begin{equation*}
+\begin{equation}
 	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \beta\OR_{\Delta}
-\end{equation*}
-
-où $\beta\OR_{\HR}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
+\end{equation}
+où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
 
 \begin{Prop}
-	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$.
-	
-	Alors $\alpha = \beta/m$.
+	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$. Alors $\alpha = \frac{\beta}{m}$.
 \end{Prop}
+\begin{proof}
+	Partant de l'équation $(2)$, on multiplie chaque membre par $\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}$. Le membre de gauche est égale à $\beta\OR_{\Delta}$ par définition de $\beta$ par l'équation $(3)$. Le membre de gauche est
+	\begin{equation*}
+		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}
+	\end{equation*}
+	Or d'après la proposition 1.17.3, $\PR_{p_{i}}^{e_{i}}\bar{\PR_{i}}^{e_{i}} = p_{i}^{e_{i}}\OR_{\Delta}$, donc 
+	\begin{equation*}
+		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \alpha m\OR_{\Delta}
+	\end{equation*}
+	Donc $\beta = \alpha m$
+\end{proof}
 
-On va plutôt chercher $\beta$. On utilise les opérations sur les formes quadratiques, donc la donnée du problème est la forme standard de $\beta\OR_{\Delta}$. L'idéal n'est pas à priori primitif, mais il suffit de trouver un générateur de l'idéal primitif associé. 
 
-On se ramène donc au problème suivant : étant donné un idéal principal primitif $(1,a,b)$, trouver un générateur $\beta$.
-
-Connaître $a$ donne immédiatement la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y$ entiers.
+On Cherche plutôt à obtenir $\beta$.  La donnée du problème est la forme standard de $\beta\OR_{\Delta}$ obtenue à l'équation $(3)$. L'idéal n'est pas à priori primitif, mais il suffit de trouver un générateur de l'idéal primitif associé. On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Comme $N((1,a,b)) = a = N(\beta)$, connaître $a$ donne la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y$ entiers.
 	
 \begin{Prop}
-	Trouver $\beta$ est équivalent à résoudre l'équation $x^2 + y^2|\Delta| = 4a$ et à vérifier que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$
+	Avec les notations précédentes, calculer $\beta$ est équivalent à résoudre l'équation $x^2 + y^2|\Delta| = 4a$ et à vérifier que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$
 \end{Prop}
 
 \begin{proof}
-	$\frac{x + y \sqrt{\Delta}}{2}$ est de norme $a$ si et seulement si $x^2 + y^2|\Delta| = 4a$.
-	
-	On veut donc montrer que $\beta\in (1,a,b)$ est un générateur si et seulement s'il est de norme $a$. C'est une conséquence de la multiplicativité de la norme. 
+	$\frac{x + y \sqrt{\Delta}}{2}$ est de norme $a$ si et seulement si $x^2 + y^2|\Delta| = 4a$. On veut donc montrer que $\beta\in (1,a,b)$ est un générateur si et seulement s'il est de norme $a$. C'est une conséquence de la multiplicativité de la norme. 
 \end{proof}
 
-L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique :
+L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique
+
+ALGO 7 ALGORITHME DE CORNACCHIA
 
 \begin{Prop}[Algorithme de Cornacchia]
 	
-	On suppose $4a$ et $\Delta$ premier entre eux.
-	
-	$x^2 + y^2|\Delta| = 4a$ admet une unique solution au signe prêt de $x$ et $y$. 
-	
-	Si l'on connaît toutes les $s$ tel que $0 < s < 2a$ et $s^2 = \Delta [4a]$, l'algorithme de Cornacchia fourni la solution à l'équation
+	On suppose $4a$ et $\Delta$ premier entre eux. $x^2 + y^2|\Delta| = 4a$ admet une unique solution au signe prêt de $x$ et $y$. Si l'on connaît tout le entiers $s$ tel que $0 < s < 2a$ et $s^2 = \Delta [4a]$, l'algorithme de Cornacchia fourni la solution à l'équation
 	
 	\begin{enumerate}
 		\item On applique l'algorithme d'Euclide à $4a$ et $s$
 		\item On s'arrête au premier reste $r$ tel que $r < 2\sqrt(a)$
-		\item On pose $x = r$ et $y = \sqrt{\frac{4a - s^2}{|\Delta|}}$
+		\item On pose $x = r$ et $y = \sqrt{\frac{4a - r^2}{|\Delta|}}$
 		\item Alors pour un certain $s$, $y$ est entier et $x$, $y$ fourni une solution.
 	\end{enumerate}
 	
 \end{Prop}
 
-L'idée est de prendre $-b$ comme racine. En effet la forme quadratique $ax^2 + bxy + cy^2$ ayant pour discriminant $\Delta$, $-b$ est bien une racine de $\Delta$ modulo $4a$. De plus $-a<b\leq a$ par définition de la forme standard. 
+La recherche de racine carré modulo un entier quelconque peut être lourde en complexité. L'idée est de choisir $-b$ comme racine. En effet la forme quadratique $ax^2 + bxy + cy^2$ ayant pour discriminant $\Delta$, $-b$ est bien une racine de $\Delta$ modulo $4a$. De plus $-a<b\leq a$ par définition de la forme standard. 
 
-\begin{Prop}
-	En appliquant l'algorithme de Cornacchia à $-b$ si $-b >0$, $-b + 2a$ sinon, on trouve $x$, $y$ tels que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$ soit de norme $a$.
+\begin{Prop}\cite{JaoSoukharev}
 	
-	Ainsi $\beta = \frac{x + y \sqrt{\Delta}}{2}$ convient.
+	En appliquant l'algorithme de Cornacchia à $-b$ si $-b >0$, $-b + 2a$ sinon, on trouve $x$, $y$ tels que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$ soit de norme $a$. Ainsi $\beta = \frac{x + y \sqrt{\Delta}}{2}$ convient.
 \end{Prop}
 
-\begin{proof}
+\begin{proof}\cite{JaoSoukharev}
 	
-	On admettra une étape de la preuve. On démontre que l'algorithme de Cornacchia fonctionne sur notre exemple. 
+	On admettra une étape de la preuve, affirmée sans démonstration dans l'article citée. Si $-b >0$, on applique l'algorithme d'Euclide entre $4a$ et $-b$. Sinon, on l'applique à $-b + 2a$ qui est aussi une racine de $\Delta$ modulo $4a$. On traite le cas où $-b > 0$. Chaque reste $r$ obtenue au cours de l'algorithme d’Euclide s'écrit $r = 4at - bs$ avec $b$ et $s$ entiers. En particulier $r^2 = b^2s^2 [4a]$. Soit $Y_{r} = \frac{4a - r^2}{|\Delta|}$. Tant que $r > 2\sqrt{a}$, $Y_{r} < 0$. Soit $r$ le premier reste obtenue tel que $r \leq 2\sqrt{a}$ Alors $Y_{r} = \frac{|\Delta|s^2 + 4ak}{|\Delta|} \geq 0$ pour un certain entier $k$.
 	
-	Si $-b >0$, on applique l'algorithme d'Euclide entre $4a$ et $-b$. Sinon, on l'applique à $-b + 2a$ qui est aussi une racine de $\Delta$ modulo $4a$. On traite le cas où $-b > 0$.
+	\textbf{On admet que, partant de $-b$ et pour un reste $r$ maximal tel que $r \leq 2\sqrt{a}$, on a $k = 0$.} 
 	
-	Chaque reste $r$ obtenue au cours de l'algorithme s'écrit $r = 4at - bs$ avec $b$ et $s$ entiers.
-	
-	En particulier $r^2 = b^2s^2 [4a]$
-	
-	Soit $Y_{r} = \frac{4a - r^2}{|\Delta|}$. Tant que $r > 2\sqrt{a}$, $Y_{r} < 0$. Soit $r$ le premier reste obtenue tel que $r \leq 2\sqrt{a}$
-	
-	Alors $Y_{r} = \frac{|\Delta|s^2 + 4ak}{|\Delta|} \geq 0$ pour un certain entier $k$.
-	
-	On admet que, partant de $-b$ et pour un reste $r$ maximal tel que $r \leq 2\sqrt{a}$, on a $k = 0$. 
-	
-	Alors $Y_{r} = s^2$
-	
-	Soit $x = r$ et $y = s$. Puisque $Y_{r} = s^2$, $x$ et $y$ sont solutions de l'équation $x^2 + y^2|\Delta| = 4a$.
-	
-	De plus $\frac{x + y \sqrt{\Delta}}{2} = \frac{4at - by + y\sqrt{\Delta}}{2} = 2ta + y\dfrac{-b + \sqrt{\Delta}}{2}$
-	
-	Donc $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$.
-	
-	Partant de $-b + 2a$, on aboutit en admettant le même résultat intermédiaire.
+	Alors $Y_{r} = s^2$. Soit $x = r$ et $y = s$. Puisque $Y_{r} = s^2$, $x$ et $y$ sont solutions de l'équation $x^2 + y^2|\Delta| = 4a$. De plus $\frac{x + y \sqrt{\Delta}}{2} = \frac{4at - by + y\sqrt{\Delta}}{2} = 2ta + y\dfrac{-b + \sqrt{\Delta}}{2}$ Donc $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$. Partant de $-b + 2a$, on aboutit en admettant le même résultat intermédiaire.
 	
 \end{proof}
 
-Dans leurs articles, Jao et Soukharev affirment sans démonstration le résultat intermédiaire. Ils admettent aussi que la condition "$4a$ et $\Delta$ sont premier entre eux" sera respecté. (la condition n'est pas citée).
-
- On dira que $-b$ est une "bonne racine" si cette assertion est vrai i.e si l'algorithme de Cornacchia aboutit à une solution en partant de $-b$. 
-
-\begin{Prop}
-	En admettant que $-b$ (ou $-b + 2a$) est une bonne racine, et que $4a$ est premier avec $\Delta$,
-	 à partir de l'idéal $\beta\OR_{\Delta}$, on trouve un générateur $\beta$ en $O(log(N(\beta\OR_{\Delta})))$
-\end{Prop}
+\begin{Rem}
+	Il faut aussi admettre que la condition "$4a$ et $\Delta$ sont premier entre eux" sera respecté. Dans \cite{JaoSoukharev}, cette condition n'est pas citée.
+\end{Rem}
 
 
+
+
+
+\textbf{Voir méthode de sage, via équivalence de forme quadratique. méthode sage "gens.reduced()"}
 
 
 
