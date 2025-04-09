@@ -2149,19 +2149,25 @@ La preuve citée de la proposition 5.7 fournit un algorithme donnant l'élément
 	\begin{algorithmic}[1]
 		\Require Une forme quadratique binaire primitive $(a,b,c)$
 		\Ensure Une forme quadratique réduite équivalente.
+		\State $test \gets False$
+		\While{test = False}
 		\If{ $|b| > a$}
 			\State Calculer $q$, $r$ tels que $b = 2aq + r$, $-a<r\leq a$
-			\State $b \gets r$
 			\State $c \gets c - bq + aq^2$
+			\State $b \gets r$
 		\EndIf
+		\State $test \gets True$
 		\If{$a > c$}
 			\State Echanger $a$ et $c$
+			\State $b \gets -b$
+			\State $test \gets False$
 		\EndIf
 		\If{$b < 0$}
 			\If{$a = -b$ OU $a = c$}
 				\State $b \gets -b$
 			\EndIf
 		\EndIf
+		\EndWhile
 	\end{algorithmic}
 \end{algorithm}
 
