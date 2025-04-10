@@ -2074,11 +2074,11 @@ Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les
  
 
 \begin{Coro}
-	Soit $\LR = (m,a,b)$ un idéal entier de $\OR_{\Delta}$ sous forme standard. Soit $c = \frac{\Delta - b^2}{4a}$. L'application
+	Soit $\LR = (m,a,b)$ un idéal entier de $\OR_{\Delta}$ sous forme standard. Soit $c = \frac{\Delta - (b)^2}{4a}$. L'application
 	\begin{equation*}
 		F : (m,a,b)\mapsto (a,b) = ax^2 + bxy + cy^2
 	\end{equation*}
-	associe à $\LR$ une forme quadratique binaire primitive de même discriminant. 
+	associe à $\LR$ une forme quadratique binaire de même discriminant. 
 	
 \end{Coro}
 
@@ -2086,17 +2086,23 @@ Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les
 	Les applications $I$ et $F$ induisent une bijection entre les idéaux entiers primitifs et les formes quadratiques binaires primitives.
 \end{Prop}
 
+\begin{proof}
+	Par construction, si $\LR = (1,a,b)$ est un idéal entier primitif de $\OR_{\Delta}$, alors $I(F(\LR)) = \LR$ et $F(I((a,b))) = (a,b)$.
+\end{proof}
+
 \begin{Rem}
 	On peut de même associé une forme quadratique à un idéal fractionnaire à partir de sa forme standard. 
 \end{Rem}
 
 On peut retrouver facilement la norme et l'inverse d'un idéal entier donné sous forme standard.
 
-\begin{Prop}
-	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$ un idéal entier sous forme standard. Alors
+\begin{Prop}\cite{Coh00}[5.2.5]
+	
+	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$ un idéal entier sous forme standard. Soit $\LR' = \left( \frac{m}{N(\LR)},a,-b\right) $ (qui est donc un idéal fractionnaire de $\OR_{\Delta}$). Alors
 	\begin{enumerate}
 		\item $N(\LR) = m^2a$
-		\item $\LR^{-1} = \left( \frac{m}{N(\LR)},a,-b\right) $
+		\item $\LR\LR' = \left[ m, \frac{-b + \sqrt{\Delta}}{2}\right] $
+		\item $\LR$ est propre si et seulement s'il est primitif, et dans ce cas $\LR' = \LR^{-1}$
 	\end{enumerate}
 \end{Prop}
 
