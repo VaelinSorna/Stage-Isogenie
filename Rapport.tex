@@ -1988,7 +1988,8 @@ On déduit une procédure naïve à partir de la formule de Vélu, à condition 
 		\State Appliquer la formule de Vélu pour trouver une forme explicite $\phi_1 : E \rightarrow E_1$ 
 		\State Calculer l'invariant différentiel de $E_1$
 		\State Calculer la constante $c$ telle que $\phi_{1}^{*}(w_{E_{1}}) = cw_E$
-		\State Appliquer l'isomorphisme $\mu_{c} : (x,y) \mapsto (c^{-2}x, c^{-3}y)$ à la forme explicite de $\phi_1$ pour calculer $\phi = \mu_{c}\circ\phi_{1}$
+		\State Appliquer l'isomorphisme $\mu_{c} : (x,y) \mapsto (c^{-2}x, c^{-3}y)$ à la forme explicite de $\phi_1 : E\rightarrow E_1$ pour calculer $\phi = \mu_{c}\circ\phi_{1} : E \rightarrow E'$
+		\Return La forme explicite $\phi : E \rightarrow E'$
 	\end{algorithmic}
 
 \end{algorithm}
@@ -2174,12 +2175,18 @@ La preuve citée de la proposition 5.7 fournit un algorithme donnant l'élément
 			\EndIf
 		\EndIf
 		\EndWhile
+		\Return $(a,b,c)$
 	\end{algorithmic}
 \end{algorithm}
 
+\begin{Prop}
+	L'algorithme 2 admet une complexité en $O(\log(a)^2)$
+\end{Prop}
 
-
-
+\begin{proof}\cite{Coh00}[5.4.3]
+	
+	La ligne $4$ correspond à une division euclidienne de $2a$ par $b$, qui se fait en $O(log(2a))$. La complexité de chaque passage dans la boucle de la ligne $2$ est essentiellement dominée par l'étape de la ligne $4$. Enfin le nombre de passage dans la boucle While est en $0(log(a))$.\cite{Coh00}[5.4.3] 
+\end{proof}
 
 
 
@@ -2280,6 +2287,7 @@ Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la proc�
 			\EndIf
 			\State $n \gets nextprime(n)$
 		\EndWhile
+		\Return $L_{premiers}$, $L_{ideaux}$, $L_{formes}$
 	\end{algorithmic}
 \end{algorithm}
 
@@ -2446,7 +2454,7 @@ compléxité, sqrt(vélu)
 \subsection{Générateur d'un groupe de torsion}
 
 
-
+\subsubsection{Méthode générale}
 
 Dans cette partie, on suppose connue un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé, et une courbe elliptique $E$ définie sur $\F_{q}$ à multiplication complexe avec $End(E)\simeq\OR_{\Delta}$ normalisé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose $l$ premier avec le conducteur maximal $f_{m}$.
 
@@ -2469,25 +2477,34 @@ On sait alors que $E\left[ \LR\right]$ est par définition l'intersection de $E\
 	Puisque $f_{m}$ et $l$ sont premier entre eux, $\left[ f_{m} \right]$ restreinte à $E\left[ l \right]$ est bijective. Or l'application $\left[.\right] $ est un morphisme d'anneau, donc $\left[  \frac{c + d\pi_{q}}{f_{m}}\right] \circ \left[ f_{m }\right] =  \left[ c + d\pi_{q}\right] $, ce qui permet de conclure.
 \end{proof}
 
-
-ALGO 5 CALCUL D'UN GENERATEUR DE GROUPE DE TORSION, VERSION 1
-Un premier algorithme pour calculer le noyau est le suivant :
-\begin{enumerate}
-	\item Calculer le polynôme de $l$ division sur $E$.
-	\item En déduire une extension $\F_{q^r}$ telle que $E(\F_{q^r})$ contienne $E[l]$.
-	\item Calculer une base $P$, $Q$ de $E\left[ l\right] $ à l'aide du polynôme de $l$ division. 
-	\item Pour $i$ allant de $0$ à $l - 1$, vérifier $\left[ c + d\pi_{q}\right](P) = 0$
-	\item Dès qu'un test est vérifier, retourner la valeur $P + iQ$ testée
-	\item Sinon, retourner $Q$.
-\end{enumerate}
+\begin{algorithm}
+	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 1}
+	\begin{algorithmic}[1]
+		\Require Un nombre premier $l$ premier avec $p*f_{m}$, une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un idéal propre $\LR\subset\OR_{\Delta}$ sous forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
+		\State Calculer le polynôme de-$l$ division sur $E$.
+		\State En déduire une extension $\F_{q^r}$ sur laquelle le polynôme de $l$-division se factorise. (Ainsi $E(\F_{q^r})$ contient $E[l]$).
+		\State Calculer une base $P$, $Q$ de $E\left[ l\right] $. 
+		\For{$i$ allant de $0$ à $l - 1$}
+		\If{$\left[ c + d\pi_{q}\right](P + iQ) = 0$} 
+		\Return la valeur $P + iQ$ 
+		\EndIf
+		\EndFor
+		\State \Return $Q$
+	\end{algorithmic}
+\end{algorithm}
 
 Cette algorithme peut être implémenté sur sage, mais pose plusieurs problème :
 \begin{enumerate}
 	\item L'extension $\F_{q^r}$ peut être très grande, Broker Charle et Lauter affirme que $r$ est en général de l'ordre de $l$. 
-	\item Le polynôme de $l$-division est degré $\frac{l^2 - 1}{2}$ et peut être lourd à calculer.
+	\item Le polynôme de $l$-division est degré $\frac{l^2 - 1}{2}$ et peut être lourd à calculer, et à factoriser.
 \end{enumerate}
 
-En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ mais le calcul prend déjà quelques secondes. Ils proposent une autre méthode, utilisant la théorie des formes modulaires. On propose ici une amélioration de la première méthode : le but est de trouver le générateur du noyau directement dans la plus petite extension qui le contient, sans calculer de polynôme de division.\\
+En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ mais le calcul prend déjà une dizaine de secondes.
+
+\subsubsection{Optimisation de la recherche d'extension de corps}
+
+ On propose une amélioration de la première méthode : le but est de trouver directement la plus petite extension qui contient la $\LR$-torsion, sans calculer de polynôme de division.\\
 
 On remarque d'abord que, partant de la forme standard de l'idéal $\LR$, on peut toujours se ramener à $d = 1$ (il suffit d'expliciter les calculs). Si $P$ est un générateur du groupe de torsion, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On se ramène donc à une étude $\pi_{q}$ restreint à $E[l]$.
 
@@ -2500,35 +2517,91 @@ On remarque d'abord que, partant de la forme standard de l'idéal $\LR$, on peut
 		\item $E$ admet $l+1$ isogénies définies sur sur$\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a une valeur propre double.
 	\end{enumerate}
 	
-cas 0 ??
+\textbf{ Cas de 0 isogénie ? }
 	
 \end{Prop}
 
-Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait que l'on se trouve dans le cas où il existe exactement $2$ isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$. 
+Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait qu'il existe exactement $2$ isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$ restreint à $E[l]$. 
 
 \begin{Prop}\cite{MMSTV}
 	
 	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $. Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$, et $r_{i}$ divise $l-1$. De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
 \end{Prop}
 
-On sait donc directement dans quelle extension chercher les générateurs des noyaux. On sait aussi que celui qui nous intéresse est un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-c$. 
+On sait donc directement dans quelle extension chercher les générateurs des noyaux. On note $r$ son degré. On cherche alors $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-c$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
+\begin{equation*}
+	E(\F_{q^{r}}) \simeq \Z/n_{1}\Z\times\Z/n_{2}\Z
+\end{equation*}
+
+avec $n_{1}$ divisant $n_{2}$, alors un point choisit au hasard sera probablement d'ordre $n_{2}$. Cependant on connait seulement le cardinal $N = n_{1}n_{2}$
+
+\begin{Prop}\cite{Sil09}[Exercice 5.6]
+	
+	Avec les notations précédentes, $n_{1}^2$ divise $N$ et $q^r = 1$ modulo $n_{1}$.
+\end{Prop}
+	
+On en déduit l'algorithme suivant :
+
+\begin{algorithm}
+	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 2}
+	\begin{algorithmic}[1]
+		\Require Un nombre premier $l$ premier avec $p*f_{m}$, une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un idéal propre $\LR\subset\OR_{\Delta}$ sous forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
+		\State $r\gets$ ordre de $-c$ dans $\F_{l}^{*}$.
+		\State $N\gets$ Cardinal de $E(\F_{q^{r}})$
+		\State $n_{max} \gets pgcd(N, q^r - 1)$
+		\State $L\gets\O$
+		\For{$i$ divisant $n_{max}$}
+		\If{$i^2$ divise $N$}
+		\State Mettre $i$ dans $L$
+		\EndIf
+		\EndFor
+		\State $P\gets$ Point aléatoire de $E(\F_{q^{r}})$
+		\For{$i$ parcourant $L$}
+		\State $K\gets (N/i)P$
+		\If{$K\neq \OR$}
+		\If{$\pi_{q}(K)=-cK$}
+		\Return $K$ 
+		\EndIf
+		\EndIf
+		\EndFor
+		\State Reprendre l'étape $10$
+	\end{algorithmic}
+\end{algorithm}
 
 
 
+\subsubsection{Méthode d'Atkin Elkies}
 
-ALGO 5 CALCUL D'UN GENERATEUR DE GROUPE DE TORSION, VERSION 2 
-On calcule l'ordre $r$ de $-c$ dans $\F_{l}^{*}$. Si les deux ordres sont différents, $E(\F_{q^r})$ ne contient pas toutes la $l$ torsion. En prenant un point $P$ au hasard dans $E(\F_{q^r})$ de cardinal $n$, $(n/l)P$ sera sûrement non nul et d'ordre $l$, et on peut tester s'il est générateur du noyaux en testant s'il est vecteurs propre pour $-c$. 
+La méthode 2 précédente est une net amélioration de la méthode 1, mais nécessite parfois de manipuler des groupes $E(F_{q^{r}})$ de très grand cardinal, lorsque $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisament souvent pour être problèmatique. On présente ici une troisième méthode, ayant pour but d'éviter tout calcul dans une quelconque extension de $\F_{q}$. 
+
+Voir : Article de Schoof, article de Bostan
+
+Article de Schoof :
+
+L'idée de la méthode repose sur beaucoup de théorème qui seront admis et résumé. Soit $E$ une courbe elliptique à multiplication complexe de $j$-invariant $j$, définie sur $\F_{q}$.
+\begin{itemize}
+	\item Il existe un polynôme $\Psi_{l}(X,Y)$, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des $l+1$ courbes $l$-isogones à $E$.
+	\item Si $l$ est décomposé, $\Psi_{l}(j,Y)$ admet uniquement $2$ racines dans $\F_{q}$, obtenues en factorisant $PGCD(\Psi_{l}(j,Y), Y^q - Y)$
+	\item Soit $h$ une de ces deux racines, alors il est possible d'obtenir un modèle de la courbe $E'$ défini sur $\F_{p}$, à partir de la donnée de $E$, $h$ et $l$. 
+	\item Soit $p_{1}$ la somme des abscisses des $l-1$ points finis du noyau de la $l$-isogénie $\phi : E\rightarrow E'$. Alors $p_{1}\in\F_{q}$ peut être obtenues à partir de la connaissance de $E$, $h$ et $l$., avec des calculs uniquement dans $\F_{q}$.
+	\item Soit $F_{h}$ le polynôme dont les racines sont les abscisses des élément du noyau de $\phi$. Soit $\wp$ la fonction de Weierstrass associée à un relèvement de $E$ via le théorème de relèvement de Deuring. 
+	\begin{equation}
+		z^l-1F(\wp(z)) = \exp(S)
+	\end{equation}
+	où $S$ est une série dont tout les termes dépendent de l'écriture en série de Laurent de $\wp$ et de $p_{1}$
+\end{itemize}
+
+On peut alors retrouver les coefficients de $F$ en identifiants les $(l-1)/2$ premiers termes des deux membres de l'équation.
+
+Article de Bostan : Section 4.2 méthode de Elkies 1998 : 
+
+Ecriture plus explicite de la méthode énoncé par Schoof. Cependant la formule (17) n'a pas de sens, la notation "$p_{i}$" n'est pas définie et le calcul de $p_{2}$ dépend de $p_{0}$ qui n'a pas de sens. 
 
 
+Article de Bostan : Section 6.4 méthode de Atkin : 
 
-
-
-
-
-
-
-
-
+Même théorème mais différente approche, semble faisable à condition de pouvoir manipuler les séries de Laurent dans sage (calculer $\wp^i$ pour $i$ allant de $1$ à $l-1$ jusqu'au coefficient de degré $l$)
 
 
 
@@ -2564,8 +2637,94 @@ où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
 \end{proof}
 
 
-On Cherche plutôt à obtenir $\beta$.  La donnée du problème est la forme standard de $\beta\OR_{\Delta}$ obtenue à l'équation $(3)$. L'idéal n'est pas à priori primitif, mais il suffit de trouver un générateur de l'idéal primitif associé. On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Comme $N((1,a,b)) = a = N(\beta)$, connaître $a$ donne la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y$ entiers.
+On cherche plutôt à obtenir $\beta$. Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, on doit trouver un générateur $\beta$. Comme $N((1,a,b)) = a = N_{\Q}^{\K}(\beta)$, connaître $a$ donne la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y$ entiers.
+
+\begin{Prop}
 	
+	Soit $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ primitif sous forme standard. Soit $f = F(\LR)$ sa forme quadratique binaire primitive associée. Alors 
+		\begin{equation*}
+			f(x,y) = ax^2 + bxy + cy^2 = N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR)
+		\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	On sait que par définition de $N_{\Q}^{\K}$, 
+	
+	\begin{align*}
+		N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR) &= \left( ax + y\frac{b}{2} + y\frac{\sqrt{\Delta}}{2}\right) \left( ax + y\frac{b}{2} - y\frac{\sqrt{\Delta}}{2}\right)/ a\\
+		&= \left( \left( ax + y\frac{b}{2} \right)^{2} - \left( y\frac{\sqrt{\Delta}}{2}\right)^{2}\right)/a\\
+		&=  ax^2 + bxy + y^2\left( \frac{b^2 - \Delta }{4a}\right) \\
+		&= ax^2 + bxy + cy^2 = f(x,y)
+	\end{align*}
+	
+	la dernière ligne étant dû au fait que $f$ est de discriminant $\Delta = b^2 - 4ac$.
+	
+\end{proof}
+	
+	
+\begin{Coro}
+	Soit $\LR = (1,a,b)\subset\OR_{\Delta}$ un idéal primitif sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f$, c'est à dire s'il existe deux entiers $x, y\in\Z$ tels que $f(x,y) = 1$. De plus dans ce cas,
+	\begin{equation*}
+		\LR = \left( ax - \frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}
+	\end{equation*}
+\end{Coro}
+
+\begin{proof}
+	$\LR$ est un idéal principal si et seulement s'il existe un élément de $\LR$ de norme égale à $N(\LR)$. Puisque $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$, tout élément $\beta$ de $\LR$ est de la forme
+	\begin{equation*}
+		\beta = \left( ax - \frac{-b + \sqrt{\Delta}}{2}\right)
+	\end{equation*}
+	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(x,y) = 1$ d'après ce qui précède.
+\end{proof}
+
+Dans le contexte de notre problème, on sait que l'idéal est principal par construction, et on connaît la forme quadratique $f$ associée. On cherche $(x,y)\in\Z^2$ solution de $f(x,y) = 1$. La notion de forme réduite va nous permettre de conclure 
+
+\begin{Prop}\cite{Cox}[Thm 2.8, 2.9]
+	
+	Soit $r = ax^2 + bxy + cy^2$ une forme quadratique binaire primitive. Si $r$ est réduite, alors tout les entiers représentés par $r$ sont positifs et $a$ est le plus petit entier représenté par $r$, avec $r(1,0) = a$.
+\end{Prop}
+
+Ainsi lorsque $f$ est une forme quadratique binaire primitive qui représente $1$, sa forme réduite $r$ est de la forme $x^2 + bxy + cy^2$. 
+
+\begin{Rem}
+	Chaque étape de l'algorithme 2 correspond à des changement de variable en $(x,y)$ \cite{Cox}[Thm 2.8]. En effet
+	\begin{enumerate}
+		\item $(x,y)\mapsto (x - 2qy, y)$ correspond aux lignes $5$ et $6$.
+		\item $(x,y)\mapsto (x + y, y)$ correspond aux lignes $17$ et $18$ dans le cas $a = -b$.
+		\item $(x,y)\mapsto(-y,-x)$ correspond aux lignes $10$ et $11$, ainsi qu'aux lignes $17$ et $18$ dans le cas $a = c$. 
+	\end{enumerate}
+\end{Rem}
+
+On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal principal.
+
+\begin{algorithm}
+	\caption{Générateur d'un idéal principal donné sous forme standard}
+	\begin{algorithmic}[1]
+		\Require $(1,a,b)$ un idéal primitif d'un ordre $\OR_{\Delta}$ dont on sait qu'il est principal.
+		\Ensure Un élément $\beta$ tel que $(1,a,b) = \beta\OR_{\Delta}$. 
+		\State $f\gets ax^2 + bxy + cy^2$
+		\State $r\gets$ résultat de l'algorithme 2 appliqué à $f$
+		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$
+		\State $(x,y)\gets(1,0)$
+		\State $(x,y)\gets(x',y')$ obtenus en appliquant tout les changements de variables retenus dans $L$ dans le sens inverse.
+		\Return $(x,y)$
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{Prop}
+	L'algorithme 5 appliqué à un idéal $\LR$ admet une complexité en $O(\log(N(\LR)^2))$.
+\end{Prop}
+
+\begin{proof}
+	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $5$. 
+\end{proof}
+
+\begin{Rem}
+	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Cependant aucune preuve de complexité n'est donné, ni aucune description exact de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. Comme la complexité déclarée est en $O(\log(N(\LR)))$, on estime que l'algorithme $5$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation sage utilise aussi l'algorithme $5$. 
+\end{Rem}
+
+\textbf{Supprimer la partie Cornacchia ?} 
+
 \begin{Prop}
 	Avec les notations précédentes, calculer $\beta$ est équivalent à résoudre l'équation $x^2 + y^2|\Delta| = 4a$ et à vérifier que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$
 \end{Prop}
@@ -2576,7 +2735,7 @@ On Cherche plutôt à obtenir $\beta$.  La donnée du problème est la forme sta
 
 L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique
 
-ALGO 7 ALGORITHME DE CORNACCHIA
+ALGORITHME DE CORNACCHIA
 
 \begin{Prop}[Algorithme de Cornacchia]
 	
