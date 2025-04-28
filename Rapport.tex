@@ -1633,7 +1633,23 @@ On définit la réduction au niveau des points.
 
 \begin{proof}\cite{Sil94}[VII 2.1]
 	
-	la preuve citée utilise une définition plus rigoureuse du morphisme de projection, sur une extension de $\Qb$. Elle utilise le lemme de Hensel. Pour nos application, on se restreint à notre définition, qui est équivalente. 
+	La preuve citée utilise une définition plus rigoureuse du morphisme de projection, sur une extension de $\Qb$. Elle utilise le lemme de Hensel. Pour nos application, on se restreint à notre définition, qui est équivalente. 
+\end{proof}
+
+Il se peut que des points finis de $E$ se réduise sur le point à l'infini. Cependant cela n'arrivera pas pour les points d'ordre fini de $E$ premier avec la caractéristique d'arrivée.
+
+\begin{Prop}
+	Soit $\PR$ un idéal premier de $\Zb$ au dessus d'un nombre premier $p$. Soit $E$ une courbe elliptique définie sur un corps de nombre $\K$ ayant une bonne réduction modulo $\PR$. Soit $\tilde{E}$ la réduction de $E$ modulo $\PR$. On note $k = \OR_{\K}/\PR\cap\OR_{\K}$. Soit $n$ premier avec la caractéristique $p$. L'application
+	\begin{equation*}
+		P\in E[n](K) \rightarrow \tilde{P}\in \tilde{E}[n](k)
+	\end{equation*}
+	est injective.
+\end{Prop}
+
+\begin{proof}
+	\cite{Sil09}[VII 3.1]
+	
+	La preuve cité utilise des notions qui n'ont pas été introduite dans le rapport. Cette proposition est donc admise. 
 \end{proof}
 
 On définit la réduction au niveau des isogénies. 
@@ -1792,7 +1808,18 @@ On peut expliciter le noyau d'une isogénie à partir d'un idéal entier propre 
 \end{Prop}
 
 \begin{proof}
-	A REDIGER OU TROUVER UNE SOURCE 
+	D'après la proposition 1.5, tout idéal $\LR\subset\OR_{\Delta}$ contient un entier $m\in\N$. Alors $\LR\in m\OR_{\Delta}$ et $E[\LR]\subset E[m]$. Il existe un corps de nombre $\K$ tel que $E(\K)[m] = E[m]$. D'après la proposition 4.11, la réduction modulo $\PR$ est injective sur $E(\K)[m]$. Donc en particulier la réduction modulo $\PR$ induit une injection de $E[\LR]$ dans $\tilde{E}[\LR]$. Soit $P\in E[\LR]$ non nul. Alors 
+	\begin{equation*}
+		\tilde{P}\in \ker(\widetilde{\phi_{\LR}}) \iff \widetilde{\phi_{\LR}(P)} = \tilde{\OR} \iff \phi_{\LR}(P) = \OR \iff P\in E[\LR]
+	\end{equation*}
+	Car $\phi(P)$ est d'ordre fini donc sa réduction est nulle si et seulement s'il est lui même nul d'après la proposition 4.11. De plus
+	\begin{equation*}
+		\tilde{P}\in \tilde{E}[\LR] \iff \widetilde{\left[ \alpha\right] }(\tilde{P}) = 0 \;\forall\alpha\in\LR \iff {\left[ \alpha\right] }(P) = 0 \;\forall\alpha\in\LR \iff P\in E[\LR]
+	\end{equation*}
+	Toujours avec la proposition 4.11. Ainsi $\ker(\widetilde{\phi_{\LR}}) = \tilde{E}[\LR]$. La courbe image de $\widetilde{\phi_{\LR}}$ est $\CL\cdot \tilde{E}$ par définition, donc 
+	\begin{equation*}
+		\tilde{E}/\tilde{E}\left[ \LR\right] = \CL\cdot \tilde{E}
+	\end{equation*}
 \end{proof}
 	
 
@@ -1965,7 +1992,7 @@ On souhaite utiliser la théorie précédente pour établir une procédure de ca
 Et on cherche une courbe elliptique $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$ définie sur $\F_{q}$. De plus on souhaite pouvoir calculer $\phi(P)$. 
 
 \begin{center}
-	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $p*f_{m}*|E(\F_{q^{n}})|$} 
+	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
 \end{center}
 
 Cette condition nous oblige à éviter certains nombres premiers. Elle a cependant plusieurs avantages :
@@ -1973,7 +2000,8 @@ Cette condition nous oblige à éviter certains nombres premiers. Elle a cependa
 	\item Sous cette condition, $l$ ne divise pas $f_{m}$ donc toutes les $l$-isogénies séparables sont horizontales. En particulier leurs noyaux sont accessibles comme groupes de torsions d'idéaux de norme $l$.
 	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de $\log(l)$ bits. On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
 	\item Si on suppose seulement que $l$ ne divise pas $f$, il existe des isogénies descendantes que l'on ne peut pas approcher avec la théorie précédente. Tandis que si $l$ ne divise pas $f_{m}$, on peut s’intéresser à toutes les $l$-isogénies définies sur $\F_{q}$.
-	\item Si $l$ ne divise pas $p*f_{m}*|E(\F_{q^{n}})|$, $f_{m}$ et $|E(\F_{q^{n}})|$ sont inversibles modulo $l$. Le fait que $f_{m}$ soit inversible sera utile par la suite pour manipuler des endomorphisme de la forme $\left[ \frac{c + d\pi_{q}}{f_{m}}\right] $. Le fait que $|E(\F_{q^{n}})|$ soit inversible sera utile pour normaliser l'isogénie obtenue (Voir section 5.5, 5.6).\\
+	\item Si $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$, $f_{m}$ et $|E(\F_{q^{n}})|$ sont inversibles modulo $l$. Le fait que $f_{m}$ soit inversible sera utile par la suite pour manipuler des endomorphisme de la forme $\left[ \frac{c + d\pi_{q}}{f_{m}}\right] $. Le fait que $|E(\F_{q^{n}})|$ soit inversible sera utile pour normaliser l'isogénie obtenue (Voir section 5.5, 5.6).
+	\item La dernière condition est cruciale pour la dernière étape (Voir section 5.6 proposition 5.29). On suppose avoir vérifié lors du choix de la courbe elliptique $E$ que cette condition est vérifié pour les valeurs de $n$ qui nous intéresse.
 	
 \end{itemize}
 
@@ -2780,7 +2808,13 @@ La recherche de racine carré modulo un entier quelconque peut être lourde en c
 
 \subsection{Application au calcul d'isogénie}
 
-On se donne un modèle $E$ de corbe elliptique à multiplication complexe définie sur $\F_{q}$, et $\LR$ un idéal de norme $l$ vérifiant toutes les conditions voulues. On est capables de factoriser sa classe $\CL$ en un produit de classe représentée par des idéaux de petites normes $\PR_{1}, \ldots,\PR_{N}$ de petites normes vérifiant toutes les conditions voulues. On peut calculer des isogénies dont les noyaux sont des groupes de $\PR_{i}$-torsion, et ainsi reproduire l'action de $\CL$ sur $E$ en suivant sa factorisation. 
+On se donne un modèle $E$ de corbe elliptique à multiplication complexe définie sur $\F_{q}$, et $\LR$ un idéal de norme $l$ vérifiant toutes les conditions voulues.
+
+\begin{center}
+	\textbf{On rappelle que $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
+\end{center}
+
+On est capables de factoriser la classe $\CL$ en un produit de classes représentées par des idéaux $\PR_{1}, \ldots,\PR_{N}$ de petites normes vérifiant toutes les mêmes conditions que $l$. On peut donc calculer des isogénies dont les noyaux sont des groupes de $\PR_{i}$-torsion, et ainsi reproduire l'action de $\CL$ sur $E$ en suivant sa factorisation. 
 
 \begin{Def}
 	Soit $\phi : E \rightarrow E/E[\LR]$. Soit $\CL = \CP_{1}^{e_{1}} \ldots\CP_{N}^{e_{N}}$ une factorisation de $\CL$. Les composantes de $\phi$ associée à cette factorisation sont isogénies obtenues par la suite
@@ -2793,21 +2827,37 @@ On se donne un modèle $E$ de corbe elliptique à multiplication complexe défin
 	Les composantes explicites sont les uniques formes explicites normalisées des composantes de sorte que la première parte du modèle $E$. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec le calcul de la dernière composante. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes
 \end{Def}
 
-$E_{c}$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi : E \rightarrow E/E[\LR]$ n'est pas égale à $\phi_c$. En effet $\phi_c$ est de degré $m =p_{1}^{e_{1}}\ldots p_{N}^{e_{N}}$ par multiplicativité du degré. On a cependant la relation
+$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi : E \rightarrow E/E[\LR]$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ sauf exception. On a cependant la relation
 \begin{equation*}
 	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}}
 \end{equation*}
-où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On est capable de calculer $\alpha$, mais puisque l'idéal principal n'est pas entier on ne peut pas lui associer un endomorphisme. Cependant on sait calculer $\alpha = \beta/m$ avec $\beta = \frac{u + v\pi_{q}}{f_{m}}\in\OR_{\Delta}$. On a choisi les $p_{i}$ premier avec $|E(\F_{q^{n}})|$, donc $m$ est aussi premier avec ce cardinal. \textbf{On a de plus supposé que $f_{m}$ est premier avec $|E(\F_{q^{n}})|$} ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. L'endomorphisme $k(u + v\pi_{q})$ est donc bien défini. 
+où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer $\alpha = \beta/m$ avec $\beta = \frac{u + v\pi_{q}}{f_{m}}\in\OR_{\Delta}$. On a choisi les $p_{i}$ premier avec $|E(\F_{q^{n}})|$, donc $m$ est aussi premier avec ce cardinal. \textbf{On a de plus supposé que $f_{m}$ est premier avec $|E(\F_{q^{n}})|$}, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. L'endomorphisme $k(u + v\pi_{q})$ est donc bien défini. 
 
 \begin{Prop}
 	Avec les notations précédentes, 
 	\begin{equation*}
-		\phi = (k(u + v\pi_{q}))\circ\phi_c
+		\forall\; P\in E[|E(\F_{q^{n}})|]\;,\;\phi(P) = (k(u + v\pi_{q}))\circ\phi_c(P)
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
-	On va montrer que deux modèles explicites de ces isogénies partant de $E$ on le même noyaux. Le noyau de $\phi$ est $E\left[ \LR\right] $. Celui de $\phi_c$ est $E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$. \textbf{A FINIR}
+	Soit $\tilde{E}$, $\tilde{E_c}$, $\tilde{E'} = \widetilde{E/E\left[\LR\right] }$ trois courbe elliptique définie sur $\Qb$, obtenue par le théorème de relèvement de Deuring appliquée via l'endomorphisme de Froebenius, et via le même idéal de réduction $\PR$ au dessus de la caractéristique $p$. Soit $\Lambda$ un réseau de $\C$ tel que $E_{Lambda} = \tilde{E}$. Alors la factorisation de $\LR$ implique que
+	\begin{equation*}
+		\tilde{E'}\simeq\C/\LR^{-1}\Lambda = \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \simeq \tilde{E'}
+	\end{equation*}
+	De plus,
+	\begin{equation*}
+		\tilde{E_c} \simeq \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda
+	\end{equation*}
+	Par définition, $\phi_{\LR}$ et $\phi_c$ correspondent au niveau des tores au morphisme identité (voir section 3.4). L'action de $\alpha$ correspond donc à l'identité. On pose
+	\begin{equation*}
+		\phi_{\alpha} : \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \rightarrow \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda, z \mapsto z
+	\end{equation*}
+	Puisque $\alpha = \beta/m$, 
+	\begin{equation*}
+		\phi_{\alpha} = [\beta]\circ\phi_{m^{-1}} = [u + v\pi_{q}]\circ\phi_{(mf_{m}^{-1})}
+	\end{equation*}
+	 Il reste à montrer que la réduction de l'isogénie associée au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. $k$ est bien défini car $mf_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux. En particulier la restriction de $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
 \end{proof}
 
 On se résume ce qui précède en énonçant l'algorithme 8 :
