@@ -15,18 +15,18 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{tikz-cd}
-\usetikzlibrary{calc,babel} % <--- IMPORTANT!
+%\usetikzlibrary{calc,babel} 
 \usepackage{tikz}
 \usepackage{mathtools}
 \usepackage{mathrsfs}
-\usepackage[backend=biber, style=alphabetic]{biblatex}
+\usepackage[backend=bibtex, style=alphabetic]{biblatex}
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \linespread{0.95}
 \renewcommand{\algorithmicrequire} {\textsc{INPUT:}}
 \renewcommand{\algorithmicensure}  {\textsc{OUTPUT:}}
 
-\addbibresource{biblio.bib}
+\addbibresource{biblio}
 
 
 \newcommand{\N}[0]{\mathbb{N}}
@@ -1992,12 +1992,12 @@ On souhaite utiliser la théorie précédente pour établir une procédure de ca
 Et on cherche une courbe elliptique $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$ définie sur $\F_{q}$. De plus on souhaite pouvoir calculer $\phi(P)$. 
 
 \begin{center}
-	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
+	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
 \end{center}
 
 Cette condition nous oblige à éviter certains nombres premiers. Elle a cependant plusieurs avantages :
 \begin{itemize}
-	\item Sous cette condition, $l$ ne divise pas $f_{m}$ donc toutes les $l$-isogénies séparables sont horizontales. En particulier leurs noyaux sont accessibles comme groupes de torsions d'idéaux de norme $l$.
+	\item Sous cette condition, $l$ ne divise pas $f_{m}$ donc toutes les $l$-isogénies séparables sont horizontales. Comme $l$ est décomposé, il existe $2$ $l$-isogénies et leurs noyaux sont accessibles comme groupes de torsions d'idéaux de norme $l$. 
 	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de $\log(l)$ bits. On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
 	\item Si on suppose seulement que $l$ ne divise pas $f$, il existe des isogénies descendantes que l'on ne peut pas approcher avec la théorie précédente. Tandis que si $l$ ne divise pas $f_{m}$, on peut s’intéresser à toutes les $l$-isogénies définies sur $\F_{q}$.
 	\item Si $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$, $f_{m}$ et $|E(\F_{q^{n}})|$ sont inversibles modulo $l$. Le fait que $f_{m}$ soit inversible sera utile par la suite pour manipuler des endomorphisme de la forme $\left[ \frac{c + d\pi_{q}}{f_{m}}\right] $. Le fait que $|E(\F_{q^{n}})|$ soit inversible sera utile pour normaliser l'isogénie obtenue (Voir section 5.5, 5.6).
@@ -2010,7 +2010,7 @@ On déduit une procédure naïve à partir de la formule de Vélu, à condition 
 \begin{algorithm}
 	\caption{Calcul d'une forme explicite normalisée de $l$-isogénie}
 	\begin{algorithmic}[1]
-		\Require Un modèle défini sur $\F_{q}$ de courbe elliptique $E$ à multiplication complexe, le discriminant $\Delta$ de son anneaux d'endomorphisme, $l$ premier ne divisant pas $p*f_{m}*|E(\F_{q^{n}})|$ tel que $\left( \frac{\Delta}{l}\right) = 1$
+		\Require Un modèle défini sur $\F_{q}$ de courbe elliptique $E$ à multiplication complexe, le discriminant $\Delta$ de $End(E)$, un nombre $l$ premier ne divisant pas $p*f_{m}*|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$
 		\Ensure Une forme explicite normalisée d'une $l$-isogénie $\phi : E \rightarrow E'$ partant de $E$.
 		\State Factoriser $l\OR_{\Delta}$ avec le théorème de Kummer
 		\State Choisir un des deux idéaux $\LR$ de norme $l$ obtenu
@@ -2512,7 +2512,7 @@ On en déduit l’algorithme suivant, proposé dans \cite{BrokerCharlesLauter}[\
 \begin{algorithm}
 	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 1}
 	\begin{algorithmic}[1]
-		\Require Un nombre premier $l$ premier avec $p*f_{m}$, une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un idéal propre $\LR\subset\OR_{\Delta}$ sous forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
 		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
 		\State Calculer le polynôme de $l$-division sur $E$.
 		\State En déduire une extension $\F_{q^r}$ sur laquelle le polynôme de $l$-division se factorise. (Ainsi $E(\F_{q^r})$ contient $E[l]$).
@@ -2575,7 +2575,7 @@ On en déduit l'algorithme 6 :
 \begin{algorithm}
 	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 2}
 	\begin{algorithmic}[1]
-		\Require Un nombre premier $l$ premier avec $p*f_{m}$, une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un idéal propre $\LR\subset\OR_{\Delta}$ sous forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
 		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
 		\State $r\gets$ ordre de $-c$ dans $\F_{l}^{*}$.
 		\State $N\gets$ Cardinal de $E(\F_{q^{r}})$
@@ -2601,37 +2601,80 @@ On en déduit l'algorithme 6 :
 
 
 
-\subsubsection{Méthode d'Atkin Elkies}
+\subsubsection{Méthode d'Elkies}
 
-La méthode 2 précédente est une net amélioration de la méthode 1, mais nécessite parfois de manipuler des groupes $E(F_{q^{r}})$ de très grand cardinal, lorsque $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisamment souvent pour être problématique. On présente ici une troisième méthode, proposé par \cite{BrokerCharlesLauter}[\S 3.1] ayant pour but d'éviter tout calcul dans une quelconque extension de $\F_{q}$. 
+La méthode 2 précédente est une net amélioration de la méthode 1, mais nécessite parfois de manipuler des groupes $E(F_{q^{r}})$ de très grand cardinal, lorsque $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisamment souvent pour être problématique. On présente ici une troisième méthode, proposé par \cite{Bostan_2008}[\S 4.3, fastElkies'] ayant pour avantage d'éviter tout calcul dans des extensions de $\F_{q}$.\\ 
 
-Voir : Article de Schoof, article de Bostan
-
-Article de Schoof :
-
-L'idée de la méthode repose sur beaucoup de théorème qui seront admis et résumé. Soit $E$ une courbe elliptique à multiplication complexe de $j$-invariant $j$, définie sur $\F_{q}$.
+On résume l'idée de la méthode en admettant les résultats utilisés. Soit $E$ une courbe elliptique à multiplication complexe de $j$-invariant $j$, définie sur $\F_{q}$.
 \begin{itemize}
-	\item Il existe un polynôme $\Psi_{l}(X,Y)$, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des $l+1$ courbes $l$-isogones à $E$.
-	\item Si $l$ est décomposé, $\Psi_{l}(j,Y)$ admet uniquement $2$ racines dans $\F_{q}$, obtenues en factorisant $PGCD(\Psi_{l}(j,Y), Y^q - Y)$
-	\item Soit $h$ une de ces deux racines, alors il est possible d'obtenir un modèle de la courbe $E'$ défini sur $\F_{p}$, à partir de la donnée de $E$, $h$ et $l$. 
-	\item Soit $p_{1}$ la somme des abscisses des $l-1$ points finis du noyau de la $l$-isogénie $\phi : E\rightarrow E'$. Alors $p_{1}\in\F_{q}$ peut être obtenues à partir de la connaissance de $E$, $h$ et $l$., avec des calculs uniquement dans $\F_{q}$.
-	\item Soit $F_{h}$ le polynôme dont les racines sont les abscisses des élément du noyau de $\phi$. Soit $\wp$ la fonction de Weierstrass associée à un relèvement de $E$ via le théorème de relèvement de Deuring. 
+	
+	\item Il existe un polynôme $\Psi_{l}(X,Y)$, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des $l+1$ courbes $l$-isogènes à $E$. Si les racines sont dans $\F_{q}$, elles correspondent aux courbes images des $l$-isogénies définies sur $\F_{q}$
+	
+	\item Soit $h$ une racine de $\Psi_{l}(j,Y)$ dans $\F_{q}$, alors il est possible d'obtenir un modèle défini sur $\F_{q}$ de la courbe $E'$ de $j$-invariant $h$, à partir de la donnée de $E$, $h$ et $l$.
+	 
+	\item  Soit $p_{1}\in\Qb$ la somme des abscisses des $l-1$ points finis du noyau de la $l$-isogénie $\phi : E\rightarrow E'$. Alors $p_{1}\in\F_{q}$ peut être obtenues à partir de la connaissance de $E$, $h$ et $l$, en menant des calculs uniquement dans $\F_{q}$.
+	
+	\item Soit $F_{h}$ le polynôme dont les racines sont les abscisses des élément du noyau de $\phi$. Soit $F'_{h}$ défini de la même façon à partir d'un relèvement de During de $E$, $E'$ $\phi$. Soit $\wp$, $\wp'$ les fonction de Weierstrass associée au relèvement de $E$ et $E'$. Alors
 	\begin{equation}
-		z^l-1F(\wp(z)) = \exp(S)
+		z^{l-1}F'_{h}(\wp(z)) = \exp(S)
 	\end{equation}
-	où $S$ est une série dont tout les termes dépendent de l'écriture en série de Laurent de $\wp$ et de $p_{1}$
+	où $S$ est une série entière dont tout les coefficients dépendent de l'écriture en série de Laurent de $\wp$, $\wp'$ et du relèvement de $p_{1}$. Les coefficients sont des éléments de $\Qb$
+	
+	\item On peut alors retrouver les coefficients de $F'_{h}$ en identifiants les $(l-1)/2$ premiers termes des deux membres de l'équation. Si chaque terme a une bonne réduction modulo l'idéal de réduction $\PR$ au dessus de $p$, alors on obtient directement les coefficient de $F_{h}$. La bonne réduction n'est cependant pas garanti si l'on doit calculer trop de termes : il faut que $l$ soit 'petit', plus précisément
+	\begin{equation*}
+		l < 4*(p+1)
+	\end{equation*}
 \end{itemize}
 
-On peut alors retrouver les coefficients de $F$ en identifiants les $(l-1)/2$ premiers termes des deux membres de l'équation.
+ Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent à minimiser et optimiser les calculs de séries.
 
-Article de Bostan : Section 4.2 méthode de Elkies 1998 : 
+\begin{Def}
+	En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}[\S 4.3, fastElkies'], prenant en entrée $E$, $E'$ deux modèles de courbe elliptique à multiplication complexe définie sur $\F_{q}$ et $l < 4*(p+1)$ un nombre premier tel qu'il existe au moins une $l$-isogénie horizontale normalisée $\phi : E \rightarrow E'$. Cette algorithme renvoie un polynôme $F$ tels que les abscisses des points finis du noyaux de $\phi$ sont les racines du polynôme $F$ (sans redondance).  
+\end{Def}
 
-Ecriture plus explicite de la méthode énoncé par Schoof. Cependant la formule (17) n'a pas de sens, la notation "$p_{i}$" n'est pas définie et le calcul de $p_{2}$ dépend de $p_{0}$ qui n'a pas de sens. 
+\begin{Prop}
+	 Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS admet une complexité en $O\left( M(l)log(l)\right)$
+\end{Prop}
+
+Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, on ne peut pas connaître à l'avance le bon choix de $j$-invariant. il faut donc un moyen de tester si le premier choix a été bon, et sinon recommencer avec la seconde racine. On veut toujours éviter de calculer dans une extension de $\F_{q}$
+
+\begin{Prop}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$. Soit $\LR = \left[ l, \frac{c + \pi_{q}}{f_{m}}\right]$ un idéal de $\OR_{\Delta}$ de norme $l$ premier. Soit $F$ un polynôme sur $\F_{q}$.  On pose 
+	\begin{equation*}
+		R = \F_{q}\left[ X,Y\right] / \left( F, Y^2 - X^3 - aX - b\right) 
+	\end{equation*}
+	Soit $(R_{1}(X), YR_{2}(X))$ les fonctions rationnelles définissant l'endomorphisme $[-c]$. Si les racines de $F$ dans $\Fb_{p}$ sont les abscisses des points finis de $E[\LR]$, alors dans le corps de fraction de $R$,
+	\begin{equation*}
+		\bar{X}^q = R_{1}(\bar{X})\;,\;\bar{Y}^{q} = \bar{Y}R_{2}(\bar{X})
+	\end{equation*}
+\end{Prop}
+
+\begin{Rem}
+	Dans la proposition précédente, $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $l$ est supposé petit, et $[-c]$ est défini modulo $l$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq l$.
+\end{Rem}
+
+On en déduit l'algorithme $8$.
+
+\begin{algorithm}
+	\caption{Méthode d'Elkies}
+	\begin{algorithmic}[1]
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Ensure Un polynôme $F\in\F_{q}\left[ X\right]$ dont les racines sont les abscisses des points finis de $E[\LR]$, sans redondance. 
+		\State $P_{invariants}(Y)\gets PGCD(\Psi_{l}(j,Y),Y^q - Y)$ ($P_{invariants}$ est de degré 2)
+		\State $h_{1}, h_{2}\gets$ racines de $P_{invariants}$
+		\State $E_{1}\gets$ modèle normalisé de $h_{1}$ (formule explicite)
+		\State $F_{1}\gets BMSS(E,E_{1},l)$
+		\If{$F_{1}$ vérifie la proposition 5.22}
+		\State \Return $F_{1}$
+		\Else 
+		\State $E_{2}\gets$ modèle normalisé de $h_{2}$ (formule explicite)
+		\State $F_{2}\gets BMSS(E,E_{2},l)$
+		\State \Return $F_{2}$
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
 
 
-Article de Bostan : Section 6.4 méthode de Atkin : 
-
-Même théorème mais différente approche, semble faisable à condition de pouvoir manipuler les séries de Laurent dans sage (calculer $\wp^i$ pour $i$ allant de $1$ à $l-1$ jusqu'au coefficient de degré $l$)
 
 
 
@@ -2737,16 +2780,16 @@ On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal pri
 		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$
 		\State $(x,y)\gets(1,0)$
 		\State $(x,y)\gets(x',y')$ obtenus en appliquant tout les changements de variables retenus dans $L$ dans le sens inverse.
-		\Return $(x,y)$
+		\State \Return $(x,y)$
 	\end{algorithmic}
 \end{algorithm}
 
 \begin{Prop}
-	L'algorithme 7 appliqué à un idéal $\LR$ admet une complexité en $O(\log(N(\LR)^2))$.
+	L'algorithme 8 appliqué à un idéal $\LR$ admet une complexité en $O(\log(N(\LR)^2))$.
 \end{Prop}
 
 \begin{proof}
-	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $7$. 
+	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $8$. 
 \end{proof}
 
 \begin{Rem}
@@ -2808,10 +2851,10 @@ La recherche de racine carré modulo un entier quelconque peut être lourde en c
 
 \subsection{Application au calcul d'isogénie}
 
-On se donne un modèle $E$ de corbe elliptique à multiplication complexe définie sur $\F_{q}$, et $\LR$ un idéal de norme $l$ vérifiant toutes les conditions voulues.
+On se donne un modèle $E$ de courbe elliptique à multiplication complexe définie sur $\F_{q}$, et $\LR$ un idéal de norme $l$ vérifiant toutes les conditions voulues.
 
 \begin{center}
-	\textbf{On rappelle que $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
+	\textbf{On rappelle que $l$ est supposé décomposé dans $End(E)$, ne divise pas $pf_{m}|E(\F_{q^{n}})|$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
 \end{center}
 
 On est capables de factoriser la classe $\CL$ en un produit de classes représentées par des idéaux $\PR_{1}, \ldots,\PR_{N}$ de petites normes vérifiant toutes les mêmes conditions que $l$. On peut donc calculer des isogénies dont les noyaux sont des groupes de $\PR_{i}$-torsion, et ainsi reproduire l'action de $\CL$ sur $E$ en suivant sa factorisation. 
@@ -2860,7 +2903,7 @@ où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer
 	 Il reste à montrer que la réduction de l'isogénie associée au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. $k$ est bien défini car $mf_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux. En particulier la restriction de $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
 \end{proof}
 
-On se résume ce qui précède en énonçant l'algorithme 8 :
+On se résume ce qui précède en énonçant l'algorithme 9 :
 
 \begin{algorithm}
 	\caption{Algorithme de Borker Charle Lauter}
@@ -2902,5 +2945,4 @@ On se résume ce qui précède en énonçant l'algorithme 8 :
 L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
 
 \printbibliography
-
 \end{document}
