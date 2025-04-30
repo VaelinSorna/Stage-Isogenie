@@ -9,9 +9,11 @@
 
 % Useful packages
 \usepackage{amsmath}
+\usepackage{blindtext}
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
-
+\usepackage[backend = bibtex ]{biblatex}
+\usepackage{csquotes}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{tikz-cd}
@@ -19,14 +21,11 @@
 \usepackage{tikz}
 \usepackage{mathtools}
 \usepackage{mathrsfs}
-\usepackage[backend=bibtex, style=alphabetic]{biblatex}
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \linespread{0.95}
 \renewcommand{\algorithmicrequire} {\textsc{INPUT:}}
 \renewcommand{\algorithmicensure}  {\textsc{OUTPUT:}}
-
-\addbibresource{biblio}
 
 
 \newcommand{\N}[0]{\mathbb{N}}
@@ -82,7 +81,7 @@
 }
 
 
-
+\addbibresource{biblio.bib}
 
 
 
@@ -93,7 +92,7 @@
 \begin{document}
 \maketitle
 \tableofcontents
-\part{Calcul d'isogénies par composantes}
+
 
 \section{Rappels de théorie des nombres}
 
@@ -235,8 +234,9 @@ Un ordre $\OR\subset\K$ quelconque n'est pas un anneaux de Dedekind, mais "presq
 	Un ordre $\OR$ d'un corps de nombre $\K$ est noethérien, et ses idéaux premiers sont maximaux.
 \end{Prop}
 
-\begin{proof}
-	Les arguments sont les mêmes que pour $\OR_{\K}$, et découlent de la proposition 1.5.\cite{Cox}[5.A, Ex 7.4]
+\begin{proof}\cite{Cox}[5.A, Ex 7.4]
+	
+	Les arguments sont les mêmes que pour $\OR_{\K}$, et découlent de la proposition 1.5.
 \end{proof}
 
 Dans la suite, nous allons préciser l'étude de $\OR_{\K}$, tenter de généraliser les résultats obtenues à un ordre quelconque $\OR$, puis déduire un résultat de factorisation d'idéaux d'ordre de corps quadratiques imaginaires. 
@@ -333,7 +333,11 @@ Certains idéaux entiers d'un ordre $\OR$ ne seront pas inversible dans $\OR$. S
 On a toujours $\OR\subset\left\lbrace \alpha\in\K, \alpha\LR\subset\LR\right\rbrace$. Cependant l'inclusion peut être stricte. On ne pourra définir une notion d'inverse pour $\LR$ qu'en le voyant comme idéal du plus gros anneaux possible. On défini donc la notion d'idéal propre :
 
 \begin{Def}
-	$\LR\subset\OR$ est un idéal propre de l'ordre $\OR$ si c'est un idéal entier tel que $\OR = \left\lbrace \alpha\in\K, \alpha\LR\subset\LR\right\rbrace$ $\IR$ est un idéal fractionnaire propre de $\OR$ s'il vérifie $\OR = \left\lbrace \alpha\in\K, \alpha\IR\subset\IR\right\rbrace$. On note $I(\OR)$ l'ensemble des idéaux fractionnaires propres.
+	$\LR\subset\OR$ est un idéal propre de l'ordre $\OR$ si c'est un idéal entier tel que
+	\begin{equation*}
+		\OR = \left\lbrace \alpha\in\K, \alpha\LR\subset\LR\right\rbrace
+	\end{equation*} 
+	 $\IR$ est un idéal fractionnaire propre de $\OR$ s'il vérifie $\OR = \left\lbrace \alpha\in\K, \alpha\IR\subset\IR\right\rbrace$. On note $I(\OR)$ l'ensemble des idéaux fractionnaires propres.
 \end{Def}
 
 \begin{Prop}\cite{Cox}[7.4]
@@ -420,7 +424,10 @@ Cette restriction permet tout de même de décrire complètement le groupe de cl
 
 \begin{Prop}\cite{Cox}[Lem 7.19]
 	
-	Si $\OR$ est un ordre d'un corps quadratique imaginaire, de conducteur $f$, alors $Cl(\OR) =  I(\OR, f)/P(\OR, f)$
+	Si $\OR$ est un ordre d'un corps quadratique imaginaire, de conducteur $f$, alors
+	\begin{equation*}
+		Cl(\OR) =  I(\OR, f)/P(\OR, f)
+	\end{equation*} 
 \end{Prop}
 
 \begin{Rem}
@@ -650,7 +657,7 @@ Le but de ce qui suit est d'introduire le une extension particulière de $\K$, a
 
 \subsection{Rappels et notations}
 
-On suppose connues les notions de théorie des courbes elliptiques présentent dans le cours du master \cite{Cours}. On énonce ici les définitions et notations utilisées dans la suite du rapport. 
+On suppose connues les notions de théorie des courbes elliptiques présentent dans le cours du master. On énonce ici les définitions et notations utilisées dans la suite du rapport. 
 
 
 \begin{Def}
@@ -1037,7 +1044,7 @@ Dans cette section, toutes les courbes seront définie sur $\Kb = \C$. Dans ce c
 	
 \end{Def}
 
-On montre que l'on peut associer à tout courbe elliptique définie sur $\C$ un réseau, et réciproquement. Il y a alors une correspondance entre les isogénies et les morphismes de tores. 
+On montre comment associer à tout courbe elliptique définie sur $\C$ un réseau, et réciproquement. Il y a alors une correspondance entre les isogénies et les morphismes de tores. 
 
 \begin{Def}
 	Soit $\Lambda$ un réseau. on lui associe la fonction de Weierstrass $\wp$ relative à $\Lambda$, définie par
@@ -1188,7 +1195,7 @@ Soit $\OR$ l'image de $f$ dans la proposition précédente. L'application $[.] :
 \end{Prop}
 
 \begin{proof}
-	En choisissant $\OR$ comme l'image de l'application $f$ de la proposition 3.8, la réciproque de $f$ convient. Le facteur de tout endomorphisme étant unique, un tel isomorphisme est unique. 
+	On choisit $\OR$ comme l'image de l'application $f$ de la proposition 3.8. Alors la réciproque de $f$ convient. Le facteur de tout endomorphisme étant unique, un tel isomorphisme est unique. 
 \end{proof}
 
 \begin{Def}
@@ -1654,7 +1661,7 @@ Il se peut que des points finis de $E$ se réduise sur le point à l'infini. Cep
 
 On définit la réduction au niveau des isogénies. 
 
-\begin{Prop}\cite{Lang}[9 \S2]
+\begin{Prop}\cite{Lang1987}[9 \S2]
 	
 	Soit $\phi : E\rightarrow E'$ une isogénie entre deux courbes elliptiques à multiplication complexe. $E$ et $E'$ sont définies sur un corps de nombre $\HR$. Alors $\phi$ est définie sur une extension fini de $\HR$. Ainsi $\phi$ est définie sur $\Qb$.
 \end{Prop}
@@ -1674,7 +1681,7 @@ On définit la réduction au niveau des isogénies.
 
 La réduction des isogénie est alors une application injective. On a cependant pas la surjectivité en général. 
 
-\begin{Prop}\cite{Sil94}[II, 4.4], \cite{Lang}[9 \S2]
+\begin{Prop}\cite{Sil94}[II, 4.4], \cite{Lang1987}[9 \S2]
 	
 	Soit $E$, $E'$ deux courbes elliptiques définies sur un corps de nombre $\HR$, qui admettent une bonne réduction modulo $\PR\subset\Zb$ idéal maximal. Soit $Hom(E, E')$ l'ensemble des isogénies entre $E$ et $E'$. L'application 
 	\begin{equation*}
@@ -1686,7 +1693,7 @@ La réduction des isogénie est alors une application injective. On a cependant 
 
 On cherche à savoir sous quelles conditions on obtient un isomorphisme $End(E)\simeq End(\tilde{E})$. On cite pour cela un critère dû à Deuring :
 
-\begin{The}\cite{Lang}[13.12]
+\begin{The}\cite{Lang1987}[13.12]
 	
 	Soit $E$ une courbe elliptique à multiplication complexe, avec $End(E)$ de conducteur $f$. Soit $\K$ le corps quadratique imaginaire dont $End(E)$ est un ordre. On note $f = p^r f_{0}$ tel que $p$ ne divise pas $f_{0}$. Soit $\PR$ un idéal maximal de $\Zb$ au dessus de $p$.
 	\begin{enumerate}
@@ -1714,7 +1721,7 @@ On montre dans ce cas que l'on peut étendre la normalisation de $End(E)$ à $En
 	Soit $E$ une courbe elliptique défini sur $\Qb$ et $\omega = \frac{dx}{2y}$ un invariant différentiel d'un modèle de $E$. Soit $\PR\subset\Zb$ un idéal maximal. La réduction de $\omega$ modulo $\PR$, notée $\tilde{\omega}$, est l'invariant différentiel de la réduction du modèle de $E$ associé à $\omega$. 
 \end{Def}
 
-\begin{Prop}\cite{Lang}[9 \S4]
+\begin{Prop}\cite{Lang1987}[9 \S4]
 	
 	Soit $(E,[.])$ une courbe elliptique complexe normalisée d'anneau d'endomorphisme isomorphe à $\OR_{\Delta}$, et $\alpha\in\OR_{\Delta}$. Soit $\alpha\in\OR_{\Delta}$ et $\omega$ un invariant différentiel d'un modèle de $E$. On suppose que $E$ se réduit complètement modulo un nombre premier $p$ via $\PR\subset\Zb$. Alors l'isogénie réduite $\widetilde{\left[ \alpha\right] }$ modulo $\PR$ agit sur $\tilde{\omega}$ par un facteur $\tilde{\alpha}$, c'est à dire
 	\begin{equation*}
@@ -1725,7 +1732,7 @@ On montre dans ce cas que l'on peut étendre la normalisation de $End(E)$ à $En
 
 On sait que la réduction $\tilde{E}$ modulo $\PR$ est définie sur un corps fini $\F_{q}$. Le morphisme de Frobenius est inséparable.
 
-\begin{Prop}\cite{Lang}[13.5 Cor]
+\begin{Prop}\cite{Lang1987}[13.5 Cor]
 	
 	Soit $E$ une courbe elliptique définie à multiplication complexe, $\OR_{\Delta}$ son anneau d'endomorphisme, vu dans le corps quadratique $\K$. On suppose que $E$ se réduit complètement modulo un nombre premier $p$ via $\PR\subset\Zb$. Il existe un corps finis $\F_{q}$ sur lequel $\tilde{E}$ est défini. Soit $\pi_{q}$ l'endomorphisme de Frobenius, et $\alpha\in\OR_{\Delta}$ tel que $\widetilde{[\alpha]} = \pi_{q}$. Alors $\alpha\in S_{\PR}\cap\OR_{\Delta}$. De plus $p$ est décomposé dans $\OR_{\Delta}$. L'un des deux idéaux au dessus de $p$ dans $\OR_{\Delta}$ est $\PR\cap\OR_{\Delta}$. Enfin si $q = p^f$,
 	
@@ -1748,7 +1755,7 @@ On sait que la réduction $\tilde{E}$ modulo $\PR$ est définie sur un corps fin
 
 On se donne désormais une courbe elliptique $E'$ à multiplication complexe définie sur un corps fini $\F_{q}$. On souhaite voir $E'$ comme la réduction d'une certaine courbe $E$ définie sur $\Qb$, modulo un certain idéal maximal $\PR\subset\Zb$. Il faut d'abord que le critère du théorème 4.14 soit respecté. C'est en réalité toujours le cas.
 
-\begin{The}\cite{Lang}[13.5]
+\begin{The}\cite{Lang1987}[13.5]
 	
 	Soit $E'$ une courbe elliptique à multiplication complexe définie sur un corps fini $\F_{q}$ de caractéristique $p$. Soit $f$ le conducteur de $End(E')$ et $\K$ son corps quadratique imaginaire. Alors $p$ est premier avec $f$ et décomposé dans $\K$. 
 	
@@ -1756,13 +1763,13 @@ On se donne désormais une courbe elliptique $E'$ à multiplication complexe dé
 
 Le théorème de relèvement de Deuring énonce la surjectivité de la réduction. 
 
-\begin{The}{Théorème de relèvement de Deuring}\cite{Lang}[13.14]
+\begin{The}{Théorème de relèvement de Deuring}\cite{Lang1987}[13.14]
 	
 	Soit $E'$ une courbe elliptique défini sur un corps fini $\F_{q}$, et $\alpha'$ un endomorphisme de $E'$ qui n'est pas une multiplication scalaire. Il existe une courbe elliptique $E$ définie sur un corps de nombre $\HR$, munie d'un endomorphisme $\alpha$ et d'un idéal maximal $\PR\subset\Zb$ au dessus de $p$, tels que la réduction $\tilde{E}$ modulo $\PR$ soit définie sur $\F_{q}$, $\tilde{E} = E'$ et $\tilde{\alpha} = \alpha'$.
 	
 \end{The}
 
-Si $E'\in Ell_{\F_{q}}(\OR_{\Delta})$, on souhaite voir les éléments de $Ell_{\F_{q}}(\OR_{\Delta})$ comme les réductions de courbes elliptiques par un même idéal maximal $\PR\in\Zb$. On n'a pas introduit les outils nécessaire pour construire un tel idéal $\PR$ et on admet son existence. Cette propriété sous entendu, sans démonstration, dans \cite{BCL}[\S2].
+Si $E'\in Ell_{\F_{q}}(\OR_{\Delta})$, on souhaite voir les éléments de $Ell_{\F_{q}}(\OR_{\Delta})$ comme les réductions de courbes elliptiques par un même idéal maximal $\PR\in\Zb$. On n'a pas introduit les outils nécessaire pour construire un tel idéal $\PR$ et on admet son existence. Cette propriété sous entendu, sans démonstration, dans \cite{BrokerCharlesLauter}[\S2].
 
 \begin{Prop}
 	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire $\K$ de conducteur $f$, et $\F_{q}$ un corps fini de caractéristique $p$. On suppose que $p$ de divise pas $f$ et est décomposé dans $\K$. Alors il existe un idéal $\PR\subset\Zb$ maximal tel que pour tout $E'\in Ell_{\F_{q}}(\OR_{\Delta})$, il existe $E\in Ell_{\F_{q}}(\OR_{\Delta})$, $\alpha'\in End(E')$, $\alpha\in End(E)$ tels que la réduction $\tilde{E}$ de $E$ modulo $\PR$ soit définie sur $\F_{q}$ et vérifie $\tilde{E} = E'$, $\tilde{\alpha} = \alpha'$.
@@ -2290,7 +2297,7 @@ La proposition suivante est un des arguments clef permettant d'obtenir un algori
 \end{Prop}
 
 \begin{Rem}
-	Comme les nombres premiers à éviter sont en nombre fini, Les conditions supplémentaires que l'on s'impose ne change pas le comportement asymptotique de la borne $N$.
+	Comme les nombres premiers à éviter sont en nombre fini, les conditions que l'on s'impose ne change pas le comportement asymptotique de la borne $N$.
 \end{Rem} 
 
 \begin{Rem}
@@ -2309,7 +2316,7 @@ Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la proc�
 	\begin{algorithmic}[1]
 		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$.
 		\Ensure Une liste $L_{premiers}$ de nombres premiers plus petit que $N$ ne divisant pas $pf_{m}|E(\F_{q^{n}})|$, la liste $L_{ideaux}$ de leurs idéaux de Seysen respectif, la liste $L_{formes}$ de leurs formes de Seysen respectives. 
-		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets \O$
+		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets$ \O
 		\State $n \gets 2$
 		\While{$n < N$}
 			\If{$\left( \frac{\Delta}{n}\right) = 1$ ET $n$ ne divise pas $pf_{m}$}
@@ -2580,7 +2587,7 @@ On en déduit l'algorithme 6 :
 		\State $r\gets$ ordre de $-c$ dans $\F_{l}^{*}$.
 		\State $N\gets$ Cardinal de $E(\F_{q^{r}})$
 		\State $n_{max} \gets pgcd(N, q^r - 1)$
-		\State $L\gets\O$
+		\State $L\gets$\O
 		\For{$i$ divisant $n_{max}$}
 		\If{$i^2$ divise $N$}
 		\State Mettre $i$ dans $L$
@@ -2912,7 +2919,7 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 		\Ensure Un modèle $E'$ d'une courbe elliptique issus d'une forme explicite normalisée d'une $l$-isogénie $\phi : E \rightarrow E'$ partant de $E$. L'image $phi(P)$ du point $P$.
 		\State $\LR\gets$ idéal de Seysen de $l$
 		\State $L_{exposants}$, $L_{facteurs}\gets$ résultats des algorithmes 3 et 4 avec un choix de borne $N$
-		\State $L_{composantes}\gets\O$
+		\State $L_{composantes}\gets$\O
 		\State $E_{depard}\gets E$
 		\State $\LR_{principal}\gets\LR$
 		\State $Q\gets P$
@@ -2939,10 +2946,13 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 	\end{algorithmic}
 \end{algorithm}
 
-
+\newpage
 \subsection{Complexité obtenue}
 
 L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
+\newpage
+
 
 \printbibliography
+
 \end{document}
