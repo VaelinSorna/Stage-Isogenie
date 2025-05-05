@@ -2412,7 +2412,7 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 	
 \end{Coro}
 
-On peut par exemple choisir de borner par $\log(|\Delta|)$, pour une majoration large mais raisonnable. On obtient alors l'algorithme suivant :
+\textbf{Estimation de la consante C ?}
 
 \begin{algorithm}
 	\caption{Factorisation de la classe d'un idéal dans une famille génératrice donnée}
@@ -2443,6 +2443,9 @@ On peut par exemple choisir de borner par $\log(|\Delta|)$, pour une majoration 
 	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
 \end{Rem}
 
+\begin{Rem}
+	L'étape 1 nécessite d'être détaillée pour analysé la complexité. Nous y reviendrons à la section 5.7
+\end{Rem}
 
 
 On revient sur la borne $N$ des nombres premiers utilisés. On peut chercher à l'optimiser par rapport à l'implémentation de l'algorithme 4.
@@ -2478,14 +2481,37 @@ La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme rédui
 
 
 \subsection{Algorithme SquareVélu}
-compléxité, sqrt(vélu)
 
+Étant donné un modèle de courbe elliptique $E$, les formules de Vélus permettent de construire une forme explicite d'une isogénie $\phi$ à partir de la connaissance de son noyau. Pour une $l$-isogénie, le noyau peut être donné sous deux formes : un point $K$ générateur du noyau, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. Dans le second cas, il faut adapter les formules pour les écrire en fonction de $F$.
 
+\begin{Def}
+	Soit $E$ un modèle de courbe elliptique et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. On sépare $Ker(\phi)$ en une partition $\left\lbrace \OR \right\rbrace \cup R\cup R'$ où $R$ regroupe $(l-1)/2$ points finis distincts, et $R'$ leurs inverses. Un polynôme $F$ décrit le noyau de $\phi$ sur $E$ si c'est un polynôme unitaire de degré $(l-1)/2$ dont les racines sont les abscisses des points finis de $R$. Un tel polynôme est unique. 
+\end{Def}
 
+Dans les deux cas, \cite{Velusqrt} propose une méthode pour évaluer des polynômes de degré $l$ dans $\F_{q}[X]$ en $O(\sqrt{l})$ opération dans $\F_{q}$. Les résultats suivants en découle.
 
+\begin{Prop}
+	Soit $E$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. Soit $K$ un générateur de $Ker(\phi)$, et $P\in E(\F_{q})$. Il est possible de calculer un modèle de $E'$ et $\phi(P)\in E'$ en $O(\sqrt{l})$ opérations dans $\F_{q}$, en utilisant l'algorithme de \cite{Velusqrt} que l'on appelera SquareVélu.
+\end{Prop}
 
+\begin{Rem}
+	SquareVélu est une amélioration asymptotique de l'application naïve des formules de Vélus. Cependant pour les petits nombres premiers, l'application naïve reste plus rapide. En pratique avec l’implémentation de Sage, il est conseillé d'utiliser SquareVélu uniquement si $l > 100$. 
+\end{Rem}
 
+On décrit maintenant comment adapter les formules de Vélu à l'utilisation de polynômes décrivant le noyau d'une isogénie.
 
+\begin{Prop}\cite{Kohel}[\S 2.4]
+	
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi$ une $l$-isogénie, avec $l$ premier impair. Soit $F$ le polynôme décrivant le noyau de $\phi$ sur $E$. Alors on peut obtenir une forme explicite de $\phi$ avec
+	\begin{equation*}
+		\phi(x,y) = \left( \frac{G(X)}{F(X)^2}\;,\;\frac{H(X,Y)}{F(X)^3}\right) 
+	\end{equation*}
+	où $G$ et $H$ peuvent être obtenue explicitement à partir de $F$. Pour $P\in E(\F_{q})$, on peut alors calculer $\phi(P)$ en $O(\sqrt{l})$ opérations dans $\F_{q}$ via les méthodes de \cite{Velusqrt}
+\end{Prop}
+
+\begin{Rem}
+	Il existe aussi des formules adaptées au cas où $l = 2$
+\end{Rem}
 
 
 \subsection{Générateur d'un groupe de torsion}
