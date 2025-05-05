@@ -2391,11 +2391,11 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 
 \begin{Prop}\cite{Jao_2009}[Lem 2.1]
 	
-	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{id}\cup (L_{id})^{-1}$. On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque. Si 
+	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{ideaux}\cup (L_{ideaux})^{-1}$. On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque. Si 
 	\begin{equation*}
 		t = O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})
 	\end{equation*} 
-	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité $\frac{S_{0}}{2|G|}$
+	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité au moins $\frac{|S_{0}|}{2|G|}$. En particulier la probabilité de terminer dans $S$ est au moins $\frac{|S|}{2|G|}$.
 \end{Prop}
 
 Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$
@@ -2417,13 +2417,20 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 \begin{algorithm}
 	\caption{Factorisation de la classe d'un idéal dans une famille génératrice donnée}
 	\begin{algorithmic}[1]
-		\Require Trois liste $L_{ideaux}$, $L_{formes}$, $L_{premiers}$ obtenues par l'algorithme 3, décrivant une famille génératrice de $Cl(\OR_{\Delta})$. Un idéal $\LR\subset\OR_{\Delta}$.
-		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ de même taille que $L_{ideaux}$, décrivant une factorisation de $\CL$.
-		\State $L_{x}\gets$ une liste de même taille que $L_{ideaux}$ composée d'exposant $x_{i}$ aléatoire, satisfaisant la condition du corollaire 5.15.
-		\State $ideal_{test}\gets\LR*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{g}^{x_{g}}$
+		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un idéal $\LR\subset\OR_{\Delta}$. 
+		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ décrivant une factorisation de $\CL$.
+		\State $L_{ideaux}$, $L_{formes}$, $L_{premiers}\gets$ résultat de l'algorithme 3 appliqué à $N$, $\Delta$, $p$, $f_{m}$, $|E(\F_{q^{n}})|$. 
+		\State $k\gets$ taille de $L_{ideaux}$
+		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
+		\For{$0<i<C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right) $}
+		\State $Indice\gets$ indice aléatoire de $L_{x}$.
+		\State $Increment\gets\pm1$
+		\State $L_{x}\left[ Indice\right] \gets L_{x}\left[ Indice\right] + Increment$
+		\EndFor
+		\State $ideal_{test}\gets\LR*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{k}^{x_{k}}$
 		\State $classe_{test}\gets$ forme réduite de $ideal_{test}$
 		\If{$classe_{test}$ se factorise par le théorème 5.12}
-		\State $L_{y}\gets$ une liste de même taille que $L_{ideaux}$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème 5.12.
+		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème 5.12.
 		\State $L_{exposants}\gets L_{y} - L_{x}$
 		\State $L_{facteurs}\gets L_{ideaux}$
 		\For{$e_i$ parcourant $L_{exposants}$ }
@@ -2433,7 +2440,7 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 		\EndIf
 		\EndFor
 		\Else
-		\State Reprendre à l'étape 1
+		\State Reprendre à l'étape 3
 		\EndIf
 		\State \Return $L_{exposants}$, $L_{facteurs}$
 	\end{algorithmic}
@@ -2443,12 +2450,15 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
 \end{Rem}
 
-\begin{Rem}
-	L'étape 1 nécessite d'être détaillée pour analysé la complexité. Nous y reviendrons à la section 5.7
-\end{Rem}
+\begin{Prop}
+	Soit $t = C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ le nombre d'indice dans les listes retournées par l'algorithme $3$. Si $N = 2log(|\Delta|)^2$ et $t\leq k$, alors l'algorithme $4$ a une complexité moyenne en 
+\end{Prop}
 
+\begin{proof}
+	 D'après le théorème des nombres premiers, $k = O(N/log(N))$. En particulier $t/k = O(1)$ et de l'ordre d'une constante $C_{0}$. Si $t\leq k$, $C_{0} \leq 1$. Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois, donc moins d'une fois. On peut donc estimer en moyenne qu'à l'étape $6$ la liste $L_{x}$ ne contient que des $0$ et des $1$, et au plus $t$ $1$. $ideal_{test}$ est donc de norme $\leq lp_{k-t}\ldots p_{k} \leq lp_{k}^{t}$. Calculer sa forme réduite $classe_{test}$ se fait en $O(log(lp_{k}^{t})) = O(log(l) + tlog(N))$. Vérifié si $classe_{test}$ se factorise demande $O(k)$ test de divisibilité et division euclidienne, chacune sur un coefficient $a$ d'une forme quadratique réduite : $a < \Delta$. Au total les étapes $11$ et $12$ demandent $O(klog(|\Delta|))$ opérations dans $\Z$. Les étapes $13$ à $20$ sont élémentaires. Il reste à savoir combien d'essais pour $L_{x}$ doit être fait en moyenne avant de réussir le test de l'étape $11$. Par choix de $t$, et avec les notations de la proposition 5.14, il faudra en moyenne $O(\frac{|G|}{|S|})$ essais. Le nombre de classes $|G|$ est de l'ordre de $O(\sqrt(|\Delta|))$. \textbf{Estimer le cardinal de $S$ ?} 
+\end{proof}
 
-On revient sur la borne $N$ des nombres premiers utilisés. On peut chercher à l'optimiser par rapport à l'implémentation de l'algorithme 4.
+\cite{JaoSoukharev} propose une complexité différente : On peut chercher à l'optimiser par rapport à l'implémentation de l'algorithme final au complet.
 
 \begin{Def}
 	On défini la complexité sous exponentielle en $\Delta$ par la fonction
@@ -2475,9 +2485,8 @@ La constante $z$ dépend de l'implémentation. \Cite{Coh00} la calcul pour un al
 
 
 
-Jao propose une majoration différente \textbf{Faire la comparaison}
-
 La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
+Sur l'exemple medium, il semble que l'on tombe très souvent sur un idéal principal directement. Normal ? 
 
 
 \subsection{Algorithme SquareVélu}
@@ -2512,6 +2521,11 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 \begin{Rem}
 	Il existe aussi des formules adaptées au cas où $l = 2$
 \end{Rem}
+
+
+
+
+
 
 
 \subsection{Générateur d'un groupe de torsion}
@@ -2686,7 +2700,7 @@ Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans 
 	Dans la proposition précédente, $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $l$ est supposé petit, et $[-c]$ est défini modulo $l$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq l$.
 \end{Rem}
 
-On en déduit l'algorithme $8$.
+On en déduit l'algorithme $7$.
 
 \begin{algorithm}
 	\caption{Méthode d'Elkies}
@@ -2697,7 +2711,7 @@ On en déduit l'algorithme $8$.
 		\State $h_{1}, h_{2}\gets$ racines de $P_{invariants}$
 		\State $E_{1}\gets$ modèle normalisé de $h_{1}$ (formule explicite)
 		\State $F_{1}\gets BMSS(E,E_{1},l)$
-		\If{$F_{1}$ vérifie la proposition 5.22}
+		\If{$F_{1}$ vérifie la proposition 5.24}
 		\State \Return $F_{1}$
 		\Else 
 		\State $E_{2}\gets$ modèle normalisé de $h_{2}$ (formule explicite)
@@ -2707,7 +2721,13 @@ On en déduit l'algorithme $8$.
 	\end{algorithmic}
 \end{algorithm}
 
+\begin{Prop}
+	L'algorithme $7$ admet une complexité en $O(log(ql)M(l))$
+\end{Prop}
 
+\begin{proof}
+	\textbf{Complexité de la vérification de 5.24 ?}
+\end{proof}
 
 
 
@@ -2829,52 +2849,7 @@ On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal pri
 	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Cependant aucune preuve de complexité n'est donné, ni aucune description exact de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. Comme la complexité déclarée est en $O(\log(N(\LR)))$, on estime que l'algorithme $5$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation sage utilise aussi l'algorithme $5$. 
 \end{Rem}
 
-\textbf{Supprimer la partie sur Cornacchia ?} 
 
-\begin{Prop}
-	Avec les notations précédentes, calculer $\beta$ est équivalent à résoudre l'équation $x^2 + y^2|\Delta| = 4a$ et à vérifier que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$
-\end{Prop}
-
-\begin{proof}
-	$\frac{x + y \sqrt{\Delta}}{2}$ est de norme $a$ si et seulement si $x^2 + y^2|\Delta| = 4a$. On veut donc montrer que $\beta\in (1,a,b)$ est un générateur si et seulement s'il est de norme $a$. C'est une conséquence de la multiplicativité de la norme. 
-\end{proof}
-
-L'algorithme de Cornacchia est une méthode général de résolution d'équation diophantienne quadratique
-
-
-\begin{Prop}[Algorithme de Cornacchia]
-	
-	On suppose $4a$ et $\Delta$ premier entre eux. $x^2 + y^2|\Delta| = 4a$ admet une unique solution au signe prêt de $x$ et $y$. Si l'on connaît tout le entiers $s$ tel que $0 < s < 2a$ et $s^2 = \Delta [4a]$, l'algorithme de Cornacchia fourni la solution à l'équation
-	
-	\begin{enumerate}
-		\item On applique l'algorithme d'Euclide à $4a$ et $s$
-		\item On s'arrête au premier reste $r$ tel que $r < 2\sqrt(a)$
-		\item On pose $x = r$ et $y = \sqrt{\frac{4a - r^2}{|\Delta|}}$
-		\item Alors pour un certain $s$, $y$ est entier et $x$, $y$ fourni une solution.
-	\end{enumerate}
-	
-\end{Prop}
-
-La recherche de racine carré modulo un entier quelconque peut être lourde en complexité. L'idée est de choisir $-b$ comme racine. En effet la forme quadratique $ax^2 + bxy + cy^2$ ayant pour discriminant $\Delta$, $-b$ est bien une racine de $\Delta$ modulo $4a$. De plus $-a<b\leq a$ par définition de la forme standard. 
-
-\begin{Prop}\cite{JaoSoukharev}
-	
-	En appliquant l'algorithme de Cornacchia à $-b$ si $-b >0$, $-b + 2a$ sinon, on trouve $x$, $y$ tels que $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$ soit de norme $a$. Ainsi $\beta = \frac{x + y \sqrt{\Delta}}{2}$ convient.
-\end{Prop}
-
-\begin{proof}\cite{JaoSoukharev}
-	
-	On admettra une étape de la preuve, affirmée sans démonstration dans l'article citée. Si $-b >0$, on applique l'algorithme d'Euclide entre $4a$ et $-b$. Sinon, on l'applique à $-b + 2a$ qui est aussi une racine de $\Delta$ modulo $4a$. On traite le cas où $-b > 0$. Chaque reste $r$ obtenue au cours de l'algorithme d’Euclide s'écrit $r = 4at - bs$ avec $b$ et $s$ entiers. En particulier $r^2 = b^2s^2 [4a]$. Soit $Y_{r} = \frac{4a - r^2}{|\Delta|}$. Tant que $r > 2\sqrt{a}$, $Y_{r} < 0$. Soit $r$ le premier reste obtenue tel que $r \leq 2\sqrt{a}$ Alors $Y_{r} = \frac{|\Delta|s^2 + 4ak}{|\Delta|} \geq 0$ pour un certain entier $k$.
-	
-	\textbf{On admet que, partant de $-b$ et pour un reste $r$ maximal tel que $r \leq 2\sqrt{a}$, on a $k = 0$.} 
-	
-	Alors $Y_{r} = s^2$. Soit $x = r$ et $y = s$. Puisque $Y_{r} = s^2$, $x$ et $y$ sont solutions de l'équation $x^2 + y^2|\Delta| = 4a$. De plus $\frac{x + y \sqrt{\Delta}}{2} = \frac{4at - by + y\sqrt{\Delta}}{2} = 2ta + y\dfrac{-b + \sqrt{\Delta}}{2}$ Donc $\frac{x + y \sqrt{\Delta}}{2}\in\beta\OR_{\Delta}$. Partant de $-b + 2a$, on aboutit en admettant le même résultat intermédiaire.
-	
-\end{proof}
-
-\begin{Rem}
-	Il faut aussi admettre que la condition "$4a$ et $\Delta$ sont premier entre eux" sera respecté. Dans \cite{JaoSoukharev}, cette condition n'est pas citée.
-\end{Rem}
 
 
 
@@ -2975,9 +2950,21 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 \newpage
 \subsection{Complexité obtenue}
 
-L'article annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$ Cependant l'article de Jao et Soukharev (citer l'article) décrit une amélioration sous-exponentielle en $|\Delta|$. 
-\newpage
+L'article \cite{BrokerCharlesLauter} annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$. Cependant ils font une analyse au pire cas de l'algorithme $4$. L'article \cite{JaoSoukharev} décrit une amélioration sous-exponentielle en $|\Delta|$ en menant une étude par analyse-synthèse de l'algorithme $9$. On regroupe les résultats énoncé précédemment pour énoncer la complexité suivante :
 
+\begin{Prop}
+	L'algorithme $9$ admet une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et 
+\end{Prop}
+
+\begin{proof}
+	contenu...
+\end{proof}
+
+
+
+
+
+\newpage
 
 \printbibliography
 
