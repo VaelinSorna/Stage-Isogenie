@@ -1626,7 +1626,7 @@ Soit $E$ une courbe elliptique à multiplication complexe définie sur $\Qb$. On
 On définit la réduction au niveau des points.
 
 \begin{Def}
-	Soit $\PR$ un idéal premier de $\Zb$, $E$ une courbe elliptique définie sur $\Qb$. Soit $P = (x,y)$ un point d'un modèle $E : y^2 = x^3 + ax + b$ de $E(\Qb)$. On définit $\tilde{P}$ par
+	Soit $\PR$ un idéal premier de $\Zb$, $E$ une courbe elliptique définie sur $\Qb$. Soit $P = (x,y)$ un point d'un modèle $E : y^2 = x^3 + ax + b$ de $E(\Qb)$. Soit $\tilde{E}$ la réduction de $E$ modulo $\PR$. On définit $\tilde{P}$ par
 	\begin{itemize}
 		\item $\tilde{P} = (\tilde{x},\tilde{y})$ si $x$, $y\in\Zb_{\left( \PR\right) }$
 		\item Sinon $\tilde{P} = \OR$, où $\OR$ est le neutre de $\tilde{E}$.
@@ -2391,11 +2391,11 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 
 \begin{Prop}\cite{Jao_2009}[Lem 2.1]
 	
-	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{ideaux}\cup (L_{ideaux})^{-1}$. On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque. Si 
+	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{ideaux}\cup (L_{ideaux})^{-1}$. On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque du graphe de Cayley de G selon S. Si 
 	\begin{equation*}
 		t = O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})
 	\end{equation*} 
-	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité au moins $\frac{|S_{0}|}{2|G|}$. En particulier la probabilité de terminer dans $S$ est au moins $\frac{|S|}{2|G|}$.
+	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité au moins $\frac{|S_{0}|}{2|G|}$. 
 \end{Prop}
 
 Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$
