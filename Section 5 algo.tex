@@ -1,0 +1,978 @@
+
+	
+\section{Algorithme de Bröker, Charles et Lauter}
+
+\subsection{Enoncé et contexte}
+
+On souhaite utiliser la théorie précédente pour établir une procédure de calcul d'isogénie plus rapide que la méthode naïve donnée par la formule de Vélu. Plus précisément on suppose connaître 
+\begin{enumerate}
+	\item Un modèle de courbe elliptique $E$ ordinaire, donnée par une équation de Weierstrass réduite définie sur un corps $\F_{q}$ de caractéristique $p$. On précalcule le nombre de point du modèle $|E(\F_{q})|$.
+	\item L'anneau d'endomorphisme $End(E)\simeq\OR_{\Delta}$ donné par son discriminant $\Delta$. On connaît donc le corps quadratique imaginaire $\K$ et le conducteur $f$. On supposera de plus que l'isomorphisme $End(E)\simeq\OR_{\Delta}$ est normalisé. 
+	\item Un nombre premier $l\neq p$.
+	\item Un entier $n\in\N$ et un point $P\in E(\F_{q^{n}})$. 
+\end{enumerate} 
+
+Et on cherche une courbe elliptique $E'$ définie sur $\F_{q}$ telle qu'il existe une $l$-isogénie séparable $\phi : E\rightarrow E'$ définie sur $\F_{q}$. De plus on souhaite pouvoir calculer $\phi(P)$. 
+
+\begin{center}
+	\textbf{Dans toutes la suite, on suppose que $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
+\end{center}
+
+Cette condition nous oblige à éviter certains nombres premiers. Elle a cependant plusieurs avantages :
+\begin{itemize}
+	\item Sous cette condition, $l$ ne divise pas $f_{m}$ donc toutes les $l$-isogénies séparables sont horizontales. Comme $l$ est décomposé, il existe $2$ $l$-isogénies et leurs noyaux sont accessibles comme groupes de torsions d'idéaux de norme $l$. 
+	\item On peut même représenter une isogénie uniquement par l'idéal qui engendre son noyau. Un tel idéal peut être donné sous la forme $\left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ donc seulement déterminé par $l$, $c$ et $d$, trois entier qui en pratique seront de $\log(l)$ bits. On peut représenter une $l$-isogénie en $O(log(l))$ bits. 
+	\item Si on suppose seulement que $l$ ne divise pas $f$, il existe des isogénies descendantes que l'on ne peut pas approcher avec la théorie précédente. Tandis que si $l$ ne divise pas $f_{m}$, on peut s’intéresser à toutes les $l$-isogénies définies sur $\F_{q}$.
+	\item Si $l$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$, $f_{m}$ et $|E(\F_{q^{n}})|$ sont inversibles modulo $l$. Le fait que $f_{m}$ soit inversible sera utile par la suite pour manipuler des endomorphisme de la forme $\left[ \frac{c + d\pi_{q}}{f_{m}}\right] $. Le fait que $|E(\F_{q^{n}})|$ soit inversible sera utile pour normaliser l'isogénie obtenue (Voir section 5.5, 5.6).
+	\item La dernière condition est cruciale pour la dernière étape (Voir section 5.6 proposition 5.29). On suppose avoir vérifié lors du choix de la courbe elliptique $E$ que cette condition est vérifié pour les valeurs de $n$ qui nous intéresse.
+	
+\end{itemize}
+
+On déduit une procédure naïve à partir de la formule de Vélu, à condition de savoir expliciter le générateur d'un groupe de torsion.
+
+\begin{algorithm}
+	\caption{Calcul d'une forme explicite normalisée de $l$-isogénie}
+	\begin{algorithmic}[1]
+		\Require Un modèle défini sur $\F_{q}$ de courbe elliptique $E$ à multiplication complexe, le discriminant $\Delta$ de $End(E)$, un nombre $l$ premier ne divisant pas $p*f_{m}*|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$
+		\Ensure Une forme explicite normalisée d'une $l$-isogénie $\phi : E \rightarrow E'$ partant de $E$.
+		\State Factoriser $l\OR_{\Delta}$ avec le théorème de Kummer
+		\State Choisir un des deux idéaux $\LR$ de norme $l$ obtenu
+		\State Calculer un générateur $P$ du groupe de torsion $E\left[ \LR\right]$ (voir section 5.4)
+		\State Appliquer la formule de Vélu pour trouver une forme explicite $\phi_1 : E \rightarrow E'$ 
+		\State Calculer l'invariant différentiel de $E'$
+		\State Calculer la constante $c$ telle que $\phi_{1}^{*}(w_{E_{1}}) = cw_E$. 
+		\State Appliquer l'isomorphisme $\mu_{c} : (x,y) \mapsto (c^{-2}x, c^{-3}y)$ à la forme explicite de $\phi_1 : E\rightarrow E'$ pour calculer $\phi = \mu_{c}\circ\phi_{1} : E \rightarrow E'$
+		\State \Return La forme explicite $\phi : E \rightarrow E'$
+	\end{algorithmic}
+	
+\end{algorithm}
+
+
+Cependant la formule de Vélu demande de parcourir le noyau entier : la procédure est linéaire en $l$, ce qui n'est pas satisfaisant. L'algorithme de Broker, Charle et Lauter consiste à améliorer l'algorithme 1 en se ramenant à des idéaux de petites normes grâce à l'action du groupe de classe $Cl(\OR_{\Delta})$ sur $Ell_{\F_{q}}(\OR_{\Delta})$. On présente les différnetes étapes de la façon suivante :
+
+\begin{itemize}
+	\item On a besoin d'outils pour calculer l'action de $Cl(\OR_{\Delta})$: on étudie cela dans la section 5.2. On utilise des formes quadratiques pour manipuler les classes d'idéaux. On explique comment trouver une famille génératrice de $Cl(\OR_{\Delta})$ représentée par des idéaux de petites normes premier bien choisies. On explique ensuite comment exprimer une classe donnée dans cette famille génératrice.
+	\item On aura tout de même besoin de la formule de Vélu au cours de l'algorithme. Dans la section 5.3, on étudie comment l'appliquer efficacement, et on analyse la complexité obtenue. 
+	\item Pour appliquer la formule de Vélu, il nous faut savoir trouver un générateur d'un groupe de torsion d'un idéal donné. Dans la section 5.4 on explique comment en obtenir un lorsque l'idéal est de norme premier.
+	\item Partant d'un idéal $\LR$ de norme $l$, on pourra exprimer sa classe $\CL$ dans une famille génératrice bien choisie. On en déduit une expression de $\LR$ à un idéal fractionnaire principal prêt qu'il faut expliciter. On explique comment trouver un générateur d'un idéal principal dans la section 5.5.
+	\item La procédure de Broker Charle Lauter sera énoncé en section 5.6, puis la complexité sera étudié en section 5.7. 
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Calculs dans les groupes de classes}
+
+
+Pour mener des calculs dans un groupe de classe $Cl\left(\OR_{\Delta} \right)$, il nous faut d'abord résoudre deux problèmes :
+\begin{enumerate}
+	\item Pour manipuler une classe sans ambiguïté il faut définir un représentant normal, unique dans chaque classe. En particulier on souhaite pouvoir tester rapidement si deux idéaux sont dans la même classe.
+	\item On voudra calculer des isogénie associée aux idéaux représentant les générateurs d'une famille génératrice. Il faut dont que leurs normes vérifient les conditions fixées sur $l$ : On veut pouvoir choisir des représentants de classes de sorte que leurs normes soient des nombres premiers bien choisis. 
+\end{enumerate}
+
+Un outil va nous permettre de résoudre les deux problèmes en même temps : les formes quadratiques à coefficient entier. 
+
+\subsubsection{Forme standard des idéaux et formes quadratiques binaires}
+
+On va étudier une correspondance entre d'une part les idéaux d'un ordre d'un corps quadratique imaginaire $\OR_{\Delta}$, et d'autre part des formes quadratiques définies positives de discriminant $\Delta$. On commence par définir les formes quadratiques qui nous intéressent :
+
+\begin{Def}
+	
+	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique. $f$ est binaire si elle est définie positive et à coefficient dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$. On notera $f = (a,b,c)$ pour désigner une forme quadratique binaire, ou $f = (a,b)$ si le discriminant $\Delta$ est connu. $f$ est dite primitive si ses coefficients $a$, $b$ et $c$ sont premiers dans leur ensemble.
+\end{Def}
+
+On peut associer à une forme quadratique binaire primitive de discriminant $\Delta$ un idéal propre de $\OR_{\Delta}$.
+
+\begin{Prop}\cite{Coh00}[Th 7.7]
+	
+	Soit $f = (a,b)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'application :
+	\begin{equation*}
+		I : (a,b)\mapsto\left[ a, \frac{-b + \sqrt{\Delta}}{2}\right] 
+	\end{equation*}
+	associe à $f$ un idéal propre de $\OR_{\Delta}$.
+\end{Prop}
+
+\begin{Def}
+	Un idéal entier $\LR\subset\OR_{\Delta}$ est dit primitif s'il est de la forme $I(a,b)$. 
+\end{Def}
+
+Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les coefficients $a$ et $b$ à partir d'une écriture adéquate de $\LR$ :
+
+\begin{Prop}
+	
+	Tout idéal entier $\LR\subset\OR_{\Delta}$ s'écrit 
+	\begin{equation*}
+		\LR = m\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right] 
+	\end{equation*}
+	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux. L'écriture est unique avec $b$ défini modulo $2a$ : on peut choisir $-a<b\leq a$.
+\end{Prop}
+
+\begin{proof}\cite{Buchmann95}[2.5]
+	La preuve citée est rédigée dans le cas des corps quadratique réel, c'est à dire de discriminant positif. Mais à part un choix de convention différent pour fixer $b$, la preuve s'adapte sans difficulté au cas imaginaire.
+\end{proof}
+
+\begin{Def}
+	Un idéal $\LR$ est sous forme standard s'il est donné par l'unique base définie par la proposition 5.2. Lorsque $\Delta$ est connue, on notera $\LR = (m,a,b)$ une écriture standard de $\LR$. On dira que $\LR$ est primitif si $\LR = (1,a,b)$.
+	
+\end{Def}
+
+\begin{Rem}
+	On peut en déduire une écriture standard d'un idéal fractionnaire $\IR$ de $\OR_{\Delta}$. En effet d'après la proposition 1.11 il existe $d\in\N$ minimal tel que $d\IR = \LR$ soit entier, de forme standard $\LR = (m,a,b)$. Alors la forme standard de $\IR$ est
+	\begin{equation*}
+		\LR = \frac{m}{d}\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right]
+	\end{equation*}
+\end{Rem}
+
+
+\begin{Coro}
+	Soit $\LR = (m,a,b)$ un idéal entier de $\OR_{\Delta}$ sous forme standard. Soit $c = \frac{\Delta - (b)^2}{4a}$. L'application
+	\begin{equation*}
+		F : (m,a,b)\mapsto (a,b) = ax^2 + bxy + cy^2
+	\end{equation*}
+	associe à $\LR$ une forme quadratique binaire de même discriminant. 
+	
+\end{Coro}
+
+\begin{Prop}
+	Les applications $I$ et $F$ induisent une bijection entre les idéaux entiers primitifs et les formes quadratiques binaires primitives.
+\end{Prop}
+
+\begin{proof}
+	Par construction, si $\LR = (1,a,b)$ est un idéal entier primitif de $\OR_{\Delta}$, alors $I(F(\LR)) = \LR$ et $F(I((a,b))) = (a,b)$.
+\end{proof}
+
+\begin{Rem}
+	On peut de même associé une forme quadratique à un idéal fractionnaire à partir de sa forme standard. 
+\end{Rem}
+
+On peut retrouver facilement la norme et l'inverse d'un idéal entier donné sous forme standard.
+
+\begin{Prop}\cite{Coh00}[5.2.5]
+	
+	Soit $\LR = (m,a,b)\subset\OR_{\Delta}$ un idéal entier sous forme standard. Soit $\LR' = \left( \frac{m}{N(\LR)},a,-b\right) $ (qui est donc un idéal fractionnaire de $\OR_{\Delta}$). Alors
+	\begin{enumerate}
+		\item $N(\LR) = m^2a$
+		\item $\LR\LR' = \left[ m, \frac{-b + \sqrt{\Delta}}{2}\right] $
+		\item $\LR$ est propre si et seulement s'il est primitif, et dans ce cas $\LR' = \LR^{-1}$
+	\end{enumerate}
+\end{Prop}
+
+On cherche à trouver un représentant d'un classe d'idéaux de $\OR_{\Delta}$ de façon systématique et pratique pour l'implémentation. Prendre un idéal primitif ne suffit pas : Il peut y avoir plusieurs idéaux primitifs dans la même classe. 
+
+\begin{Def}
+	Deux formes quadratiques binaires primitives sont équivalentes si leurs idéaux primitifs associés sont dans la même classe. On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
+\end{Def}
+
+La bijection précédente entre les idéaux entiers primitif et les formes quadratiques binaires primitive induit une structure de groupe sur les formes quadratiques binaires primitives. L'isomorphisme passe au quotient et induit un isomorphisme entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. Cependant la notion d'équivalence entre formes quadratiques binaires primitives peut être définie sans faire le lien avec les idéaux de $\OR_{\Delta}$, ainsi qu'une loi de groupe sur les formes et sur les classes via le produit le Dirichlet \cite{Cox}[3.8]
+
+\begin{Def}
+	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante : Soit $B$ défini modulo $2aa'$ par
+	\begin{enumerate}
+		\item $B = b [2a]$
+		\item $B = b' [2a']$
+		\item $B^2 = \Delta [4aa']$
+	\end{enumerate}
+	Alors $f*f' = (aa', B)$ est une forme quadratique binaire primitive.
+\end{Def}
+
+\begin{Prop}\cite{Cox}[Th 7.7]
+	
+	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$ Et ces opérations induisent des isomorphismes entre groupes de classes.
+\end{Prop}
+
+On défini une notion de forme quadratique binaire réduite, qui aura l'avantage d'être unique dans chaque classe :
+
+\begin{Def}
+	Soit $f = (a,b)$ une forme quadratique binaire primitive sous forme standard de discriminant $\Delta < 0$. Soit $c = (\Delta - b^2)/4a$. $f$ est une forme quadratique réduite si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$. Un idéal entier primitif $\LR$ de $\OR_{\Delta}$ est dit réduit si $F(\LR)$ est une forme quadratique réduite
+\end{Def}
+
+\begin{Prop}\cite{Cox}[2.8]
+	
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire. Toute classe de $Cl(\Delta)$ contient une unique forme quadratique réduite. Toute classe de $Cl(\OR_{\Delta})$ contient un unique idéal entier primitif réduit. 
+\end{Prop}
+
+\begin{Rem}
+	Une forme quadratique réduite $f = (a,b)$ vérifie 
+	\begin{equation*}
+		|b|\leq|a|\leq\sqrt{\frac{|\Delta|}{3}}
+	\end{equation*}
+	On peut donc représenter chaque classe $Cl(\OR_{\Delta})$ en $O(\log(|\Delta|))$ bits. 
+\end{Rem}
+
+La preuve citée de la proposition 5.7 fournit un algorithme donnant l'élément réduit de la classe en $\OR(\log(\Delta)^{2} )$ à partir d'un représentant quelconque.
+
+\begin{algorithm}
+	\caption{Réduction de forme quadratique binaire primitive}
+	\begin{algorithmic}[1]
+		\Require Une forme quadratique binaire primitive $(a,b,c)$
+		\Ensure Une forme quadratique réduite équivalente.
+		\State $test \gets False$
+		\While{test = False}
+		\If{ $|b| > a$}
+		\State Calculer $q$, $r$ tels que $b = 2aq + r$, $-a<r\leq a$
+		\State $c \gets c - bq + aq^2$
+		\State $b \gets r$
+		\EndIf
+		\State $test \gets True$
+		\If{$a > c$}
+		\State Echanger $a$ et $c$
+		\State $b \gets -b$
+		\State $test \gets False$
+		\EndIf
+		\If{$b < 0$}
+		\If{$a = -b$ OU $a = c$}
+		\State $b \gets -b$
+		\EndIf
+		\EndIf
+		\EndWhile
+		\State \Return $(a,b,c)$
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{Prop}
+	L'algorithme 2 admet une complexité en $O(\log(a)^2)$
+\end{Prop}
+
+\begin{proof}\cite{Coh00}[5.4.3]
+	
+	La ligne $4$ correspond à une division euclidienne de $2a$ par $b$, qui se fait en $O(log(2a))$. La complexité de chaque passage dans la boucle de la ligne $2$ est essentiellement dominée par l'étape de la ligne $4$. Enfin le nombre de passage dans la boucle While est en $0(log(a))$.\cite{Coh00}[5.4.3] 
+\end{proof}
+
+\begin{Rem}
+	On peut donc rapidement vérifier que deux idéaux entiers sont dans la même classe : il suffit de réduire leurs formes quadratiques binaires primitives associées et vérifier que l'on trouve le même résultat. 
+\end{Rem}
+
+
+\subsubsection{Représentant de classe premier avec le conducteur}
+
+La forme réduite sera adapté pour faire des calculs dans le groupe de classe. Pour le calcul d'isogénie, on voudra cependant trouver un système de représentant de normes bien choisies. A priori l'idéal associé à la forme réduite ne convient pas. Cependant il existe un système de représentant adapté au calcul d'isogénie.
+
+\begin{Def}
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
+\end{Def}
+
+\begin{Prop}\cite{Cox}[Th 7.7]
+	
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe $\LR\in \widetilde{I(f)}$ tel que $N(\LR) = m$
+\end{Prop}
+
+\begin{Rem}
+	La preuve de cette proposition fournit une méthode pour trouver l'idéal $\LR$ de norme $m$ à partir de deux entiers $s$, $t$ tel que $f(s,t) = 1$ \cite{Cox}[Lem 2.3]. Cependant si $m$ est premier, on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après le théorème de Kummer. Ceci permet de trouver l'idéal $\LR$ sans expliciter les entiers $s$ et $t$.
+\end{Rem}
+
+\begin{Prop}\cite{Cox}[Cor 7.17]
+	
+	Soit $M\in\N$ en entier. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$. Ainsi toutes classes d'idéaux d'un ordre quadratique imaginaire possède un idéal entier premier avec $M$. 
+\end{Prop}
+
+
+Ainsi, toute classe d'idéaux possède un représentant premier avec $M = p*f_{m}*|E(\F_{q^{n}})|$. Comme il y a deux choix d'idéaux de norme $p$ premier lorsque $p$ est décomposé, on va fixer une convention nous permettant de choisir. Cette convention sera aussi utile pour les calculs dans le groupe de classe.
+
+\begin{Def}
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. La forme quadratique de Seysen de discriminant $\Delta$ associée à $p$ est $(p,b_{p})$ où $b_{p}\in\N$ est le plus petit entier positif tel que $b_{p}^2 = \Delta [4p]$. L'idéal de Seysen associé à $p$ est alors $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
+\end{Def}
+
+\begin{Rem}
+	L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b_{p}))$ est le second, et représente la classe de $(\PR_{p})^{-1}$ d'après la proposition 5.5.
+\end{Rem}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Famille génératrice du groupe de classe}
+
+
+
+
+On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux de Seysen de norme $p$ adaptée au calcul d'isogénie, c'est à dire $p$ premier avec $p*f_{m}*|E(\F_{q^{n}})|$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables plus petit qu'une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes parmi les idéaux de Seysen associés pour obtenir une famille génératrice.
+
+\begin{Def}
+	On note $P_{N} = \left\lbrace \PR_{p} : p \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des $N$ premiers idéaux de Seysen. 
+\end{Def}
+
+La proposition suivante est un des arguments clef permettant d'obtenir un algorithme sous exponentielle en $|\Delta|$ : 
+
+\begin{Prop}\cite{Seysen}[Th 3.3]
+	
+	Sous l'hypothèse de Riemann généralisée, il existe une constante $C$ telle que $Cl(\OR_{\Delta})$ soit engendré par les classes des éléments de $P_{N}$, avec 
+	\begin{equation*}
+		N = C\times \log(\Delta)^{2}
+	\end{equation*}
+	
+\end{Prop}
+
+\begin{Rem}
+	Comme les nombres premiers à éviter sont en nombre fini, les conditions que l'on s'impose ne change pas le comportement asymptotique de la borne $N$.
+\end{Rem} 
+
+\begin{Rem}
+	Pour estimer la borne, \cite{Seysen} cite deux résultats proposant $C= 280$ ou même $C = 2$. \cite{Coh00} propose $C = 6$. Cependant d'après \cite{Coh00}, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
+\end{Rem}
+
+\begin{Rem}
+	\cite{Coh00} ainsi que \cite{JaoSoukharev} propose en plus une borne pour $N$ sous exponentielle en $|\Delta|$  qui n'admet pas l’hypothèse de Riemann généralisée. Elle dépend de l'implémentation et vise à optimiser la complexité de la factorisation d'un idéal. Nous reviendront donc sur l'ordre de grandeur de $N$ par la suite.
+\end{Rem}
+
+Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la procédure naïve, détaillée dans l'algorithme 3. 
+
+
+\begin{algorithm}
+	\caption{Famille génératrice du groupe de classe par des idéaux de Seysen}
+	\begin{algorithmic}[1]
+		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$.
+		\Ensure Une liste $L_{premiers}$ de nombres premiers plus petit que $N$ ne divisant pas $pf_{m}|E(\F_{q^{n}})|$, la liste $L_{ideaux}$ de leurs idéaux de Seysen respectif, la liste $L_{formes}$ de leurs formes de Seysen respectives. 
+		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets$ \O
+		\State $n \gets 2$
+		\While{$n < N$}
+		\If{$\left( \frac{\Delta}{n}\right) = 1$ ET $n$ ne divise pas $pf_{m}$}
+		\State Mettre $n$ dans $L_{premiers}$
+		\State Calculer $q_{n} = (n ,b_{n})$ la forme de Seysen de $n$
+		\State Mettre $q_{n}$ dans $L_{formes}$
+		\State Calculer $I_{n}$ l'idéal de Seysen de $n$
+		\State Mettre $I_{n}$ dans $L_{ideaux}$
+		\EndIf
+		\State $n \gets nextprime(n)$
+		\EndWhile
+		\State\Return $L_{premiers}$, $L_{ideaux}$, $L_{formes}$
+	\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+\subsubsection{Écriture d'une classe dans une famille génératrice}
+
+
+Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Alors 
+\begin{equation*}
+	\CL = \CL_{1}^{e_{1}}\CL_{2}^{e_{2}}\ldots\CL_{g}^{e_{g}}
+\end{equation*}
+
+avec $g = |Cl(\OR_{\Delta})|$ et $\CL_{1}\ldots\CL_{g}$ les différentes classes d'idéaux donné dans par une famille quelconque de représentant. Alors il existe $\alpha\in\K$ tel que
+
+\begin{equation*}
+	\LR = (\alpha\OR_{\Delta})\LR_{1}^{e_{1}}\LR_{2}^{e_{2}}\ldots\LR_{g}^{e_{g}}
+\end{equation*}
+
+Dans cette section on ne cherche pas à expliciter $\alpha$ mais seulement une liste d'exposant $e_{i}$ fournissant une factorisation de $\CL$ lorsque les représentants $\LR_{i}$ sont choisit parmi la liste d'idéaux renvoyée par l'algorithme 3. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
+
+\begin{enumerate}
+	\item Certaines classes représentées par des formes réduites ayant de bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
+	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités d'arriver en un temps sous-exponentiel à une classe facilement factorisable.
+\end{enumerate}
+
+D'abord on cite le théorème de Seysen sur la factorisation d'idéaux:
+
+\begin{The}\cite{Seysen}[Th 3.1]
+	
+	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ ait une forme réduite $(a,b)$. Si $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en nombres premiers de l'entier $a$, alors
+	\begin{enumerate}
+		\item $p_{i}$ est décomposé dans $\OR_{\Delta}$.
+		\item Si $\PR_{p_{i}} = (1,p_{i},b_{p_{i}})$ est l'idéal de Seysen de $p_{i}$, alors $b = \pm b_{p_{i}} $ mod $2a$.
+		\item $\CL = \CP_{p_{1}}^{\pm e_{1}}\CP_{p_{2}}^{\pm e_{2}}\ldots\CP_{p_{g}}^{\pm e_{g}}$ 
+		\item L'exposant de $\PR_{p_{i}}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$
+	\end{enumerate}
+\end{The}
+
+\begin{Coro}
+	Avec les notations du théorème précédent, si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{premiers}$ obtenue par l'algorithme 3, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
+\end{Coro}
+
+\begin{Rem}
+	Pour une forme quadratique réduite $(a,b)$, on sait que $a < |\Delta|$. Factoriser $a$ est donc au pire des cas sous-exponentielle en $\log(a) \leq \log(|\Delta|)$. De plus il suffit de vérifier que $a$ se factorise complètement parmi une famille de petit nombres premiers renvoyés par l'algorithme 3. Donc on peut éviter de factoriser complètement $a$.
+\end{Rem}
+
+On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. Sans rappeler la théorie des graphes expanseurs, on cite les résultats principaux.
+
+\begin{Def}
+	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
+	\begin{enumerate}
+		\item Les sommets sont associés chacun à un élément de G
+		\item Une arêtes relie deux sommets associés à $g$ et $g'$ si et seulement s'il existe $s\in S$ tel que $g = sg'$
+	\end{enumerate}
+	S est supposé stable par inverse pour que le graphe ne soit pas orienté.
+\end{Def}
+
+\begin{Prop}\cite{Jao_2009}[Lem 2.1]
+	
+	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{ideaux}\cup (L_{ideaux})^{-1}$. On considère une marche aléatoire en $t$ étape partant d'un sommet quelconque du graphe de Cayley de G selon S. Si 
+	\begin{equation*}
+		t = O(\frac{\log(|\Delta|)}{\log(\log(|\Delta|))})
+	\end{equation*} 
+	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité au moins $\frac{|S_{0}|}{2|G|}$. 
+\end{Prop}
+
+Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$
+
+\begin{Rem}
+	Puisque le groupe est abélien, le nombre d'étape $t$ correspond à la somme des valeurs absolue des exposants, c'est à dire la norme $l1$ du vecteurs des exposants, que l'on notera $x$
+\end{Rem}
+
+\begin{Coro}
+	On peut choisir des vecteurs d'exposants aléatoire parmi les vecteurs $x$ tels que 
+	\begin{equation*}
+		\left\| x\right\| _{1} \leq C\times\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}
+	\end{equation*}
+	
+\end{Coro}
+
+\textbf{Estimation de la constante C ?}
+
+\begin{algorithm}
+	\caption{Factorisation de la classe d'un idéal dans une famille génératrice donnée}
+	\begin{algorithmic}[1]
+		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un idéal $\LR\subset\OR_{\Delta}$. 
+		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ décrivant une factorisation de $\CL$.
+		\State $L_{ideaux}$, $L_{formes}$, $L_{premiers}\gets$ résultat de l'algorithme 3 appliqué à $N$, $\Delta$, $p$, $f_{m}$, $|E(\F_{q^{n}})|$. 
+		\State $k\gets$ taille de $L_{ideaux}$
+		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
+		\For{$0<i<C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right) $}
+		\State $Indice\gets$ indice aléatoire de $L_{x}$.
+		\State $Increment\gets\pm1$
+		\State $L_{x}\left[ Indice\right] \gets L_{x}\left[ Indice\right] + Increment$
+		\EndFor
+		\State $ideal_{test}\gets\LR*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{k}^{x_{k}}$
+		\State $classe_{test}\gets$ forme réduite de $ideal_{test}$
+		\If{$classe_{test}$ se factorise par le théorème 5.12}
+		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème 5.12.
+		\State $L_{exposants}\gets L_{y} - L_{x}$
+		\State $L_{facteurs}\gets L_{ideaux}$
+		\For{$e_i$ parcourant $L_{exposants}$ }
+		\If{$e_i < 0$}
+		\State $e_i\gets-e_i$
+		\State $\left( L_{facteurs}\right) _{i} \gets $ idéal conjugué de $\left( L_{facteurs}\right) _{i}$
+		\EndIf
+		\EndFor
+		\Else
+		\State Reprendre à l'étape 3
+		\EndIf
+		\State \Return $L_{exposants}$, $L_{facteurs}$
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{Rem}
+	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
+\end{Rem}
+
+\begin{Prop}
+	Soit $t = C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ le nombre d'indice dans les listes retournées par l'algorithme $3$. Si $N = 2log(|\Delta|)^2$ et $t\leq k$, alors l'algorithme $4$ a une complexité moyenne en 
+\end{Prop}
+
+\begin{proof}
+	D'après le théorème des nombres premiers, $k = O(N/log(N))$. En particulier $t/k = O(1)$ et de l'ordre d'une constante $C_{0}$. Si $t\leq k$, $C_{0} \leq 1$. Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois, donc moins d'une fois. On peut donc estimer en moyenne qu'à l'étape $6$ la liste $L_{x}$ ne contient que des $0$ et des $1$, et au plus $t$ $1$. $ideal_{test}$ est donc de norme $\leq lp_{k-t}\ldots p_{k} \leq lp_{k}^{t}$. Calculer sa forme réduite $classe_{test}$ se fait en $O(log(lp_{k}^{t})) = O(log(l) + tlog(N))$. Vérifié si $classe_{test}$ se factorise demande $O(k)$ test de divisibilité et division euclidienne, chacune sur un coefficient $a$ d'une forme quadratique réduite : $a < \Delta$. Au total les étapes $11$ et $12$ demandent $O(klog(|\Delta|))$ opérations dans $\Z$. Les étapes $13$ à $20$ sont élémentaires. Il reste à savoir combien d'essais pour $L_{x}$ doit être fait en moyenne avant de réussir le test de l'étape $11$. \textbf{Heuristique nombre friable ?}
+\end{proof}
+
+\cite{JaoSoukharev} propose une complexité différente : On peut chercher à l'optimiser par rapport à l'implémentation de l'algorithme final au complet.
+
+\begin{Def}
+	On défini la complexité sous exponentielle en $\Delta$ par la fonction
+	\begin{equation*}
+		L(x) = e^{\sqrt{\log(x)\log(\log(x))}}
+	\end{equation*}
+	On dira qu'une procédure est sous-exponentielle en $\Delta$ s'il existe une constante $z$ telle que la complexité soit en $O(L(|\Delta|))^{z}$
+\end{Def}
+
+Si $N$ est trop petit, la partie $S_{0}$ est plus petite et la probabilité de l'atteindre avec une marche aléatoire est plus faible. Mais si $N$ est trop grand, il est plus difficile de vérifier si $a$ se factorise entièrement sur $L_{p_{i}}$. 
+
+\begin{Prop}\cite{Coh00}[5.5.1]
+	
+	Il existe une constante $z$ tel que choisir $N$ de l'ordre de $O(L(|\Delta|))^{z}$ optimise la complexité de l'algorithme 4
+	
+\end{Prop}
+
+La constante $z$ dépend de l'implémentation. \Cite{Coh00} la calcul pour un algorithme visant à expliciter la structure complète du groupe de classe : on a pas besoin de cette structure, mais seulement d'une relation factorisant $\LR$. \cite{JaoSoukharev} trouve une constante pour la procédure qui nous intéresse, mais majore différemment les exposants : au lieu de majorer la norme $l_{1}$, il impose une borne à chaque exposant et une borne sur le nombre d'exposant non nul. 
+
+\begin{Rem}
+	Même si la borne théorique admettant l'hypothèse de Riemann généralisé est asymptotiquement meilleure, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite\cite{Coh00}[5.5.1]. 
+\end{Rem}
+
+
+
+
+La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
+Sur l'exemple medium, il semble que l'on tombe très souvent sur un idéal principal directement. Normal ? 
+
+
+\subsection{Algorithme SquareVélu}
+
+Étant donné un modèle de courbe elliptique $E$, les formules de Vélus permettent de construire une forme explicite d'une isogénie $\phi$ à partir de la connaissance de son noyau. Pour une $l$-isogénie, le noyau peut être donné sous deux formes : un point $K$ générateur du noyau, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. Dans le second cas, il faut adapter les formules pour les écrire en fonction de $F$.
+
+\begin{Def}
+	Soit $E$ un modèle de courbe elliptique et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. On sépare $Ker(\phi)$ en une partition $\left\lbrace \OR \right\rbrace \cup R\cup R'$ où $R$ regroupe $(l-1)/2$ points finis distincts, et $R'$ leurs inverses. Un polynôme $F$ décrit le noyau de $\phi$ sur $E$ si c'est un polynôme unitaire de degré $(l-1)/2$ dont les racines sont les abscisses des points finis de $R$. Un tel polynôme est unique. 
+\end{Def}
+
+Dans les deux cas, \cite{Velusqrt} propose une méthode pour évaluer des polynômes de degré $l$ dans $\F_{q}[X]$ en $O(\sqrt{l})$ opération dans $\F_{q}$. Les résultats suivants en découle.
+
+\begin{Prop}
+	Soit $E$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. Soit $K$ un générateur de $Ker(\phi)$, et $P\in E(\F_{q})$. Il est possible de calculer un modèle de $E'$ et $\phi(P)\in E'$ en $O(\sqrt{l})$ opérations dans $\F_{q}$, en utilisant l'algorithme de \cite{Velusqrt} que l'on appelera SquareVélu.
+\end{Prop}
+
+\begin{Rem}
+	SquareVélu est une amélioration asymptotique de l'application naïve des formules de Vélus. Cependant pour les petits nombres premiers, l'application naïve reste plus rapide. En pratique avec l’implémentation de Sage, il est conseillé d'utiliser SquareVélu uniquement si $l > 100$. 
+\end{Rem}
+
+On décrit maintenant comment adapter les formules de Vélu à l'utilisation de polynômes décrivant le noyau d'une isogénie.
+
+\begin{Prop}\cite{Kohel}[\S 2.4]
+	
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi$ une $l$-isogénie, avec $l$ premier impair. Soit $F$ le polynôme décrivant le noyau de $\phi$ sur $E$. Alors on peut obtenir une forme explicite de $\phi$ avec
+	\begin{equation*}
+		\phi(x,y) = \left( \frac{G(X)}{F(X)^2}\;,\;\frac{H(X,Y)}{F(X)^3}\right) 
+	\end{equation*}
+	où $G$ et $H$ peuvent être obtenue explicitement à partir de $F$. Pour $P\in E(\F_{q})$, on peut alors calculer $\phi(P)$ en $O(\sqrt{l})$ opérations dans $\F_{q}$ via les méthodes de \cite{Velusqrt}
+\end{Prop}
+
+\begin{Rem}
+	Il existe aussi des formules adaptées au cas où $l = 2$
+\end{Rem}
+
+
+
+
+
+
+
+\subsection{Générateur d'un groupe de torsion}
+
+
+\subsubsection{Méthode générale}
+
+Dans cette partie, on suppose connu un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé, et une courbe elliptique $E$ définie sur $\F_{q}$ à multiplication complexe avec $End(E)\simeq\OR_{\Delta}$ normalisé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose $l$ premier avec le conducteur maximal $f_{m}$.
+
+\begin{Rem}
+	Si $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$, $\LR$ est primitif car de norme premier. Il est facile de passer à une écriture dépendant de $w_{\K}$ au lieu de $\sqrt{d_{K}}$, et la proposition 4.23 permet alors d'obtenir en quelques calculs une base de la forme 
+	\begin{equation*}
+		\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]
+	\end{equation*}
+	On suppose $\LR$ donné sous cette forme. 
+\end{Rem}
+
+On sait alors que $E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ et du noyau de $\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. Dans $E[l]$, à partir d'une base $P$, $Q$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible. (voir proposition 2.6). On veut alors pouvoir tester lequel est dans $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. 
+
+\begin{Prop}
+	Avec les notations précédentes, si $l$ ne divise pas $f_{m}$, alors les isogénies $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right] $ restreintes à $E\left[ l\right] $ ont même noyau.
+	
+\end{Prop}
+
+\begin{proof}
+	Puisque $f_{m}$ et $l$ sont premier entre eux, $\left[ f_{m} \right]$ restreinte à $E\left[ l \right]$ est bijective. Or l'application $\left[.\right] $ est un morphisme d'anneau, donc $\left[  \frac{c + d\pi_{q}}{f_{m}}\right] \circ \left[ f_{m }\right] =  \left[ c + d\pi_{q}\right] $, ce qui permet de conclure.
+\end{proof}
+
+On en déduit l’algorithme suivant, proposé dans \cite{BrokerCharlesLauter}[\S 3.2] comme méthode générale :
+
+\begin{algorithm}
+	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 1}
+	\begin{algorithmic}[1]
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
+		\State Calculer le polynôme de $l$-division sur $E$.
+		\State En déduire une extension $\F_{q^r}$ sur laquelle le polynôme de $l$-division se factorise. (Ainsi $E(\F_{q^r})$ contient $E[l]$).
+		\State Calculer une base $P$, $Q$ de $E\left[ l\right] $. 
+		\For{$i$ allant de $0$ à $l - 1$}
+		\If{$\left[ c + d\pi_{q}\right](P + iQ) = 0$} 
+		\Return la valeur $P + iQ$ 
+		\EndIf
+		\EndFor
+		\State \Return $Q$
+	\end{algorithmic}
+\end{algorithm}
+
+Cette algorithme peut être implémenté sur sage, mais pose plusieurs problème :
+
+\begin{enumerate}
+	\item L'extension $\F_{q^r}$ peut être très grande, Broker Charle et Lauter affirme que $r$ est en général de l'ordre de $l$. 
+	\item Le polynôme de $l$-division est degré $\frac{l^2 - 1}{2}$ et peut être lourd à calculer, et à factoriser.
+\end{enumerate}
+
+En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ mais le calcul prend déjà une dizaine de secondes.
+
+\subsubsection{Optimisation de la recherche d'extension de corps}
+
+On propose une amélioration de la première méthode : le but est de trouver directement la plus petite extension qui contient la $\LR$-torsion, sans calculer de polynôme de division.\\
+
+On remarque d'abord que, partant de la forme standard de l'idéal $\LR$, on peut toujours se ramener à $d = 1$ (il suffit d'expliciter les calculs). Si $P$ est un générateur du groupe de torsion, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On se ramène donc à une étude $\pi_{q}$ restreint à $E[l]$.
+
+\begin{Prop}\cite{MMSTV}[Prop 1]
+	
+	Soit $E$ définie sur $\F_{q}$ de $j$-invariant différent de $0$, $1728$.
+	\begin{enumerate}
+		\item $E$ admet une unique $l$-isogénies définie sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a un unique espace propre de dimension $1$.
+		\item $E$ admet exactement deux $l$-isogénies définies sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a deux valeurs propres distinctes .
+		\item $E$ admet $l+1$ isogénies définies sur sur $\F_{q}$ si et seulement si $\pi_{q}$ restreint à $E[l]$ a une valeur propre double.
+	\end{enumerate}
+	
+\end{Prop}
+
+\textbf{ Cas de 0 isogénie ? } Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait qu'il existe exactement $2$ isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$ restreint à $E[l]$. 
+
+\begin{Prop}\cite{MMSTV}
+	
+	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $. Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$, et $r_{i}$ divise $l-1$. De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
+\end{Prop}
+
+On sait donc directement dans quelle extension chercher les générateurs des noyaux. On note $r$ son degré. On cherche alors $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-c$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
+\begin{equation*}
+	E(\F_{q^{r}}) \simeq \Z/n_{1}\Z\times\Z/n_{2}\Z
+\end{equation*}
+
+avec $n_{1}$ divisant $n_{2}$, alors un point choisit au hasard sera probablement d'ordre $n_{2}$. Cependant on connait seulement le cardinal $N = n_{1}n_{2}$
+
+\begin{Prop}\cite{Sil09}[Exercice 5.6]
+	
+	Avec les notations précédentes, $n_{1}^2$ divise $N$ et $q^r = 1$ modulo $n_{1}$.
+\end{Prop}
+
+On en déduit l'algorithme 6 :
+\begin{algorithm}
+	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 2}
+	\begin{algorithmic}[1]
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
+		\State $r\gets$ ordre de $-c$ dans $\F_{l}^{*}$.
+		\State $N\gets$ Cardinal de $E(\F_{q^{r}})$
+		\State $n_{max} \gets pgcd(N, q^r - 1)$
+		\State $L\gets$\O
+		\For{$i$ divisant $n_{max}$}
+		\If{$i^2$ divise $N$}
+		\State Mettre $i$ dans $L$
+		\EndIf
+		\EndFor
+		\State $P\gets$ Point aléatoire de $E(\F_{q^{r}})$
+		\For{$i$ parcourant $L$}
+		\State $K\gets (N/i)P$
+		\If{$K\neq \OR$}
+		\If{$\pi_{q}(K)=-cK$}
+		\Return $K$ 
+		\EndIf
+		\EndIf
+		\EndFor
+		\State Reprendre l'étape $10$
+	\end{algorithmic}
+\end{algorithm}
+
+	
+\subsubsection{Méthode d'Elkies}
+
+La méthode 2 précédente est une net amélioration de la méthode 1, mais nécessite parfois de manipuler des groupes $E(F_{q^{r}})$ de très grand cardinal, lorsque $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisamment souvent pour être problématique. On présente ici une troisième méthode, proposé par \cite{Bostan_2008}[\S 4.3, fastElkies'] ayant pour avantage d'éviter tout calcul dans des extensions de $\F_{q}$.\\ 
+
+On résume l'idée de la méthode en admettant les résultats utilisés. Soit $E$ une courbe elliptique à multiplication complexe de $j$-invariant $j$, définie sur $\F_{q}$.
+\begin{itemize}
+	
+	\item Il existe un polynôme $\Psi_{l}(X,Y)$, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des $l+1$ courbes $l$-isogènes à $E$. Si les racines sont dans $\F_{q}$, elles correspondent aux courbes images des $l$-isogénies définies sur $\F_{q}$
+	
+	\item Soit $h$ une racine de $\Psi_{l}(j,Y)$ dans $\F_{q}$, alors il est possible d'obtenir un modèle défini sur $\F_{q}$ de la courbe $E'$ de $j$-invariant $h$, à partir de la donnée de $E$, $h$ et $l$.
+	
+	\item  Soit $p_{1}\in\Qb$ la somme des abscisses des $l-1$ points finis du noyau de la $l$-isogénie $\phi : E\rightarrow E'$. Alors $p_{1}\in\F_{q}$ peut être obtenues à partir de la connaissance de $E$, $h$ et $l$, en menant des calculs uniquement dans $\F_{q}$.
+	
+	\item Soit $F_{h}$ le polynôme dont les racines sont les abscisses des élément du noyau de $\phi$. Soit $F'_{h}$ défini de la même façon à partir d'un relèvement de During de $E$, $E'$ $\phi$. Soit $\wp$, $\wp'$ les fonction de Weierstrass associée au relèvement de $E$ et $E'$. Alors
+	\begin{equation}
+		z^{l-1}F'_{h}(\wp(z)) = \exp(S)
+	\end{equation}
+	où $S$ est une série entière dont tout les coefficients dépendent de l'écriture en série de Laurent de $\wp$, $\wp'$ et du relèvement de $p_{1}$. Les coefficients sont des éléments de $\Qb$
+	
+	\item On peut alors retrouver les coefficients de $F'_{h}$ en identifiants les $(l-1)/2$ premiers termes des deux membres de l'équation. Si chaque terme a une bonne réduction modulo l'idéal de réduction $\PR$ au dessus de $p$, alors on obtient directement les coefficient de $F_{h}$. La bonne réduction n'est cependant pas garanti si l'on doit calculer trop de termes : il faut que $l$ soit 'petit', plus précisément
+	\begin{equation*}
+		l < 4*(p+1)
+	\end{equation*}
+\end{itemize}
+
+Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent à minimiser et optimiser les calculs de séries.
+
+\begin{Def}
+	En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}[\S 4.3, fastElkies'], prenant en entrée $E$, $E'$ deux modèles de courbe elliptique à multiplication complexe définie sur $\F_{q}$ et $l < 4*(p+1)$ un nombre premier tel qu'il existe au moins une $l$-isogénie horizontale normalisée $\phi : E \rightarrow E'$. Cette algorithme renvoie un polynôme $F$ tels que les abscisses des points finis du noyaux de $\phi$ sont les racines du polynôme $F$ (sans redondance).  
+\end{Def}
+
+\begin{Prop}
+	Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS admet une complexité en $O\left( M(l)log(l)\right)$
+\end{Prop}
+
+Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, on ne peut pas connaître à l'avance le bon choix de $j$-invariant. il faut donc un moyen de tester si le premier choix a été bon, et sinon recommencer avec la seconde racine. On veut toujours éviter de calculer dans une extension de $\F_{q}$
+
+\begin{Prop}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$. Soit $\LR = \left[ l, \frac{c + \pi_{q}}{f_{m}}\right]$ un idéal de $\OR_{\Delta}$ de norme $l$ premier. Soit $F$ un polynôme sur $\F_{q}$.  On pose 
+	\begin{equation*}
+		R = \F_{q}\left[ X,Y\right] / \left( F, Y^2 - X^3 - aX - b\right) 
+	\end{equation*}
+	Soit $(R_{1}(X), YR_{2}(X))$ les fonctions rationnelles définissant l'endomorphisme $[-c]$. Si les racines de $F$ dans $\Fb_{p}$ sont les abscisses des points finis de $E[\LR]$, alors dans le corps de fraction de $R$,
+	\begin{equation*}
+		\bar{X}^q = R_{1}(\bar{X})\;,\;\bar{Y}^{q} = \bar{Y}R_{2}(\bar{X})
+	\end{equation*}
+\end{Prop}
+
+\begin{Rem}
+	Dans la proposition précédente, $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $l$ est supposé petit, et $[-c]$ est défini modulo $l$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq l$.
+\end{Rem}
+
+On en déduit l'algorithme $7$.
+
+\begin{algorithm}
+	\caption{Méthode d'Elkies}
+	\begin{algorithmic}[1]
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Ensure Un polynôme $F\in\F_{q}\left[ X\right]$ dont les racines sont les abscisses des points finis de $E[\LR]$, sans redondance. 
+		\State $P_{invariants}(Y)\gets PGCD(\Psi_{l}(j,Y),Y^q - Y)$ ($P_{invariants}$ est de degré 2)
+		\State $h_{1}, h_{2}\gets$ racines de $P_{invariants}$
+		\State $E_{1}\gets$ modèle normalisé de $h_{1}$ (formule explicite)
+		\State $F_{1}\gets BMSS(E,E_{1},l)$
+		\If{$F_{1}$ vérifie la proposition 5.24}
+		\State \Return $F_{1}$
+		\Else 
+		\State $E_{2}\gets$ modèle normalisé de $h_{2}$ (formule explicite)
+		\State $F_{2}\gets BMSS(E,E_{2},l)$
+		\State \Return $F_{2}$
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{Prop}
+	L'algorithme $7$ admet une complexité en $O(log(ql)M(l))$
+\end{Prop}
+
+\begin{proof}
+	\textbf{Complexité de la vérification de 5.24 ?}
+\end{proof}
+
+
+
+\subsection{Problème de l'Idéal Principal}
+
+Dans cette partie, on suppose connaître une factorisation de la classe $\CL$ obtenue avec l'algorithme 4
+\begin{equation}
+	\CL = \CP_{p_{1}}^{e_{1}}\CP_{p_{2}}^{e_{2}}\ldots\CP_{p_{g}}^{e_{g}}
+\end{equation}
+Où les idéaux $\PR_{p_{i}}$ sont des idéaux de Seysen de normes $p_{i}$ différent de $p$ et ne divisant pas $f_{m}|E(\F_{q^{n}})|$. On cherche alors $\alpha\in\K$ tel que 
+\begin{equation}
+	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}
+\end{equation}
+On commence par se ramener à chercher un élément de $\OR_{\Delta}$ : Comme $\PR_{i} = I_{p_{i}} = (p_{i},b_{i})$, la forme $(p_{i},-b_{i})$ représente $\CP_{i}^{-1}$ et $\bar{\PR_{i}} = I((p_{i},-b_{i}))$. Donc
+\begin{equation}
+	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \beta\OR_{\Delta}
+\end{equation}
+où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
+
+\begin{Prop}
+	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$. Alors $\alpha = \frac{\beta}{m}$.
+\end{Prop}
+
+\begin{proof}
+	Partant de l'équation $(2)$, on multiplie chaque membre par $\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}$. Le membre de gauche est égale à $\beta\OR_{\Delta}$ par définition de $\beta$ par l'équation $(3)$. Le membre de gauche est
+	\begin{equation*}
+		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}
+	\end{equation*}
+	Or d'après la proposition 1.17.3, $\PR_{p_{i}}^{e_{i}}\bar{\PR_{i}}^{e_{i}} = p_{i}^{e_{i}}\OR_{\Delta}$, donc 
+	\begin{equation*}
+		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \alpha m\OR_{\Delta}
+	\end{equation*}
+	Donc $\beta = \alpha m$
+\end{proof}
+
+On cherche plutôt à obtenir $\beta$. Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, on doit trouver un générateur $\beta$. Comme $N((1,a,b)) = a = N_{\Q}^{\K}(\beta)$, connaître $a$ donne la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y$ entiers.
+
+\begin{Prop}
+	
+	Soit $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ primitif sous forme standard. Soit $f = F(\LR)$ sa forme quadratique binaire primitive associée. Alors 
+	\begin{equation*}
+		f(x,y) = ax^2 + bxy + cy^2 = N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR)
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	On sait que par définition de $N_{\Q}^{\K}$, 
+	
+	\begin{align*}
+		N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR) &= \left( ax + y\frac{b}{2} + y\frac{\sqrt{\Delta}}{2}\right) \left( ax + y\frac{b}{2} - y\frac{\sqrt{\Delta}}{2}\right)/ a\\
+		&= \left( \left( ax + y\frac{b}{2} \right)^{2} - \left( y\frac{\sqrt{\Delta}}{2}\right)^{2}\right)/a\\
+		&=  ax^2 + bxy + y^2\left( \frac{b^2 - \Delta }{4a}\right) \\
+		&= ax^2 + bxy + cy^2 = f(x,y)
+	\end{align*}
+	
+	la dernière ligne étant dû au fait que $f$ est de discriminant $\Delta = b^2 - 4ac$.
+	
+\end{proof}
+
+
+\begin{Coro}
+	Soit $\LR = (1,a,b)\subset\OR_{\Delta}$ un idéal primitif sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f$, c'est à dire s'il existe deux entiers $x, y\in\Z$ tels que $f(x,y) = 1$. De plus dans ce cas,
+	\begin{equation*}
+		\LR = \left( ax - \frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}
+	\end{equation*}
+\end{Coro}
+
+\begin{proof}
+	$\LR$ est un idéal principal si et seulement s'il existe un élément de $\LR$ de norme égale à $N(\LR)$. Puisque $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$, tout élément $\beta$ de $\LR$ est de la forme
+	\begin{equation*}
+		\beta = \left( ax - \frac{-b + \sqrt{\Delta}}{2}\right)
+	\end{equation*}
+	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(x,y) = 1$ d'après ce qui précède.
+\end{proof}
+
+Dans le contexte de notre problème, on sait que l'idéal est principal par construction, et on connaît la forme quadratique $f$ associée. On cherche $(x,y)\in\Z^2$ solution de $f(x,y) = 1$. La notion de forme réduite va nous permettre de conclure 
+
+\begin{Prop}\cite{Cox}[Thm 2.8, 2.9]
+	
+	Soit $r = ax^2 + bxy + cy^2$ une forme quadratique binaire primitive. Si $r$ est réduite, alors tout les entiers représentés par $r$ sont positifs et $a$ est le plus petit entier représenté par $r$, avec $r(1,0) = a$.
+\end{Prop}
+
+Ainsi lorsque $f$ est une forme quadratique binaire primitive qui représente $1$, sa forme réduite $r$ est de la forme $x^2 \pm xy + cy^2$. 
+
+\begin{Rem}
+	Chaque étape de l'algorithme 2 correspond à un changement de variable en $(x,y)$ a appliquer à la forme quadratique \cite{Cox}[Thm 2.8]. En effet
+	\begin{enumerate}
+		\item $(x,y)\mapsto (x - 2qy, y)$ correspond aux lignes $5$ et $6$.
+		\item $(x,y)\mapsto (x + y, y)$ correspond aux lignes $17$ et $18$ dans le cas $a = -b$.
+		\item $(x,y)\mapsto(-y,-x)$ correspond aux lignes $10$ et $11$, ainsi qu'aux lignes $17$ et $18$ dans le cas $a = c$. 
+	\end{enumerate}
+\end{Rem}
+
+On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal principal.
+
+\begin{algorithm}
+	\caption{Générateur d'un idéal principal donné sous forme standard}
+	\begin{algorithmic}[1]
+		\Require $(1,a,b)$ un idéal primitif d'un ordre $\OR_{\Delta}$ dont on sait qu'il est principal.
+		\Ensure Un élément $\beta$ tel que $(1,a,b) = \beta\OR_{\Delta}$. 
+		\State $f\gets ax^2 + bxy + cy^2$
+		\State $r\gets$ résultat de l'algorithme 2 appliqué à $f$
+		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$
+		\State $(x,y)\gets(1,0)$
+		\State $(x,y)\gets(x',y')$ obtenus en appliquant tout les changements de variables retenus dans $L$ dans le sens inverse.
+		\State \Return $(x,y)$
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{Prop}
+	L'algorithme 8 appliqué à un idéal $\LR$ admet une complexité en $O(\log(N(\LR)^2))$.
+\end{Prop}
+
+\begin{proof}
+	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $8$. 
+\end{proof}
+
+\begin{Rem}
+	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Cependant aucune preuve de complexité n'est donné, ni aucune description exact de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. Comme la complexité déclarée est en $O(\log(N(\LR)))$, on estime que l'algorithme $5$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation sage utilise aussi l'algorithme $5$. 
+\end{Rem}
+
+
+
+
+
+
+
+
+
+\subsection{Application au calcul d'isogénie}
+
+On se donne un modèle $E$ de courbe elliptique à multiplication complexe définie sur $\F_{q}$, et $\LR$ un idéal de norme $l$ vérifiant toutes les conditions voulues.
+
+\begin{center}
+	\textbf{On rappelle que $l$ est supposé décomposé dans $End(E)$, ne divise pas $pf_{m}|E(\F_{q^{n}})|$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux}
+\end{center}
+
+On est capables de factoriser la classe $\CL$ en un produit de classes représentées par des idéaux $\PR_{1}, \ldots,\PR_{N}$ de petites normes vérifiant toutes les mêmes conditions que $l$. On peut donc calculer des isogénies dont les noyaux sont des groupes de $\PR_{i}$-torsion, et ainsi reproduire l'action de $\CL$ sur $E$ en suivant sa factorisation. 
+
+\begin{Def}
+	Soit $\phi : E \rightarrow E/E[\LR]$. Soit $\CL = \CP_{1}^{e_{1}} \ldots\CP_{N}^{e_{N}}$ une factorisation de $\CL$. Les composantes de $\phi$ associée à cette factorisation sont isogénies obtenues par la suite
+	\begin{equation*}
+		E\rightarrow E/E\left[ \PR_{1}\right] \rightarrow E/E\left[ \PR_{1}^{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\right] \rightarrow
+	\end{equation*}
+	\begin{equation*}
+		\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\right] \rightarrow\ldots\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]
+	\end{equation*}
+	Les composantes explicites sont les uniques formes explicites normalisées des composantes de sorte que la première parte du modèle $E$. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec le calcul de la dernière composante. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes
+\end{Def}
+
+$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi : E \rightarrow E/E[\LR]$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ sauf exception. On a cependant la relation
+\begin{equation*}
+	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}}
+\end{equation*}
+où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer $\alpha = \beta/m$ avec $\beta = \frac{u + v\pi_{q}}{f_{m}}\in\OR_{\Delta}$. On a choisi les $p_{i}$ premier avec $|E(\F_{q^{n}})|$, donc $m$ est aussi premier avec ce cardinal. \textbf{On a de plus supposé que $f_{m}$ est premier avec $|E(\F_{q^{n}})|$}, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. L'endomorphisme $k(u + v\pi_{q})$ est donc bien défini. 
+
+\begin{Prop}
+	Avec les notations précédentes, 
+	\begin{equation*}
+		\forall\; P\in E[|E(\F_{q^{n}})|]\;,\;\phi(P) = (k(u + v\pi_{q}))\circ\phi_c(P)
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	Soit $\tilde{E}$, $\tilde{E_c}$, $\tilde{E'} = \widetilde{E/E\left[\LR\right] }$ trois courbe elliptique définie sur $\Qb$, obtenue par le théorème de relèvement de Deuring appliquée via l'endomorphisme de Froebenius, et via le même idéal de réduction $\PR$ au dessus de la caractéristique $p$. Soit $\Lambda$ un réseau de $\C$ tel que $E_{Lambda} = \tilde{E}$. Alors la factorisation de $\LR$ implique que
+	\begin{equation*}
+		\tilde{E'}\simeq\C/\LR^{-1}\Lambda = \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \simeq \tilde{E'}
+	\end{equation*}
+	De plus,
+	\begin{equation*}
+		\tilde{E_c} \simeq \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda
+	\end{equation*}
+	Par définition, $\phi_{\LR}$ et $\phi_c$ correspondent au niveau des tores au morphisme identité (voir section 3.4). L'action de $\alpha$ correspond donc à l'identité. On pose
+	\begin{equation*}
+		\phi_{\alpha} : \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \rightarrow \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda, z \mapsto z
+	\end{equation*}
+	Puisque $\alpha = \beta/m$, 
+	\begin{equation*}
+		\phi_{\alpha} = [\beta]\circ\phi_{m^{-1}} = [u + v\pi_{q}]\circ\phi_{(mf_{m}^{-1})}
+	\end{equation*}
+	Il reste à montrer que la réduction de l'isogénie associée au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. $k$ est bien défini car $mf_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux. En particulier la restriction de $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
+\end{proof}
+
+On se résume ce qui précède en énonçant l'algorithme 9 :
+
+\begin{algorithm}
+	\caption{Algorithme de Borker Charle Lauter}
+	\begin{algorithmic}[1]
+		\Require Un modèle $E$ défini sur $\F_{q}$ de courbe elliptique à multiplication complexe, le discriminant $\Delta$ de son anneaux d'endomorphisme, un entier positif $n$ tel que $|E(\F_{q^{n}})|$ et $f_{m}$ soient premier entre eux, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ tel que $\left( \frac{\Delta}{l}\right) = 1$, un entier positif $N$, et un point $P\in\F_{q^{n}}$
+		\Ensure Un modèle $E'$ d'une courbe elliptique issus d'une forme explicite normalisée d'une $l$-isogénie $\phi : E \rightarrow E'$ partant de $E$. L'image $phi(P)$ du point $P$.
+		\State $\LR\gets$ idéal de Seysen de $l$
+		\State $L_{exposants}$, $L_{facteurs}\gets$ résultats des algorithmes 3 et 4 avec un choix de borne $N$
+		\State $L_{composantes}\gets$\O
+		\State $E_{depard}\gets E$
+		\State $\LR_{principal}\gets\LR$
+		\State $Q\gets P$
+		\For {$e_{i}$, $\PR_{i}$ parcourant $L_{exposants}$, $L_{facteurs}$}
+		\State$\LR_{principal}\gets\LR_{principal}\times\bar{\PR_{i}}^{ei}$
+		\For {$j\in\left[ 1\ldots e_{i}\right]$ }
+		\State Calculer une forme explicite de l'isogénie $\phi_c : E_{depard} \rightarrow E_{depard}/ E_{depard}[\PR_{i}]$ 
+		\State $E_c\gets$ le modèle de $E_{depard}/ E_{depard}[\PR_{i}]$ calculé.
+		\State Mettre $\phi_c$ dans $L_{composantes}$
+		\State $Q\gets phi_c(Q)$
+		\State $E_{depard}\gets E_c$
+		\EndFor
+		\EndFor
+		\State $\beta\gets$ générateur de l'idéal principal $\LR_{principal}$ via l'algorithme 5
+		\State Calculer $u$, $v$ tels que $\beta = \frac{u + v\pi_{q}}{f_{m}}$
+		\State $m\gets p_{1}^{e_{1}}\ldots p_{g}^{e_{g}}$, où $\PR_{i}$ est de norme $p_{i}$ 
+		\State $c\gets\frac{u}{mf_{m}}$ 
+		\State Poser $a$, $b$ tels que $E_c : y^2 = x^3 + ax + b$
+		\State Poser $E' : y^2 = x^3 + c^4ax + c^6b$
+		\State $k\gets (mf_m)^{-1}$ modulo $|E(\F_{q^{n}}|)$
+		\State $Q\gets (k(u + v\pi_{q}))(Q)$
+		\State \Return E', Q
+		
+	\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\subsection{Complexité obtenue}
+
+L'article \cite{BrokerCharlesLauter} annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$. Cependant ils font une analyse au pire cas de l'algorithme $4$. L'article \cite{JaoSoukharev} décrit une amélioration sous-exponentielle en $|\Delta|$ en menant une étude par analyse-synthèse de l'algorithme $9$. On regroupe les résultats énoncé précédemment pour énoncer la complexité suivante :
+
+\begin{Prop}
+	L'algorithme $9$ admet une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et 
+\end{Prop}
+
+\begin{proof}
+	contenu...
+\end{proof}
+	
+	
