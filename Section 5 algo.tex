@@ -75,6 +75,11 @@ Pour mener des calculs dans un groupe de classe $Cl\left(\OR_{\Delta} \right)$, 
 
 Un outil va nous permettre de résoudre les deux problèmes en même temps : les formes quadratiques à coefficient entier. 
 
+
+
+\textbf{Déplacer la partie théorique des formes quadratiques}
+
+
 \subsubsection{Forme standard des idéaux et formes quadratiques binaires}
 
 On va étudier une correspondance entre d'une part les idéaux d'un ordre d'un corps quadratique imaginaire $\OR_{\Delta}$, et d'autre part des formes quadratiques définies positives de discriminant $\Delta$. On commence par définir les formes quadratiques qui nous intéressent :
@@ -183,7 +188,17 @@ La bijection précédente entre les idéaux entiers primitif et les formes quadr
 	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$ Et ces opérations induisent des isomorphismes entre groupes de classes.
 \end{Prop}
 
+
+
+
+\textbf{Fin partie théorique à déplacer}
+
+
+
+
 On défini une notion de forme quadratique binaire réduite, qui aura l'avantage d'être unique dans chaque classe :
+
+\textbf{Expliquer rapidement l'action des matrices, utile plus tard aussi}
 
 \begin{Def}
 	Soit $f = (a,b)$ une forme quadratique binaire primitive sous forme standard de discriminant $\Delta < 0$. Soit $c = (\Delta - b^2)/4a$. $f$ est une forme quadratique réduite si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$. Un idéal entier primitif $\LR$ de $\OR_{\Delta}$ est dit réduit si $F(\LR)$ est une forme quadratique réduite
@@ -232,23 +247,20 @@ La preuve citée de la proposition 5.7 fournit un algorithme donnant l'élément
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{Prop}
-	L'algorithme 2 admet une complexité en $O(\log(a)^2)$
-\end{Prop}
 
-\begin{proof}\cite{Coh00}[5.4.3]
-	
-	La ligne $4$ correspond à une division euclidienne de $2a$ par $b$, qui se fait en $O(log(2a))$. La complexité de chaque passage dans la boucle de la ligne $2$ est essentiellement dominée par l'étape de la ligne $4$. Enfin le nombre de passage dans la boucle While est en $0(log(a))$.\cite{Coh00}[5.4.3] 
-\end{proof}
 
 \begin{Rem}
-	On peut donc rapidement vérifier que deux idéaux entiers sont dans la même classe : il suffit de réduire leurs formes quadratiques binaires primitives associées et vérifier que l'on trouve le même résultat. 
+	On peut donc vérifier que deux idéaux entiers sont dans la même classe : il suffit de réduire leurs formes quadratiques binaires primitives associées et vérifier que l'on trouve le même résultat. 
 \end{Rem}
+
+
+
+
 
 
 \subsubsection{Représentant de classe premier avec le conducteur}
 
-La forme réduite sera adapté pour faire des calculs dans le groupe de classe. Pour le calcul d'isogénie, on voudra cependant trouver un système de représentant de normes bien choisies. A priori l'idéal associé à la forme réduite ne convient pas. Cependant il existe un système de représentant adapté au calcul d'isogénie.
+La forme réduite sera adapté pour faire des calculs dans le groupe de classe. Pour le calcul d'isogénie, on voudra cependant trouver un système de représentant de normes bien choisies. A priori l'idéal associé à la forme réduite ne convient pas. 
 
 \begin{Def}
 	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
@@ -256,27 +268,27 @@ La forme réduite sera adapté pour faire des calculs dans le groupe de classe. 
 
 \begin{Prop}\cite{Cox}[Th 7.7]
 	
-	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe $\LR\in \widetilde{I(f)}$ tel que $N(\LR) = m$
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe un idéal $\LR\in \widetilde{I(f)}$ tel que $N(\LR) = m$
 \end{Prop}
 
 \begin{Rem}
-	La preuve de cette proposition fournit une méthode pour trouver l'idéal $\LR$ de norme $m$ à partir de deux entiers $s$, $t$ tel que $f(s,t) = 1$ \cite{Cox}[Lem 2.3]. Cependant si $m$ est premier, on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par sa décomposition d'après le théorème de Kummer. Ceci permet de trouver l'idéal $\LR$ sans expliciter les entiers $s$ et $t$.
+	La preuve de cette proposition fournit une méthode pour trouver l'idéal $\LR$ de norme $m$ à partir de deux entiers $s$, $t$ tel que $f(s,t) = 1$ \cite{Cox}[Lem 2.3]. Cependant si $m$ est premier, on connaît les idéaux de normes $m$ lorsque $m$ est décomposé ou ramifié: Un idéal de norme $m$ contient $m\OR_{\Delta}$ et est donc donné par le théorème de Kummer. Ceci permet de trouver l'idéal $\LR$ sans expliciter les entiers $s$ et $t$.
 \end{Rem}
 
 \begin{Prop}\cite{Cox}[Cor 7.17]
 	
-	Soit $M\in\N$ en entier. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$. Ainsi toutes classes d'idéaux d'un ordre quadratique imaginaire possède un idéal entier premier avec $M$. 
+	Soit $M\in\N$ en entier. Toutes formes quadratiques binaires primitives représente au moins un entier premier avec $M$. Ainsi toutes classes d'idéaux d'un ordre quadratique imaginaire possède un représentant premier avec $M$. 
+	
 \end{Prop}
 
-
-Ainsi, toute classe d'idéaux possède un représentant premier avec $M = p*f_{m}*|E(\F_{q^{n}})|$. Comme il y a deux choix d'idéaux de norme $p$ premier lorsque $p$ est décomposé, on va fixer une convention nous permettant de choisir. Cette convention sera aussi utile pour les calculs dans le groupe de classe.
+Ainsi, toute classe d'idéaux possède un représentant premier avec $M = pf_{m}|E(\F_{q^{n}})|$. Comme il y a deux choix d'idéaux de norme $p$ premier lorsque $p$ est décomposé, on va fixer une convention nous permettant de choisir. 
 
 \begin{Def}
-	Soit $p$ premier décomposé dans $\OR_{\Delta}$. La forme quadratique de Seysen de discriminant $\Delta$ associée à $p$ est $(p,b_{p})$ où $b_{p}\in\N$ est le plus petit entier positif tel que $b_{p}^2 = \Delta [4p]$. L'idéal de Seysen associé à $p$ est alors $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. On fixe un algorithme prenant entrée $p$ et $\OR_{\Delta}$ qui calcule une racine de $\OR_{\Delta}$ modulo $4p$. La forme quadratique première de discriminant $\Delta$ associée à $p$ est $(p,b_{p})$ où $b_{p}\in\N$ vérifie $b_{p}^2 = \Delta [4p]$ et est obtenue par l’algorithme choisit. L'idéal premier associé à $p$ est alors $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
 \end{Def}
 
 \begin{Rem}
-	L'idéal de Seysen est donc l'un des deux idéaux qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b_{p}))$ est le second, et représente la classe de $(\PR_{p})^{-1}$ d'après la proposition 5.5.
+	L'idéal premier associé à $p$ est donc l'un des deux idéaux premier qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b_{p}))$ est le second, et représente la classe de $(\PR_{p})^{-1}$ d'après la proposition 5.5. 
 \end{Rem}
 
 
@@ -295,13 +307,13 @@ Ainsi, toute classe d'idéaux possède un représentant premier avec $M = p*f_{m
 
 
 
-On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux de Seysen de norme $p$ adaptée au calcul d'isogénie, c'est à dire $p$ premier avec $p*f_{m}*|E(\F_{q^{n}})|$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables plus petit qu'une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes parmi les idéaux de Seysen associés pour obtenir une famille génératrice.
+On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux de norme $p$ adaptée au calcul d'isogénie, c'est à dire $p$ premier avec $pf_{m}|E(\F_{q^{n}})|$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables plus petit qu'une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes parmi les idéaux premier associés pour obtenir une famille génératrice.
 
 \begin{Def}
-	On note $P_{N} = \left\lbrace \PR_{p} : p \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des $N$ premiers idéaux de Seysen. 
+	Soit $N\in\N$. On note $P_{N} = \left\lbrace \PR_{p} : p \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des idéaux premiers associés aux nombres premiers plus petits que $N$. 
 \end{Def}
 
-La proposition suivante est un des arguments clef permettant d'obtenir un algorithme sous exponentielle en $|\Delta|$ : 
+La proposition suivante permet de choisir la borne $N$.
 
 \begin{Prop}\cite{Seysen}[Th 3.3]
 	
@@ -313,33 +325,29 @@ La proposition suivante est un des arguments clef permettant d'obtenir un algori
 \end{Prop}
 
 \begin{Rem}
-	Comme les nombres premiers à éviter sont en nombre fini, les conditions que l'on s'impose ne change pas le comportement asymptotique de la borne $N$.
+	Pour estimer la constante $C$, \cite{Seysen} cite deux résultats proposant $C= 280$ ou même $C = 2$. \cite{Coh00} propose $C = 6$. Cependant d'après \cite{Coh00}, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
+\end{Rem}
+
+\begin{Rem}
+	Comme les nombres premiers divisant $pf_{m}|E(\F_{q^{n}})|$ sont en nombre fini, les exclure de $P_{N}$ ne change pas le comportement asymptotique de la borne $N$. Prenant en compte ceci et la remarque précédente, on suppose donc que $P_{N}$ reste une famille génératrice si l'on ignore les diviseurs de $pf_{m}|E(\F_{q^{n}})|$. 
 \end{Rem} 
 
-\begin{Rem}
-	Pour estimer la borne, \cite{Seysen} cite deux résultats proposant $C= 280$ ou même $C = 2$. \cite{Coh00} propose $C = 6$. Cependant d'après \cite{Coh00}, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
-\end{Rem}
-
-\begin{Rem}
-	\cite{Coh00} ainsi que \cite{JaoSoukharev} propose en plus une borne pour $N$ sous exponentielle en $|\Delta|$  qui n'admet pas l’hypothèse de Riemann généralisée. Elle dépend de l'implémentation et vise à optimiser la complexité de la factorisation d'un idéal. Nous reviendront donc sur l'ordre de grandeur de $N$ par la suite.
-\end{Rem}
-
-Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la procédure naïve, détaillée dans l'algorithme 3. 
+Comme on peut choisir $N$ de taille asymptotiquement raisonnable, on peut appliquer la procédure naïve, détaillée dans l'algorithme 3. 
 
 
 \begin{algorithm}
-	\caption{Famille génératrice du groupe de classe par des idéaux de Seysen}
+	\caption{Famille génératrice du groupe de classe}
 	\begin{algorithmic}[1]
 		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$.
 		\Ensure Une liste $L_{premiers}$ de nombres premiers plus petit que $N$ ne divisant pas $pf_{m}|E(\F_{q^{n}})|$, la liste $L_{ideaux}$ de leurs idéaux de Seysen respectif, la liste $L_{formes}$ de leurs formes de Seysen respectives. 
 		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets$ \O
 		\State $n \gets 2$
 		\While{$n < N$}
-		\If{$\left( \frac{\Delta}{n}\right) = 1$ ET $n$ ne divise pas $pf_{m}$}
+		\If{$\left( \frac{\Delta}{n}\right) = 1$ ET $n$ ne divise pas $pf_{m}|E(\F_{q^{n}})|$}
 		\State Mettre $n$ dans $L_{premiers}$
-		\State Calculer $q_{n} = (n ,b_{n})$ la forme de Seysen de $n$
+		\State Calculer $q_{n} = (n ,b_{n})$ la forme quadratique première associée à $n$ de discriminant $\Delta$.
 		\State Mettre $q_{n}$ dans $L_{formes}$
-		\State Calculer $I_{n}$ l'idéal de Seysen de $n$
+		\State Calculer $I_{n}$ l'idéal premier associé à $n$. 
 		\State Mettre $I_{n}$ dans $L_{ideaux}$
 		\EndIf
 		\State $n \gets nextprime(n)$
@@ -352,32 +360,33 @@ Comme on peut choisir $N$ de taille raisonnable, on peut donc appliquer la proc�
 
 
 
+
+
+
+
 \subsubsection{Écriture d'une classe dans une famille génératrice}
 
 
-Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Alors 
+Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Soit $L_{premiers}$, $L_{ideaux}$ et $L_{formes}$ les listes retournées par l'algorithme $3$. On note $k$ leurs tailles. Alors il existe $e_{1},\ldots,e_{k}\in\Z$ tels que
 \begin{equation*}
-	\CL = \CL_{1}^{e_{1}}\CL_{2}^{e_{2}}\ldots\CL_{g}^{e_{g}}
+	\CL = \CL_{1}^{e_{1}}\CL_{2}^{e_{2}}\ldots\CL_{k}^{e_{k}}
 \end{equation*}
-
-avec $g = |Cl(\OR_{\Delta})|$ et $\CL_{1}\ldots\CL_{g}$ les différentes classes d'idéaux donné dans par une famille quelconque de représentant. Alors il existe $\alpha\in\K$ tel que
-
+avec $\LR_{1}\ldots\LR_{k}\in L_{premiers}$. De plus il existe $\alpha\in\K$ tel que
 \begin{equation*}
 	\LR = (\alpha\OR_{\Delta})\LR_{1}^{e_{1}}\LR_{2}^{e_{2}}\ldots\LR_{g}^{e_{g}}
 \end{equation*}
-
-Dans cette section on ne cherche pas à expliciter $\alpha$ mais seulement une liste d'exposant $e_{i}$ fournissant une factorisation de $\CL$ lorsque les représentants $\LR_{i}$ sont choisit parmi la liste d'idéaux renvoyée par l'algorithme 3. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
+Dans cette section on ne cherche pas à expliciter $\alpha$ mais seulement des exposants $e_{i}$. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
 
 \begin{enumerate}
-	\item Certaines classes représentées par des formes réduites ayant de bonnes propriétés vont être explicitement et rapidement factorisable grâce à la convention de Seysen.
-	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités d'arriver en un temps sous-exponentiel à une classe facilement factorisable.
+	\item Certaines classes représentées par des formes réduites ayant de bonnes propriétés vont être explicitement et rapidement factorisable.
+	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités de terminer en un temps sous-exponentiel sur une classe facilement factorisable.
 \end{enumerate}
 
-D'abord on cite le théorème de Seysen sur la factorisation d'idéaux:
+D'abord on cite le théorème sur la factorisation de classes:
 
 \begin{The}\cite{Seysen}[Th 3.1]
 	
-	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ ait une forme réduite $(a,b)$. Si $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en nombres premiers de l'entier $a$, alors
+	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ ait une forme réduite $(a,b)$. Si $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en facteurs premiers de l'entier $a$, alors
 	\begin{enumerate}
 		\item $p_{i}$ est décomposé dans $\OR_{\Delta}$.
 		\item Si $\PR_{p_{i}} = (1,p_{i},b_{p_{i}})$ est l'idéal de Seysen de $p_{i}$, alors $b = \pm b_{p_{i}} $ mod $2a$.
@@ -389,10 +398,6 @@ D'abord on cite le théorème de Seysen sur la factorisation d'idéaux:
 \begin{Coro}
 	Avec les notations du théorème précédent, si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{premiers}$ obtenue par l'algorithme 3, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$. 
 \end{Coro}
-
-\begin{Rem}
-	Pour une forme quadratique réduite $(a,b)$, on sait que $a < |\Delta|$. Factoriser $a$ est donc au pire des cas sous-exponentielle en $\log(a) \leq \log(|\Delta|)$. De plus il suffit de vérifier que $a$ se factorise complètement parmi une famille de petit nombres premiers renvoyés par l'algorithme 3. Donc on peut éviter de factoriser complètement $a$.
-\end{Rem}
 
 On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. Sans rappeler la théorie des graphes expanseurs, on cite les résultats principaux.
 
@@ -414,10 +419,10 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 	Alors pour toute partie $S_{0}\subset G$, la marche aléatoire termine dans $S_{0}$ avec probabilité au moins $\frac{|S_{0}|}{2|G|}$. 
 \end{Prop}
 
-Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$
+Concrètement, dès que l'on enchaîne des marches aléatoires de taille de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$.
 
 \begin{Rem}
-	Puisque le groupe est abélien, le nombre d'étape $t$ correspond à la somme des valeurs absolue des exposants, c'est à dire la norme $l1$ du vecteurs des exposants, que l'on notera $x$
+	Puisque le groupe est abélien, la norme $l1$ du vecteurs des exposants, que l'on notera $x$, est au pire le nombre de pas $t$ de la marche aléatoire. 
 \end{Rem}
 
 \begin{Coro}
@@ -433,19 +438,24 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 \begin{algorithm}
 	\caption{Factorisation de la classe d'un idéal dans une famille génératrice donnée}
 	\begin{algorithmic}[1]
-		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un idéal $\LR\subset\OR_{\Delta}$. 
+		\Require Un entier positif $N$, une borne de pas de marche aléatoire $t$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un idéal $\LR\subset\OR_{\Delta}$. 
 		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ décrivant une factorisation de $\CL$.
 		\State $L_{ideaux}$, $L_{formes}$, $L_{premiers}\gets$ résultat de l'algorithme 3 appliqué à $N$, $\Delta$, $p$, $f_{m}$, $|E(\F_{q^{n}})|$. 
+		\State $classe_{test}\gets$ forme réduite de $\LR$
 		\State $k\gets$ taille de $L_{ideaux}$
 		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
-		\For{$0<i<C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right) $}
+		
+		\While{$classe_{test}$ ne se factorise pas avec le théorème 5.12}
+		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
+		\For{$0<i<t $}
 		\State $Indice\gets$ indice aléatoire de $L_{x}$.
 		\State $Increment\gets\pm1$
 		\State $L_{x}\left[ Indice\right] \gets L_{x}\left[ Indice\right] + Increment$
 		\EndFor
-		\State $ideal_{test}\gets\LR*\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{k}^{x_{k}}$
+		\State $ideal_{test}\gets\LR\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{k}^{x_{k}}$
 		\State $classe_{test}\gets$ forme réduite de $ideal_{test}$
-		\If{$classe_{test}$ se factorise par le théorème 5.12}
+		\EndWhile
+		
 		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème 5.12.
 		\State $L_{exposants}\gets L_{y} - L_{x}$
 		\State $L_{facteurs}\gets L_{ideaux}$
@@ -455,65 +465,26 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille l'ordre
 		\State $\left( L_{facteurs}\right) _{i} \gets $ idéal conjugué de $\left( L_{facteurs}\right) _{i}$
 		\EndIf
 		\EndFor
-		\Else
-		\State Reprendre à l'étape 3
-		\EndIf
+		
 		\State \Return $L_{exposants}$, $L_{facteurs}$
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{Rem}
-	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
-\end{Rem}
-
-\begin{Prop}
-	Soit $t = C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ le nombre d'indice dans les listes retournées par l'algorithme $3$. Si $N = 2log(|\Delta|)^2$ et $t\leq k$, alors l'algorithme $4$ a une complexité moyenne en 
-\end{Prop}
-
-\begin{proof}
-	D'après le théorème des nombres premiers, $k = O(N/log(N))$. En particulier $t/k = O(1)$ et de l'ordre d'une constante $C_{0}$. Si $t\leq k$, $C_{0} \leq 1$. Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois, donc moins d'une fois. On peut donc estimer en moyenne qu'à l'étape $6$ la liste $L_{x}$ ne contient que des $0$ et des $1$, et au plus $t$ $1$. $ideal_{test}$ est donc de norme $\leq lp_{k-t}\ldots p_{k} \leq lp_{k}^{t}$. Calculer sa forme réduite $classe_{test}$ se fait en $O(log(lp_{k}^{t})) = O(log(l) + tlog(N))$. Vérifié si $classe_{test}$ se factorise demande $O(k)$ test de divisibilité et division euclidienne, chacune sur un coefficient $a$ d'une forme quadratique réduite : $a < \Delta$. Au total les étapes $11$ et $12$ demandent $O(klog(|\Delta|))$ opérations dans $\Z$. Les étapes $13$ à $20$ sont élémentaires. Il reste à savoir combien d'essais pour $L_{x}$ doit être fait en moyenne avant de réussir le test de l'étape $11$. \textbf{Heuristique nombre friable ?}
-\end{proof}
-
-\cite{JaoSoukharev} propose une complexité différente : On peut chercher à l'optimiser par rapport à l'implémentation de l'algorithme final au complet.
-
-\begin{Def}
-	On défini la complexité sous exponentielle en $\Delta$ par la fonction
-	\begin{equation*}
-		L(x) = e^{\sqrt{\log(x)\log(\log(x))}}
-	\end{equation*}
-	On dira qu'une procédure est sous-exponentielle en $\Delta$ s'il existe une constante $z$ telle que la complexité soit en $O(L(|\Delta|))^{z}$
-\end{Def}
-
-Si $N$ est trop petit, la partie $S_{0}$ est plus petite et la probabilité de l'atteindre avec une marche aléatoire est plus faible. Mais si $N$ est trop grand, il est plus difficile de vérifier si $a$ se factorise entièrement sur $L_{p_{i}}$. 
-
-\begin{Prop}\cite{Coh00}[5.5.1]
-	
-	Il existe une constante $z$ tel que choisir $N$ de l'ordre de $O(L(|\Delta|))^{z}$ optimise la complexité de l'algorithme 4
-	
-\end{Prop}
-
-La constante $z$ dépend de l'implémentation. \Cite{Coh00} la calcul pour un algorithme visant à expliciter la structure complète du groupe de classe : on a pas besoin de cette structure, mais seulement d'une relation factorisant $\LR$. \cite{JaoSoukharev} trouve une constante pour la procédure qui nous intéresse, mais majore différemment les exposants : au lieu de majorer la norme $l_{1}$, il impose une borne à chaque exposant et une borne sur le nombre d'exposant non nul. 
-
-\begin{Rem}
-	Même si la borne théorique admettant l'hypothèse de Riemann généralisé est asymptotiquement meilleure, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite\cite{Coh00}[5.5.1]. 
-\end{Rem}
+ 
 
 
 
-
-La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
-Sur l'exemple medium, il semble que l'on tombe très souvent sur un idéal principal directement. Normal ? 
 
 
 \subsection{Algorithme SquareVélu}
 
-Étant donné un modèle de courbe elliptique $E$, les formules de Vélus permettent de construire une forme explicite d'une isogénie $\phi$ à partir de la connaissance de son noyau. Pour une $l$-isogénie, le noyau peut être donné sous deux formes : un point $K$ générateur du noyau, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. Dans le second cas, il faut adapter les formules pour les écrire en fonction de $F$.
+Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu permettent de construire une forme explicite d'une isogénie $\phi$ à partir de la connaissance de son noyau. Pour une $l$-isogénie, le noyau peut être donné sous deux formes : un point $K\in E(\F_{q^{r}})$ générateur du noyau, avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. Dans le second cas, il faut adapter les formules pour les écrire en fonction de $F$.
 
 \begin{Def}
 	Soit $E$ un modèle de courbe elliptique et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. On sépare $Ker(\phi)$ en une partition $\left\lbrace \OR \right\rbrace \cup R\cup R'$ où $R$ regroupe $(l-1)/2$ points finis distincts, et $R'$ leurs inverses. Un polynôme $F$ décrit le noyau de $\phi$ sur $E$ si c'est un polynôme unitaire de degré $(l-1)/2$ dont les racines sont les abscisses des points finis de $R$. Un tel polynôme est unique. 
 \end{Def}
 
-Dans les deux cas, \cite{Velusqrt} propose une méthode pour évaluer des polynômes de degré $l$ dans $\F_{q}[X]$ en $O(\sqrt{l})$ opération dans $\F_{q}$. Les résultats suivants en découle.
+Dans les deux cas, \cite{Velusqrt} propose une méthode pour évaluer des polynômes de degré $l$ dans $\F_{q}[X]$ en $O(\sqrt{l})$ opérations dans $\F_{q}$. Les résultats suivants en découle.
 
 \begin{Prop}
 	Soit $E$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. Soit $K$ un générateur de $Ker(\phi)$, et $P\in E(\F_{q})$. Il est possible de calculer un modèle de $E'$ et $\phi(P)\in E'$ en $O(\sqrt{l})$ opérations dans $\F_{q}$, en utilisant l'algorithme de \cite{Velusqrt} que l'on appelera SquareVélu.
@@ -544,7 +515,13 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 
 
 
+
+
+
 \subsection{Générateur d'un groupe de torsion}
+
+
+
 
 
 \subsubsection{Méthode générale}
@@ -598,11 +575,17 @@ Cette algorithme peut être implémenté sur sage, mais pose plusieurs problème
 
 En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ mais le calcul prend déjà une dizaine de secondes.
 
+
+
+
+
+
+
 \subsubsection{Optimisation de la recherche d'extension de corps}
 
-On propose une amélioration de la première méthode : le but est de trouver directement la plus petite extension qui contient la $\LR$-torsion, sans calculer de polynôme de division.\\
+On propose une amélioration de la première méthode : le but est de trouver directement la plus petite extension qui contient la $\LR$-torsion.\\
 
-On remarque d'abord que, partant de la forme standard de l'idéal $\LR$, on peut toujours se ramener à $d = 1$ (il suffit d'expliciter les calculs). Si $P$ est un générateur du groupe de torsion, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On se ramène donc à une étude $\pi_{q}$ restreint à $E[l]$.
+On remarque d'abord que, partant de la forme standard de l'idéal $\LR$, on peut toujours se ramener à $d = 1$ (il suffit d'expliciter les calculs)\textbf{Si l'on retire la section 4 il faut détailler un peu ici}. Si $P$ est un générateur du groupe de torsion, alors $\pi_{q}(P) = -cP$ : $P$ est un vecteur propre de $\pi_{q}$ restreint à $E[l]$. On se ramène donc à une étude $\pi_{q}$ restreint à $E[l]$.
 
 \begin{Prop}\cite{MMSTV}[Prop 1]
 	
@@ -698,7 +681,7 @@ Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008
 	Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS admet une complexité en $O\left( M(l)log(l)\right)$
 \end{Prop}
 
-Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, on ne peut pas connaître à l'avance le bon choix de $j$-invariant. il faut donc un moyen de tester si le premier choix a été bon, et sinon recommencer avec la seconde racine. On veut toujours éviter de calculer dans une extension de $\F_{q}$
+Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, on ne peut pas connaître à l'avance le bon choix de $j$-invariant. il faut donc un moyen de tester si le premier choix était bon, et sinon recommencer avec la seconde racine. On veut toujours éviter de calculer dans une extension de $\F_{q}$
 
 \begin{Prop}
 	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$. Soit $\LR = \left[ l, \frac{c + \pi_{q}}{f_{m}}\right]$ un idéal de $\OR_{\Delta}$ de norme $l$ premier. Soit $F$ un polynôme sur $\F_{q}$.  On pose 
@@ -711,16 +694,12 @@ Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans 
 	\end{equation*}
 \end{Prop}
 
-\begin{Rem}
-	Dans la proposition précédente, $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $l$ est supposé petit, et $[-c]$ est défini modulo $l$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq l$.
-\end{Rem}
-
 On en déduit l'algorithme $7$.
 
 \begin{algorithm}
 	\caption{Méthode d'Elkies}
 	\begin{algorithmic}[1]
-		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
+		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier ne divisant pas $pf_{m}|E(\F_{q^{n}})|$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$, le polynôme modulaire $\Psi_{l}$.
 		\Ensure Un polynôme $F\in\F_{q}\left[ X\right]$ dont les racines sont les abscisses des points finis de $E[\LR]$, sans redondance. 
 		\State $P_{invariants}(Y)\gets PGCD(\Psi_{l}(j,Y),Y^q - Y)$ ($P_{invariants}$ est de degré 2)
 		\State $h_{1}, h_{2}\gets$ racines de $P_{invariants}$
@@ -736,13 +715,8 @@ On en déduit l'algorithme $7$.
 	\end{algorithmic}
 \end{algorithm}
 
-\begin{Prop}
-	L'algorithme $7$ admet une complexité en $O(log(ql)M(l))$
-\end{Prop}
 
-\begin{proof}
-	\textbf{Complexité de la vérification de 5.24 ?}
-\end{proof}
+
 
 
 
@@ -836,10 +810,10 @@ Ainsi lorsque $f$ est une forme quadratique binaire primitive qui représente $1
 	\end{enumerate}
 \end{Rem}
 
-On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal principal.
+On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal principal primitif.
 
 \begin{algorithm}
-	\caption{Générateur d'un idéal principal donné sous forme standard}
+	\caption{Générateur d'un idéal principal primitif donné sous forme standard}
 	\begin{algorithmic}[1]
 		\Require $(1,a,b)$ un idéal primitif d'un ordre $\OR_{\Delta}$ dont on sait qu'il est principal.
 		\Ensure Un élément $\beta$ tel que $(1,a,b) = \beta\OR_{\Delta}$. 
@@ -851,18 +825,6 @@ On en déduit un algorithme pour trouver le générateur $\beta$ d'un idéal pri
 		\State \Return $(x,y)$
 	\end{algorithmic}
 \end{algorithm}
-
-\begin{Prop}
-	L'algorithme 8 appliqué à un idéal $\LR$ admet une complexité en $O(\log(N(\LR)^2))$.
-\end{Prop}
-
-\begin{proof}
-	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $8$. 
-\end{proof}
-
-\begin{Rem}
-	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Cependant aucune preuve de complexité n'est donné, ni aucune description exact de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. Comme la complexité déclarée est en $O(\log(N(\LR)))$, on estime que l'algorithme $5$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation sage utilise aussi l'algorithme $5$. 
-\end{Rem}
 
 
 
@@ -926,6 +888,7 @@ où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer
 	Il reste à montrer que la réduction de l'isogénie associée au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. $k$ est bien défini car $mf_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux. En particulier la restriction de $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
 \end{proof}
 
+
 On se résume ce qui précède en énonçant l'algorithme 9 :
 
 \begin{algorithm}
@@ -941,15 +904,16 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 		\State $Q\gets P$
 		\For {$e_{i}$, $\PR_{i}$ parcourant $L_{exposants}$, $L_{facteurs}$}
 		\State$\LR_{principal}\gets\LR_{principal}\times\bar{\PR_{i}}^{ei}$
+		\State$\Psi\gets \Psi_{p_{i}}$ le polynôme modulaire de $p_{i}$ norme de $\PR_{i}$. 
 		\For {$j\in\left[ 1\ldots e_{i}\right]$ }
-		\State Calculer une forme explicite de l'isogénie $\phi_c : E_{depard} \rightarrow E_{depard}/ E_{depard}[\PR_{i}]$ 
-		\State $E_c\gets$ le modèle de $E_{depard}/ E_{depard}[\PR_{i}]$ calculé.
+		\State Calculer $\phi_c : E_{depard} \rightarrow E_{depard}/ E_{depard}[\PR_{i}]$ avec l'algorithme 7.
+		\State $E_c\gets$ le modèle de $E_{depard}/ E_{depard}[\PR_{i}]$ calculé avec l'algorithme 7.
 		\State Mettre $\phi_c$ dans $L_{composantes}$
 		\State $Q\gets phi_c(Q)$
 		\State $E_{depard}\gets E_c$
 		\EndFor
 		\EndFor
-		\State $\beta\gets$ générateur de l'idéal principal $\LR_{principal}$ via l'algorithme 5
+		\State $\beta\gets$ générateur de l'idéal principal $\LR_{principal}$ via l'algorithme 8
 		\State Calculer $u$, $v$ tels que $\beta = \frac{u + v\pi_{q}}{f_{m}}$
 		\State $m\gets p_{1}^{e_{1}}\ldots p_{g}^{e_{g}}$, où $\PR_{i}$ est de norme $p_{i}$ 
 		\State $c\gets\frac{u}{mf_{m}}$ 
@@ -963,9 +927,128 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 \end{algorithm}
 
 \newpage
+
+
+
+
+
+
+
 \subsection{Complexité obtenue}
 
-L'article \cite{BrokerCharlesLauter} annonce une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et $O(|\Delta|)$. Cependant ils font une analyse au pire cas de l'algorithme $4$. L'article \cite{JaoSoukharev} décrit une amélioration sous-exponentielle en $|\Delta|$ en menant une étude par analyse-synthèse de l'algorithme $9$. On regroupe les résultats énoncé précédemment pour énoncer la complexité suivante :
+\begin{Prop}\cite{Coh00}[5.4.3]
+	
+	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'algorithme 2 renvoie une forme de réduite de $(a,b,c)$ en utilisant au plus $2 + \log\left( \frac{a}{\sqrt{|\Delta|}} \right)$ divisions euclidiennes.
+\end{Prop}
+
+\begin{Coro}
+	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. La complexité de l'algorithme 2 est en 
+	\begin{equation*}
+		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right) +\log(b)\right).
+	\end{equation*}
+	
+\end{Coro}
+
+\begin{proof}
+	
+	La complexité de chaque passage dans la boucle de la ligne $2$ est essentiellement dominée par l'étape de la ligne $4$, qui correspond à une division euclidienne de $b$ par $2a$ donc en $O(\log(b))$. Après le premier passage dans la boucle, $|b|<a$ et les futures divisions euclidiennes seront toutes en $O(\log(a))$. Enfin le nombre de passages dans la boucle est donné par la proposition 5.31 \cite{Coh00}[5.4.3], d'où la conclusion. 
+\end{proof}
+
+\begin{Prop}
+	Soit $N$ un entier positif, $\Delta$ un discriminant, et $A = pf_{m}|E(\F_{q^{n}})|$. L'algorithme $3$ renvoie une famille supposée génératrice du groupe de classe de norme premier bornée par $N$ avec une complexité en 
+	\begin{equation*}
+		O(N\log(N)^3).
+	\end{equation*} 
+\end{Prop}
+
+\begin{proof}
+	On parcourt tout les nombres premiers plus petit que $N$. La boucle de la ligne $3$ demande donc d'après le théorème des nombre premier $O(N/\log(N))$ passages. Pour chaque nombre premier $n$ regardé, le calcule intermédiaires les plus coûteux est le calcul d'une racine $b_{n}$ de $\Delta$ modulo $4n$, en $O(\log(n)^4)$ avec l'algorithme de Tonelli et Shanks \cite{Coh00}[1.5.1] (on peut faire plus rapide lorsque $n\neq 1$ modulo $8$, mais ceci est la meilleure méthode générale. L'implémentation Sage applique la méthode la plus rapide connue selon la valeur de $n$ modulo $16$.). D'où une complexité globale en $O(N\log(N)^3)$.
+\end{proof}
+
+\cite{JaoSoukharev} et \cite{Coh00}[\S 5.5.1] propose une astuce pour optimiser la complexité de l'algorithme 4 : Si $N$ est trop petit, on risque de ne pas avoir une famille génératrice, et il est plus difficile de trouver par hasard une classe facilement factorisable. Mais si $N$ est trop grand, l'algorithme $3$ prend plus de temps. Il est aussi plus lent de vérifié si un entier se factorise dans la famille de normes voulue. La borne théorique proposant $N = 2\log(|\Delta|)^{2}$ étant supposé pessimiste\cite{Coh00}[\S 5.5.1], on choisit $N$ différemment :
+
+\begin{Def}
+	Soit $\Delta$ un discriminant. On défini la complexité sous exponentielle en $\Delta$ par la fonction
+	\begin{equation*}
+		L(\alpha,z) = e^{\left( (z + O(1))\log^{\alpha}(|\Delta|)\log^{1-\alpha}(\log(|\Delta|))\right) }
+	\end{equation*}
+	On dira qu'une procédure est sous-exponentielle en $\Delta$ s'il existe des constante $\alpha$, $z$ telles que la complexité soit en $O(L(\alpha,z))$.
+\end{Def}
+
+\begin{Def}
+	Soit $\Delta$ un discriminant et $z$ un réel fixé que l'on calculera par la suite. On note $N_{t} = 2\log(|\Delta|)^{2}$ et $N_{p} = L(1/2,z)$. $N_{t}$ est appelée la borne théorique, et $N_{p}$ la borne pratique. 
+\end{Def}
+
+\begin{Rem}
+	Même si la borne théorique est asymptotiquement plus petite que la borne pratique, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite \cite{Coh00}[5.5.1]. Elle est cependant supposée (sans preuve) suffisamment grande pour que l'algorithme $3$ appliquée à $N_{p}$ retourne une famille génératrice.
+\end{Rem}
+
+\begin{Prop}
+	Soit $t = C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = L(\frac{1}{2},z)$ et $t\leq k$, alors 
+	\begin{enumerate}
+		\item Une itération de la boucle WHILE des lignes $5$ à $14$ de l'algorithme $4$ termine en moyenne en un temps en $?$
+		\item Le nombre d'itération de la boucle des lignes $5$ à $14$ de l'algorithme $4$ est en $?$
+		\item l'algorithme $4$ a une complexité moyenne en $?$
+	\end{enumerate}
+\end{Prop}
+
+\begin{proof}
+	
+	D'après le théorème des nombres premiers, si l'on suppose $k = O(N/log(N))$. En particulier
+	\begin{equation*}
+		\frac{t}{k} = C\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C}{\log(|\Delta|)}
+	\end{equation*}
+	$t/k = O(1)$ est de l'ordre d'une constante $C_{0}$. Si $t\leq k$, $C_{0} \leq 1$. 
+	Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois, donc moins d'une fois. On peut donc estimer en moyenne qu'à l'étape $6$ la liste $L_{x}$ ne contient que des $0$ et des $1$, et au plus $t$ $1$. $ideal_{test}$ est donc de norme $\leq lp_{k-t}\ldots p_{k} \leq lp_{k}^{t}$. Calculer sa forme réduite $classe_{test}$ se fait en $O(log(lp_{k}^{t})) = O(log(l) + tlog(N))$. Vérifié si $classe_{test}$ se factorise demande $O(k)$ test de divisibilité et division euclidienne, chacune sur un coefficient $a$ d'une forme quadratique réduite : $a < \Delta$. Au total les étapes $11$ et $12$ demandent $O(klog(|\Delta|))$ opérations dans $\Z$. Les étapes $13$ à $20$ sont élémentaires. Il reste à savoir combien d'essais pour $L_{x}$ doit être fait en moyenne avant de réussir le test de l'étape $11$. \textbf{Heuristique nombre friable ?}
+\end{proof}
+
+\begin{Rem}
+	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
+\end{Rem}
+
+La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
+Sur l'exemple medium, il semble que l'on tombe très souvent sur un idéal principal directement. Normal ?
+
+\begin{Prop}\cite{Bostan_2008}
+	
+	Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS admet une complexité en 
+	\begin{equation*}
+		O\left( M(l)\log(l)\right).
+	\end{equation*}
+\end{Prop}
+
+
+
+\begin{Prop}
+	L'algorithme 7, appliqué à une courbe elliptique $E$ et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$, retourne un polynôme $F$ décrivant $E[\LR]$ avec une complexité en 
+	\begin{equation*}
+		O(log(q) + M(l)\log(l))
+	\end{equation*}
+\end{Prop}
+
+\begin{Rem}
+	Dans la proposition précédente, $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $l$ est supposé petit, et $[-c]$ est défini modulo $l$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq l$.
+\end{Rem}
+
+\begin{proof}
+	\textbf{Complexité de la vérification de 5.24 ?}
+\end{proof}
+
+\begin{Prop}
+	Soit $(1,a,b) = \beta\OR_{\Delta}$ un idéal principal primitif de $\OR_{\Delta}$ donné sous forme standard. . L'algorithme 8 trouve $\beta$ avec une complexité en
+	\begin{equation*}
+		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right) +\log(b)\right).
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $8$. 
+\end{proof}
+
+\begin{Rem}
+	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Ils déclarent une complexité en $O(\log(N(\LR)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. On estime que l'algorithme $8$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation Sage utilise aussi l'algorithme $8$. 
+\end{Rem}
+
 
 \begin{Prop}
 	L'algorithme $9$ admet une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et 
