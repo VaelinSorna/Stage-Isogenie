@@ -452,8 +452,13 @@ Concrètement, dès que l'on enchaîne des marches aléatoires de taille de l'or
 		\State $Increment\gets\pm1$
 		\State $L_{x}\left[ Indice\right] \gets L_{x}\left[ Indice\right] + Increment$
 		\EndFor
-		\State $ideal_{test}\gets\LR\PR_{1}^{x_{1}}\PR_{2}^{x_{2}}\ldots\PR_{k}^{x_{k}}$
-		\State $classe_{test}\gets$ forme réduite de $ideal_{test}$
+		\For{$0\leq i \leq k - 1$}
+		\State $x_{i}\gets L_{x}[i]$
+		\For{$1 \leq j \leq x_{i}$}
+		\State $classe_{test}\gets classe_{test}L_{formes}[i]$
+		\State $classe_{test}\gets classe_{test}$ réduit par l'algorithme 2
+		\EndFor
+		\EndFor
 		\EndWhile
 		
 		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème 5.12.
@@ -934,7 +939,7 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 
 
 
-\subsection{Complexité obtenue}
+\subsection{Analyse de complexité}
 
 \begin{Prop}\cite{Coh00}[5.4.3]
 	
@@ -955,24 +960,24 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 \end{proof}
 
 \begin{Prop}
-	Soit $N$ un entier positif, $\Delta$ un discriminant, et $A = pf_{m}|E(\F_{q^{n}})|$. L'algorithme $3$ renvoie une famille supposée génératrice du groupe de classe de norme premier bornée par $N$ avec une complexité en 
+	Soit $N$ un entier positif, $\Delta$ un discriminant, et $A = pf_{m}|E(\F_{q^{n}})|$. L'algorithme $3$ renvoie une famille supposée génératrice du groupe de classe de norme premier bornée par $N$ avec une complexité majorée par 
 	\begin{equation*}
-		O(N\log(N)^3).
+		O(N\log(N)^4).
 	\end{equation*} 
 \end{Prop}
 
 \begin{proof}
-	On parcourt tout les nombres premiers plus petit que $N$. La boucle de la ligne $3$ demande donc d'après le théorème des nombre premier $O(N/\log(N))$ passages. Pour chaque nombre premier $n$ regardé, le calcule intermédiaires les plus coûteux est le calcul d'une racine $b_{n}$ de $\Delta$ modulo $4n$, en $O(\log(n)^4)$ avec l'algorithme de Tonelli et Shanks \cite{Coh00}[1.5.1] (on peut faire plus rapide lorsque $n\neq 1$ modulo $8$, mais ceci est la meilleure méthode générale. L'implémentation Sage applique la méthode la plus rapide connue selon la valeur de $n$ modulo $16$.). D'où une complexité globale en $O(N\log(N)^3)$.
+	On parcourt tout les entiers plus petit que $N$, en testant s'ils sont premier à chaque fois. Pour chaque nombre premier $n$ regardé, le calcul intermédiaires les plus coûteux est celui d'une racine $b_{n}$ de $\Delta$ modulo $4n$, en $O(\log(n)^4)$ avec l'algorithme de Tonelli et Shanks \cite{Coh00}[1.5.1] (on peut faire plus rapide lorsque $n\neq 1$ modulo $8$, mais ceci est la meilleure méthode générale. L'implémentation Sage applique la méthode la plus rapide connue selon la valeur de $n$ modulo $16$.). D'où une complexité globale majorée par $O(N\log(N)^4)$.
 \end{proof}
 
-\cite{JaoSoukharev} et \cite{Coh00}[\S 5.5.1] propose une astuce pour optimiser la complexité de l'algorithme 4 : Si $N$ est trop petit, on risque de ne pas avoir une famille génératrice, et il est plus difficile de trouver par hasard une classe facilement factorisable. Mais si $N$ est trop grand, l'algorithme $3$ prend plus de temps. Il est aussi plus lent de vérifié si un entier se factorise dans la famille de normes voulue. La borne théorique proposant $N = 2\log(|\Delta|)^{2}$ étant supposé pessimiste\cite{Coh00}[\S 5.5.1], on choisit $N$ différemment :
+\cite{JaoSoukharev} et \cite{Coh00}[\S 5.5.1] propose une astuce pour optimiser la complexité de l'algorithme 4 : Si $N$ est trop petit, on risque de ne pas avoir une famille génératrice, et il est plus difficile de trouver par hasard une classe facilement factorisable. Mais si $N$ est trop grand, l'algorithme $3$ prend plus de temps. Il sera aussi plus lent de vérifier si un entier se factorise dans la famille de normes voulue. La borne théorique proposant $N = 2\log(|\Delta|)^{2}$ étant supposé pessimiste\cite{Coh00}[\S 5.5.1], on choisit $N$ différemment :
 
 \begin{Def}
-	Soit $\Delta$ un discriminant. On défini la complexité sous exponentielle en $\Delta$ par la fonction
+	Soit $\Delta$ un discriminant. On défini la complexité sous exponentielle en $\log(|\Delta|)$ par la fonction
 	\begin{equation*}
 		L(\alpha,z) = e^{\left( (z + O(1))\log^{\alpha}(|\Delta|)\log^{1-\alpha}(\log(|\Delta|))\right) }
 	\end{equation*}
-	On dira qu'une procédure est sous-exponentielle en $\Delta$ s'il existe des constante $\alpha$, $z$ telles que la complexité soit en $O(L(\alpha,z))$.
+	On dira qu'une procédure est sous-exponentielle en $\log(|\Delta|)$ s'il existe des constante $\alpha$, $z$ telles que la complexité soit en $O(L(\alpha,z))$.
 \end{Def}
 
 \begin{Def}
@@ -984,23 +989,70 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 \end{Rem}
 
 \begin{Prop}
-	Soit $t = C\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = L(\frac{1}{2},z)$ et $t\leq k$, alors 
+	
+	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Alors si $N = N_{t}$,
 	\begin{enumerate}
-		\item Une itération de la boucle WHILE des lignes $5$ à $14$ de l'algorithme $4$ termine en moyenne en un temps en $?$
-		\item Le nombre d'itération de la boucle des lignes $5$ à $14$ de l'algorithme $4$ est en $?$
-		\item l'algorithme $4$ a une complexité moyenne en $?$
+		\item Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues avec les lignes $7$ à $11$ de l'algorithme $4$. Les $|x_{i}|$ sont des variables aléatoires d'espérance en $O\left( \frac{1}{\log(|\Delta|)}\right)$. 
+		\item Chaque itération de la boucle des lignes $5$ à $19$ de l'algorithme $4$ demande en moyenne $O(\log(|\Delta|)^3\log(\log(|\Delta|)))$ opérations.
+		\item Le nombre d'itération de la boucle des lignes $5$ à $19$ de l'algorithme $4$ est minorée par 
+		\begin{equation*}
+			O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N \right)  \right)\frac{\log\left(|\Delta| \right)}{\log\left( N \right)} \right) \right) 
+		\end{equation*}
+		\item L'algorithme $4$ a une complexité exponentielle en $\log(|\Delta|)$
 	\end{enumerate}
 \end{Prop}
 
 \begin{proof}
+	\begin{enumerate}
+		\item La liste d'exposants $L_{x}$ est de taille $k$. Le choix de la ligne $8$ est aléatoire et uniforme. Donc au cours de la boucle des lignes $7$ à $11$, chaque élément $x_{i}$ de $L_{x}$ est incrémenté en moyenne $\frac{t}{k}$ fois. D'après le théorème des nombres premiers, si l'on suppose qu'environ la moitié des nombres premiers plus petit que $N$ sont décomposé dans $\OR_{\Delta}$, on a $k \simeq (N/2log(N))$. En particulier si $N = N_{t}$,
+		\begin{equation*}
+			\frac{t}{k} \simeq C_{t}\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C_{t}}{\log(|\Delta|)}
+		\end{equation*}
+		Or $|x_{i}|$ est majoré par le nombre d'incrémentation, d'où le résultat. 
+		
+		\item Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois. Si $N = N_{t}$, d'après $1$ on peut supposer qu'en moyenne chaque indice est incrémenté au plus une fois, et que $L_{x}$ ne contient que des éléments nuls sauf $t$ valeurs égales à $\pm 1$. Sous cette hypothèse le calcul de $classe_{test}$ des lignes $12$ à $18$ demande $t$ produits entre une forme réduite et une forme première associée à un $p_{i} \leq N_{t}$ suivi d'une réduction par l'algorithme $2$. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
+		\begin{equation*}
+			|b| \leq a \leq \sqrt{\frac{|\Delta|}{3}},
+		\end{equation*} 
+		 la complexité d'un produit d'une telle forme avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ \cite{JaoSoukharev}. La forme obtenue est $(a',b',c')$ avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée par 
+		\begin{equation*}
+			O(\log(a p_{i})\log(p_{i}) + \log(2a^2 p_{i})) = O(\log(N)^2\log(|\Delta|)^2)
+		\end{equation*}
+		La complexité du calcul du produit est négligeable devant celle de la réduction qui le suit. Donc le calcul de $classe_{test}$ des lignes $12$ à $18$ se fait en
+		\begin{equation*}
+			 O(t\log(N)^2\log(|\Delta|)^2) = O\left( \frac{\log(N)^2\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right) .
+		\end{equation*}
+		Avec $N = N_{t}$, ceci devient
+		\begin{equation*}
+			O(t\log(N)^2\log(|\Delta|)^2) = O(\log(|\Delta|)^3\log(\log(|\Delta|))).
+		\end{equation*}
+		
+		Après avoir calculer $classe_{test}$, il faut tester s'il se factorise via le théorème 5.12. On note maintenant $classe_{test} = (a,b,c)$. Il s'agit de déterminer si $a$ se factorise sur les éléments de $L_{premier}$, autrement dit si $a$ est $L_{premier}$-friable. On procède par essais erreur, (voir \cite{BernO4} pour des améliorations possibles), ce qui demande pour chaque $p_{i}$ au plus $O(\log(a))$ divisions euclidiennes, donc au plus $O(\log(a)^2)$ opérations, ceci $k$ fois. Comme $classe_{test} = (a,b,c)$ est réduite, la vérification de la ligne $5$ prend
+		\begin{equation*}
+			O(k\log(a)^2) = O\left( \frac{N}{\log(N)}\log(|\Delta|)\right) 
+		\end{equation*}
+		Avec $N = N_{t}$, ceci devient
+		\begin{equation*}
+			O(k\log(a)^2) = O\left( \frac{\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right) = O(\log(|\Delta|)^{3}).
+		\end{equation*}
+		
+		Ainsi lorsque $N = N_{t}$, l'étape ayant la complexité la plus lourde lors d'une itération de la boucle est le calcul de $classe_{test}$, et la complexité d'une itération est en $O(\log(|\Delta|)^3\log(\log(|\Delta|)))$
+		
+		\item Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. On minore cela par la probabilité d'être $N$-friable, c'est à dire en regardant tout les nombres premiers plus petit que $N$ au lieu de seulement $L_{premier}$. Le théorème de Canfield Erdös Pomerance (voir  \cite{Coh00}[Th 10.2.1] ) permet d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $N$-friable. Le résultat énoncé est une application directe de ce théorème.
+		
+		\item Avec $N = N_{t}$, Le nombre d'itérations de la boucle des lignes $5$ à $19$ est minoré par
+		\begin{equation*}
+			O\left( \exp \left(  \log\log\left(|\Delta| \right)  \frac{\log\left(|\Delta| \right)}{2\log(\log(|\Delta|))} \right) \right) = O(\sqrt{|\Delta|})
+		\end{equation*}
+		ce qui implique un complexité au moins exponentielle en $\log(|\Delta|)$. On peut majorer le nombre d'itérations en considérant le cas où l'on ne cherche pas à factoriser, mais à directement trouver $a = 1$, c'est à dire arrêter la boucle lorsque $classe_{test}$ est la classe neutre du groupe $Cl(\OR_{\Delta})$. Comme le cardinal du groupe de classe est en $O(\sqrt{|Delta|})$, en supposant les valeurs de $classe_{test}$ uniforme dans $Cl(\OR_{\Delta})$ grâce au choix de $t$, le nombre d'itérations est dans ce cas au pire environ en $O(\sqrt{|\Delta|})$, donc exponentielle en $\log(|\Delta|)$. 
+	\end{enumerate} 
 	
-	D'après le théorème des nombres premiers, si l'on suppose $k = O(N/log(N))$. En particulier
-	\begin{equation*}
-		\frac{t}{k} = C\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C}{\log(|\Delta|)}
-	\end{equation*}
-	$t/k = O(1)$ est de l'ordre d'une constante $C_{0}$. Si $t\leq k$, $C_{0} \leq 1$. 
-	Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois, donc moins d'une fois. On peut donc estimer en moyenne qu'à l'étape $6$ la liste $L_{x}$ ne contient que des $0$ et des $1$, et au plus $t$ $1$. $ideal_{test}$ est donc de norme $\leq lp_{k-t}\ldots p_{k} \leq lp_{k}^{t}$. Calculer sa forme réduite $classe_{test}$ se fait en $O(log(lp_{k}^{t})) = O(log(l) + tlog(N))$. Vérifié si $classe_{test}$ se factorise demande $O(k)$ test de divisibilité et division euclidienne, chacune sur un coefficient $a$ d'une forme quadratique réduite : $a < \Delta$. Au total les étapes $11$ et $12$ demandent $O(klog(|\Delta|))$ opérations dans $\Z$. Les étapes $13$ à $20$ sont élémentaires. Il reste à savoir combien d'essais pour $L_{x}$ doit être fait en moyenne avant de réussir le test de l'étape $11$. \textbf{Heuristique nombre friable ?}
 \end{proof}
+
+\begin{Prop}
+	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = N_{p}$, l'algorithme $4$ a une complexité sous-exponentielle en $\log(|\Delta|)$
+	
+\end{Prop}
 
 \begin{Rem}
 	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
