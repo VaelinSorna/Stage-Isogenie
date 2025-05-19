@@ -941,16 +941,19 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 
 \subsection{Analyse de complexité}
 
+0n commence par énoncé la complexité des algorithme $2$ et $3$:
+
 \begin{Prop}\cite{Coh00}[5.4.3]
 	
 	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'algorithme 2 renvoie une forme de réduite de $(a,b,c)$ en utilisant au plus $2 + \log\left( \frac{a}{\sqrt{|\Delta|}} \right)$ divisions euclidiennes.
 \end{Prop}
 
 \begin{Coro}
-	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. La complexité de l'algorithme 2 est en 
+	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. La complexité de l'algorithme 2 appliqué à $(a,b,c)$ est en 
 	\begin{equation*}
 		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right) +\log(b)\right).
 	\end{equation*}
+	En particulier si $b\leq 2a$ alors la complexité de l'algorithme 2 est majorée en $O(log(a)^2)$.
 	
 \end{Coro}
 
@@ -960,7 +963,7 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 \end{proof}
 
 \begin{Prop}
-	Soit $N$ un entier positif, $\Delta$ un discriminant, et $A = pf_{m}|E(\F_{q^{n}})|$. L'algorithme $3$ renvoie une famille supposée génératrice du groupe de classe de norme premier bornée par $N$ avec une complexité majorée par 
+	Soit $N$ un entier positif, $\Delta$ un discriminant, et $A = pf_{m}|E(\F_{q^{n}})|$. L'algorithme $3$ renvoie une famille supposée génératrice du groupe de classe de représentants de norme premier bornée par $N$ avec une complexité majorée par 
 	\begin{equation*}
 		O(N\log(N)^4).
 	\end{equation*} 
@@ -988,33 +991,55 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 	Même si la borne théorique est asymptotiquement plus petite que la borne pratique, pour les tailles cryptographiques c'est la borne sous exponentielle qui sera plus petite \cite{Coh00}[5.5.1]. Elle est cependant supposée (sans preuve) suffisamment grande pour que l'algorithme $3$ appliquée à $N_{p}$ retourne une famille génératrice.
 \end{Rem}
 
+Les deux propositions suivantes vont permettre d'analysé la complexité de l'algorithme $4$ et des algorithmes suivant.
+
+\begin{Prop}
+	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire de l'algorithme $4$. Soit $k$ la taille des listes retournées par l'algorithme $3$. Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues avec les lignes $7$ à $11$ de l'algorithme $4$. Alors les $|x_{i}|$ sont des variables aléatoires d'espérance majorée par $O\left( \frac{1}{\log(|\Delta|)}\right)$. 
+\end{Prop}
+
+\begin{proof}
+	La liste d'exposants $L_{x}$ est de taille $k$. Le choix de la ligne $8$ est aléatoire et uniforme. Donc au cours de la boucle des lignes $7$ à $11$, chaque élément $x_{i}$ de $L_{x}$ est incrémenté en moyenne $\frac{t}{k}$ fois. D'après le théorème des nombres premiers, si l'on suppose qu'environ la moitié des nombres premiers plus petit que $N$ sont décomposé dans $\OR_{\Delta}$, on a $k \simeq (N/2log(N))$. En particulier si $N = N_{t}$,
+	\begin{equation*}
+		\frac{t}{k} \simeq C_{t}\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C_{t}}{\log(|\Delta|)}
+	\end{equation*}
+	Or $|x_{i}|$ est majoré par le nombre d'incrémentation, d'où le résultat. Si $N \leq N_{t}$, cela implique d'augmenter $k$ sans influencer $t$, donc cela ne fera que diminuer l'espérance et le résultat précédent reste une majoration. 
+\end{proof}
+
+\begin{Rem}
+	Ainsi la construction des relations aléatoires selon les lignes $7$ à $11$ de l'algorithme $4$ fournit en moyenne $t$ exposant non nuls, tous égaux à $\pm 1$. Plus $\Delta$ est grand, plus la variance des $|x_{i}|$ tendra vers $0$. On supposera donc dès que possible que la suite $L_{x}$ contient $t$ éléments non nuls, tous égaux à $\pm$. La liste $L_{exposant}$ est obtenue en déduisant des coefficients de $L_{x}$ les exposants de la factorisation de $classe_{test}$. Ces derniers sont supposé petit car la forme $classe_{test}$ est au préalable réduite \cite{JaoSoukharev}. On supposera dans l'analyse de complexité que $L_{exposant}$ se comporte comme $L_{x}$, l'erreur commise étant négligeable.  
+\end{Rem}
+
+\begin{Prop}
+	Le nombre d'itérations de la boucle des lignes $5$ à $19$ de l'algorithme $4$ est minorée par 
+	\begin{equation*}
+		O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N \right)  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N \right)} \right) \right) 
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. On majore cela par la probabilité d'être $N$-friable, c'est à dire en regardant tout les nombres premiers plus petit que $N$ au lieu de seulement $L_{premier}$. Le théorème de Canfield Erdös Pomerance (voir  \cite{Coh00}[Th 10.2.1] ) permet d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $N$-friable. Le résultat énoncé est une application directe de ce théorème.
+\end{proof}
+
+On en déduit la complexité de l'algorithme $4$
+
 \begin{Prop}
 	
-	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Alors si $N = N_{t}$,
+	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire de l'algorithme $4$. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = N_{t}$, alors
 	\begin{enumerate}
-		\item Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues avec les lignes $7$ à $11$ de l'algorithme $4$. Les $|x_{i}|$ sont des variables aléatoires d'espérance en $O\left( \frac{1}{\log(|\Delta|)}\right)$. 
-		\item Chaque itération de la boucle des lignes $5$ à $19$ de l'algorithme $4$ demande en moyenne $O(\log(|\Delta|)^3\log(\log(|\Delta|)))$ opérations.
-		\item Le nombre d'itération de la boucle des lignes $5$ à $19$ de l'algorithme $4$ est minorée par 
-		\begin{equation*}
-			O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N \right)  \right)\frac{\log\left(|\Delta| \right)}{\log\left( N \right)} \right) \right) 
-		\end{equation*}
+		\item Chaque itération de la boucle des lignes $5$ à $19$ de l'algorithme $4$ demande en moyenne $O(\log(|\Delta|)^4)$ opérations.
 		\item L'algorithme $4$ a une complexité exponentielle en $\log(|\Delta|)$
 	\end{enumerate}
 \end{Prop}
 
 \begin{proof}
+	
 	\begin{enumerate}
-		\item La liste d'exposants $L_{x}$ est de taille $k$. Le choix de la ligne $8$ est aléatoire et uniforme. Donc au cours de la boucle des lignes $7$ à $11$, chaque élément $x_{i}$ de $L_{x}$ est incrémenté en moyenne $\frac{t}{k}$ fois. D'après le théorème des nombres premiers, si l'on suppose qu'environ la moitié des nombres premiers plus petit que $N$ sont décomposé dans $\OR_{\Delta}$, on a $k \simeq (N/2log(N))$. En particulier si $N = N_{t}$,
-		\begin{equation*}
-			\frac{t}{k} \simeq C_{t}\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C_{t}}{\log(|\Delta|)}
-		\end{equation*}
-		Or $|x_{i}|$ est majoré par le nombre d'incrémentation, d'où le résultat. 
 		
-		\item Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois. Si $N = N_{t}$, d'après $1$ on peut supposer qu'en moyenne chaque indice est incrémenté au plus une fois, et que $L_{x}$ ne contient que des éléments nuls sauf $t$ valeurs égales à $\pm 1$. Sous cette hypothèse le calcul de $classe_{test}$ des lignes $12$ à $18$ demande $t$ produits entre une forme réduite et une forme première associée à un $p_{i} \leq N_{t}$ suivi d'une réduction par l'algorithme $2$. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
+		\item Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois. Si $N = N_{t}$, d'après la proposition 5.31 on peut supposer qu'en moyenne chaque indice est incrémenté au plus une fois, et que la liste $L_{x}$ ne contient que des éléments nuls sauf $t$ valeurs égales à $\pm 1$. Sous cette hypothèse le calcul de $classe_{test}$ des lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un $p_{i} \leq N_{t}$, et à chaque fois suivi d'une réduction par l'algorithme $2$. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
 		\begin{equation*}
 			|b| \leq a \leq \sqrt{\frac{|\Delta|}{3}},
 		\end{equation*} 
-		 la complexité d'un produit d'une telle forme avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ \cite{JaoSoukharev}. La forme obtenue est $(a',b',c')$ avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée par 
+		 la complexité d'un produit d'une forme réduite avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ \cite{JaoSoukharev}. On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée par 
 		\begin{equation*}
 			O(\log(a p_{i})\log(p_{i}) + \log(2a^2 p_{i})) = O(\log(N)^2\log(|\Delta|)^2)
 		\end{equation*}
@@ -1027,87 +1052,178 @@ On se résume ce qui précède en énonçant l'algorithme 9 :
 			O(t\log(N)^2\log(|\Delta|)^2) = O(\log(|\Delta|)^3\log(\log(|\Delta|))).
 		\end{equation*}
 		
-		Après avoir calculer $classe_{test}$, il faut tester s'il se factorise via le théorème 5.12. On note maintenant $classe_{test} = (a,b,c)$. Il s'agit de déterminer si $a$ se factorise sur les éléments de $L_{premier}$, autrement dit si $a$ est $L_{premier}$-friable. On procède par essais erreur, (voir \cite{BernO4} pour des améliorations possibles), ce qui demande pour chaque $p_{i}$ au plus $O(\log(a))$ divisions euclidiennes, donc au plus $O(\log(a)^2)$ opérations, ceci $k$ fois. Comme $classe_{test} = (a,b,c)$ est réduite, la vérification de la ligne $5$ prend
+		Après avoir calculer $classe_{test}$, il faut tester s'il se factorise via le théorème 5.12. On note maintenant $classe_{test} = (a,b,c)$. Il s'agit de déterminer si $a$ se factorise sur les éléments de $L_{premier}$, autrement dit si $a$ est $L_{premier}$-friable. On procède par essais erreur, (voir \cite{Bern04} pour des améliorations possibles), ce qui demande pour chaque $p_{i}$ au plus $O(\log(a))$ divisions euclidiennes, donc au plus $O(\log(a)^2)$ opérations, ceci $k$ fois. Comme $classe_{test} = (a,b,c)$ est réduite, la vérification de la ligne $5$ prend
 		\begin{equation*}
-			O(k\log(a)^2) = O\left( \frac{N}{\log(N)}\log(|\Delta|)\right) 
+			O(k\log(a)^2) = O\left( \frac{N}{\log(N)}\log(|\Delta|)^{2}\right) 
 		\end{equation*}
 		Avec $N = N_{t}$, ceci devient
 		\begin{equation*}
-			O(k\log(a)^2) = O\left( \frac{\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right) = O(\log(|\Delta|)^{3}).
+			O(k\log(a)^2) = O\left( \frac{\log(|\Delta|)^4}{\log(\log(|\Delta|))}\right) = O(\log(|\Delta|)^{4}).
 		\end{equation*}
 		
-		Ainsi lorsque $N = N_{t}$, l'étape ayant la complexité la plus lourde lors d'une itération de la boucle est le calcul de $classe_{test}$, et la complexité d'une itération est en $O(\log(|\Delta|)^3\log(\log(|\Delta|)))$
+		Ainsi lorsque $N = N_{t}$, l'étape ayant la complexité la plus lourde lors d'une itération de la boucle est la vérification de la ligne $5$, et la complexité d'une itération est en $O(\log(|\Delta|)^4)$.
 		
-		\item Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. On minore cela par la probabilité d'être $N$-friable, c'est à dire en regardant tout les nombres premiers plus petit que $N$ au lieu de seulement $L_{premier}$. Le théorème de Canfield Erdös Pomerance (voir  \cite{Coh00}[Th 10.2.1] ) permet d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $N$-friable. Le résultat énoncé est une application directe de ce théorème.
-		
-		\item Avec $N = N_{t}$, Le nombre d'itérations de la boucle des lignes $5$ à $19$ est minoré par
+		\item Avec $N = N_{t}$, Le nombre d'itérations de la boucle des lignes $5$ à $19$ est minoré d'après la proposition $5.32$ par
 		\begin{equation*}
-			O\left( \exp \left(  \log\log\left(|\Delta| \right)  \frac{\log\left(|\Delta| \right)}{2\log(\log(|\Delta|))} \right) \right) = O(\sqrt{|\Delta|})
+			O\left( \exp \left(  \log\log\left(|\Delta| \right)  \frac{\log\left(|\Delta| \right)}{4\log(\log(|\Delta|))} \right) \right) = O(\sqrt{|\Delta|})
 		\end{equation*}
-		ce qui implique un complexité au moins exponentielle en $\log(|\Delta|)$. On peut majorer le nombre d'itérations en considérant le cas où l'on ne cherche pas à factoriser, mais à directement trouver $a = 1$, c'est à dire arrêter la boucle lorsque $classe_{test}$ est la classe neutre du groupe $Cl(\OR_{\Delta})$. Comme le cardinal du groupe de classe est en $O(\sqrt{|Delta|})$, en supposant les valeurs de $classe_{test}$ uniforme dans $Cl(\OR_{\Delta})$ grâce au choix de $t$, le nombre d'itérations est dans ce cas au pire environ en $O(\sqrt{|\Delta|})$, donc exponentielle en $\log(|\Delta|)$. 
+		ce qui implique un complexité au moins exponentielle en $\log(|\Delta|)$. On peut majorer le nombre d'itérations en considérant le cas où l'on ne cherche pas à factoriser, mais à directement trouver $a = 1$, c'est à dire arrêter la boucle lorsque $classe_{test}$ est la classe neutre du groupe $Cl(\OR_{\Delta})$. Comme le cardinal du groupe de classe est en $O(\sqrt{|\Delta|})$, en supposant les valeurs de $classe_{test}$ uniforme dans $Cl(\OR_{\Delta})$ grâce au choix de $t$, le nombre d'itérations est dans ce cas en $O(\sqrt{|\Delta|})$, donc exponentiel en $\log(|\Delta|)$. 
 	\end{enumerate} 
 	
 \end{proof}
 
 \begin{Prop}
-	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = N_{p}$, l'algorithme $4$ a une complexité sous-exponentielle en $\log(|\Delta|)$
+	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = N_{p}$, l'algorithme $4$ a une complexité sous-exponentielle en $\log(|\Delta|)$. Plus précisément si $N_{p} = L\left(\frac{1}{2}, z \right)$ alors l'algorithme $4$ a une complexité selon $\log(|\Delta|)$ en
 	
+	\begin{equation*}
+		 O\left( L\left(\frac{1}{2}, z + \frac{1}{4z} \right) \right) 
+	\end{equation*}
 \end{Prop}
 
-\begin{Rem}
-	Les calcules de produit d'idéaux peuvent se faire en calculant des produits de formes quadratiques. Comme seule la forme réduite de $ideal_{test}$ nous intéresse, on peut réduire au fur et à mesure des calculs pour plus d’efficacité. L'étape 11 est un calcul d'inverse dans le groupe de classe, qui est instantanée car le calcul de conjugaison est juste un changement de signe d'un coefficient (que ce soit sur la forme standard d'un idéal ou sur sa forme quadratique associée)
-\end{Rem}
+\begin{proof}
+	Dans la preuve précédente, on a établit des formules de complexité en fonction de $N$. Lorsque $N = N_{p}$, toutes les étapes de l'algorithme dont la complexité dépend de $\log(N)$ sont polynomiales en $\log(|\Delta|)$. L'étape de vérification de la ligne $5$ admet une complexité en 
+	\begin{equation*}
+		O\left( \frac{N_{p}}{\log(N_{p})}\log(|\Delta|)\right) = O(N_{p})
+	\end{equation*}
+	La complexité de chaque itération de la boucle des ligne $5$ à $19$ est dominé par cette étape et est donc en $O(N_{p})$. Le nombre d'itérations est quand à lui de l'ordre de 
+	\begin{equation*}
+		O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N_{p} \right)  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right) = O\left( \exp \left( \log\log\left(|\Delta|  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right)
+	\end{equation*}
+	On rappelle que $N_{p} = L(1/2,z)$ avec $z\in\R$ fixé à déterminer. Ainsi
+	\begin{equation*}
+		O\left( \exp \left( \log\log\left(|\Delta|  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right) = O\left( L\left( \frac{1}{2},\frac{1}{4z}\right) \right) 
+	\end{equation*}
+	
+	La complexité selon $\log(|\Delta|)$ de l'algorithme $4$ est donc en 
+	\begin{equation*}
+		O\left( N_{p}L\left( \frac{1}{2},\frac{1}{4z}\right)\right)  = O\left( L\left(\frac{1}{2}, z + \frac{1}{4z} \right) \right) 
+	\end{equation*}
+	
+\end{proof}
 
-La partie $S_{0}$ qui nous intéresse est l'ensemble des classes de forme réduite factorisable par Seysen \textbf{Estimer la taille de S\_{0} ?}
-Sur l'exemple medium, il semble que l'on tombe très souvent sur un idéal principal directement. Normal ?
+L'algorithme $4$ influence fortement le temps de calcul de l'algorithme $9$. La seconde étape coûteuse est le calcul d'isogénie, principalement à cause du calcul et de la manipulation des polynômes modulaires. 
 
 \begin{Prop}\cite{Bostan_2008}
 	
-	Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS admet une complexité en 
+	Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS calcul le polynôme décrivant le noyaux d'une isogénie définie sur $\F_{q}$ de degré $p_{i}$ avec une complexité en 
 	\begin{equation*}
-		O\left( M(l)\log(l)\right).
+		O\left( M(p_{i},q)\log(p_{i})\right).
 	\end{equation*}
 \end{Prop}
 
-
-
 \begin{Prop}
-	L'algorithme 7, appliqué à une courbe elliptique $E$ et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$, retourne un polynôme $F$ décrivant $E[\LR]$ avec une complexité en 
+	L'algorithme 7, appliqué à une courbe elliptique $E$ et un idéal $\PR_{i}\subset\OR_{\Delta}$ de norme $p_{i}$, retourne un polynôme $F$ décrivant $E[\PR_{i}]$ avec une complexité en 
 	\begin{equation*}
-		O(log(q) + M(l)\log(l))
-	\end{equation*}
-\end{Prop}
-
-\begin{Rem}
-	Dans la proposition précédente, $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $l$ est supposé petit, et $[-c]$ est défini modulo $l$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq l$.
-\end{Rem}
-
-\begin{proof}
-	\textbf{Complexité de la vérification de 5.24 ?}
-\end{proof}
-
-\begin{Prop}
-	Soit $(1,a,b) = \beta\OR_{\Delta}$ un idéal principal primitif de $\OR_{\Delta}$ donné sous forme standard. . L'algorithme 8 trouve $\beta$ avec une complexité en
-	\begin{equation*}
-		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right) +\log(b)\right).
+		O(log(q) + M(p_{i},q)\log(p_{i}))
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
-	Le nombre de calcul de cette algorithme et le double du nombre de calcul nécessaire à la réduction de la forme quadratique $f$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $8$. 
-\end{proof}
-
-\begin{Rem}
-	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Ils déclarent une complexité en $O(\log(N(\LR)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. On estime que l'algorithme $8$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation Sage utilise aussi l'algorithme $8$. 
-\end{Rem}
-
-
-\begin{Prop}
-	L'algorithme $9$ admet une complexité en $O(log(l))$, $O(log(q))$, $O(n)$ et 
-\end{Prop}
-
-\begin{proof}
-	contenu...
-\end{proof}
+	L'algorithme d'Euclide pour calculer le PGCD à la ligne $1$ se fait en $O(\log(q))$. L'étape suivante est une application de l'algorithme BMSS. Enfin, il faut vérifier le choix de $j$-invariant avec le théorème 5.24.
+	Pour cela, des divisions de polynômes multivariées sont nécessaires. On approxime la complexité en $O(\log(q))$. $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $p_{i}$ est supposé petit, et $[-c]$ est défini modulo $p_{i}$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'\leq p_{i}$.
 	
+	\textbf{complexité polynôme de division ?}
+	
+\end{proof}
+
+\begin{Prop}
+	La complexité du calcul de la liste d'isogénies $L_{composantes}$ lors des lignes $7$ à $17$ de l'algorithme $9$ est en 
+	\begin{equation*}
+		O\left( t\left(N^3\log(N)^{2} + N^2\log(q) \right) \right). 
+	\end{equation*}
+	
+\end{Prop}
+
+\begin{proof}
+	On se place dans le cadre de la proposition $5.31$ et on suppose en moyenne que chaque exposant non nul est égal à $1$. Pour tout exposant $e_{i}$ non nul, chaque calcul de composante $\phi_c$ demande de calculer et manipuler le polynôme modulaire $\Psi_{p_{i}}$. Dans l'analyse de complexité de \cite{JaoSoukharev}, la complexité citée du calcul de  $\Psi_{p_{i}}$ est en
+	\begin{equation*}
+		 O\left( p_{i}^{3 + \epsilon}\log\left( p_{i}\right)^{3 + \epsilon} \right)\;,\;\forall\epsilon >0.
+	\end{equation*}
+	Et chaque manipulation de $\Psi_{p_{i}}$ (dérivation partielle, évaluation) a un coup estimé par \cite{JaoSoukharev} en 
+	\begin{equation*}
+		O\left(p_{i}^{2 + \epsilon}\log\left( q \right)^{1 + \epsilon} \right)\;,\;\forall\epsilon >0.
+	\end{equation*}
+	En majorant $p_{i}$ par $N$, et d'après la proposition $5.31$, si l'on suppose que la manipulation de $\Psi_{p_{i}}$ domine la complexité du calcul de $\phi_c$, alors celle-ci est en
+	\begin{equation*}
+		O\left( t\left(N^3\log(N)^{2} + N^2\log(q) \right) \right). 
+	\end{equation*}
+\end{proof}
+
+Le calcul de l'image du point $P$ demande de l'arithmétique dans $\F_{q^{n}}$, ce qui devient coûteux selon le paramètre $n$. La complexité va aussi dépendre des degrés des isogénies intermédiaires, donc de $N$.  
+
+\begin{Prop}
+	La complexité de l'ensemble des évaluations dû à la répétition de la ligne $14$ et à la ligne $25$ de l'algorithme $9$ est en $O(tN^2\log(q^n))$.
+\end{Prop}
+
+\begin{proof}
+	Contrairement au reste de l'algorithme, ici les calculs se font dans le corps $\F_{q^{n}}$ car $P\in E(\F_{q^{n}})$. L'évaluation d'une isogénie de degré $p_{i}$ obtenue avec les formules de Vélu et l'algorithme BMSS est d'après \cite{JaoSoukharev} de $O(p_{i}^{2})$ opérations dans $\F_{q^{n}}$. Chacune demande $O(\log(q^n))$ opérations élémentaires. D'après la proposition $5.31$, on effectue $t$ évaluations de ce type. En majorant $p_{i}$ par $N$, on obtient que la complexité des répétitions de la ligne $14$ est en $O(tN^2\log(q^n))$. L’évaluation à la ligne $25$ est un calcul d'une isogénie scalaire explicite, ce qui est négligeable devant ce qui précède.  
+\end{proof}
+
+Le calcul d'un générateur de l'idéal principal dépend de la norme de l'idéal. La proposition $5.31$ va assurer que la norme de $\LR_{principal}$ est petite et que lui trouver un générateur n'est pas une étape coûteuse. 
+
+\begin{Prop}
+	Soit $(1,a,b) = \beta\OR_{\Delta}$ un idéal principal primitif de $\OR_{\Delta}$ donné sous forme standard (en particulier $a$ est la norme de $\beta$). L'algorithme 8 trouve $\beta$ avec une complexité en
+	\begin{equation*}
+		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	Le nombre de calcul de cette algorithme est le double du nombre de calcul nécessaire à la réduction de la forme quadratique associée à $\beta\OR_{\Delta}$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $8$. 
+\end{proof}
+
+\begin{Rem}
+	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Ils déclarent une complexité en $O(\log(N(\beta)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. On estime que l'algorithme $8$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation Sage utilise aussi l'algorithme $8$. 
+\end{Rem}
+
+\begin{Prop}
+	La norme de l'idéal $\LR_{principal}$ calculé lors de la boucle des lignes $7$ à $17$ de l'algorithme $9$ est en $O(lN^t)$. Avec le choix de $t$ de la proposition $5.31$, le calcul de $\LR_{principal}$ demande une complexité en $O\left( \left( log(l) + tlog(N)\right) \right)$. La complexité de la recherche de $\beta$ à la ligne $18$ de l'algorithme $9$ est en $O\left( \left( log(l) + tlog(N)\right)^{2} \right)$.
+\end{Prop}
+
+\begin{proof}
+	Ces résultats découlent de la proposition $5.31$. En majorant chaque norme de idéaux premier $\PR_{i}$ intervenant dans le calcul par $N$, d'après la proposition $5.31$ et la multiplicativité de la norme, $N\left(\LR_{principal} \right) \leq lN^t$. La complexité du calcul du produit de deux idéaux entier $\IR$ et $\LR$ donné sous forme standard est en $O\left( \max\left( N(\IR),N(\LR)\right) \right)$ ( voir \cite{JaoSoukharev}), donc la complexité du calcul de $\LR_{principal}$ peut être majorée en $O\left( \log\left(N\left(\LR_{principal} \right)  \right) \right)$. Si $(1,a,b) = \beta\OR_{\Delta}$, $b$ est obtenu par produit successif d'idéaux sous forme standard donc $b\leq 2a$ et la complexité de l'algorithme $8$ appliqué à $\LR_{principal}$ est majorée en $O\left( \log\left(a  \right)^2 \right) = O\left( \log\left(N\left(\LR_{principal} \right)  \right)^2 \right)$.
+\end{proof}
+
+On déduit de ce qui précède la complexité de l'algorithme $9$. 
+
+\begin{Prop}
+	Si $N = N_{t}$, l'algorithme $9$ admet une complexité en $O(\log(l))$, $O(log(q))$, $O(n)$ et $O(\sqrt{|\Delta|})$
+\end{Prop}
+
+\begin{proof}
+	Il s'agit de remarquer pour chaque paramètre quelle étape domine la complexité. Les seules étapes dépendant de $l$ sont en $O(\log(l))$. La dépendance en $q$ est en $(log(q^n))$ pour le calcul de l'image du point $P$, d'où une complexité en $O(log(q))$ et en $O(n)$. La dépendance en $\Delta$ est dominé par la recherche de relation dans l'algorithme $4$, qui est en $O(\sqrt{|\Delta|})$. 
+\end{proof}
+
+\begin{Prop}
+	Si $N = N_{p}$, l'algorithme $9$ admet une complexité en $O(\log(l))$, $O(log(q))$, $O(n)$ et 
+	\begin{equation*}
+		O\left( L\left(\frac{1}{2}, z + \frac{1}{4z} \right) + L\left(\frac{1}{2}, 3z \right) \right). 
+	\end{equation*}
+	 Le temps de calcul de l'algorithme est minimal lorsque $z = \frac{1}{2\sqrt{2}}$ et dans ce cas la complexité selon $\Delta$ est en \begin{equation*}
+	 	O\left( L\left(\frac{1}{2}, \frac{3}{2\sqrt{2}} \right) \right)
+	 \end{equation*}
+\end{Prop}
+	
+\begin{proof}
+	 Seule la dépendance en $\Delta$ change comparé à la proposition précédente. Les étapes sous-exponentielle en $\log(|\Delta|)$ sont
+	 \begin{enumerate}
+	 	\item L'algorithme $3$, en $O(L(\frac{1}{2}, z))$,
+	 	\item L'algorithme $4$, en $O(L(\frac{1}{2}, z + \frac{1}{4z}))$,
+	 	\item Le calcul de $L_{composantes}$, en $O\left( t\left(N^3\log(N)^{2} + N^2\log(q) \right) \right) = O(L(\frac{1}{2}, 3z))$.
+	 	\item Le calcul de l'image du point $P$, en $O(tN^2\log(q^n)) = O(L(\frac{1}{2}, 2z))$
+	 \end{enumerate}
+	 Pour tout $z$, le calcul de $L_{composantes}$ domine en complexité à la fois l'algorithme $3$ et le calcul de l'image de $P$. Ainsi la complexité de l'algorithme $9$ est en
+	 \begin{equation*}
+	 	O\left( L\left(\frac{1}{2}, z + \frac{1}{4z} \right) + L\left(\frac{1}{2}, 3z \right) \right). 
+	 \end{equation*}
+	 On choisit $z > 0$ minimisant cette complexité : on veut équilibré les deux termes, c'est à dire choisir $z$ tel que
+	 \begin{equation*}
+	 	z + \frac{1}{4z} = 3z \iff z^2 = \frac{1}{8}
+	 \end{equation*}
+	 On choisit donc $z = \frac{1}{2\sqrt{2}}$. la complexité obtenue est alors en
+	 \begin{equation*}
+	 	O\left( L\left(\frac{1}{2}, \frac{3}{2\sqrt{2}} \right) \right)
+	 \end{equation*}
+	 
+\end{proof}
 	
