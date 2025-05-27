@@ -2,6 +2,7 @@ from sage.rings.finite_rings.integer_mod import square_root_mod_prime
 from sage.rings.finite_rings.integer_mod import square_root_mod_prime_power
 from sage.rings.number_field.order_ideal import NumberFieldOrderIdeal
 import time
+import numpy as np 
 
 def ideal_de_norme(l,f,D):
 
@@ -273,6 +274,66 @@ def test(K,O,l,N,Borne_z,Borne_t):
 
     return Exposant, t1, Compte, Idéaux, Exposant2, t2, Compte2, Idéaux2
 
+
+D = -38669866235  
+
+K.<t> = QuadraticField(D)
+O = K.maximal_order()
+D = O.discriminant()
+
+print('Discriminant ordre :', D)
+
+N = 2*int(log(-D,2))^2                 
+z = 1/(2*sqrt(3))  
+Borne_z = int(sqrt(log(-D/3,2))/z)     
+Borne_t = int(log(-D)/log(log(-D)))
+
+l = next_prime(randint(10^20, 10^21))
+while kronecker(D,l) != 1:
+        l = next_prime(l)
+
+somme_exp = []
+temps = []
+tentatives = []
+nb_idéaux = []
+norme_max = []
+nb_exp = []
+
+somme_exp2 = []
+temps2 = []
+tentatives2 = []
+nb_idéaux2 = []
+norme_max2 = []
+nb_exp2 = []
+
+for i in range(1):
+    exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
+    temps.append(t1)
+    temps2.append(t2)
+    tentatives.append(c1)
+    tentatives2.append(c2)
+    somme_exp.append(sum(exp1))
+    somme_exp2.append(sum(exp2))
+    nb_idéaux.append(len(Id1))
+    nb_idéaux2.append(len(Id2))
+    norme_max.append((Id1[-1]).norm())
+    norme_max2.append((Id2[-1]).norm())
+
+print('Somme des exposants :')
+print(np.mean(somme_exp), np.mean(somme_exp2))
+print('temps de calcul :')
+print(np.mean(temps), np.mean(temps2))
+print('nombre de tentatives :')
+print(np.mean(tentatives), np.mean(tentatives2))
+print('nombre exposants :')
+print(np.mean(nb_idéaux), np.mean(nb_idéaux2))
+print('norme maximale :')
+print(np.mean(norme_max), np.mean(norme_max2))
+
+
+
+
+
 D = -3635657473823
 
 K.<t> = QuadraticField(D)
@@ -290,10 +351,44 @@ l = next_prime(randint(10^20, 10^21))
 while kronecker(D,l) != 1:
         l = next_prime(l)
 
-exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
-print('Exposants')
-print(exp1, exp2)
-print('Temps')
-print(t1,t2)
-print('Tentatives')
-print(c1,c2)
+somme_exp = []
+temps = []
+tentatives = []
+nb_idéaux = []
+norme_max = []
+nb_exp = []
+
+somme_exp2 = []
+temps2 = []
+tentatives2 = []
+nb_idéaux2 = []
+norme_max2 = []
+nb_exp2 = []
+
+for i in range(1):
+    exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
+    temps.append(t1)
+    temps2.append(t2)
+    tentatives.append(c1)
+    tentatives2.append(c2)
+    somme_exp.append(sum(exp1))
+    somme_exp2.append(sum(exp2))
+    nb_idéaux.append(len(Id1))
+    nb_idéaux2.append(len(Id2))
+    norme_max.append((Id1[-1]).norm())
+    norme_max2.append((Id2[-1]).norm())
+
+print('Somme des exposants :')
+print(np.mean(somme_exp), np.mean(somme_exp2))
+print('temps de calcul :')
+print(np.mean(temps), np.mean(temps2))
+print('nombre de tentatives :')
+print(np.mean(tentatives), np.mean(tentatives2))
+print('nombre exposants :')
+print(np.mean(nb_idéaux), np.mean(nb_idéaux2))
+print('norme maximale :')
+print(np.mean(norme_max), np.mean(norme_max2))
+
+
+
+
