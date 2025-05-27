@@ -27,7 +27,6 @@ def ideal_de_norme(l,f,D):
 
 
 
-
 def forme_de_norme(l,D):
 
     #Remarque : Seysen dmande une racine spécifique, la plus petite vu dans N. Mais cela n'est pas nécessaire pour la suite (Cf Cohen)
@@ -43,8 +42,12 @@ def forme_de_norme(l,D):
             y = square_root_mod_prime(d,l)
             b = x.crt(y)
             b = ZZ(b)
-        ql = BinaryQF([l,b, int(int((b^2 - D))/int(4*l))])
-        return ql
+        ql = BinaryQF([l,b, (b^2 - D)/(4*l)])
+        if ql.discriminant() == D:
+            return ql
+        else:
+            raise ValueError('erreur de discriminant de forme')
+
 
 
 def formes_generatrices (D,N,test_norm): #Trouver la borne : Analyse de Jao
@@ -275,63 +278,6 @@ def test(K,O,l,N,Borne_z,Borne_t):
     return Exposant, t1, Compte, Idéaux, Exposant2, t2, Compte2, Idéaux2
 
 
-D = -38669866235  
-
-K.<t> = QuadraticField(D)
-O = K.maximal_order()
-D = O.discriminant()
-
-print('Discriminant ordre :', D)
-
-N = 2*int(log(-D,2))^2                 
-z = 1/(2*sqrt(3))  
-Borne_z = int(sqrt(log(-D/3,2))/z)     
-Borne_t = int(log(-D)/log(log(-D)))
-
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-        l = next_prime(l)
-
-somme_exp = []
-temps = []
-tentatives = []
-nb_idéaux = []
-norme_max = []
-nb_exp = []
-
-somme_exp2 = []
-temps2 = []
-tentatives2 = []
-nb_idéaux2 = []
-norme_max2 = []
-nb_exp2 = []
-
-for i in range(1):
-    exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
-    temps.append(t1)
-    temps2.append(t2)
-    tentatives.append(c1)
-    tentatives2.append(c2)
-    somme_exp.append(sum(exp1))
-    somme_exp2.append(sum(exp2))
-    nb_idéaux.append(len(Id1))
-    nb_idéaux2.append(len(Id2))
-    norme_max.append((Id1[-1]).norm())
-    norme_max2.append((Id2[-1]).norm())
-
-print('Somme des exposants :')
-print(np.mean(somme_exp), np.mean(somme_exp2))
-print('temps de calcul :')
-print(np.mean(temps), np.mean(temps2))
-print('nombre de tentatives :')
-print(np.mean(tentatives), np.mean(tentatives2))
-print('nombre exposants :')
-print(np.mean(nb_idéaux), np.mean(nb_idéaux2))
-print('norme maximale :')
-print(np.mean(norme_max), np.mean(norme_max2))
-
-
-
 
 
 D = -3635657473823
@@ -365,7 +311,7 @@ nb_idéaux2 = []
 norme_max2 = []
 nb_exp2 = []
 
-for i in range(1):
+for i in range(100):
     exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
     temps.append(t1)
     temps2.append(t2)
