@@ -3,6 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[french]{babel}
+\usepackage{quiver}
 \usetheme{Madrid}
 \begin{document}
 	\author[Maxime LOUVET]{Maxime LOUVET}
@@ -22,14 +23,14 @@
 		\frametitle{Profil académique}
 		\begin{block}{Mon parcours universitaire}
 			\begin{itemize}
-				\item<1-> 2017-2020 \textbf{CPGE filière MPSI/MP*}
-				Lycée Faidherbe, Lille 
+				\item<1-> 2017-2020 \textbf{CPGE filière MPSI/MP*},
+				Lycée Faidherbe, Lille.
 				
-				\item<2-> 2021-2023 \textbf{L3, Master Formation à l'Enseignement Supérieur}
-				Université Paris-Saclay
+				\item<2-> 2020-2023 \textbf{L3, Master Formation à l'Enseignement Supérieur de Mathématiques},
+				Université Paris-Saclay, Orsay.
 				
-				\item<3-> 2024/2025 \textbf{M2 Algèbre Appliquée}
-				Université Versailles Saint-Quentin
+				\item<3-> 2024/2025 \textbf{M2 Algèbre Appliquée},
+				Université Versailles Saint-Quentin.
 				
 			\end{itemize}
 		\end{block}
@@ -47,7 +48,7 @@
 				
 				\item<3-> 08/2024-02/2025 \textbf{Khôlleur}, lycée Lakanal, Sceaux.
 				
-				\item<4-> 02/2025-Aujourd'hui \textbf{Stage de M2 au laboratoire MIS}
+				\item<4-> 02/2025-Aujourd'hui \textbf{Stage de M2 au laboratoire MIS}, Amiens.
 				
 			\end{itemize}
 		\end{block}
@@ -55,33 +56,116 @@
 	
 	\begin{frame}
 		\frametitle{Échange de clef en cryptographie} 
+		Alice et Bob veulent créer un secret $K$ à partir d'une donnée $P$ publique. 
+		\begin{center}
+			Soit $(G,+)$ un groupe, et $P\in(G,+)$.
+			
+			\includegraphics[scale = 0.4]{DH}
 		
+		\begin{block}{Problème du logarithme discret (DLP)}
+			Étant donné $P$ et $Q$ deux éléments d'un groupe $G$, trouver $k$ tel que $Q = k\cdot P$.
+		\end{block}
+	\end{center}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Groupe et géométrie} 
+		\begin{center}
+			\includegraphics[scale = 0.4]{cercle1}<1>
+			\includegraphics[scale = 0.4]{cercle2}<2>
+			\includegraphics[scale = 0.4]{cercle3}<3>
+			\includegraphics[scale = 0.4]{cercle4}<4>
+		\end{center}
 		
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Courbes elliptiques} 
+		\begin{itemize}
+			\item Problème DLP sur le cercle : Facile.
+			\item Droites, ellipses, hyperboles... : courbe de "genre" $0$ donc "simple".
+		\begin{block}{Courbes Elliptiques}
+			Les courbes elliptiques sont les courbes de genre $1$.
+		\end{block}
 		
+		\item Problème DLP sur courbes elliptiques : Difficile. 
+		\end{itemize}
+		\begin{block}{Projet réalisé}
+			\begin{itemize}
+				\item 2023 \textbf{Baby step Giant step} Problème DLP sur groupe quelconque.
+				\item 2025 \textbf{Méthode GLV} Calcul de $k\cdot A$ sur courbe elliptique.
+			\end{itemize}
+		\end{block}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Stage actuel} 
 		\framesubtitle{Cryptanalyse et isogénies} 
 		
+		Si $E$ et $E'$ sont deux courbes elliptiques, soit $\phi$ une application qui à un point $P\in E$ associe un point $\phi(P)\in E'$.
+		
+		\begin{block}{Isogénie entre courbes elliptiques}
+			$\phi$ est une isogénie si elle vérifie
+			\begin{equation*}
+				\phi(P+Q) = \phi(P) + \phi(Q).
+			\end{equation*}
+		\end{block}
+		
+		\begin{block}{Lien avec le problème DLP }
+			Si $\phi$ est une isogénie, alors $Q = k\cdot P\iff \phi(Q) = k\cdot\phi(P)$
+		\end{block}
+		
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Stage actuel} 
 		\framesubtitle{Calculer une isogénie}
+		\begin{block}{Sujet de stage}
+			Trouver $\phi$ isogénie entre $E$ et $E'$ ? Calculer $\phi(P)$ lorsque $P\in E$?
+		\end{block}
+		\begin{itemize}
+			\item Difficulté mesurée selon $q$ (taille des groupes) et $l$ ("degrés" de l'isogénie).
+			\item Formule de Vélu : méthode générale, rapide selon $q$ mais lent selon $l$ : Permet de calculer les "petites" isogénies.
+		\end{itemize}
 		
+		
+		\begin{block}{Méthodes de calcul d'isogénies}
+			\begin{itemize}
+				\item Idée 1 : \textbf{Action du groupe de classes}(2008): rapide selon $l$, mais moyennement rapide selon $q$. 
+				\item Idée 2 : \textbf{Lemme de Kani}(2022): rapide en théorie selon $l$ et $q$. 
+			\end{itemize}
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Stage actuel} 
+		\framesubtitle{Action du groupe de classe}
+		\begin{block}{Action du groupe de classe}
+			\begin{enumerate}
+				\item On représente une isogénie par un objet $L$ et une classe $\tilde{L}$.
+				\item $\tilde{L}$ s'écrit dans un groupe $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$. 
+				\item On calcule les isogénies associées à $L_1, \cdots, L_n$ avec Vélu.
+				\item On les enchaîne pour calculer $\phi$.
+			\end{enumerate}
+		\end{block}
+		\begin{itemize}
+			\item $L_1,\cdots,L_n$ : petites isogénies, donc la formule de Vélu est rapide.
+			\item Trouver $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$ lent selon $q$ : Optimisation possible. 
+		\end{itemize}
+		
+		\begin{block}{Contribution personnelle}
+			\begin{itemize}
+				\item Proposition d'optimisation pour l'étape $2$, implémentée dans Sage. 
+				\item Comparaison avec l'optimisation initiale (Jao Soukharev 2010).
+			\end{itemize}
+		
+		\end{block}
+	
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Introduction à la thèse} 
+		
 		
 	\end{frame}
 	
