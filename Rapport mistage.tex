@@ -1,0 +1,108 @@
+\documentclass{article}
+
+% Language setting
+
+\usepackage[french]{babel}
+
+
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{blindtext}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage[backend = bibtex ]{biblatex}
+\usepackage{csquotes}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz-cd}
+\usepackage{quiver}
+%\usetikzlibrary{calc,babel} 
+\usepackage{tikz}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\linespread{0.95}
+\renewcommand{\algorithmicrequire} {\textsc{INPUT:}}
+\renewcommand{\algorithmicensure}  {\textsc{OUTPUT:}}
+
+
+\newcommand{\N}[0]{\mathbb{N}}
+\newcommand{\Z}[0]{\mathbb{Z}}
+\newcommand{\Q}[0]{\mathbb{Q}}
+\newcommand{\R}[0]{\mathbb{R}}
+\newcommand{\C}[0]{\mathbb{C}}
+\newcommand{\K}[0]{\mathbb{K}}
+\newcommand{\Pc}[0]{\mathbb{P}}
+\newcommand{\Lc}[0]{\mathbb{L}}
+\newcommand{\Kb}[0]{\bar{\K}}
+\newcommand{\Qb}[0]{\bar{\Q}}
+\newcommand{\Zb}[0]{\bar{\Z}}
+\newcommand{\Fb}[0]{\bar{\F}}
+\newcommand{\OR}[0]{\mathcal{O}}
+\newcommand{\LR}[0]{\mathfrak{L}}
+\newcommand{\PR}[0]{\mathfrak{P}}
+\newcommand{\IR}[0]{\mathfrak{I}}
+\newcommand{\HR}[0]{\mathcal{H}}
+\newcommand{\CL}[0]{\tilde{\LR}}
+\newcommand{\CP}[0]{\tilde{\PR}}
+\newcommand{\F}[0]{\mathbb{F}}
+\newcommand{\A}[0]{\mathbb{A}}
+
+
+
+\newtheorem{The}{Théorème}[section]
+\newtheorem{Prop}[The]{Proposition}
+\newtheorem{Coro}[The]{Corollaire}
+
+\theoremstyle{definition}
+\newtheorem*{Def}{Définition}
+\newtheorem*{Ex}{Exemple}
+\newtheorem{Hyp}{Hypothèse}
+
+\theoremstyle{remark}
+\newtheorem*{Rem}{Remarque}
+
+\tikzset{
+	curve/.style={
+		settings={#1},
+		to path={
+			(\tikztostart)
+			.. controls ($(\tikztostart)!\pv{pos}!(\tikztotarget)!\pv{height}!270:(\tikztotarget)$)
+			and ($(\tikztostart)!1-\pv{pos}!(\tikztotarget)!\pv{height}!270:(\tikztotarget)$)
+			.. (\tikztotarget)\tikztonodes
+		},
+	},
+	settings/.code={%
+		\tikzset{quiver/.cd,#1}%
+		\def\pv##1{\pgfkeysvalueof{/tikz/quiver/##1}}%
+	},
+	quiver/.cd,
+	pos/.initial=0.35,
+	height/.initial=0,
+}
+
+
+\addbibresource{biblio.bib}
+
+
+
+
+\title{Calculs dans les graphes d'isogénies}
+\author{Maxime LOUVET}
+
+\begin{document}
+	\maketitle
+	
+	\section{Objectifs du stage}
+	contexte, 2 algo, 
+	\section{Méthode étudiée}
+	action du groupe de classe, groupe de torsion, marche aléatoire
+	\section{Seconde méthode}
+	Lemme de Kani, probleme de la N torsion, cas supersingulier
+	\newpage
+	\printbibliography
+	
+\end{document}

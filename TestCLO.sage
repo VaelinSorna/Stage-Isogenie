@@ -311,7 +311,7 @@ nb_idéaux2 = []
 norme_max2 = []
 nb_exp2 = []
 
-for i in range(100):
+for i in range(30):
     exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
     temps.append(t1)
     temps2.append(t2)
