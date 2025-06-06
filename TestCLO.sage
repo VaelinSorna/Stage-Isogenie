@@ -261,11 +261,8 @@ def test(K,O,l,N,Borne_z,Borne_t):
     L = ideal_de_norme(l,f,D)
     # On choisit test_norm de sorte toujours commencer une marche aléatoire
     ql = L.quadratic_form()
-    print(ql)
     ql = ql.reduced_form()
-    print(ql)
     test_norm = ql[0]
-    print('test_norm :', test_norm)
     
     début = time.time()
     Exposant, Idéaux, Compte = factorisation(L,D,N,Borne_z,test_norm)
@@ -280,7 +277,7 @@ def test(K,O,l,N,Borne_z,Borne_t):
 
 
 
-D = -3635657473823
+D = -48221266355996583
 
 K.<t> = QuadraticField(D)
 O = K.maximal_order()
@@ -291,11 +288,7 @@ print('Discriminant ordre :', D)
 N = 2*int(log(-D,2))^2                 
 z = 1/(2*sqrt(3))  
 Borne_z = int(sqrt(log(-D/3,2))/z)     
-Borne_t = int(log(-D)/log(log(-D)))
-
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-        l = next_prime(l)
+Borne_t = int(log(-D,2)/log(log(-D,2),2))
 
 somme_exp = []
 temps = []
@@ -312,6 +305,9 @@ norme_max2 = []
 nb_exp2 = []
 
 for i in range(30):
+    l = next_prime(randint(10^20, 10^21))
+    while kronecker(D,l) != 1:
+        l = next_prime(l)
     exp1, t1, c1, Id1, exp2, t2, c2, Id2 = test(K,O,l,N,Borne_z,Borne_t)
     temps.append(t1)
     temps2.append(t2)

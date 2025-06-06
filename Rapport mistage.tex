@@ -90,18 +90,118 @@
 
 
 
-\title{Calculs dans les graphes d'isogénies}
+\title{Pré-rapport de stage}
 \author{Maxime LOUVET}
 
 \begin{document}
 	\maketitle
 	
-	\section{Objectifs du stage}
-	contexte, 2 algo, 
-	\section{Méthode étudiée}
-	action du groupe de classe, groupe de torsion, marche aléatoire
-	\section{Seconde méthode}
-	Lemme de Kani, probleme de la N torsion, cas supersingulier
+	\section{Présentation du stage}
+	
+	\subsection{Cadre}
+	
+	J'effectue mon stage au laboratoire Modélisation, Information et Systèmes (MIS) d'Amiens, auprès de l'équipe Optimisation, Cryptographie et IA (OCIA), et encadré par Sorina Ionica. Le stage est accompagné d'un projet de thèse dans la continuité du sujet. 
+	
+	\subsection{Sujet}
+	
+	Les graphes d’isogénies sont des graphes dont les nœuds sont des courbes elliptiques, et les arêtes sont des isogénies. Ces objets sont employés pour construire des protocoles cryptographiques et pour en étudier la sécurité. Le problème de calculer un plus court chemin entre deux nœuds de ces graphes permet d’attaquer le problème du logarithme discret (DLP), fondamental en cryptographie classique à base de courbes elliptiques, mais aussi au cœur des méthodes de cryptanalyse des propositions de schémas d’échange de clé et signature basés sur les isogénies. Le stage consiste en une étude de l’état de l’art des différents algorithmes permettant de résoudre le problème du plus court chemin dans ces graphes.\\
+	
+	Certaines méthodes sont purement combinatoires, et repose sur une formule dû à Vélu. D'autres reposent sur des calculs dans le groupe de classes d’idéaux d’un certain corps quadratique associé à la courbe elliptique. L'une a été introduite par Broker, Charles et Lauter \cite{BrokerCharlesLauter} en 2008, et optimisée par Jao et Soukharev \cite{JaoSoukharev} en 2010. L'idée repose sur une factorisation d'une isogénie en une compositions d'isogénies de petits degrés, et présente une complexité théorique sous-exponentielle.\\
+	 
+	La méthode la plus récente de l'état de l'art, appelée Clapoti, \cite{Clapoti} s'inspire de l'attaque du cryptosystème SIDH en 2022. La redécouverte de résultats dû à Kani permet d'éviter une étape crucial de factorisation des  méthodes précédentes, mais demande de résoudre certaines équations diophantiennes à la place. Si elles peuvent être résolue efficacement, alors la complexité théorique devient polynomiale. Deux articles \cite{KLaPoTi} puis \cite{Pegasis} ont proposé en 2024 et 2025 des idées permettant d'appliquer efficacement la méthode Clapoti au contexte du système de signature post-quantique CSIDH. 
+	
+	\subsection{Travaux effectués et objectifs}
+	
+	Au moment de l'écriture de ce pré-rapport, j'ai pu mener une étude théorique de la méthode de Broker, Charles et Lauter \cite{BrokerCharlesLauter}. J'ai proposé une implémentation en Sage, en suivant les idées d'optimisation proposé par Jao et Soukharev \cite{JaoSoukharev} ainsi que des prises d'initiatives personnelles quand cela m'a semblé pertinent. L'objectif est d'avoir une analyse de complexité de mon implémentation et de la comparer avec l'état de l'art, c'est à dire avec celle de \cite{JaoSoukharev} et par la suite avec la méthode Clapoti \cite{Clapoti}. Il faut cependant comprendre cette dernière et l'appliquer aux même exemples, qui sorte du contexte de CSIDH où s'applique les idées de \cite{KLaPoTi} et \cite{Pegasis}. Le projet de thèse vise à appliquer Clapoti à la cryptanalyse de schémas pré-quantiques. 
+	 
+	\section{Revue de la méthode étudiée}
+	
+	\subsection{Rappels et notations}
+	
+	On suppose connues les notions de théorie des nombres nécessaires pour définir le groupe de classes d'idéaux d'un ordre d'un corps de nombres (voir par exemple \cite{Cox}[\S 5 et 7]). En particulier on considère des extensions $\K$ de $\Q$ de degré $2$ qui ne sont pas incluses dans $\R$, que l'on appelle des corps quadratiques imaginaires. Un tel corps est caractérisé par son discriminant $d_\K < 0$. Soit une courbe elliptique $E$ définie sur un corps fini $\F_q$ de caractéristique $p$. Elle est dites à multiplication complexe (CM), ou ordinaire, si son anneaux d'endomorphismes est un ordre dans un corps quadratique imaginaire. Un tel ordre est caractérisé soit par son conducteur $f$, soit son discriminant $\Delta$, avec la relation $\Delta = f^2d_\K < 0$. Pour une courbe elliptique $E$ CM, on note $\OR_\Delta$ l'anneau d'endomorphisme. On considère alors $Cl(\OR_\Delta)$ le groupe (commutatif) des classes d'idéaux de cet ordre. Si $\LR$ est un idéal fractionnaire de $\OR_\Delta$, on note $\CL$ sa classe, et on rappelle que 
+	\begin{equation*}
+		\CL = \CL' \iff \exists\alpha\in\K,\; \alpha\LR = \LR'.
+	\end{equation*}
+	Soit $l$ un nombre premier, $l\neq p$. $l$ est dit décomposé dans $\OR_\Delta$ si $\Delta$ est un carré non nul modulo $l$, ramifié si $\Delta = 0$ modulo $l$, et inerte sinon. Une isogénie $\phi : E\rightarrow E'$ est une $l$-isogénie si elle est séparable de degré $l$. D'après la thèse de David Kohel \cite{Kohel}, les graphes de $l$-isogénies entre courbes $CM$ ont une structure dite de volcan d'isogénies. En particulier, on en déduit que pour calculer efficacement des isogénies entre deux courbes $E$ et $E'$ d'anneaux d'endomorphismes isomorphes à $\OR_\Delta$, on peut se restreindre à l'étude des isogénies séparable de degré $l$ décomposé et premier avec le conducteur $f$. On note $\pi_q$ l'endomorphisme de Frobenius sur $E$. Alors $\Z[\pi_q]$ vu dans $\OR_\Delta$ est aussi un ordre de $\K$, de conducteur noté $f_m$. En particulier l'inclusion $\Z[\pi_q]\subset\OR_\Delta$ implique que $f$ divise $f_m$. 
+	
+	
+	\subsection{Action du groupe de classes d'idéaux}
+	
+	On considère $Ell_{\F_q}(\OR_\Delta)$ l'ensemble des courbes elliptiques CM d'anneaux d'endomorphismes isomorphes à l'ordre $\OR_\Delta$. Pour débuter le stage, j'ai commencer par étudier une introduction à la théorie de la multiplication complexe \cite{Sil94} qui permet de définir une action simplement transitive du groupe $Cl(\OR_\Delta)$ sur $Ell_{\F_q}(\OR_\Delta)$. Cependant si $\LR$ est un idéal factionnaire de $\OR_\Delta$, l'action de $\CL$ sur une courbe elliptique $E$ ne définit pas proprement une isogénie sur $E$, mais seulement à endomorphisme prêt (les endomorphismes étant représentés par la classe des idéaux principaux). Si $\LR\subset\OR_\Delta$ est un idéal entier de norme premier avec le conducteur $f$, alors $\LR$ définit une isogénie. Plus précisément $\LR$ permet de définir un sous groupe fini $E[\LR]$ de $E$, appelé groupe de $\LR$-torsion, qui est le noyau d'une unique isogénie séparable $\phi_\LR$ dont la courbe image est donnée par l'action de $\CL$ sur $E$. Le degré de $\phi_\LR$ est alors la norme de l'idéal $\LR$. On note $E/E[\LR]$ la courbe image de $\phi_\LR$.
+	
+	\subsection{Calculs d'isogénies de petits degrés}
+	
+	On souhaite calculer une isogénie $\phi$ de degré $l$ supposé décomposé dans $\OR_\Delta$ et premier avec $f_m$. Comme $l$ est décomposé, il existe deux idéaux entier conjugué $\LR$ et $\bar{\LR}$ dans $\OR_\Delta$, de norme $l$. Il existe $l+1$ $l$-isogénies sur $E$ définies sur $\bar{\F_Q}$, mais d'après la structure de volcan d'isogénie, comme $l$ est premier avec $f_m$, il existe exactement $2$ $l$-isogénies définies sur $\bar{\F_Q}$. Elles sont données par $\LR$ et $\bar{\LR}$. On choisit par exemple $\LR$ et on souhaite calculer l'isogénie associée à l'idéal $\LR$. Plus précisément, $\LR$ peut être efficacement écrit sous la forme 
+	\begin{equation*}
+		\LR = l\Z + (c + \pi_q)\Z, 
+	\end{equation*} 
+	où $\pi_q$ est l'image du morphisme de Frobenius vu dans $\OR_\Delta$, et $c\in\Z$ défini modulo $l$. On effectue alors un précalcule de $\Phi_l\in\F_q[X,Y]$, le polynôme modulaire associée à $l$. C'est un objet que l'on sait calculer explicitement connaissant seulement $l$, mais dont le calcul est de complexité cubique en $l$. Lorsque $l$ est suffisamment petit, en particulier $l<4|\Delta|$ et $l<4(p+1)$, on peut retrouver efficacement le sous groupe $E[\LR]$ à partir de la donnée de $\Phi_l$ et $c$. Cette méthode est dû à Atkin et Elkies, et a été optimisée de plusieurs manières. On utilise la méthode "FastElkies'" de \cite{Bostan_2008}, aussi appelée algorithme BMSS dans Sage. Une fois connu le sous groupe $E[\LR]$, la formule de Vélu \cite{Velu71} permet de trouver l'isogénie $\phi_\LR$ en complexité exponentielle en $\log(l)$. De façon remarquable, l'algorithme BMSS n'utilise que de l'arithmétique dans $\F_q$, même si le groupe $E[\LR]$ peut contenir des points aux coordonnées dans une extension de $\F_q$. 
+	
+	\subsection{Calculs dans le groupe de classe d'idéaux}
+	
+	On souhaite calculer une isogénie $\phi$ de degré $l$ décomposé et premier avec $f_m$ dans $\OR_\Delta$, à partir d'un idéal $\LR$ de norme $l$, mais cette fois-ci sans savoir de conditions de taille sur $l$. L'idée va être d'écrire la classe $\CL$ comme produit 
+	\begin{equation}
+		\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{N}^{e_{N}},\; N\in\N,\; e_1,\ldots,e_N\in\Z,
+	\end{equation}
+	dans une famille de classe $\CP_1,\ldots,\CP_N$ dont on connaît des représentants $\PR_1,\ldots,\PR_N$ de normes $p_1,\ldots,p_N$ qui sont de petits nombres premiers décomposés et premiers avec $f_m$. Une partie conséquente du stage a été de comprendre comment mener ce calcul et de l’implémenter dans Sage. Il faut d'abord construire la famille d'idéaux $L_{representant} = \left\lbrace \PR_1,\ldots,\PR_N\right\rbrace $. Pour cela on établit la liste des $N$ premiers nombres premiers $L_{premiers} = \left\lbrace p_1,\ldots,p_N\right\rbrace $ décomposés dans $\OR_\Delta$ et premier avec $f_m$ (en rejetant la caractéristique $p$ si besoin.) On choisit alors $N$ suffisamment grand pour que la famille $\CP_1,\ldots,\CP_N$ forme une famille génératrice de $Cl(\OR_\Delta)$. Sous l'hypothèse de Riemann généralisée, il existe une constante $C$ telle que $N = C\log(\Delta)^{2}$ convienne. Plus précisément \cite{Coh00} énonce que $C=6$ convient, et estime de plus cette borne $N$ pessimiste et conjecture $N = O(\log(\Delta)^{1 + \epsilon})$ avec $\epsilon > 0$ aussi petit que l'on veut. On utilise de plus un outil supplémentaire, les formes quadratiques binaires primitives associées à un idéal entier de $\OR_\Delta$. Cela rend les calculs de produit d'idéaux, ou de classes d'idéaux, effectifs. On en déduit un algorithme qui prend en entrée $N$, $\Delta$ et qui renvoie les listes $L_{premiers}$, $L_{representant}$ et $L_{formes}$ qui contient les formes associées à chaque idéal de $L_{representant}$.\\
+	
+	Maintenant on se donne un idéal $\LR$ de norme premier $l$, et on souhaite écrire $\CL$ comme produit dans la famille $\CP_1,\ldots,\CP_N$. L'idée est d'effectuer une marche aléatoire dans le graphe de Cayley de $Cl(\OR_\Delta)$ selon la partie génératrice des classes des éléments de $L_{representant}$ (on suppose ici pour simplifier que tout ces représentants ont des classes distinctes). Ce graphe a donc pour sommet les éléments de $Cl(\OR_\Delta)$, et deux classe $\CL_1$, $\CL_2$ sont reliées s'il existe une classe $\CP_{i}$ telle que $\CL_1\CP_i = \CL_2$. Faire une marche aléatoire de $t$ pas dans ce graphe en partant de $\CL$, c'est multiplier $\CL$ par $t$ éléments aléatoires parmi $\CP_1,\ldots,\CP_N$. Or certaines classes particulières peuvent être factorisées de façon déterministe (voir \cite{Seysen}[Th 3.1]). Si la marche aléatoire s'arrête sur une telle classe, on peut en déduire l'écriture souhaitée de $\CL$. De plus, le graphe parcouru est un graphe dit expanseur, et cette propriété permet d'estimer le nombre $t$ de pas de la marche aléatoire nécessaire pour avoir un probabilité uniforme de tomber sur une classe quelconque. On choisit donc un nombre $t$ fixe et on effectue des marches aléatoire partant de $\CL$ de $t$ pas jusqu'à tomber sur une classe vérifiant les hypothèse de \cite{Seysen}[Th 3.1]. On en déduit un algorithme qui prend en entrée $N$, $\Delta$ et $\CL$ et qui renvoie sous forme de listes une écriture de $\CL$ selon l'équation $(1)$. 
+	
+	\subsection{Application aux calculs d'isogénies}
+	
+	On se donne donc $\LR$ un idéal entier de norme premier $l$, et on souhaite calculer l'isogénie associée $\phi_\LR$. Plus précisément on se donne $n\in\N$ et $P\in E(\F_{q^{n}})$, et l'on souhaite calculer l'image $\phi_\LR(P)$. Pour une étape finale de l'algorithme, on suppose de plus que $|E(\F_{q^{n}})|$ est premier avec $l$ et $f_m$. On applique ce qui précède pour obtenir une écriture de $\CL$ sous la forme de l'équation $(1)$. Partant de $E$, on calcule avec Vélu la suite d'isogénie
+	\begin{equation*}
+		E\rightarrow E/E\left[ \PR_{1}\right] \rightarrow E/E\left[ \PR_{1}^{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\right] \rightarrow
+	\end{equation*}
+	\begin{equation*}
+		\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\right] \rightarrow\ldots\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right],
+	\end{equation*}
+	et l'on note $\phi_c : E\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ la composée. $\phi_c$ et $\phi_\LR$ sont associée à des idéaux de même classe, mais $\phi_c \neq \phi_\LR$ ($\phi_c$ n'est pas de degré premier). Pour obtenir $\phi_\LR$, on remarque que $\widetilde{\bar{\LR}} = \tilde{\LR}^{-1}$, et que donc 
+	\begin{equation*}
+		\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \beta\OR_{\Delta},\;\beta\in\OR_\Delta.
+	\end{equation*} 
+	Le calcul de $\beta$ est rendu effectif en exploitant les formes quadratiques binaires \cite{Coh00}[Algo 5.4.2]. On montre alors qu'à partir de $\beta$ on peut explicitement calculer un endomorphisme $\psi$ sur la courbe image de $\phi_c$, tel que
+	\begin{equation*}
+		\forall\; P\in E[|E(\F_{q^{n}})|]\;,\;\phi_\LR(P) = \psi\circ\phi_c(P).
+	\end{equation*}
+	On doit cependant supposer ici que $|E(\F_{q^{n}})|$ est premier avec $l$ et $f_m$.\\
+	
+	J'ai pu implémenter l'algorithme décrit dans toute cette section, et le tester sur l'exemple "small" de l'article \cite{BrokerCharlesLauter}. L'exemple initiale propose un idéal de norme $l = 31$, mais l'étape de marche aléatoire est alors triviale car la classe de $\LR$ est directement factorisable avec le théorème \cite{Seysen}[Th 3.1]. Avec $l=59$ une marche aléatoire est nécessaire, et $l$ est suffisamment petit pour tester le résultat obtenue en appliquant directement la formule de Vélu. Sur ma machine personnel, il n'est pas possible de tester des exemples de grande caractéristique $p$. Il est possible dans la suite du stage de tester cela avec la plateforme Matrics. 
+	
+	\subsection{Analyse de complexité}
+	
+	Un objectif du stage est de mener une analyse de complexité des différentes méthodes de l'état de l'art. L'algorithme précédent a été analysé dans \cite{JaoSoukharev}, où la complexité énoncée est linéaire en $\log(l)$, $\log(q)$ et $n$, mais sous-exponentielle en $\log(\Delta)$. Cependant il y a plusieurs différences entre l'implémentation proposée par \cite{JaoSoukharev} et celle décrite précédemment. La différence principale, qui m'a amené à faire ma propre analyse de complexité, est l'implémentation de la marche aléatoire. Là où je suis la méthode précédente en choisissant un nombre de pas $t$ fixé, \cite{JaoSoukharev} choisit indépendamment et au hasard des exposants $x_1,\ldots,x_N$, en bornant le nombre maximal d'exposants non nuls par $B \simeq \sqrt{\log(|\Delta1)}$, ainsi que la valeur maximale de chaque $|x_i|$ par $B_i = (N/p_i)^2$. Les valeurs de $B$ et $B_i$ semblent expérimentales, et inspirées d'algorithmes qui ont besoin de trouver plusieurs relations telles que l'équation $(1)$ (par exemple \cite{Coh00}[5.5]). Cette implémentation conduit à des exposants de l'ordre de $B_i/2$ en moyenne, donc très élevé pour les petits nombres premiers. Cela conduit à calculer beaucoup d'isogénies. Au contraire, en respectant une marche aléatoire dans le groupe de classe, mon implémentation amène à des exposants en moyenne égaux à $\pm1$, et en pratique dépassant rarement $2$ sur des exemples. Cependant le nombre d'exposant non nul est de l'ordre de $\log(|\Delta|)/(\log(\log(|\Delta)))$, ce qui amène asymptotiquement à calculer plus de polynômes modulaires distincts que la méthode précédente. Un objectif du stage est de tester sur de grandes valeurs de $|\Delta|$ laquelle des deux méthodes est la plus efficace, à l'aide de la plateforme Matrics. 
+	
+	\subsection{Exemple de calcul dans le groupe de classe}
+	
+	 Soit $\Delta$ choisit au hasard (un entier négatif congrue à $0$ ou $1$ modulo $4$). Pour $10^20 < l < 10^21$ un nombre premier décomposé aléatoire, je calcule un idéal entier $\LR$ de $\OR_{\Delta}$ de norme $l$. Choisissant $N = 2*\log(|Delta|)^2$ d'après \cite{Seysen}[Th 3.3], je cherche à calculer une factorisation de $\CL$ avec la méthode de \cite{JaoSoukharev} (appelée méthode 1) puis mon implémentation (appelée méthode 2). Je répète cela $30$ fois, avec une valeur de $l$ différente à chaque fois. Je garde en mémoire les résultats puis je calcule la moyenne de la somme des exposants, du temps de calculs, du nombre de tentatives de marches aléatoires, du nombre d'exposants non nuls et de la norme maximale parmi les idéaux d'exposant non nuls.
+	\begin{center}
+	\begin{tabular}{|c|cc|cc|}
+		\hline
+		Discriminant & \multicolumn{2}{c|}{D = -3635657473865223} & \multicolumn{2}{c|}{D = -48221266355996583}  \\
+		\hline
+		Méthode & 1 & 2 & 1 & 2 \\
+		\hline
+		Somme exposants & 6266 & 12,9 & 262377 & 13 \\
+		\hline
+		Temps & 18,6s & 4,27s & 79s & 5,0s \\
+		\hline
+		Tentatives & 11,8 & 12,7 & 14,2 & 16,8 \\
+		\hline
+		Exposants non nuls & 12,5 & 11,9 & 15,1 & 12,2 \\
+		\hline
+		Norme maximale & 4515 & 4646 & 5457 & 5163 \\
+		\hline
+	\end{tabular}
+	\end{center}
+	
+	\section{Introduction à la seconde méthode}
+	
+	En parallèle de l'analyse de complexité précédente, un objectif central du stage est l'étude de la méthode la plus récente de l'état de l'art. Inspiré de l'attaque de 2022 sur le cryptosystème SIDH, l'article \cite{Clapoti} propose une méthode de calcul en temps polynomial de l'action du groupe de classe d'idéaux sur une courbe elliptique définie sur un corps fini $\F_q$. La méthode s'applique à la fois au courbes elliptiques CM et aux courbes elliptiques supersingulières orientées. Des contraintes techniques sur la méthodes font qu'elle a fortement été exploitée dans le cas des courbes elliptiques supersingulières \cite{KLaPoTi}, \cite{Pegasis}.\\
+	
+	Notre objectif est de comprendre la méthode présentée dans \cite{Clapoti} ainsi que les deux optimisations proposées par \cite{KLaPoTi} et \cite{Pegasis}, dans le but de les adapter aux courbes CM. L'obstacle principale identifié au moment de l'écriture de ce pré-rapport est la manipulation des point de $N$-torsion de la courbe $E$ donnée, pour un certain $N$. Ces points peuvent être définis sur une extension de $\F_q$, ce qui est très vite coûteux selon le degré d'extension. Dans le cas des courbes supersingulières, une méthode générale permet de choisir la caractéristique $p$ et un exposant $e$ tels que $N = 2^e$ soit un choix efficace. Ceci est dû au fait que toutes les courbes supersingulières définies sur $\F_p$ ont exactement $p+1$ points rationnels. Pour les courbes CM, il faut s'adapter aux différents cardinaux possible. Cela implique d'étudier certaines équations diophantienne impliquant $N$, le cardinal de la courbe et le degré de l'isogénie cherchée.\\
+	
+	
 	\newpage
 	\printbibliography
 	

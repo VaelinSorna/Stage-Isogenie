@@ -3,7 +3,11 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[french]{babel}
+\usepackage{tikz-cd}
 \usepackage{quiver}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{pgfplots}
 \usetheme{Madrid}
 \begin{document}
 	\author[Maxime LOUVET]{Maxime LOUVET}
@@ -11,7 +15,7 @@
 	%\subtitle{test}
 	%\logo{}
 	%\institute{}
-	\date[17/06/2025]{17/06/2025}
+	\date[19/06/2025]{19/06/2025}
 	%\subject{}
 	%\setbeamercovered{transparent}
 	%\setbeamertemplate{navigation symbols}{}
@@ -26,11 +30,11 @@
 				\item 2017-2020 \textbf{CPGE filière MPSI/MP*},
 				Lycée Faidherbe, Lille.
 				
-				\item 2020-2023 \textbf{L3, Master Formation à l'Enseignement Supérieur de Mathématiques},
-				Université Paris-Saclay, Orsay.
+				\item 2020-2023 \textbf{L3, Master Formation à l'Enseignement Supérieur de Mathématiques}, Institue de Mathématiques d'Orsay.
 				
-				\item<3-> 2024/2025 \textbf{M2 Algèbre Appliquée},
-				Université Versailles Saint-Quentin.
+				\item 2023 \textbf{Agrégation de mathématiques}, admis 34/345. 
+				
+				\item<3-> 2024/2025 \textbf{M2 Algèbre Appliquée}, Versailles.
 				
 			\end{itemize}
 		\end{block}
@@ -52,22 +56,71 @@
 		
 	\end{frame}
 	
-	
-		
-	
+
 	
 	\begin{frame}
-		\frametitle{Échange de clef en cryptographie} 
-		Alice et Bob veulent créer un secret $K$ à partir d'une donnée $P$ publique. 
-		\begin{center}
-			Soit $(G,+)$ un groupe, et $P\in(G,+)$.
+
+		\frametitle{\'Echange de clef en cryptographie}
+		
+		\begin{itemize}
+			\item Alice et Bob veulent créer un secret $K$ à partir d'une donnée $P$ publique.
+			\item Soit $(G,+)$ un groupe, et $P\in(G,+)$.
+		\end{itemize}
+		
+		\begin{columns}<2->
+			\column{1 cm}
+			\begin{figure}
+				\includegraphics[scale=0.18]{Alice.png}
+			\end{figure}
+			\column{6 cm}
 			
-			\includegraphics[scale = 0.45]{DH}<2->
+			
+			\begin{figure}
+				\begin{tikzpicture}{0cm}{-1cm}{4.5 cm}{1.5 cm}
+					%\pgfsetendarrow{\pgfarrowto}
+					%\pgfline{\pgfxy(0.5,1.15)}{\pgfxy(4.2,1.15)}
+					\draw [decoration={markings,mark=at position 1 with
+						{\arrow[scale=3,>=stealth]{>}}},postaction={decorate}] (0.5,1.15) --
+					(4.2,1.15);
+					\draw [->,>=stealth] (0.5,1.15) -- (4.2,1.15);
+					%\pgfclearendarrow
+					%\pgfsetstartarrow{\pgfarrowto}
+					\draw [<-, >=stealth] (0.5,0.85)--(4.2,0.85);
+					\pgfputat{\pgfxy(2.2,1.35)}{\pgfbox[center,center]{\tiny{$P_A= k_A \cdot P
+								$}}}
+					\pgfputat{\pgfxy(2.2,0.65)}{\pgfbox[center,center]{\tiny{$P_B= k_B \cdot P 
+								$}}}
+					
+					%\pgfputat{\pgfxy(0.5,1)}{\pgfbox[center,center]{Alice}}
+					%\pgfputat{\pgfxy(4.2,1)}{\pgfbox[center,center]{Bob}}
+					
+					\draw [<-, >=stealth] (2.5,-0.4)--(5.2,0.4);
+					\draw [<-, >=stealth] (2.35,-0.4)--(-0.5,0.4);
+					\pgfputat{\pgfxy(-0.5,1.1)}{\pgfbox[center,center]{\tiny{$k_A,k_A\cdot P$}}}
+					\pgfputat{\pgfxy(5.2,1.1)}{\pgfbox[center,center]{\tiny{$k_B,k_B\cdot P$}}}
+					\pgfputat{\pgfxy(-0.5,0.7)}{\pgfbox[center,center]{\tiny{$K=k_A \cdot P_B$}}}
+					\pgfputat{\pgfxy(5.2,0.7)}{\pgfbox[center,center]{\tiny{$K=k_B \cdot P_A$}}}
+					
+					%\pgfline{\pgfxy(0.5,0)}{\pgfxy(2.10,-0.4)}
+					%\pgfline{\pgfxy(0.5,0)}{\pgfxy(2.10,-0.4)}
+					%\draw (4.2,0) -- (2.60,-0.4);
+					\pgfputat{\pgfxy(2.35,-0.6)}{\pgfbox[center,center]{\tiny{$K= (k_Ak_B)\cdot P
+								$}}}
+					%\pgfline{\pgfxy(4.2,0)}{\pgfxy(2.60,-0.4)}
+				\end{tikzpicture}
+			\end{figure}
+			\column{1 cm}
+			\begin{figure}
+				\includegraphics[scale=0.18]{Bob.png}
+			\end{figure}
+		\end{columns}
+		
+		%\includegraphics[scale = 0.45]{DH}<2-> version geogebra
 		
 		\begin{block}{Problème du logarithme discret (DLP)}<3->
 			Étant donné $P$ et $Q$ deux éléments d'un groupe $G$, trouver $k$ tel que $Q = k\cdot P$.
 		\end{block}
-	\end{center}
+		
 	\end{frame}
 	
 	\begin{frame}
@@ -99,9 +152,8 @@
 		\end{block}
 	\end{frame}
 	
-	\begin{frame}
-		\frametitle{Stage actuel} 
-		\framesubtitle{Cryptanalyse et isogénies} 
+	\begin{frame} 
+		\frametitle{Cryptanalyse et isogénies} 
 		
 		Si $E$ et $E'$ sont deux courbes elliptiques, soit $\phi$ une application qui à un point $P\in E$ associe un point $\phi(P)\in E'$.
 		
@@ -119,44 +171,42 @@
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{Stage actuel} 
-		\framesubtitle{Calculer une isogénie}
-		\begin{block}{Sujet de stage}
+		\frametitle{Calculer une isogénie}
+		\begin{block}{Sujet de stage au laboratoire MIS}
 			Trouver $\phi$ isogénie entre $E$ et $E'$ ? Calculer $\phi(P)$ lorsque $P\in E$?
 		\end{block}
 		\begin{itemize}
-			\item<2-> Difficulté mesurée selon $q$ (taille des groupes) et $l$ ("degrés" de l'isogénie).
-			\item<2-> Formule de Vélu : méthode générale, rapide selon $q$ mais lent selon $l$ : Permet de calculer les "petites" isogénies.
+			\item<2-> Complexité exprimée selon $q$ (\textit{taille} des groupes) et $l$ (\text{taille} de l'isogénie).
+			\item<2-> Formule de Vélu : méthode générale, polynomiale en $\log(q)$ mais exponentielle $\log(l)$ : Permet de calculer les \textit{petites} isogénies.
 		\end{itemize}
 		
 		\begin{block}{Méthodes de calcul d'isogénies}<3->
 			\begin{itemize}
-				\item Idée 1 : \textbf{Action du groupe de classes}(2008): rapide selon $l$, mais moyennement rapide selon $q$. 
-				\item Idée 2 : \textbf{Lemme de Kani}(2022): rapide en théorie selon $l$ et $q$. 
+				\item 2008 : \textbf{Action du groupe de classes}: polynomiale en $\log(l)$, mais sous-exponentiel en $q$. 
+				\item 2023 : \textbf{Clapoti}: polynomial selon $l$ et $q$. 
 			\end{itemize}
 		\end{block}
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{Stage actuel} 
-		\framesubtitle{Action du groupe de classe}
-		\begin{block}{Action du groupe de classe}
+		\frametitle{Action du groupe de classes d'idéaux}
+		\begin{block}{Calcul d'une isogénie}
 			\begin{enumerate}
-				\item On représente une isogénie par un objet $L$ et une classe $\tilde{L}$.
-				\item<2-> $\tilde{L}$ s'écrit dans un groupe $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$.
+				\item On représente une isogénie par un idéal $L$ de classe $\tilde{L}$.
+				\item<2-> $\tilde{L}$ s'écrit dans le groupe de classes $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$.
 				\item<3-> On calcule les isogénies associées à $L_1, \cdots, L_n$ avec Vélu.
-				\item<4-> On les enchaîne pour calculer $\phi$.
+				\item<4-> On en déduit l'isogénie $\phi$.
 			\end{enumerate}
 		\end{block}
 		\begin{itemize}
-			\item<5-> $L_1,\cdots,L_n$ : petites isogénies, donc la formule de Vélu est rapide.
-			\item<5-> Trouver $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$ lent selon $q$ : Optimisation possible. 
+			\item<5-> $L_1,\cdots,L_n$ : \textit{petites} isogénies, calculées avec Vélu.
+			\item<5-> Trouver $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$ est exponentielle $\log(q)$ : Optimisation possible. 
 		\end{itemize}
 		
 		\begin{block}{Contribution personnelle}<6->
 			\begin{itemize}
 				\item Proposition d'optimisation pour l'étape $2$, implémentée dans Sage. 
-				\item Comparaison avec l'optimisation initiale (Jao Soukharev 2010).
+				\item Comparaison avec l'état de l'art (Jao Soukharev 2010).
 			\end{itemize}
 		
 		\end{block}
@@ -166,17 +216,17 @@
 	\begin{frame}
 		\frametitle{Introduction à la thèse} 
 		\begin{itemize}
-			\item Lemme de Kani : Attaque de SIDH (2022): Permet d'éviter l'étape 2.
-			\item Application actuelle limitée à certaines courbes "supersingulières".
+			\item Résultats de Kani : Attaque de SIDH (2022), Clapoti (2023) : Permet d'éviter l'étape 2.
+			\item Application actuelle limitée à certaines courbes \textit{supersingulières}.
 		\end{itemize}
 		
 		\begin{block}{Objectifs de la thèse}<2->
-		Appliquer le lemme de Kani à la cryptanalyse des systèmes préquantiques, utilisant des courbes elliptiques ordinaires. 
+		Appliquer les résultats de Kani à la cryptanalyse des systèmes pré-quantiques, utilisant des courbes elliptiques ordinaires. 
 		\end{block}
 		
 		\begin{block}{Exemples}<3->
 			\begin{itemize}
-				\item Cryptographie à base de couplage (cryptomonaie, echange de clef tripartie).
+				\item Cryptographie à base de couplage (cryptomonnaie, DH tripartite).
 				\item Courbes hyperelliptique : genre supérieur (2, 3).
 				\item Attaquer DLP sur les courbes elliptiques CM (par calcul d'indice).
 			\end{itemize}
