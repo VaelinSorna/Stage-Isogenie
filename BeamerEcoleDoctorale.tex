@@ -9,8 +9,11 @@
 \usepackage{pgf}
 \usepackage{pgfplots}
 \usetheme{Madrid}
+
+\newcommand{\F}[0]{\mathbb{F}}
+
 \begin{document}
-	\author[Maxime LOUVET]{Maxime LOUVET}
+	\author[Maxime LOUVET]{Maxime LOUVET, encadré par Sorina IONICA}
 	\title[Audition EDSTS]{Cryptanalyse des systèmes à base de courbes elliptiques via isogénies}
 	%\subtitle{test}
 	%\logo{}
@@ -30,11 +33,11 @@
 				\item 2017-2020 \textbf{CPGE filière MPSI/MP*},
 				Lycée Faidherbe, Lille.
 				
-				\item 2020-2023 \textbf{L3, Master Formation à l'Enseignement Supérieur de Mathématiques}, Institue de Mathématiques d'Orsay.
+				\item 2020-2023 \textbf{L3, Master Formation à l'Enseignement Supérieur de Mathématiques}, Institut de Mathématiques d'Orsay.
 				
 				\item 2023 \textbf{Agrégation de mathématiques}, admis 34/345. 
 				
-				\item<3-> 2024/2025 \textbf{M2 Algèbre Appliquée}, Versailles.
+				\item<3-> 2024/2025 \textbf{M2 Algèbre Appliquée}, Versailles. rang 2/17.
 				
 			\end{itemize}
 		\end{block}
@@ -63,7 +66,7 @@
 		\frametitle{\'Echange de clef en cryptographie}
 		
 		\begin{itemize}
-			\item Alice et Bob veulent créer un secret $K$ à partir d'une donnée $P$ publique.
+			\item Alice et Bob veulent échanger un secret $K$ à partir d'une donnée $P$ publique.
 			\item Soit $(G,+)$ un groupe, et $P\in(G,+)$.
 		\end{itemize}
 		
@@ -96,8 +99,8 @@
 					
 					\draw [<-, >=stealth] (2.5,-0.4)--(5.2,0.4);
 					\draw [<-, >=stealth] (2.35,-0.4)--(-0.5,0.4);
-					\pgfputat{\pgfxy(-0.5,1.1)}{\pgfbox[center,center]{\tiny{$k_A,k_A\cdot P$}}}
-					\pgfputat{\pgfxy(5.2,1.1)}{\pgfbox[center,center]{\tiny{$k_B,k_B\cdot P$}}}
+					\pgfputat{\pgfxy(-0.5,1.1)}{\pgfbox[center,center]{\tiny{$k_A$}}}
+					\pgfputat{\pgfxy(5.2,1.1)}{\pgfbox[center,center]{\tiny{$k_B$}}}
 					\pgfputat{\pgfxy(-0.5,0.7)}{\pgfbox[center,center]{\tiny{$K=k_A \cdot P_B$}}}
 					\pgfputat{\pgfxy(5.2,0.7)}{\pgfbox[center,center]{\tiny{$K=k_B \cdot P_A$}}}
 					
@@ -118,7 +121,7 @@
 		%\includegraphics[scale = 0.45]{DH}<2-> version geogebra
 		
 		\begin{block}{Problème du logarithme discret (DLP)}<3->
-			Étant donné $P$ et $Q$ deux éléments d'un groupe $G$, trouver $k$ tel que $Q = k\cdot P$.
+			Étant donné $P$, $Q\in G$, trouver $k$ tel que $Q = k\cdot P$.
 		\end{block}
 		
 	\end{frame}
@@ -129,22 +132,29 @@
 			\includegraphics[scale = 0.4]{cercle2}<1>
 			\includegraphics[scale = 0.4]{cercle3}<2>
 			\includegraphics[scale = 0.4]{cercle4}<3>
+			\includegraphics[scale = 0.3]{cercle4}<4>
 		\end{center}
-		
+		\begin{itemize}
+			\item<4> Problème DLP sur le cercle : Facile.
+			\item<4> Problème DLP sur courbes de genres $0$ : Facile
+		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Courbes elliptiques} 
-		\begin{itemize}
-			\item Problème DLP sur le cercle : Facile.
-			\item Ellipses, paraboles, hyperboles... : courbe de "genre" $0$ donc "simple".
-		\begin{block}{Courbes Elliptiques}<2->
-			Les courbes elliptiques sont les courbes de genre $1$.
-		\end{block}
 		
-		\item<2-> Problème DLP sur courbes elliptiques : Difficile. 
+		\begin{block}{Problème DLP}
+			Le problème DLP est difficile sur les courbes de genres $1$, lisses et non vide.
+		\end{block}
+			
+		\begin{itemize}
+			\item<2-> Courbes elliptiques définies sur $\F_q$: ensemble fini de taille $\sim q$.
+			\begin{center}
+				\includegraphics[scale = 0.18]{exemplecourbe}<2->
+			\end{center}
 		\end{itemize}
-		\begin{block}{Projet réalisé}<3->
+		
+		\begin{block}{Projets réalisés}<3->
 			\begin{itemize}
 				\item 2023 \textbf{Baby step Giant step} Problème DLP sur groupe quelconque.
 				\item 2025 \textbf{Méthode GLV} Calcul de $k\cdot A$ sur courbe elliptique.
@@ -155,8 +165,10 @@
 	\begin{frame} 
 		\frametitle{Cryptanalyse et isogénies} 
 		
-		Si $E$ et $E'$ sont deux courbes elliptiques, soit $\phi$ une application qui à un point $P\in E$ associe un point $\phi(P)\in E'$.
-		
+		\begin{itemize}
+			\item Si $E$ et $E'$ sont deux courbes elliptiques, soit $\phi : E\rightarrow E'$.
+		\end{itemize}
+			
 		\begin{block}{Isogénie entre courbes elliptiques}<2->
 			$\phi$ est une isogénie si elle vérifie
 			\begin{equation*}
@@ -165,8 +177,12 @@
 		\end{block}
 		
 		\begin{block}{Lien avec le problème DLP }<3->
-			Si $\phi$ est une isogénie, alors $Q = k\cdot P\iff \phi(Q) = k\cdot\phi(P)$
+			Si $P$, $Q\in E$, alors $Q = k\cdot P\iff \phi(Q) = k\cdot\phi(P)$
 		\end{block}
+		
+		\begin{itemize}
+			\item<3-> Si DLP plus simple sur $E'$, $\phi$ permet d'attaquer DLP sur $E$.
+		\end{itemize}
 		
 	\end{frame}
 	
@@ -176,14 +192,14 @@
 			Trouver $\phi$ isogénie entre $E$ et $E'$ ? Calculer $\phi(P)$ lorsque $P\in E$?
 		\end{block}
 		\begin{itemize}
-			\item<2-> Complexité exprimée selon $q$ (\textit{taille} des groupes) et $l$ (\text{taille} de l'isogénie).
-			\item<2-> Formule de Vélu : méthode générale, polynomiale en $\log(q)$ mais exponentielle $\log(l)$ : Permet de calculer les \textit{petites} isogénies.
+			\item<2-> Complexité selon $q$ (taille des groupes) et $l$ (\textit{taille} de l'isogénie).
+			\item<2-> Formule de Vélu : méthode générale, polynomiale en $\log(q)$ mais exponentielle en $\log(l)$. Pour les \textit{petites} isogénies.
 		\end{itemize}
 		
-		\begin{block}{Méthodes de calcul d'isogénies}<3->
+		\begin{block}{Méthodes de calculs d'isogénies}<3->
 			\begin{itemize}
 				\item 2008 : \textbf{Action du groupe de classes}: polynomiale en $\log(l)$, mais sous-exponentiel en $q$. 
-				\item 2023 : \textbf{Clapoti}: polynomial selon $l$ et $q$. 
+				\item 2023 : \textbf{Clapoti}: polynomiale selon $l$ et $q$ pour certaines familles de courbes. 
 			\end{itemize}
 		\end{block}
 	\end{frame}
@@ -194,16 +210,16 @@
 			\begin{enumerate}
 				\item On représente une isogénie par un idéal $L$ de classe $\tilde{L}$.
 				\item<2-> $\tilde{L}$ s'écrit dans le groupe de classes $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$.
-				\item<3-> On calcule les isogénies associées à $L_1, \cdots, L_n$ avec Vélu.
+				\item<3-> On calcule les isogénies associées à $L_1, \cdots, L_n$.
 				\item<4-> On en déduit l'isogénie $\phi$.
 			\end{enumerate}
 		\end{block}
 		\begin{itemize}
-			\item<5-> $L_1,\cdots,L_n$ : \textit{petites} isogénies, calculées avec Vélu.
-			\item<5-> Trouver $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$ est exponentielle $\log(q)$ : Optimisation possible. 
+			\item<4-> $L_1,\cdots,L_n$ : \textit{petites} isogénies, calculées avec Vélu.
+			\item<4-> Trouver $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$ : exponentielle en $\log(q)$. Optimisation possible. 
 		\end{itemize}
 		
-		\begin{block}{Contribution personnelle}<6->
+		\begin{block}{Contribution personnelle}<5->
 			\begin{itemize}
 				\item Proposition d'optimisation pour l'étape $2$, implémentée dans Sage. 
 				\item Comparaison avec l'état de l'art (Jao Soukharev 2010).
@@ -216,7 +232,7 @@
 	\begin{frame}
 		\frametitle{Introduction à la thèse} 
 		\begin{itemize}
-			\item Résultats de Kani : Attaque de SIDH (2022), Clapoti (2023) : Permet d'éviter l'étape 2.
+			\item 1997 Kani : Attaque de SIDH (2022), Clapoti (2023) : Permet d'éviter l'étape 2.
 			\item Application actuelle limitée à certaines courbes \textit{supersingulières}.
 		\end{itemize}
 		
@@ -227,8 +243,9 @@
 		\begin{block}{Exemples}<3->
 			\begin{itemize}
 				\item Cryptographie à base de couplage (cryptomonnaie, DH tripartite).
-				\item Courbes hyperelliptique : genre supérieur (2, 3).
-				\item Attaquer DLP sur les courbes elliptiques CM (par calcul d'indice).
+				\item Attaquer DLP sur les courbes elliptiques ordinaires.
+				\item Courbes hyperelliptiques : genre supérieur (2, 3).
+				\item Calcule dans les groupes de classes de corps CM (degré 4, 6).
 			\end{itemize}
 		\end{block}
 		

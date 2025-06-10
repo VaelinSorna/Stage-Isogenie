@@ -998,7 +998,7 @@ Les deux propositions suivantes vont permettre d'analyser la complexité de l'al
 	\begin{equation*}
 		t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)\;,\; C_{t} \geq 1
 	\end{equation*}
-	et l'on considère dans l'algorithme $4$ une marche aléatoire de $t$ pas. Soit $k$ la taille des listes retournées par l'algorithme $3$. Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues avec les lignes $7$ à $11$ de l'algorithme $4$. Alors les $|x_{i}|$ sont des variables aléatoires d'espérance majorée par $O\left( \frac{1}{\log(|\Delta|)}\right)$. 
+	et l'on considère dans l'algorithme $4$ une marche aléatoire de $t$ pas. Soit $k$ la taille des listes retournées par l'algorithme $3$, avec $N \geq N_{t}$. Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues avec les lignes $7$ à $11$ de l'algorithme $4$. Alors les $|x_{i}|$ sont des variables aléatoires d'espérance majorée par $O\left( \frac{1}{\log(|\Delta|)}\right)$. 
 \end{Prop}
 
 \begin{proof}
@@ -1006,7 +1006,7 @@ Les deux propositions suivantes vont permettre d'analyser la complexité de l'al
 	\begin{equation*}
 		\frac{t}{k} \simeq C_{t}\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C_{t}}{\log(|\Delta|)}.
 	\end{equation*}
-	Or $|x_{i}|$ est majoré par le nombre d'incrémentation, d'où le résultat. Si $N \leq N_{t}$, cela implique d'augmenter $k$ sans influencer $t$, donc cela ne fera que diminuer l'espérance et le résultat précédent reste une majoration. 
+	Or $|x_{i}|$ est majoré par le nombre d'incrémentation, d'où le résultat. Si $N \geq N_{t}$, cela implique d'augmenter $k$ sans influencer $t$, donc cela ne fera que diminuer l'espérance et le résultat précédent reste une majoration. 
 \end{proof}
 
 \begin{Rem}
@@ -1027,6 +1027,36 @@ Les deux propositions suivantes vont permettre d'analyser la complexité de l'al
 On en déduit la complexité de l'algorithme $4$
 
 \begin{Prop}
+	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire de l'algorithme $4$. Soit $k$ la taille des listes retournées par l'algorithme $3$. Alors le nombre d'opération de chaque itération de la boucle while des lignes $5$ à $19$ de l'algorithme $4$ est en moyenne 
+	\begin{equation*}
+		O\left( \frac{\log(N)^2\log(|\Delta|)^3}{\log(\log(|\Delta|))} + \frac{N}{\log(N)}\log(|\Delta|)^{2}\right)
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois. Si $N \geq N_{t}$, d'après la proposition 5.31 on peut supposer qu'en moyenne chaque indice est incrémenté au plus une fois, et que la liste $L_{x}$ ne contient que des éléments nuls sauf $t$ valeurs égales à $\pm 1$. Sous cette hypothèse le calcul de $classe_{test}$ des lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un $p_{i} \leq N$, et à chaque fois suivi d'une réduction par l'algorithme $2$. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
+	\begin{equation*}
+		|b| \leq a \leq \sqrt{\frac{|\Delta|}{3}},
+	\end{equation*} 
+	la complexité d'un produit d'une forme réduite avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ \cite{JaoSoukharev}. On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée par 
+	\begin{equation*}
+		O(\log(a p_{i})\log(p_{i}) + \log(2a^2 p_{i})) = O(\log(N)^2\log(|\Delta|)^2)
+	\end{equation*}
+	La complexité du calcul du produit est négligeable devant celle de la réduction qui le suit. Donc le calcul de $classe_{test}$ des lignes $12$ à $18$ se fait en
+	\begin{equation*}
+		O(t\log(N)^2\log(|\Delta|)^2) = O\left( \frac{\log(N)^2\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right) .
+	\end{equation*}
+	Après avoir calculer $classe_{test}$, il faut tester s'il se factorise via le théorème 5.12. On note maintenant $classe_{test} = (a,b,c)$. Il s'agit de déterminer si $a$ se factorise sur les éléments de $L_{premier}$, autrement dit si $a$ est $L_{premier}$-friable. On applique ECM pour factoriser $a$. \textbf{TODO analyse complexité avec ECM}
+	
+	
+	
+	Ancienne preuve obsolète : On procède par essais erreur, (voir \cite{Bern04} pour des améliorations possibles), ce qui demande pour chaque $p_{i}$ au plus $O(\log(a))$ divisions euclidiennes, donc au plus $O(\log(a)^2)$ opérations, ceci $k$ fois. Comme $classe_{test} = (a,b,c)$ est réduite, la vérification de la ligne $5$ prend
+	\begin{equation*}
+		O(k\log(a)^2) = O\left( \frac{N}{\log(N)}\log(|\Delta|)^{2}\right) 
+	\end{equation*}
+\end{proof}
+
+\begin{Prop}
 	
 	Soit $t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)$ le nombre de pas de la marche aléatoire de l'algorithme $4$. Soit $k$ la taille des listes retournées par l'algorithme $3$. Si $N = N_{t}$, alors
 	\begin{enumerate}
@@ -1039,28 +1069,12 @@ On en déduit la complexité de l'algorithme $4$
 	
 	\begin{enumerate}
 		
-		\item Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois. Si $N = N_{t}$, d'après la proposition 5.31 on peut supposer qu'en moyenne chaque indice est incrémenté au plus une fois, et que la liste $L_{x}$ ne contient que des éléments nuls sauf $t$ valeurs égales à $\pm 1$. Sous cette hypothèse le calcul de $classe_{test}$ des lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un $p_{i} \leq N_{t}$, et à chaque fois suivi d'une réduction par l'algorithme $2$. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
-		\begin{equation*}
-			|b| \leq a \leq \sqrt{\frac{|\Delta|}{3}},
-		\end{equation*} 
-		 la complexité d'un produit d'une forme réduite avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ \cite{JaoSoukharev}. On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée par 
-		\begin{equation*}
-			O(\log(a p_{i})\log(p_{i}) + \log(2a^2 p_{i})) = O(\log(N)^2\log(|\Delta|)^2)
-		\end{equation*}
-		La complexité du calcul du produit est négligeable devant celle de la réduction qui le suit. Donc le calcul de $classe_{test}$ des lignes $12$ à $18$ se fait en
-		\begin{equation*}
-			 O(t\log(N)^2\log(|\Delta|)^2) = O\left( \frac{\log(N)^2\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right) .
-		\end{equation*}
-		Avec $N = N_{t}$, ceci devient
+		\item  Avec $N = N_{t}$, ceci (nb de calculs pour $classe_{test}$) devient
 		\begin{equation*}
 			O(t\log(N)^2\log(|\Delta|)^2) = O(\log(|\Delta|)^3\log(\log(|\Delta|))).
 		\end{equation*}
 		
-		Après avoir calculer $classe_{test}$, il faut tester s'il se factorise via le théorème 5.12. On note maintenant $classe_{test} = (a,b,c)$. Il s'agit de déterminer si $a$ se factorise sur les éléments de $L_{premier}$, autrement dit si $a$ est $L_{premier}$-friable. On procède par essais erreur, (voir \cite{Bern04} pour des améliorations possibles), ce qui demande pour chaque $p_{i}$ au plus $O(\log(a))$ divisions euclidiennes, donc au plus $O(\log(a)^2)$ opérations, ceci $k$ fois. Comme $classe_{test} = (a,b,c)$ est réduite, la vérification de la ligne $5$ prend
-		\begin{equation*}
-			O(k\log(a)^2) = O\left( \frac{N}{\log(N)}\log(|\Delta|)^{2}\right) 
-		\end{equation*}
-		Avec $N = N_{t}$, ceci devient
+		Avec $N = N_{t}$, ceci (factorisation du coef a) devient
 		\begin{equation*}
 			O(k\log(a)^2) = O\left( \frac{\log(|\Delta|)^4}{\log(\log(|\Delta|))}\right) = O(\log(|\Delta|)^{4}).
 		\end{equation*}
