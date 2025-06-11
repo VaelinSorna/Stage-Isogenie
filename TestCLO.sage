@@ -1,8 +1,10 @@
 from sage.rings.finite_rings.integer_mod import square_root_mod_prime
 from sage.rings.finite_rings.integer_mod import square_root_mod_prime_power
 from sage.rings.number_field.order_ideal import NumberFieldOrderIdeal
+from sage.libs.libecm import ecmfactor
+from sage.misc.search import search
+import numpy as np
 import time
-import numpy as np 
 
 def ideal_de_norme(l,f,D):
 
@@ -27,6 +29,7 @@ def ideal_de_norme(l,f,D):
 
 
 
+
 def forme_de_norme(l,D):
 
     #Remarque : Seysen dmande une racine spécifique, la plus petite vu dans N. Mais cela n'est pas nécessaire pour la suite (Cf Cohen)
@@ -47,8 +50,6 @@ def forme_de_norme(l,D):
             return ql
         else:
             raise ValueError('erreur de discriminant de forme')
-
-
 
 def formes_generatrices (D,N,test_norm): #Trouver la borne : Analyse de Jao
 
@@ -73,18 +74,50 @@ def formes_generatrices (D,N,test_norm): #Trouver la borne : Analyse de Jao
 
 
 
-def facto_complet(a,Primes):
-    
-    #On veut savoir si un entier a de factorisation facto = factor(a) ne contient que des premiers de la liste Primes
-    # On utilise le fait que facto et Primes soit triée
+def factor_ecm(a,Primes):
+    produit = a
+    factorisation = []
+    friable = True         # Dès que l'on trouve un facteur qui contredit la friabilité, on s'arrête. 
+    while produit > 1 and friable:
+        testecm = ecmfactor(produit, 0.00)
+        # On teste si produit est un nombre premier (ECM peut rater des facteurs avec faible probabilité)
+        
+        testpremier = False
+        while (testecm[0] == False or testecm[1] == produit) and testpremier == False:
+            if produit.is_prime() :
+                facteur = produit
+                reste = 1
+                testpremier = True
+            else :
+                testecm = ecmfactor(produit, 0.00)
+        if testecm[0] == True:
+            facteur = testecm[1]
+            reste = produit//facteur
 
-    test = a
-    k = len(Primes)
-    for i in [0 .. k-1]:
-        pi = Primes[i]
-        while test%pi == 0:
-            test = test/pi
-    return test == 1
+        # On vérifie que le facteur trouvé est premier, sinon on le factorise encore
+        
+        while facteur.is_prime() == False:
+            
+            testecm2 = ecmfactor(facteur, 0.00)
+            if testecm2[0] == True :
+                facteur2 = testecm2[1]
+                reste = reste*(facteur//facteur2)
+                facteur = facteur2
+
+        # On teste le facteur premier trouvé
+        
+        if search(Primes,facteur)[0]: #Recherche dans une liste triée
+            exposant = 1
+            while reste%facteur == 0:
+                exposant = exposant + 1
+                reste = reste//facteur
+            factorisation.append([facteur, exposant])
+        else:
+            factorisation.append([facteur, 1])
+            factorisation.append([reste, 1])
+            friable = False
+        produit = reste 
+    return friable, factorisation
 
 
 
@@ -107,7 +140,9 @@ def factorisation(L,D,N,Borne_z,test_norm):
     expx = [0]*k
     liste_indice = []
     compte = 0
-    while facto_complet(a,Primes) == False:
+    test_facto, facto = factor_ecm(a,Primes)
+    
+    while test_facto == False:
         compte = compte + 1
         # Choix d'exposant au hasard, on veut entre 3 et Borne_z coefficient non nul (Cf algo 3 Jao)
         # Autoriser 1 ou 2 comme nombre d'exposant possible ?
@@ -132,106 +167,22 @@ def factorisation(L,D,N,Borne_z,test_norm):
             for _ in [1 .. (expx[i])]:
                 relation = (relation*Formes[i]).reduced_form()
         a = relation[0] #Si a factorise complétement dans Primes, c'est gagné avec Seysen
-        
-    facto = factor(a) 
-    
-    
-    #Calcul des valuations de a en chaque Primes, et change le signe selon la méthode Seysen
-    expu = [0]*k     #liste des exposant ui de Jao
-    ka = len(facto)
-    b = relation[1]
-    j = 0
-    for i in [0 .. k-1]:
-        if j < ka :
-            if Primes[i] == facto[j][0] :  
-                expu[i] = facto[j][1]
-                bi = Formes[i][1]
-                if Mod( b , 2*Primes[i]) != Mod( bi , 2*Primes[i]):
-                    expu[i] = -expu[i]
-                j = j + 1
-        
-    
-    #inverser la relation pour trouver L:
-    
-    expe = []     #liste des exposants ei de Jao
-    factoL = []
-    for i in [0 .. k-1] :
-        ei = expu[i] - expx[i]
-        if ei > 0 :
-            expe.append(ei)
-            factoL.append(Idéaux[i])
-        elif ei < 0 :
-            expe.append(-ei)
-            factoL.append(Idéaux[i].conjugate())
-            
-    
-    return expe, factoL , compte
-
-
-
-# Version 2 de la factorisation : avec une borne version Biasse / Graphe expanseur
-
-def factorisation_2(L,D,N,Borne_t,test_norm):
-
-    #Algo 3 Jao : (Hafney / McCurley) Factoriser L dans la base précédente
-    #On cherche au hasard à ramener la classe de L à une classe simplifiable par le théorème 3.1 de Seysen.
-    #On représente les classes par des formes quadratiques réduites : c'est nécessaire pour se ramener à Seysen
-    #Borne_z est une borne donnée par Jao dans l'analyse de l'algorithme. Le nombres de facteurs de L ne dépassera pas Borne_z
-    
-    Idéaux, Formes, Primes = formes_generatrices (D,N,test_norm)
-    ql = (L.quadratic_form()).reduced_form() #Représente la classe de L
-    k = len(Primes)
-    a = ql[0]
-    Min_reduction = int(sqrt(-D/3))
-    relation = ql        # Partant de ql, on va chercher une classe simplifiable
-
-    expx = [0]*k
-    liste_indice = []
-    compte = 0
-    while facto_complet(a,Primes) == False:
-        compte = compte + 1
-        # Choix d'exposant au hasard, on veut entre 3 et Borne_z coefficient non nul (Cf algo 3 Jao)
-        # Autoriser 1 ou 2 comme nombre d'exposant possible ?
-        
-        expx = [0]*k   
-        test = ql[0]
-        for i in [1 .. Borne_t]:
-            indice = randint(0,k-1)
-            increment = randint(0,1)
-            if increment == 0:
-                increment = -1
-            expx[indice] = expx[indice] + increment
-            test = test*Primes[indice]
-        #print('Test si reduction ? :', test >= Min_reduction)
-            
-        # calcul de ql*( fi^exp(xi) pour tout i ) pour chercher une relation "simplifiable"
-        relation = ql
-        for i in [0 .. k-1]:
-            facteur = Formes[i]
-            exp = expx[i]
-            if exp < 0:
-                facteur = BinaryQF([facteur[0],-facteur[1],facteur[2]])
-                exp = -exp
-            for _ in [1 .. exp]:
-                relation = (relation*facteur).reduced_form()   #Toujours réduire : bonne idée ??
-        a = relation[0] #Si a factorise complétement dans Primes, c'est gagné avec Seysen
-        
-    facto = factor(a) 
-    
+        test_facto, facto = factor_ecm(a,Primes)
+         
     
     #Calcul des valuations de a en chaque Primes, et change le signe selon la méthode Seysen
-    expu = [0]*k     #liste des exposant ui de Jao
+
+    expu = [0]*k          #liste des exposant ui de Jao
     ka = len(facto)
     b = relation[1]
-    j = 0
-    for i in [0 .. k-1]:
-        if j < ka :
-            if Primes[i] == facto[j][0] :  
-                expu[i] = facto[j][1]
-                bi = Formes[i][1]
-                if Mod( b , 2*Primes[i]) != Mod( bi , 2*Primes[i]):
+    for j in [0 .. ka-1]:
+        i = 0
+        while Primes[i] != facto[j][0]:
+            i = i+1
+        expu[i] = facto[j][1]
+        bi = Formes[i][1]
+        if Mod( b , 2*Primes[i]) != Mod( bi , 2*Primes[i]):
                     expu[i] = -expu[i]
-                j = j + 1
         
     
     #inverser la relation pour trouver L:
@@ -251,6 +202,90 @@ def factorisation_2(L,D,N,Borne_t,test_norm):
     return expe, factoL, compte
 
 
+
+# Version 2 de la factorisation : avec une borne version Biasse / Graphe expanseur
+
+def factorisation_2(L,D,N,Borne_z,test_norm):
+    
+    #Algo 3 Jao : (Hafney / McCurley) Factoriser L dans la base précédente
+    #On cherche au hasard à ramener la classe de L à une classe simplifiable par le théorème 3.1 de Seysen.
+    #On représente les classes par des formes quadratiques réduites : c'est nécessaire pour se ramener à Seysen
+    #Borne_z est une borne donnée par Jao dans l'analyse de l'algorithme. Le nombres de facteurs de L ne dépassera pas Borne_z
+    
+    Idéaux, Formes, Primes = formes_generatrices (D,N,test_norm)
+    ql = (L.quadratic_form()).reduced_form() #Représente la classe de L
+    
+    k = len(Primes)
+    
+    a = ql[0]
+    
+    relation = ql        # Partant de ql, on va chercher une classe simplifiable
+    expx = [0]*k
+    compte = 0
+    test_facto, facto = factor_ecm(a,Primes)
+    
+    while test_facto == False:
+        compte = compte + 1
+        # Choix d'exposant au hasard, on veut entre 3 et Borne_z coefficient non nul (Cf algo 3 Jao)
+        # Autoriser 1 ou 2 comme nombre d'exposant possible ?
+        
+        expx = [0]*k   
+        
+        for i in [1 .. Borne_t]:
+            indice = randint(0,k-1)
+            increment = randint(0,1)
+            if increment == 0:
+                increment = -1
+            expx[indice] = expx[indice] + increment
+            
+        #print('Test si reduction ? :', test >= Min_reduction)
+            
+        # calcul de ql*( fi^exp(xi) pour tout i ) pour chercher une relation "simplifiable"
+        relation = ql
+        for i in [0 .. k-1]:
+            facteur = Formes[i]
+            exp = expx[i]
+            if exp < 0:
+                facteur = BinaryQF([facteur[0],-facteur[1],facteur[2]])
+                exp = -exp
+            for _ in [1 .. exp]:
+                relation = (relation*facteur).reduced_form()   #Toujours réduire : bonne idée ??
+        a = relation[0] #Si a factorise complétement dans Primes, c'est gagné avec Seysen
+        test_facto, facto = factor_ecm(a,Primes)
+    
+    #Calcul des valuations de a en chaque Primes, et change le signe selon la méthode Seysen
+
+    expu = [0]*k          #liste des exposant ui de Jao
+    ka = len(facto)
+    b = relation[1]
+    for j in [0 .. ka-1]:
+        i = 0
+        while Primes[i] != facto[j][0]:
+            i = i+1
+        expu[i] = facto[j][1]
+        bi = Formes[i][1]
+        if Mod( b , 2*Primes[i]) != Mod( bi , 2*Primes[i]):
+                    expu[i] = -expu[i]
+        
+    
+    #inverser la relation pour trouver L:
+    
+    expe = []     #liste des exposants ei de Jao
+    factoL = []
+    for i in [0 .. k-1] :
+        ei = expu[i] - expx[i]
+        if ei > 0 :
+            expe.append(ei)
+            factoL.append(Idéaux[i])
+        elif ei < 0 :
+            expe.append(-ei)
+            factoL.append(Idéaux[i].conjugate())
+            
+    
+    return expe, factoL, compte
+
+
+
 def test(K,O,l,N,Borne_z,Borne_t):
     
     
@@ -261,8 +296,11 @@ def test(K,O,l,N,Borne_z,Borne_t):
     L = ideal_de_norme(l,f,D)
     # On choisit test_norm de sorte toujours commencer une marche aléatoire
     ql = L.quadratic_form()
+    #print(ql)
     ql = ql.reduced_form()
+    #print(ql)
     test_norm = ql[0]
+    #print('test_norm :', test_norm)
     
     début = time.time()
     Exposant, Idéaux, Compte = factorisation(L,D,N,Borne_z,test_norm)
