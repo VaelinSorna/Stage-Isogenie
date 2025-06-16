@@ -5,6 +5,7 @@
 \usepackage[french]{babel}
 \usepackage{tikz-cd}
 \usepackage{quiver}
+\usepackage{graphics}
 \usepackage{tikz}
 \usepackage{pgf}
 \usepackage{pgfplots}
@@ -13,11 +14,11 @@
 \newcommand{\F}[0]{\mathbb{F}}
 
 \begin{document}
-	\author[Maxime LOUVET]{Maxime LOUVET, encadré par Sorina IONICA}
-	\title[Audition EDSTS]{Cryptanalyse des systèmes à base de courbes elliptiques via isogénies}
-	%\subtitle{test}
+	\author[Maxime LOUVET]{Maxime LOUVET}
+	\title[Audition EDSTS]{Sujet de thèse 242070 \\ Cryptanalyse des systèmes à base de courbes elliptiques via isogénies}
+	\subtitle{Proposé par Sorina IONICA}
 	%\logo{}
-	%\institute{}
+	\institute{EDSTS 585}
 	\date[19/06/2025]{19/06/2025}
 	%\subject{}
 	%\setbeamercovered{transparent}
@@ -48,9 +49,7 @@
 				\item 09/2023-02/2024 \textbf{Professeur agrégé de mathématiques}
 				Lycée Jules Verne, Limours.
 				
-				\item<2-> 03/2024-Aujourd'hui \textbf{Professeur particulier chez Acadomia}, niveau lycée, licence et CPGE.
-				
-				\item<2-> 08/2024-02/2025 \textbf{Khôlleur}, lycée Lakanal, Sceaux.
+				\item<2-> 08/2024-02/2025 \textbf{Khôlleur}, filière PC, lycée Lakanal, Sceaux.
 				
 				\item<3-> 02/2025-Aujourd'hui \textbf{Stage de M2 au laboratoire MIS}, Amiens.
 				
@@ -67,7 +66,7 @@
 		
 		\begin{itemize}
 			\item Alice et Bob veulent échanger un secret $K$ à partir d'une donnée $P$ publique.
-			\item Soit $(G,+)$ un groupe, et $P\in(G,+)$.
+			\item Soit $(G,+)$ un groupe et $P\in G$.
 		\end{itemize}
 		
 		\begin{columns}<2->
@@ -136,7 +135,7 @@
 		\end{center}
 		\begin{itemize}
 			\item<4> Problème DLP sur le cercle : Facile.
-			\item<4> Problème DLP sur courbes de genres $0$ : Facile
+			\item<4> Problème DLP sur courbes de genre $0$ : Facile
 		\end{itemize}
 	\end{frame}
 	
@@ -144,14 +143,15 @@
 		\frametitle{Courbes elliptiques} 
 		
 		\begin{block}{Problème DLP}
-			Le problème DLP est difficile sur les courbes de genres $1$, lisses et non vide.
+			Difficile sur les courbes de genre $1$, lisses et avec un point distingué.
 		\end{block}
+		
+		\begin{center}
+			\includegraphics[scale = 0.18]{exemplecourbe}<2->
+		\end{center}
 			
 		\begin{itemize}
 			\item<2-> Courbes elliptiques définies sur $\F_q$: ensemble fini de taille $\sim q$.
-			\begin{center}
-				\includegraphics[scale = 0.18]{exemplecourbe}<2->
-			\end{center}
 		\end{itemize}
 		
 		\begin{block}{Projets réalisés}<3->
@@ -170,7 +170,7 @@
 		\end{itemize}
 			
 		\begin{block}{Isogénie entre courbes elliptiques}<2->
-			$\phi$ est une isogénie si elle vérifie
+			Pour $P$, $Q\in E$, $\phi$ vérifie
 			\begin{equation*}
 				\phi(P+Q) = \phi(P) + \phi(Q).
 			\end{equation*}
@@ -193,12 +193,12 @@
 		\end{block}
 		\begin{itemize}
 			\item<2-> Complexité selon $q$ (taille des groupes) et $l$ (\textit{taille} de l'isogénie).
-			\item<2-> Formule de Vélu : méthode générale, polynomiale en $\log(q)$ mais exponentielle en $\log(l)$. Pour les \textit{petites} isogénies.
+			\item<2-> Pour les \textit{petites} isogénies: Formule de Vélu, polynomiale en $\log(q)$ mais exponentielle en $\log(l)$. 
 		\end{itemize}
 		
 		\begin{block}{Méthodes de calculs d'isogénies}<3->
 			\begin{itemize}
-				\item 2008 : \textbf{Action du groupe de classes}: polynomiale en $\log(l)$, mais sous-exponentiel en $q$. 
+				\item 2008 : \textbf{Action du groupe de classes d'idéaux}: polynomiale en $\log(l)$, mais sous-exponentielle en $q$. 
 				\item 2023 : \textbf{Clapoti}: polynomiale selon $l$ et $q$ pour certaines familles de courbes. 
 			\end{itemize}
 		\end{block}
@@ -209,14 +209,13 @@
 		\begin{block}{Calcul d'une isogénie}
 			\begin{enumerate}
 				\item On représente une isogénie par un idéal $L$ de classe $\tilde{L}$.
-				\item<2-> $\tilde{L}$ s'écrit dans le groupe de classes $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$.
-				\item<3-> On calcule les isogénies associées à $L_1, \cdots, L_n$.
+				\item<2-> $\tilde{L}$ s'écrit dans le groupe de classes $\tilde{L} = \tilde{L_1}\cdot\ldots\cdot\tilde{L_n}$.
+				\item<3-> On calcule les isogénies associées à $L_1, \ldots, L_n$.
 				\item<4-> On en déduit l'isogénie $\phi$.
 			\end{enumerate}
 		\end{block}
 		\begin{itemize}
-			\item<4-> $L_1,\cdots,L_n$ : \textit{petites} isogénies, calculées avec Vélu.
-			\item<4-> Trouver $\tilde{L} = \tilde{L_1}\cdots\tilde{L_n}$ : exponentielle en $\log(q)$. Optimisation possible. 
+			\item<4-> $L_1,\ldots,L_n$ : \textit{petites} isogénies, calculées avec Vélu. 
 		\end{itemize}
 		
 		\begin{block}{Contribution personnelle}<5->
@@ -242,15 +241,16 @@
 		
 		\begin{block}{Exemples}<3->
 			\begin{itemize}
-				\item Cryptographie à base de couplage (cryptomonnaie, DH tripartite).
-				\item Attaquer DLP sur les courbes elliptiques ordinaires.
+				\item Cryptographie à base de couplages (cryptomonnaie, DH tripartite).
 				\item Courbes hyperelliptiques : genre supérieur (2, 3).
-				\item Calcule dans les groupes de classes de corps CM (degré 4, 6).
+				\item Calcul dans les groupes de classes de corps CM (degré 4, 6).
 			\end{itemize}
 		\end{block}
 		
 		
 		
 	\end{frame}
+	
+	
 	
 \end{document}
