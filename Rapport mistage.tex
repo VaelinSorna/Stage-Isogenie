@@ -113,22 +113,22 @@
 	
 	\subsection{Travaux effectués et objectifs}
 	
-	Au moment de l'écriture de ce pré-rapport, je me suis concentré sur l'étude de la méthode de Broker, Charles et Lauter \cite{BrokerCharlesLauter}. J'ai proposé une implémentation en Sage, en suivant les idées d'optimisation proposées par Jao et Soukharev \cite{JaoSoukharev} ainsi que des prises d'initiatives personnelles quand cela m'a semblé pertinent. L'objectif est d'avoir une analyse de complexité de ma approche  et de la comparer avec l'état de l'art, c'est à dire avec celle de \cite{JaoSoukharev} et par la suite avec la méthode Clapoti \cite{Clapoti}. Il faut cependant comprendre cette dernière et l'appliquer aux même exemples, qui sorte du contexte de CSIDH où s'applique les idées de \cite{KLaPoTi} et \cite{Pegasis}. Le projet de thèse vise à appliquer Clapoti à la cryptanalyse de schémas pré-quantiques. 
+	Au moment de l'écriture de ce pré-rapport, je me suis concentré sur l'étude de la méthode de Broker, Charles et Lauter \cite{BrokerCharlesLauter}. J'ai proposé une implémentation en Sage, en suivant les idées d'optimisation proposées par Jao et Soukharev \cite{JaoSoukharev} ainsi que des prises d'initiatives personnelles quand cela m'a semblé pertinent. L'objectif est d'avoir une analyse de complexité de mon approche et de la comparer avec l'état de l'art, c'est à dire avec celle de \cite{JaoSoukharev} et par la suite avec la méthode Clapoti \cite{Clapoti}. Il faut cependant comprendre cette dernière et l'appliquer aux même exemples, qui sorte du contexte de CSIDH où s'applique les idées de \cite{KLaPoTi} et \cite{Pegasis}. Le projet de thèse vise à appliquer Clapoti à la cryptanalyse de schémas pré-quantiques. 
 	 
 	\section{Revue de la méthode étudiée}
 	
 	\subsection{Rappels et notations}
 	
-	On suppose connues les notions de théorie des nombres nécessaires pour définir le groupe de classes d'idéaux d'un ordre d'un corps de nombres (voir par exemple \cite{Cox}[\S 5 et 7]). En particulier on considère des extensions $\K$ de $\Q$ de degré $2$ qui ne sont pas incluses dans $\R$, que l'on appelle des corps quadratiques imaginaires. Un tel corps est caractérisé par son discriminant $d_\K < 0$. Soit une courbe elliptique $E$ définie sur un corps fini $\F_q$ de caractéristique $p$. Elle est dites ordinaire si son anneaux d'endomorphismes est un ordre dans un corps quadratique imaginaire. Un tel ordre est caractérisé soit par son conducteur $f$, soit son discriminant $\Delta$, avec la relation $\Delta = f^2d_\K < 0$. Pour une courbe elliptique $E$ ordinaire, soit $\OR_\Delta$ son anneau d'endomorphismes. On considère $Cl(\OR_\Delta)$ le groupe (commutatif) des classes d'idéaux de cet ordre. Si $\LR$ est un idéal fractionnaire de $\OR_\Delta$, on note $\CL$ sa classe, et on rappelle que 
+	On suppose connues les notions de théorie des nombres nécessaires pour définir le groupe de classes d'idéaux d'un ordre d'un corps de nombres (voir par exemple \cite{Cox}[\S 5 et 7]). En particulier on considère des extensions $\K$ de $\Q$ de degré $2$ qui ne sont pas incluses dans $\R$, que l'on appelle des corps quadratiques imaginaires. Un tel corps est caractérisé par son discriminant $d_\K < 0$. Soit une courbe elliptique $E$ définie sur un corps fini $\F_q$ de caractéristique $p$. Elle est dites ordinaire si son anneaux d'endomorphismes est un ordre dans un corps quadratique imaginaire. Un tel ordre est caractérisé soit par son conducteur $f$, soit son discriminant $\Delta$, avec la relation $\Delta = f^2d_\K < 0$. Pour une courbe elliptique $E$ ordinaire, soit $\OR_\Delta$ son anneau d'endomorphismes. On note $Ell_{\F_q}(\OR_\Delta)$ l'ensemble des courbes elliptiques d'anneaux d'endomorphismes isomorphes à $\OR_\Delta$. On considère $Cl(\OR_\Delta)$ le groupe (commutatif) des classes d'idéaux de cet ordre. Si $\LR$ est un idéal fractionnaire de $\OR_\Delta$, on note $\CL$ sa classe, et on rappelle que 
 	\begin{equation*}
 		\CL = \CL' \iff \exists\alpha\in\K,\; \alpha\LR = \LR'.
 	\end{equation*}
-	Soit $l$ un nombre premier, $l\neq p$. $l$ est dit décomposé dans $\OR_\Delta$ si $\Delta$ est un carré non nul modulo $l$, ramifié si $\Delta = 0$ modulo $l$, et inerte sinon. Une isogénie $\phi : E\rightarrow E'$ est une $l$-isogénie si elle est séparable de degré $l$. D'après la thèse de David Kohel \cite{Kohel}, pour calculer efficacement des isogénies entre deux courbes ordinaires $E$ et $E'$ d'anneaux d'endomorphismes isomorphes à un même ordre $\OR_\Delta$, on peut se restreindre à l'étude des $l$-isogénies avec $l$ décomposé et premier avec le conducteur $f$. On note $\pi_q$ l'endomorphisme de Frobenius sur $E$. Alors $\Z[\pi_q]$ vu dans $\OR_\Delta$ est aussi un ordre de $\K$, de conducteur noté $f_m$. En particulier l'inclusion $\Z[\pi_q]\subset\OR_\Delta$ implique que $f$ divise $f_m$. 
+	Soit $l$ un nombre premier, $l\neq p$. $l$ est dit décomposé dans $\OR_\Delta$ si $\Delta$ est un carré non nul modulo $l$, ramifié si $\Delta = 0$ modulo $l$, et inerte sinon. Une isogénie $\phi : E\rightarrow E'$ est une $l$-isogénie si elle est séparable de degré $l$. D'après la thèse de David Kohel \cite{Kohel}, pour calculer efficacement des isogénies entre deux courbes ordinaires $E$, $E'\in Ell_{\F_q}(\OR_\Delta)$, on peut se restreindre à l'étude des $l$-isogénies avec $l$ décomposé et premier avec le conducteur $f$. On note $\pi_q$ l'endomorphisme de Frobenius sur $E$. Alors $\Z[\pi_q]$ vu dans $\OR_\Delta$ est aussi un ordre de $\K$, de conducteur noté $f_m$. En particulier l'inclusion $\Z[\pi_q]\subset\OR_\Delta$ implique que $f$ divise $f_m$. 
 	
 	
 	\subsection{Action du groupe de classes d'idéaux}
 	
-	On considère $Ell_{\F_q}(\OR_\Delta)$ l'ensemble des courbes elliptiques d'anneaux d'endomorphismes isomorphes à $\OR_\Delta$. Pour débuter le stage, j'ai commencer par étudier une introduction à la théorie de la multiplication complexe \cite{Sil94} qui permet de définir une action simplement transitive du groupe $Cl(\OR_\Delta)$ sur $Ell_{\F_q}(\OR_\Delta)$. Cependant si $\LR$ est un idéal fractionnaire de $\OR_\Delta$, l'action de $\CL$ sur une courbe elliptique $E$ définit une isogénie sur $E$ seulement à endomorphisme prêt. Par contre si $\LR\subset\OR_\Delta$ est un idéal entier de norme premier avec le conducteur $f$, alors $\LR$ définit une isogénie. Plus précisément $\LR$ permet de définir un sous-groupe fini $E[\LR]$ de $E$, appelé groupe de $\LR$-torsion, qui est le noyau d'une unique isogénie séparable $\phi_\LR$, dont la courbe image est donnée par l'action de $\CL$ sur $E$. Le degré de $\phi_\LR$ est alors la norme de l'idéal $\LR$. On note $E/E[\LR]$ la courbe image de $\phi_\LR$.
+	 Pour débuter le stage, j'ai commencer par étudier une introduction à la théorie de la multiplication complexe \cite{Sil94} qui permet de définir une action simplement transitive du groupe $Cl(\OR_\Delta)$ sur $Ell_{\F_q}(\OR_\Delta)$. Cependant si $\LR$ est un idéal fractionnaire de $\OR_\Delta$, l'action de $\CL$ sur une courbe elliptique $E$ définit une isogénie sur $E$ seulement à endomorphisme prêt. Par contre si $\LR\subset\OR_\Delta$ est un idéal entier de norme premier avec le conducteur $f$, alors $\LR$ définit une isogénie. Plus précisément $\LR$ permet de définir un sous-groupe fini $E[\LR]$ de $E$, appelé groupe de $\LR$-torsion, qui est le noyau d'une unique isogénie séparable $\phi_\LR$, dont la courbe image est donnée par l'action de $\CL$ sur $E$. Le degré de $\phi_\LR$ est alors la norme de l'idéal $\LR$. On note $E/E[\LR]$ la courbe image de $\phi_\LR$.
 	
 	\subsection{Calculs d'isogénies de petits degrés}
 	
@@ -169,7 +169,9 @@
 	
 	\subsection{Analyse de complexité et implémentation}
 	
-	Un objectif du stage est de mener une analyse de complexité des différentes méthodes de l'état de l'art. Cet algorithme de calcul d'isogénies a été analysé dans \cite{JaoSoukharev}, où la complexité énoncée est linéaire en $\log(l)$, $\log(q)$ et $n$, mais sous-exponentielle en $\log(|\Delta|)$. Cependant il y a plusieurs différences entre l'algorithme proposée par \cite{JaoSoukharev} et l'approche décrite précédemment, notamment sur l'implémentation de la marche aléatoire. Là où je suis la méthode précédente en choisissant un nombre de pas $t$ fixé, \cite{JaoSoukharev} choisit indépendamment et au hasard des exposants $x_1,\ldots,x_N$, en bornant le nombre maximal d'exposants non nuls , ainsi que leurs valeurs absolues. Cette approche conduit à des exposants plus grands, donc beaucoup de calculs d'isogénies intermédiaires. Au contraire, mon approche amène à des exposants en moyenne égaux à $\pm1$, et en pratique dépassant rarement 2 sur des exemples. Cependant elle amène asymptotiquement à calculer plus de polynômes modulaires distincts. Un objectif du stage est de tester sur de grandes valeurs de $|\Delta|$ laquelle des deux méthodes est la plus efficace. Dans les deux cas la complexité asymptotique est donnée par le théorème \ref{theoreme}.
+	Un objectif du stage est de mener une analyse de complexité des différentes méthodes de l'état de l'art. Cet algorithme de calcul d'isogénies a été analysé dans \cite{JaoSoukharev}, où la complexité énoncée est linéaire en $\log(l)$, $\log(q)$ et $n$, mais sous-exponentielle en $\log(|\Delta|)$. Cependant il y a plusieurs différences entre l'algorithme proposée par \cite{JaoSoukharev} et l'approche décrite précédemment, notamment sur l'implémentation de la marche aléatoire. Là où je suis la méthode précédente en choisissant un nombre de pas $t$ fixé, \cite{JaoSoukharev} choisit indépendamment et au hasard des exposants $x_1,\ldots,x_N$, en bornant le nombre maximal d'exposants non nuls , ainsi que leurs valeurs absolues. Cette approche conduit à des exposants plus grands, donc beaucoup de calculs d'isogénies intermédiaires.\\
+	
+	Au contraire, mon approche amène à des exposants en moyenne égaux à $\pm1$, et en pratique dépassant rarement 2 sur des exemples. Cependant elle amène asymptotiquement à calculer plus de polynômes modulaires distincts. Il est possible d'aller chercher ces derniers dans des bases de données publiques, mais pour cette analyse on prend en compte leurs calculs. Un objectif du stage est de tester sur de grandes valeurs de $|\Delta|$ laquelle des deux méthodes est la plus efficace. Dans les deux cas la complexité asymptotique est donnée par le théorème \ref{theoreme}. 
 	
 	\begin{Def}
 		
@@ -185,9 +187,9 @@
 	
 	\begin{The}\label{theoreme}
 		Soit $E$ une courbe elliptique ordinaire définie sur $\F_q$, et $P\in E(\F_{q^{n}})$, $n > 0$. Soit $\LR\subset\OR_{\Delta}$ un idéal de norme $l$ premier, et premier avec $pf_m|E(\F_{q^{n}})|$. Soit 
-		\begin{equation}
+		\begin{equation*}
 			N = \max\left(2\log(|\Delta|)^2,\; L_\Delta(1/2, z)\right) 
-		\end{equation}
+		\end{equation*}
 		la taille choisie d'une famille génératrice de $Cl(\OR_\Delta)$. Le calcul de la courbe image de $\phi_\LR$ ainsi que de $\phi_\LR(P)$ admet une complexité en
 		\begin{equation*}
 			\tilde{O}\left( \log(l)^2 + L_\Delta\left(\frac{1}{2}, \frac{1}{4z}\right) + L_\Delta\left(\frac{1}{2}, 3z\right) + L_\Delta\left( \frac{1}{2}, 2z\right) \log(q^{n+1}) \right) 
@@ -200,8 +202,6 @@
 \subsection{Exemple de calcul dans le groupe de classe}
 	
 	Soit $\Delta$ choisit au hasard (un entier négatif congrue à $0$ ou $1$ modulo $4$). Pour $10^{20} < l < 10^{21}$ un nombre premier décomposé aléatoire, on calcule un idéal entier $\LR$ de $\OR_{\Delta}$ de norme $l$. Choisissant $N = 2\log(|\Delta|)^2$ d'après \cite{Seysen}[Th 3.3], on cherche à calculer une factorisation de $\CL$ avec la méthode de \cite{JaoSoukharev} (appelée méthode 1), puis avec mon approche (appelée méthode 2). On répète cela $30$ fois, avec une valeur de $l$ différente à chaque fois. Le tableau~\ref{tableauexp} regroupe les moyennes des sommes des exposants, des temps de calculs, du nombre de tentatives de marches aléatoires, du nombre d'exposants non nuls et des normes maximales parmi les idéaux d'exposant non nuls.
-	 
-	La somme des exposants correspond au nombre de calculs d'isogénies intermédiaires. Le tableau \ref{tableauexp} montre l'avantage de la méthode 2 sur ce point. Le désavantage théorique est le nombre d'exposants non nuls, qui correspond au nombre de polynômes modulaires à calculer. Ce désavantage est asymptotique, et pour ces valeurs de $\Delta$ la méthode 2 reste avantageuse.
 	
 	\begin{table}[h]
 		\begin{center}
@@ -226,6 +226,8 @@
 		\caption{Comparaison des méthodes 1 et 2}
 		\label{tableauexp}
 	\end{table}
+	
+	La somme des exposants correspond au nombre de calculs d'isogénies intermédiaires. Le tableau \ref{tableauexp} montre l'avantage de la méthode 2 sur ce point. Le désavantage théorique est le nombre d'exposants non nuls, qui correspond au nombre de polynômes modulaires distincts à calculer. Ce désavantage est asymptotique, et pour ces valeurs de $\Delta$ la méthode 2 reste avantageuse.
 	
 	\section{Introduction à la seconde méthode}
 	
