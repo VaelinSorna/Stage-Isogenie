@@ -1,0 +1,342 @@
+\documentclass[11pt]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+%\usepackage[active,tightpage,floats]{preview}
+\usepackage{tikz-cd}
+\usepackage{quiver}
+\usepackage{graphics}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{pgfplots}
+\usetikzlibrary{calc}
+\usetheme{Madrid}
+
+\newcommand{\N}[0]{\mathbb{N}}
+\newcommand{\Z}[0]{\mathbb{Z}}
+\newcommand{\Q}[0]{\mathbb{Q}}
+\newcommand{\R}[0]{\mathbb{R}}
+\newcommand{\C}[0]{\mathbb{C}}
+\newcommand{\K}[0]{\mathbb{K}}
+\newcommand{\F}[0]{\mathbb{F}}
+\newcommand{\LR}[0]{\mathfrak{L}}
+\newcommand{\OR}[0]{\mathcal{O}}
+\newcommand{\PR}[0]{\mathfrak{P}}
+\newcommand{\IR}[0]{\mathfrak{I}}
+
+\begin{document}
+	\author[Maxime LOUVET]{Maxime LOUVET}
+	\title[Audition EDSTS]{Introduction aux réseaux euclidiens structurés et application aux groupes de classes}
+	%\logo{}
+	%\institute{EDSTS 585}
+	\date[03/07/2025]{03/07/2025}
+	%\subject{}
+	%\setbeamercovered{transparent}
+	%\setbeamertemplate{navigation symbols}{}
+	
+	\begin{frame}[plain]
+		\maketitle
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Structures mathématiques}
+		groupe, anneaux, corps : voc, def idéaux
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Réseaux en dimension 2}
+		\begin{figure}
+			%\centering
+			\begin{tikzpicture}
+				\coordinate (Origin)   at (0,0);
+				\coordinate (XAxisMin) at (-3,0);
+				\coordinate (XAxisMax) at (5,0);
+				\coordinate (YAxisMin) at (0,-2);
+				\coordinate (YAxisMax) at (0,5);
+				\draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+				\draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+				
+				\clip (-3,-2) rectangle (5cm,5cm); % Clips the picture...
+				\pgftransformcm{1}{0.6}{0.7}{1}{\pgfpoint{0cm}{0cm}}
+				% This is actually the transformation matrix entries that
+				% gives the slanted unit vectors. You might check it on
+				% MATLAB etc. . I got it by guessing.
+				\coordinate (Bone) at (0,2);
+				\coordinate (Btwo) at (2,-2);
+				\draw[style=help lines,dashed] (-8,-8) grid[step=2cm] (8,8);
+				% Draws a grid in the new coordinates.
+				%\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+				% Puts the shaded rectangle
+				\foreach \x in {-4,-3,...,4}{% Two indices running over each
+					\foreach \y in {-4,-3,...,4}{% node on the grid we have drawn 
+						\node[draw,circle,inner sep=2pt,fill] at (2*\x,2*\y) {};
+						% Places a dot at those points
+					}
+				}
+				\draw [ultra thick,-latex,red] (Origin)
+				-- (Bone) node [above left] {$b_1$};
+				\draw [ultra thick,-latex,red] (Origin)
+				-- (Btwo) node [below right] {$b_1 - b_2$};
+				\draw [ultra thick,-latex,red] (Origin)
+				-- ($(Bone)+(Btwo)$) node [below right] {$b_2$};
+				\draw [ultra thick,-latex,red] (Origin)
+				-- ($2*(Bone)+(Btwo)$) node [above left] {$b_1+b_2$};
+				%\filldraw[fill=gray, fill opacity=0.3, draw=black] (Origin)
+				%rectangle ($2*(Bone)+(Btwo)$);
+				%\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+				% -- ($2*(0,2)+(2,-2)$)
+				% -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+			\end{tikzpicture}
+			%\caption{Structure de groupe des réseaux}
+			\label{figure:solving-CVP-bad-basis}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Structure supplémentaire}
+		\begin{itemize}
+			\item $\R^2\subset\C$ : multiplication complexe comme seconde opération.
+		\end{itemize}
+		\begin{block}{Réseaux structurés, première définition}
+			Un réseaux $[b_1; b_2] \subset \C$ est structuré s'il est stable par multiplication.
+		\end{block}
+		\begin{block}{Ordres, première définition}
+			Un réseaux $[b_1; b_2] \subset \C$ est un ordre quadratique si c'est un sous-anneaux.
+		\end{block}
+		\begin{itemize}
+			\item<2-> Si $z\in\C\setminus\R$ est tel que $[1,z]$ est un ordre quadratique,
+			\item<3-> Alors $z^2\in[1,z]$ : $z^2 = nz + m$, $n,m\in\Z$
+			\item<3-> Donc $z$ est racine de $P(X) = X^2 - nX - m\in\Z[X]$
+			\begin{equation*}
+				z = \frac{n \pm \sqrt{\Delta}}{2},\;\Delta=n^2 - 4m < 0
+			\end{equation*}
+		\end{itemize}
+	\end{frame}
+		
+		
+	\begin{frame}
+		\frametitle{Exemples d'ordres quadratiques imaginaires}
+		
+		\begin{figure}
+			%\centering
+			\begin{tikzpicture}
+				\coordinate (Origin)   at (0,0);
+				\coordinate (XAxisMin) at (-3,0);
+				\coordinate (XAxisMax) at (5,0);
+				\coordinate (YAxisMin) at (0,-2);
+				\coordinate (YAxisMax) at (0,5);
+				\draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+				\draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+				
+				\clip (-3.2,-2.2) rectangle (5cm,5cm); % Clips the picture...
+				\pgftransformcm{1}{0}{0}{2}{\pgfpoint{0cm}{0cm}}
+				% This is actually the transformation matrix entries that
+				% gives the slanted unit vectors. You might check it on
+				% MATLAB etc. . I got it by guessing.
+				\coordinate (Bone) at (0,1);
+				\coordinate (Btwo) at (1,-1);
+				\draw[style=help lines,dashed] (-8,-8) grid[step=1cm] (8,8);
+				% Draws a grid in the new coordinates.
+				%\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+				% Puts the shaded rectangle
+				\foreach \x in {-4,-3,...,4}{% Two indices running over each
+					\foreach \y in {-4,-3,...,4}{% node on the grid we have drawn 
+						\node[draw,circle,inner sep=2pt,fill] at (\x,\y) {};
+						% Places a dot at those points
+					}
+				}
+				\draw [ultra thick,-latex,red] (Origin)
+				-- (Bone) node [above left] {$i\sqrt{|\Delta|}$};
+				%\draw [ultra thick,-latex,red] (Origin)
+				%-- (Btwo) node [below right] {$b_2$};
+				\draw [ultra thick,-latex,red] (Origin)
+				-- ($(Bone)+(Btwo)$) node [below right] {$1$};
+				%\draw [ultra thick,-latex,red] (Origin)
+				%-- ($2*(Bone)+(Btwo)$) node [above left] {2$b_1+b_2$};
+				%\filldraw[fill=gray, fill opacity=0.3, draw=black] (Origin)
+				%rectangle ($2*(Bone)+(Btwo)$);
+				%\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+				% -- ($2*(0,2)+(2,-2)$)
+				% -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+			\end{tikzpicture}
+			%\caption{Structure de groupe des réseaux}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Exemples d'ordres quadratiques imaginaires}
+		
+		\begin{figure}
+			%\centering
+			\begin{tikzpicture}
+				\coordinate (Origin)   at (0,0);
+				\coordinate (XAxisMin) at (-3,0);
+				\coordinate (XAxisMax) at (5,0);
+				\coordinate (YAxisMin) at (0,-2);
+				\coordinate (YAxisMax) at (0,5);
+				\draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+				\draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+				
+				\clip (-3.2,-2.2) rectangle (5cm,5cm); % Clips the picture...
+				\pgftransformcm{1}{0}{0}{2}{\pgfpoint{0cm}{0cm}}
+				% This is actually the transformation matrix entries that
+				% gives the slanted unit vectors. You might check it on
+				% MATLAB etc. . I got it by guessing.
+				\coordinate (Bone) at (0,1);
+				\coordinate (Btwo) at (1,0);
+				\draw[style=help lines,dashed] (-8,-8) grid[step=1cm] (8,8);
+				% Draws a grid in the new coordinates.
+				%\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+				% Puts the shaded rectangle
+				\foreach \x in {-8,-6,...,8}{% Two indices running over each
+					\foreach \y in {-8,-6,...,8}{% node on the grid we have drawn 
+						\node[draw,circle,inner sep=2pt,fill] at (\x,\y) {};
+						% Places a dot at those points
+					}
+				}
+				\foreach \x in {-7,-5,...,5}{% Two indices running over each
+					\foreach \y in {-7,-5,...,5}{% node on the grid we have drawn 
+						\node[draw,circle,inner sep=2pt,fill] at (\x,\y) {};
+						% Places a dot at those points
+					}
+				}
+				\draw [ultra thick,-latex,green] (Origin)
+				-- ($(Bone)+(Bone)$) node [above left] {$i\sqrt{|\Delta|}$};
+				\draw [ultra thick,-latex,red] (Origin)
+				-- ($(Bone)+(Btwo)$) node [below right] {$\frac{1 + i\sqrt{|\Delta|}}{2}$};
+				\draw [ultra thick,-latex,red] (Origin)
+				-- ($(Btwo)+(Btwo)$) node [below right] {$1$};
+				%\draw [ultra thick,-latex,red] (Origin)
+				%-- ($2*(Bone)+(Btwo)$) node [above left] {2$b_1+b_2$};
+				%\filldraw[fill=gray, fill opacity=0.3, draw=black] (Origin)
+				%rectangle ($2*(Bone)+(Btwo)$);
+				%\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+				% -- ($2*(0,2)+(2,-2)$)
+				% -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+			\end{tikzpicture}
+			%\caption{Structure de groupe des réseaux}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Corps de nombres}
+		\begin{itemize}
+			\item Si $z\in\C$ est tel que $[1,z]$ est un ordre,
+			alors $z$ est racine de $P(X) = X^2 - nX - m\in\Z[X]$
+		\end{itemize}
+		\begin{block}{Entiers algébriques}
+			$z\in\C$ est un entier algébrique s'il est racine de $P\in\Z[X]$ irréductible unitaire.
+		\end{block}
+		\begin{itemize}
+			\item P est alors unique, appelé polynôme minimal de $z$. 
+		\end{itemize}
+		\begin{block}{Corps engendrés}<2->
+			Soit $\alpha\in\C$, on note $\Q\left[\alpha\right] $ le sous-corps de $\C$ engendré par $\Q$ et $\alpha$.
+		\end{block}
+		\begin{itemize}
+			\item<2-> Si $\alpha$ est un entier algébrique, alors $\Q\left[\alpha\right]$ est un corps de nombres.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Forme standard des ordres quadratiques imaginaires}
+		\begin{block}{Proposition}
+			Un ordre $[1,z]\subset\C$ est toujours inclus dans un corps de la forme $\Q\left[i\sqrt{|\Delta|}\right] $, avec $\Delta\in\Z$ un discriminant.
+		\end{block}
+		\begin{itemize}
+			\item Si $[1,z]\subset\C$ est un ordre, $[1,fz]\subset\C$ aussi $\forall f\in\Z$.
+			\item Soit $\K = \Q\left[\sqrt{\Delta}\right]$, on note
+			\begin{equation*}
+				w_\K = \frac{\Delta + i\sqrt{|\Delta|}}{2}.
+			\end{equation*}
+		\end{itemize}
+		\begin{block}{Ordre maximal}
+			$\OR_\K = [1, w_\K]$ est un ordre, qui contient tout les ordres de $\K$
+		\end{block}
+		\begin{itemize}
+			\item Tout les ordres de $\K$ sont de la forme $[1, fw_\K]$, $f\in\Z$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Réseaux structurés de dimension $2$}
+		
+		\begin{block}{Idéaux fractionnaires}
+			Un réseau structuré de dimension $2$ est un réseaux de la forme $\alpha\LR$, $\alpha\in\LR$ et $\LR\subset\OR$ est un idéal.
+		\end{block}
+		\begin{itemize}
+			\item Un réseau structuré est stable par multiplication. 
+		\end{itemize}
+		\begin{block}{Norme d'un idéal}
+			Un réseau structuré d'un ordre $[1,z]$ est de la forme $[l,z]$ avec $z$ entier algébrique et $l\in\Z$. $l$ est appelé norme de l'idéal.
+		\end{block}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Dimension supérieur }
+		\begin{itemize}
+			\item $\C$ est un $\Q$-ev de dimension infinie.
+			\item Soit $\alpha$ est un entier algébrique. Si $\mu_\alpha$ est de degré $d$, $\Q[\alpha]$ est un $\Q$-ev de dimension $d$
+		\end{itemize}
+		\begin{block}{Ordre d'un corps de nombres}
+			Soit $\K = \Q[\alpha]$, On note $\OR_\K$ l'ensemble des entiers algébriques de $\K$. C'est un anneaux, qui contient une $\Q$-base de $\K$. $\OR_\K\simeq\Z^d$
+		\end{block}
+		\begin{itemize}
+			\item $\OR_\K$ est un ordre de $\K$, et contient tout les autres.
+			\item $\OR_\K$ est un réseaux vu dans $\Q^d$. Si l'on souhaite avoir un réseau de $\R^d$, on peut procéder à une extension des scalaires (produit vectoriel).
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Ideal lattice}
+		\begin{block}{Réseaux structurés}
+			Soit $\K = \Q[\alpha]$ un corps de nombres. Un réseaux de $\K$ est structuré si c'est un $\OR_\K$-module non nul inclus dans $\K$
+		\end{block}
+		\begin{itemize}
+			\item Les ordres de $\K$ et leurs idéaux sont des réseaux structurés 
+			\item Si $\LR$ est un idéal d'un ordre de $\K$ et $\beta\in\K$, $\beta\LR$ est un réseaux structurés
+		\end{itemize}
+		\begin{block}{Idéaux fractionnaires}
+			Les réseaux de la forme $\beta\LR$ sont appelés idéaux fractionnaires, et si nécessaire les idéaux d'ordres sont appelés idéaux entiers 
+		\end{block}
+		\begin{itemize}
+			\item Si $\IR$ est un idéal fractionnaire, alors il existe $q\in\Z$ tel que $q\IR$ soit un idéal entier. 
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Propriétés des réseaux structurés}
+		Norme ? Contient un entier Produit, factorisation (pourquoi "idéal")
+		idéaux fractionnaire = fraction d'idéaux entiers
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Classes de réseaux structurés}
+		Def equivalence, lien homothétie, notation
+		def groupe des classes
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Calculs dans le groupe des classes}
+		enoncé problème PIP, problème de factorisation
+		Lien avec vecteurs cours.
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Réduction du représentant d'une classe}
+		enoncé problème de réduction, solution avec BKZ
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Marche aléatoire dans le groupe de classes}
+		méthode, enoncé graphe expanseur, algorithme
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Factorisation dans le groupe de classes}
+		méthode, enoncé graphe expanseur, algorithme
+	\end{frame}
+	
+	
+\end{document}
