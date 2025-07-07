@@ -9,7 +9,7 @@ from sage.schemes.elliptic_curves.hom_frobenius import EllipticCurveHom_frobeniu
 from sage.libs.libecm import ecmfactor
 from sage.misc.search import search
 import time
-
+from myklpt2 import klpt
 
 
 
@@ -63,11 +63,13 @@ candidats_KLPT = []
 if Nmax^2 > -D:
     facto = Nmax.factor()
     k = len(facto)
+    factoN = []
     N = 1
     for i in [ 0 .. k-1]:
         N = N*facto[i][0]
+        factoN.append(facto[i][0]
     if N^2 > -D:
-        candidats_KLPT.append([N,1])
+        candidats_KLPT.append([N,factoN,1])
 #traces = [tracef]
 #cards = [CE]
 for d in [2 .. degmax]:
@@ -87,10 +89,12 @@ for d in [2 .. degmax]:
         facto = Nd.factor()
         k = len(facto)
         N = 1
+        factoN = []
         for i in [ 0 .. k-1]:
             N = N*facto[i][0]
+            factoN.append(facto[i][0])
         if N^2 > -D:
-            candidats_KLPT.append([N,d])
+            candidats_KLPT.append([N,factoN,d])
     #traces.append(tracefd)
     #cards.append(q + 1 - tracefd)
 
@@ -100,7 +104,94 @@ for d in [2 .. degmax]:
 
 
 print('Torsions', torsions)
-print('KLaPoTi', candidats_KLPT)
+print('Candidats KLaPoTi', candidats_KLPT)
 #print('Traces', traces)
 #print('Cards', cards)
 #print(E.count_points(degmax))
+
+
+
+
+
+
+# TEST SOLUTIONS KLPT
+
+
+
+def ideal_de_norme(l,f,D):
+
+    #Trouver un idéal de norme l premier : Cf notes de cours Biasse
+    #On se place dans un ordre de discriminant D et de conducteur f
+    
+    if kronecker(D,l) == 1:
+        D = Mod(D,l)
+        sq = square_root_mod_prime(D,l) #Lien avec Seysen ? Prendre le min des deux racines vu dans N ? (Optionnel)
+        sm = Mod(-sq,l)
+        sq = ZZ(sq)
+        sm = ZZ(sm)
+        sq = min(sm,sq)
+        #print(sq)
+        return NumberFieldOrderIdeal(O,[l, -sq + f*t]) #Forme donnée dans le cours de Biasse
+    elif kronecker(D,l) == 0:
+        return NumberFieldOrderIdeal(O,[l, f*t])
+    else:
+        raise "l est inerte"
+
+
+
+
+
+def sol_KLPT(N,factoN,aa)
+
+    #Utiliser KLPT pour résoudre l'equation définie par N et aa
+
+    l, α = aa.gens_two()
+    Quat.<i,j,k> = QuaternionAlgebra(-1, dK)
+    assert (α[0] + α[1]*j).reduced_norm() == α.norm()
+    assert (α[0] + α[1]*j).reduced_trace() == α.trace()
+    assert j.reduced_norm() == rK.norm() and j.reduced_trace() == rK.trace()
+        ϑ = α.parent().number_field().gen()
+    assert (ϑ+1)/2 in self.ctx.O   #Necessaire ? ordre de discriminant = 1 mod 4 ?
+    OO = Quat.quaternion_order([1, i, (1+j)/2, (i+k)/2])
+    I = OO*N + OO*(α[0] + α[1]*j)
+    print(f'{I = }')
+
+
+    elt = klpt(I,N,factoN)
+    assert elt in I
+    print(f'{elt = }', '| norm:', elt.reduced_norm().factor())
+    
+
+    b = elt[0] + elt[2]*ϑ
+    c = elt[1] + elt[3]*ϑ
+    while b and c and b/2 in aa and c/2 in aa:  # can we avoid this a priori in KLPT?
+        b /= 2
+        c /= 2
+    print(f'{b = }')
+    print(f'{c = }')
+    assert b in aa
+    assert c in aa
+    bb = O.ideal([g*b.conjugate()/aa.norm() for g in aa.gens()])
+    cc = O.ideal([g*c.conjugate()/aa.norm() for g in aa.gens()])
+    print(f'{bb = }', bb.norm())#.factor())
+    print(f'{cc = }', cc.norm())#.factor())
+    assert ZZ(bb.norm() + cc.norm()).prime_divisors() == [2]
+    if bb.norm().gcd(cc.norm()) != 1:
+        print('solution premier entre eux')
+        return bb.norm(), cc.norm(), False
+    else :
+        print('mauvaise solution !')
+        return bb.norm(), cc.norm(), True
+        
+        
+        
+
+
+aa = ideal_de_norme(l,f,D)
+k_candidats = len(candidats_KLPT)
+for i in [ 0 .. k_candidats - 1]:
+    N = candidats_KLPT[i][0]
+    factoN = candidats_KLPT[i][1]
+    Nb, Nc, verif = sol_KLPT(N,factoN,aa)
+    
+
