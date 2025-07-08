@@ -147,7 +147,7 @@ def strong_approximation(N, α, C, D, rhs):
             seen.add((z,t))
             assert eqn(0,0,z,t) % N**2 == 0
             rhs2 = ZZ(eqn(0,0,z,t)) // N**2
-            sol = trysolve(nf, rhs2)
+            sol = trysolve(nf, rhs2)          #rhs2 pseudoprime ?
             if sol is not None:
                 x,y = sol
                 break
@@ -202,8 +202,9 @@ def klpt(I, N, factoN):
             γ = represent_integer(O0, l*N1)
             if γ is not None:
                 test = False
-        print(f'{N1 =}')
+        print(f'{N1 = }')
         print(f'{N2 = }')
+        
         C,D = ideal_mod_constraint(l, α, γ)
         print(f'{C = }')
         print(f'{D = }')

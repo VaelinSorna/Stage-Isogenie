@@ -49,16 +49,16 @@ s = int((-fm*dK + tracef)/2)
 s2 = (-fm*dK - tracef)/2
 frob = fm*wK + s
 frob2 = -(fm*wK + s2)
-#print(frob^2 - tracef*frob + p)
-#print(frob2^2 - tracef*frob2 + p)
-Nmax = gcd(s-1,fm/f)
+assert (frob^2 - tracef*frob + p) == 0
+assert (frob2^2 - tracef*frob2 + p) == 0
 
-frobd = frob
-frob2d = frob2
-q = p
-
-degmax = 24
+if dK%4 == 1 :
+    a = int((tracef - fm)/2)
+else :
+    a = int(tracef/2)
+Nmax = gcd(a-1,fm/f)
 torsions = [Nmax]
+
 candidats_KLPT = []
 if Nmax^2 > -D:
     facto = Nmax.factor()
@@ -67,11 +67,16 @@ if Nmax^2 > -D:
     N = 1
     for i in [ 0 .. k-1]:
         N = N*facto[i][0]
-        factoN.append(facto[i][0]
+        factoN.append(facto[i][0])
     if N^2 > -D:
         candidats_KLPT.append([N,factoN,1])
+
 #traces = [tracef]
 #cards = [CE]
+frobd = frob
+frob2d = frob2
+q = p
+degmax = 24
 for d in [2 .. degmax]:
     q = q*p
     frobd = frobd*frob
@@ -79,6 +84,8 @@ for d in [2 .. degmax]:
     tracefd = frobd + frob2d
     Dm = tracefd^2 - 4*q
     fm = int(sqrt(Dm/(dK)))
+    assert (frobd^2 - tracefd*frobd + q) == 0
+    assert (frob2d^2 - tracefd*frob2d + q) == 0
     if dK%4 == 1 :
         a = int((tracefd - fm)/2)
     else :
@@ -98,9 +105,6 @@ for d in [2 .. degmax]:
     #traces.append(tracefd)
     #cards.append(q + 1 - tracefd)
 
-    #print('Test frobs')
-    #print(frobd^2 - tracefd*frobd + q)
-    #print(frob2d^2 - tracefd*frob2d + q)
 
 
 print('Torsions', torsions)
@@ -141,7 +145,7 @@ def ideal_de_norme(l,f,D):
 
 
 
-def sol_KLPT(N,factoN,aa)
+def sol_KLPT(N,factoN,aa):
 
     #Utiliser KLPT pour résoudre l'equation définie par N et aa
 
@@ -150,8 +154,8 @@ def sol_KLPT(N,factoN,aa)
     assert (α[0] + α[1]*j).reduced_norm() == α.norm()
     assert (α[0] + α[1]*j).reduced_trace() == α.trace()
     assert j.reduced_norm() == rK.norm() and j.reduced_trace() == rK.trace()
-        ϑ = α.parent().number_field().gen()
-    assert (ϑ+1)/2 in self.ctx.O   #Necessaire ? ordre de discriminant = 1 mod 4 ?
+    r = α.parent().number_field().gen()
+    assert (r+1)/2 in self.ctx.O   #Necessaire ? ordre de discriminant = 1 mod 4 ?
     OO = Quat.quaternion_order([1, i, (1+j)/2, (i+k)/2])
     I = OO*N + OO*(α[0] + α[1]*j)
     print(f'{I = }')
@@ -162,8 +166,8 @@ def sol_KLPT(N,factoN,aa)
     print(f'{elt = }', '| norm:', elt.reduced_norm().factor())
     
 
-    b = elt[0] + elt[2]*ϑ
-    c = elt[1] + elt[3]*ϑ
+    b = elt[0] + elt[2]*r
+    c = elt[1] + elt[3]*r
     while b and c and b/2 in aa and c/2 in aa:  # can we avoid this a priori in KLPT?
         b /= 2
         c /= 2
