@@ -137,6 +137,7 @@ def make_liste_ideq(L,O,m,liste_B,CE):
     liste_ideq = []
     Nk_max = 1
     Nk_min = -(O.discriminant())
+    ideal_friable = False
     
     for x in [0 .. m]:   #on evite de creer gamma et -gamma
         for y in [-m .. m]:
@@ -165,14 +166,15 @@ def make_liste_ideq(L,O,m,liste_B,CE):
                         
                 assert NI == Nk*Ne
                 if Nk == 1:
-                    print('Ideal equivalent friable', I)
+                    #print('Ideal equivalent friable', I)
+                    ideal_friable = True
                 liste_ideq.append([I,Nk,Ne,Ne_facto])
                 if Nk > Nk_max:
                     Nk_max = Nk
                 if Nk < Nk_min:
                     Nk_min = Nk
                     
-    return liste_ideq, Nk_max, Nk_min
+    return liste_ideq, Nk_max, Nk_min, ideal_friable
 
 def coin_equation(N1,N2,N):
     
@@ -282,7 +284,7 @@ def first_solutions_clapoti(prime_max,m_id,l,E,K,O):
     
     resultat = []
     liste_B = liste_premiers_splits(D,prime_max,fm,p)
-    liste_ideq, Nk_max, Nk_min = make_liste_ideq(L,O,m_id,liste_B,CE)
+    liste_ideq, Nk_max, Nk_min, ideal_friable = make_liste_ideq(L,O,m_id,liste_B,CE)
     torsions_candidats, deg_max = etude_torsions(E,p,O,K,Nk_max,Nk_min)
     
     for torsion in torsions_candidats:
@@ -291,7 +293,7 @@ def first_solutions_clapoti(prime_max,m_id,l,E,K,O):
             resultat.append(torsion)
             resultat.append(sols)
             break
-    return resultat, liste_ideq, deg_max
+    return resultat, liste_ideq, deg_max, ideal_friable
 
 def test_solutions_clapoti(prime_max,m_id,l,E,K,O):
     #prime_max : taille maximal des nombres premiers considérés petit
@@ -302,10 +304,48 @@ def test_solutions_clapoti(prime_max,m_id,l,E,K,O):
     resultat = []
     Bp = 1
     while Bp <= prime_max:
-        first, liste_ideq, deg_max = first_solutions_clapoti(Bp,m_id,l,E,K,O)
+        first, liste_ideq, deg_max, ideal_friable = first_solutions_clapoti(Bp,m_id,l,E,K,O)
         resultat.append([Bp,deg_max,len(liste_ideq),first[0],len(first[1])])
         Bp = next_prime(Bp)
     return resultat
+
+def stat_solutions_clapoti(prime_max, m_id, nb_essais,E,K,O): 
+
+    print('prime_max :', prime_max)
+
+    moy_deg = 0
+    moy_id = 0
+    nb_id_friable = 0
+    max_deg = 0
+    min_deg = 0
+    D = O.discriminant()
+
+    print('Nombre essais', nb_essais)
+
+    for _ in range(20):
+
+        l = next_prime(randint(10^20, 10^21))
+        while kronecker(D,l) != 1:
+            l = next_prime(l)
+        first, liste_ideq, deg_max, ideal_friable = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
+        deg_sol = first[0][1]
+        moy_deg = moy_deg + deg_sol
+        moy_id = moy_id + len(liste_ideq)
+        if ideal_friable:
+            nb_id_friable += 1
+        if deg_sol > max_deg:
+            max_deg = deg_sol
+        if deg_sol < min_deg or min_deg == 0:
+            min_deg = deg_sol
+
+    print('degrés moyen de first solution :', moy_deg/20)
+    print('dégrés maximal parmis les solutions :', max_deg)
+    print('degrés minimal parmis les solutions :', min_deg)
+    print('Nb idéaux théoriques :', m_id*m_id*2 + m_id)
+    print('Nb idéaux retenus en moyenne :', moy_id)
+    print('Nb de tentatives avec idéal eq friable :', nb_id_friable)
+
+    return 
 
 
 
@@ -326,18 +366,17 @@ O = K.maximal_order()                   #Calculer O et K à partir de E ? CF Sut
 f = O.conductor()
 D = O.discriminant()
 
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-    l = next_prime(l)
+print('Discriminant =', D)
 
 m_id = isqrt(p.nbits())+1  #choix fait dans Pegasis
+
 prime_max = 370           # taille max polynome modulaire sagemath. Acces Sutherland possible ? 
 
-#first, liste_ideq, deg_max = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
-#print(first)
+stat_solutions_clapoti(prime_max, m_id, 20, E,K,O)
 
-test_prime_max = test_solutions_clapoti(prime_max,m_id,l,E,K,O)
-print(test_prime_max)
+prime_max = 1000           # taille max polynome modulaire Sutherland  
+
+stat_solutions_clapoti(prime_max, m_id, 20, E,K,O)
 
 
 
@@ -357,20 +396,17 @@ f = 524287   #trouver par algo de Sutherland
 O = K.order(f*(1 + rK)/2)
 
 
-D = O.discriminant()
-
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-    l = next_prime(l)
+print('Discriminant =', D)
 
 m_id = isqrt(p.nbits())+1  #choix fait dans Pegasis
+
 prime_max = 370           # taille max polynome modulaire sagemath. Acces Sutherland possible ? 
 
-#first, liste_ideq, deg_max = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
-#print(first)
+stat_solutions_clapoti(prime_max, m_id, 20,E,K,O)
 
-test_prime_max = test_solutions_clapoti(prime_max,m_id,l,E,K,O)
-print(test_prime_max)
+prime_max = 1000           # taille max polynome modulaire Sutherland  
+
+stat_solutions_clapoti(prime_max, m_id, 20,E,K,O)
 
 
 
@@ -392,18 +428,17 @@ O = K.order(f*(1 + rK)/2)
 
 D = O.discriminant()
 
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-    l = next_prime(l)
+print('Discriminant =', D)
 
 m_id = isqrt(p.nbits())+1  #choix fait dans Pegasis
+
 prime_max = 370           # taille max polynome modulaire sagemath. Acces Sutherland possible ? 
 
-#first, liste_ideq, deg_max = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
-#print(first)
+stat_solutions_clapoti(prime_max, m_id, 20, E,K,O)
 
-test_prime_max = test_solutions_clapoti(prime_max,m_id,l,E,K,O)
-print(test_prime_max)
+prime_max = 1000           # taille max polynome modulaire Sutherland  
+
+stat_solutions_clapoti(prime_max, m_id, 20, E,K,O)
 
 
 
@@ -426,18 +461,17 @@ O = K.maximal_order()
 #Creer par CM. On a f = 1 automatique !
 D = O.discriminant()
 
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-    l = next_prime(l)
+print('Discriminant =', D)
 
 m_id = isqrt(p.nbits())+1  #choix fait dans Pegasis
+
 prime_max = 370           # taille max polynome modulaire sagemath. Acces Sutherland possible ? 
 
-#first, liste_ideq, deg_max = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
-#print(first)
+stat_solutions_clapoti(prime_max, m_id, 20, E,K,O)
 
-test_prime_max = test_solutions_clapoti(prime_max,m_id,l,E,K,O)
-print(test_prime_max)
+prime_max = 1000           # taille max polynome modulaire Sutherland  
+
+stat_solutions_clapoti(prime_max, m_id, 20, E,K,O)
 
 
 
@@ -456,15 +490,14 @@ O = K.maximal_order()
 
 D = O.discriminant()
 
-l = next_prime(randint(10^20, 10^21))
-while kronecker(D,l) != 1:
-    l = next_prime(l)
-    
+print('Discriminant =', D)
+
 m_id = isqrt(p.nbits())+1  #choix fait dans Pegasis
+
 prime_max = 370           # taille max polynome modulaire sagemath. Acces Sutherland possible ? 
 
-#first, liste_ideq, deg_max = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
-#print(first)
+stat_solutions_clapoti(prime_max, m_id, 20,E,K,O)
 
-test_prime_max = test_solutions_clapoti(prime_max,m_id,l,E,K,O)
-print(test_prime_max)
+prime_max = 1000           # taille max polynome modulaire Sutherland  
+
+stat_solutions_clapoti(prime_max, m_id, 20,E,K,O)
