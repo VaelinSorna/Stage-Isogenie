@@ -322,28 +322,35 @@ def stat_solutions_clapoti(prime_max, m_id, nb_essais,E,K,O):
 
     print('Nombre essais', nb_essais)
 
-    for _ in range(20):
+    non_friable = 0
+
+    while non_friable < 20:
 
         l = next_prime(randint(10^20, 10^21))
         while kronecker(D,l) != 1:
             l = next_prime(l)
         first, liste_ideq, deg_max, ideal_friable = first_solutions_clapoti(prime_max,m_id,l,E,K,O)
         deg_sol = first[0][1]
-        moy_deg = moy_deg + deg_sol
         moy_id = moy_id + len(liste_ideq)
+
         if ideal_friable:
             nb_id_friable += 1
-        if deg_sol > max_deg:
-            max_deg = deg_sol
-        if deg_sol < min_deg or min_deg == 0:
-            min_deg = deg_sol
+        else:
+            non_friable += 1
+            moy_deg = moy_deg + deg_sol
+            if deg_sol > max_deg:
+                max_deg = deg_sol
+            if deg_sol < min_deg or min_deg == 0:
+                min_deg = deg_sol
 
     print('degrés moyen de first solution :', moy_deg/20)
     print('dégrés maximal parmis les solutions :', max_deg)
     print('degrés minimal parmis les solutions :', min_deg)
     print('Nb idéaux théoriques :', m_id*m_id*2 + m_id)
-    print('Nb idéaux retenus en moyenne :', moy_id)
-    print('Nb de tentatives avec idéal eq friable :', nb_id_friable)
+    print('Nb idéaux retenus en moyenne :', moy_id/(nb_id_friable + 20))
+    print('Nb de tentatives ignorées (idéal friable) :', nb_id_friable)
+    print('Fréquence d'idéaux friables :', nb_id_friable/(nb_id_friable + 20))
+    print('\n')
 
     return 
 
