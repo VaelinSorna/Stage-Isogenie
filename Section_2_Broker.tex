@@ -1,19 +1,20 @@
 \section{Algorithme de Broker Charles et Lauter}
 
-\subsection{Calculs d'isogénies horizontales de petits degrés}
-%Vélu, sqrtVélu, Elkies, CheckElkies
+L'objectif de cette section est d'énoncé l'algorithme de Broker Charles et Lauter, qui prend en entrée une courbe elliptique ordinaire donnée avec son anneaux d'endomorphisme et un idéal premier de ce dernier, et qui renvoie l'isogénie résultant de l'action de l'idéal sur la courbe. Cette algorithme ramène le cas général à des calculs d'actions d'idéaux de normes plus petites, et utilise des algorithmes adaptés à ces cas. On explique la méthode puis on propose une implémentation dont on analyse la complexité, pour la comparer avec l'état de l'art. 
 
+\subsection{Calculs d'isogénies horizontales de petits degrés}
+%Vélu (avant ?), sqrtVélu, Elkies, CheckElkies
 
 
 \subsubsection{Algorithme SquareVélu}
 
-Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu permettent de construire une forme explicite d'une isogénie $\phi$ à partir de la connaissance de son noyau. Celui-ci peut être donné sous deux formes : un point $K\in E(\F_{q^{r}})$ générateur du noyau, avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. 
+Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu permettent de construire une forme explicite d'une $l$-isogénie $\phi$ à partir de la connaissance de son noyau. Appliquer naïvement les formules demande cependant $O(l)$ opérations sur la courbe. On explique ici comment le noyau peut être représenter efficacement, puis l'on énonce les résultat de \cite{Velusqrt} permettant d'obtenir une complexité en $O(\sqrt{l})$. $\ker(\phi)$ peut être donné sous deux formes : un générateur $K\in E(\F_{q^{r}})$ avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. 
 
 \begin{Def}
 	Soit $E$ un modèle de courbe elliptique et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. On sépare $Ker(\phi)$ en une partition $\left\lbrace \OR \right\rbrace \cup R\cup R'$, où $R$ regroupe $(l-1)/2$ points finis distincts, et $R'$ leurs inverses. Un polynôme $F$ décrit le noyau de $\phi$ sur $E$ si c'est un polynôme unitaire de degré $(l-1)/2$ dont les racines sont les abscisses des points finis de $R$. Un tel polynôme ne dépend pas de la partition choisie. 
 \end{Def}
 
-Pour calculer une isogénie de degré $l$, \cite{Velusqrt} propose une méthode pour évaluer les polynômes intervenant dans les formules de Vélu dans $\F_{q}[X]$ en $O(\sqrt{l})$ opérations dans $\F_{q}$. Les résultats suivants en découle.
+Pour calculer une $l$-isogénie, \cite{Velusqrt} propose une méthode pour évaluer les polynômes de $\F_{q}[X]$ intervenant dans les formules de Vélu en $O(\sqrt{l})$ opérations dans $\F_{q}$. Les résultats suivants en découle.
 
 \begin{Prop}
 	Soit $E$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. Soit $K$ un générateur de $Ker(\phi)$, et $P\in E(\F_{q})$. Il est possible de calculer un modèle de $E'$ et $\phi(P)\in E'$ en $O(\sqrt{l})$ opérations dans $\F_{q}$, en utilisant l'algorithme de \cite{Velusqrt} que l'on appelera SquareVélu.
@@ -31,7 +32,7 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 	\begin{equation*}
 		\phi(x,y) = \left( \frac{G(X)}{F(X)^2}\;,\;\frac{H(X,Y)}{F(X)^3}\right) 
 	\end{equation*}
-	où $G$ et $H$ peuvent être obtenue explicitement à partir de $F$. Pour $P\in E(\F_{q})$, on peut alors calculer $\phi(P)$ en $O(\sqrt{l})$ opérations dans $\F_{q}$ via les méthodes de \cite{Velusqrt}
+	où $G$ et $H$ peuvent être obtenue explicitement à partir de $F$. Pour $P\in E(\F_{q})$, on peut alors calculer $\phi(P)$ en $O(\sqrt{l})$ opérations dans $\F_{q}$, via les méthodes de \cite{Velusqrt}.
 \end{Prop}
 
 \begin{Rem}
@@ -257,8 +258,6 @@ On commence par se ramener à chercher un élément de $\OR_{\Delta}$. L'idéal 
 \end{equation}
 où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
 
-\textbf{TODO : mettre ici le lemme de correspondance entre idéaux équivalent et élément de l'idéal}
-
 \begin{Prop}
 	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$. Alors $\alpha = \frac{\beta}{m}$.
 \end{Prop}
@@ -268,89 +267,14 @@ où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
 	\begin{equation*}
 		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}.
 	\end{equation*}
-	Or d'après la proposition 1.17, $\PR_{p_{i}}^{e_{i}}\bar{\PR_{i}}^{e_{i}} = p_{i}^{e_{i}}\OR_{\Delta}$, donc 
+	Or d'après la proposition \ref{NormesId}, $\PR_{p_{i}}^{e_{i}}\bar{\PR_{i}}^{e_{i}} = p_{i}^{e_{i}}\OR_{\Delta}$, donc 
 	\begin{equation*}
 		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \alpha m\OR_{\Delta}.
 	\end{equation*}
 	Donc $\beta = \alpha m$.
 \end{proof}
 
-Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Comme $N((1,a,b)) = a = N_{\Q}^{\K}(\beta)$, connaître $a$ donne la norme de $\beta$. On sait que $\beta = \frac{x + y \sqrt{\Delta}}{2}$ avec $x$, $y\in\Z$.
-
-\begin{Prop}
-	
-	Soit $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ primitif sous forme standard. Soit $f = F(\LR)$ sa forme quadratique binaire primitive associée. Alors 
-	\begin{equation*}
-		f(x,y) = ax^2 + bxy + cy^2 = N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR)
-	\end{equation*}
-\end{Prop}
-
-\begin{proof}
-	On sait que par définition de $N_{\Q}^{\K}$, 
-	
-	\begin{align*}
-		N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR) &= \left( ax + y\frac{b}{2} + y\frac{\sqrt{\Delta}}{2}\right) \left( ax + y\frac{b}{2} - y\frac{\sqrt{\Delta}}{2}\right)/ a\\
-		&= \left( \left( ax + y\frac{b}{2} \right)^{2} - \left( y\frac{\sqrt{\Delta}}{2}\right)^{2}\right)/a\\
-		&=  ax^2 + bxy + y^2\left( \frac{b^2 - \Delta }{4a}\right) \\
-		&= ax^2 + bxy + cy^2 = f(x,y),
-	\end{align*}
-	
-	la dernière étape étant dû au fait que $f$ est de discriminant $\Delta = b^2 - 4ac$.
-	
-\end{proof}
-
-
-\begin{Coro}
-	Soit $\LR = (1,a,b)\subset\OR_{\Delta}$ un idéal primitif sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f$, c'est à dire s'il existe deux entiers $x, y\in\Z$ tels que $f(x,y) = 1$. De plus dans ce cas,
-	\begin{equation*}
-		\LR = \left( ax - \frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}.
-	\end{equation*}
-\end{Coro}
-
-\begin{proof}
-	$\LR$ est un idéal principal si et seulement s'il existe un élément de $\LR$ de norme égale à $N(\LR)$. Puisque $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$, tout élément $\beta$ de $\LR$ est de la forme
-	\begin{equation*}
-		\beta = \left( ax - \frac{-b + \sqrt{\Delta}}{2}\right).
-	\end{equation*}
-	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(x,y) = 1$ d'après ce qui précède.
-\end{proof}
-
-Dans le contexte de notre problème, on sait que l'idéal est principal par construction, et on connaît la forme quadratique $f$ associée. On cherche donc $(x,y)\in\Z^2$ solution de $f(x,y) = 1$. La notion de forme réduite va nous permettre de conclure. 
-
-\begin{Prop}\cite{Cox}[Thm 2.8, 2.9]
-	
-	Soit $r = ax^2 + bxy + cy^2$ une forme quadratique binaire primitive. Alors tout les entiers représentés par $r$ sont positifs. Si $r$ est réduite, alors $a$ est le plus petit entier représenté par $r$, avec $r(1,0) = a$.
-\end{Prop}
-
-Ainsi lorsque $f$ est une forme quadratique binaire primitive qui représente $1$, sa forme réduite $r$ est de la forme $x^2 \pm xy + cy^2$. 
-
-\textbf{TODO : décrire la réduction sous forme de changement de variable dans la section 1}
-
-\begin{Rem}
-	Chaque étape de l'algorithme 2 correspond à un changement de variable en $(x,y)$ a appliquer à la forme quadratique \cite{Cox}[Thm 2.8]. En effet
-	\begin{enumerate}
-		\item $(x,y)\mapsto (x - 2qy, y)$ correspond aux lignes $5$ et $6$.
-		\item $(x,y)\mapsto (x + y, y)$ correspond aux lignes $17$ et $18$ dans le cas $a = -b$.
-		\item $(x,y)\mapsto(-y,-x)$ correspond aux lignes $10$ et $11$, ainsi qu'aux lignes $17$ et $18$ dans le cas $a = c$. 
-	\end{enumerate}
-\end{Rem}
-
-
-On en déduit l'algorithme $5$ permettant de trouver le générateur $\beta$ d'un idéal principal primitif. C'est l'algorithme par défaut utilisé par Sage pour la recherche de générateur.  
-
-\begin{algorithm}
-	\caption{Générateur d'un idéal principal primitif donné sous forme standard}
-	\begin{algorithmic}[1]
-		\Require $(1,a,b)$ un idéal primitif d'un ordre $\OR_{\Delta}$ dont on sait qu'il est principal.
-		\Ensure Un élément $\beta$ tel que $(1,a,b) = \beta\OR_{\Delta}$. 
-		\State $f\gets ax^2 + bxy + cy^2$
-		\State $r\gets$ résultat de l'algorithme 2 appliqué à $f$
-		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$
-		\State $(x,y)\gets(1,0)$
-		\State $(x,y)\gets(x',y')$ obtenus en appliquant tout les changements de variables retenus dans $L$ dans le sens inverse.
-		\State \Return $(x,y)$
-	\end{algorithmic}
-\end{algorithm}
+Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Ceci est résolue par l'algorithme \ref{ALGOidealprincipal}.
 
 
 \begin{Def}
@@ -397,7 +321,7 @@ où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer
 	Il reste à montrer que la réduction de l'isogénie associée au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. $k$ est bien défini car $mf_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux. En particulier la restriction de $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
 \end{proof}
 
-On en déduit un algorithme qui déduit de l'équation d'équivalence (Cf label) l'isogénie souhaité. Ecrire l'algorithme : 
+On en déduit un algorithme qui déduit de l'équation d'équivalence (Cf label) l'isogénie souhaité. \textbf{Ecrire l'algorithme} : 
 
 
 \subsection{Calculs dans le groupe de classes d'idéaux}
@@ -408,7 +332,15 @@ On explique dans cette question comment trouver un idéal friable équivalent à
 \subsubsection{Famille génératrice du groupe des classes d'idéaux}
 
 
-On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux dont on sait calculer l'action sur $Ell_{\F_{q}}{\OR_{\Delta}}$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables inférieur à une borne $N$. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes parmi les idéaux premier associés pour obtenir une famille génératrice.
+On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux dont on sait calculer l'action sur $Ell_{\F_{q}}{\OR_{\Delta}}$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables inférieur à une borne $N$. On fixe alors une convention pour associer à chacun d'eux un idéal premier de même norme. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes parmi les idéaux premier associés pour obtenir une famille génératrice.
+
+\begin{Def}
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. On fixe un algorithme prenant entrée $p$ et $\OR_{\Delta}$ qui calcule une racine de $\OR_{\Delta}$ modulo $4p$. On définit la forme quadratique première de discriminant $\Delta$ associée à $p$ comme étant $f(p,b_{p})$, où $b_{p}\in\N$ vérifie $b_{p}^2 = \Delta [4p]$ et est obtenue par l’algorithme choisit. On définit l'idéal premier associé à $p$ par $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
+\end{Def}
+
+\begin{Rem}
+	L'idéal premier associé à $p$ est donc l'un des deux idéaux premier qui factorise $p$ dans $\OR_{\Delta}$. $I((p,-b_{p}))$ est le second, et représente la classe de $(\PR_{p})^{-1}$ d'après la proposition \ref{NormesId}. 
+\end{Rem}
 
 \begin{Def}
 	Soit $N\in\N$. On note $P_{N} = \left\lbrace \PR_{p} : p \; premier, 0\leq p\leq N, \left( \frac{\Delta}{p}\right) = 1\right\rbrace$ la liste des idéaux premiers associés aux nombres premiers décomposés plus petits que $N$. 
@@ -436,7 +368,7 @@ La proposition suivante permet de choisir la borne $N$.
 Comme on peut choisir $N$ de taille asymptotiquement raisonnable, on énonce  l'algorithme 3 qui sera utilisé pour établir une liste de représentant d'une famille génératrice du groupe des classes d'idéaux. 
 
 
-\begin{algorithm}
+\begin{algorithm}[h]
 	\caption{Famille génératrice du groupe de classes}
 	\begin{algorithmic}[1]
 		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$.
@@ -458,8 +390,6 @@ Comme on peut choisir $N$ de taille asymptotiquement raisonnable, on énonce  l'
 \end{algorithm}
 
 
-
-\newpage
 
 
 
@@ -573,41 +503,7 @@ On en déduit l'algorithme $4$ permettant de trouver les exposants $e_{i}$ cherc
 \subsubsection{Analyse de complexité}
 
 
-On commence par énoncé la complexité des algorithme $2$ et $5$: (faire les labels)
-
-\begin{Prop}\cite{Coh00}[5.4.3]
-	
-	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'algorithme 2 renvoie une forme de réduite de $(a,b,c)$ en utilisant au plus $2 + \log\left( \frac{a}{\sqrt{|\Delta|}} \right)$ divisions euclidiennes.
-\end{Prop}
-
-\begin{Coro}
-	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. La complexité de l'algorithme 2 appliqué à $(a,b,c)$ est en 
-	\begin{equation*}
-		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right) +\log(b)\right).
-	\end{equation*}
-	En particulier si $b\leq 2a$ alors la complexité de l'algorithme 2 est majorée en $O(log(a)^2)$.
-	
-\end{Coro}
-
-\begin{proof}
-	
-	La complexité de chaque passage dans la boucle de la ligne $2$ est essentiellement dominée par l'étape de la ligne $4$, qui correspond à une division euclidienne de $b$ par $2a$ donc en $O(\log(b))$. Après le premier passage dans la boucle, $|b|<a$ et les futures divisions euclidiennes seront toutes en $O(\log(a))$. Enfin le nombre de passages dans la boucle est donné par la proposition 5.31 \cite{Coh00}[5.4.3], d'où la conclusion. 
-\end{proof}
-
-\begin{Prop}
-	Soit $(1,a,b) = \beta\OR_{\Delta}$ un idéal principal primitif de $\OR_{\Delta}$ donné sous forme standard (en particulier $a$ est la norme de $\beta$). L'algorithme 8 trouve $\beta$ avec une complexité en
-	\begin{equation*}
-		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
-	\end{equation*}
-\end{Prop}
-
-\begin{proof}
-	Le nombre de calcul de cette algorithme est le double du nombre de calculs nécessaires à la réduction de la forme quadratique associée à $\beta\OR_{\Delta}$. D'après l'analyse de l'algorithme $2$, on déduit la complexité de l'algorithme $5$. 
-\end{proof}
-
-\begin{Rem}
-	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre ce problème. Ils déclarent une complexité en $O(\log(N(\beta)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme en question. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. On estime que l'algorithme $8$ a une complexité satisfaisante et nous n'utiliseront pas l'algorithme de Cornacchia. De plus l'implémentation Sage utilise aussi l'algorithme $8$. 
-\end{Rem}
+\textbf{TODO relire et faire des labels/ref}
 
 La complexité des algorithmes $3$ et $4$ nécessite de préciser comment on choisit le paramètre $N$ bornant les nombres premiers utilisés.  
 
