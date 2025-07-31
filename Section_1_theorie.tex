@@ -612,21 +612,12 @@ Il sera utile par la suite de trouver des générateurs d'idéaux (primitifs) pr
 \end{Prop}
 
 \begin{proof}
-	On sait que par définition de $N_{\Q}^{\K}$, 
-	
-	\begin{align*}
-		N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR) &= \left( ax + y\frac{b}{2} + y\frac{\sqrt{\Delta}}{2}\right) \left( ax + y\frac{b}{2} - y\frac{\sqrt{\Delta}}{2}\right)/ a\\
-		&= \left( \left( ax + y\frac{b}{2} \right)^{2} - \left( y\frac{\sqrt{\Delta}}{2}\right)^{2}\right)/a\\
-		&=  ax^2 + bxy + y^2\left( \frac{b^2 - \Delta }{4a}\right) \\
-		&= ax^2 + bxy + cy^2 = f(x,y),
-	\end{align*}
-	
-	la dernière étape étant dû au fait que $f$ est de discriminant $\Delta = b^2 - 4ac$.
+	Cette égalité découle de la définition de la norme d'extension $N_{\Q}^{\K}$.
 	
 \end{proof}
 
 \begin{Coro}
-	Soit $\LR = (1,a,b)\subset\OR_{\Delta}$ un idéal primitif sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f$, c'est à dire s'il existe deux entiers $x, y\in\Z$ tels que $f(x,y) = 1$. De plus dans ce cas,
+	Soit $\LR = (1,a,b)\subset\OR_{\Delta}$ un idéal primitif sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f$. De plus dans ce cas,
 	\begin{equation*}
 		\LR = \left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}.
 	\end{equation*}
@@ -701,10 +692,699 @@ Les algorithmes \ref{ALGO reduction} et \ref{ALGOidealprincipal} sont polynomiau
 \subsection{Rappels sur les isogénies de courbes elliptiques}
 %pas/peu de preuves
 %structure volcan, normalisation, anneaux d'endomorphisme 
+\subsubsection{Rappels et notations}
 
-\subsection{Représentation d'isogénies par action du groupe de classes d'idéaux}
-%preuves si elles sont pertinentes (remarques idéaux propres)
+On suppose connues les notions de théorie des courbes elliptiques présentées dans le cours du master. On énonce ici les définitions et notations utilisées dans la suite. Dans la suite, on énonce des résultats généraux sur les courbes elliptiques découverts et étudiés pendant le stage. 
 
-\subsection{Réduction de courbe elliptique et relèvement de Deuring}
-%pas de preuve, cf Kohel. Tableaux ?
 
+\begin{Def}
+	On défini une courbe elliptique $E$ à isomorphisme prêt. Par abus de notation, on désigne par $E$ un ensemble de courbes elliptiques de même $j$-invariant. Un modèle de courbe elliptique est une courbe elliptique explicite donnée par une équation. Pour préciser le choix d'un modèle de courbe de $E$, on le donne par son équation. 
+\end{Def}
+
+\begin{Rem}
+	On considère, sauf mention contraire, des modèles de courbes elliptiques donnés par des équation de Weierstrass réduites $E : y^2 = x^3 + ax + b$. On notera $\OR$ le point neutre, ou $\OR_{E}$ s'il y a besoin de précision (pour différentier des ordres par exemple). 
+\end{Rem}
+
+\begin{Def}
+	Soit $E$ et $E'$ deux courbes elliptiques. Une isogénie $\phi : E\rightarrow E'$ est défini à isomorphisme prêt. Par abus de notation, on désigne par $\phi : E\rightarrow E'$ un ensemble d'isogénies égales à isomorphisme prêt au départ et à l'arrivée. Une isogénie $\phi$ est sous forme explicite lorsque l'on spécifie un modèle de départ et d'arrivé. $\phi$ est un endomorphisme lorsque $E$ est $E'$ sont isomorphes (on parlera d'endomorphisme même si $E\neq E'$). 
+\end{Def}
+
+\begin{Rem}
+	Lorsque l'on voudra calculer des isogénies, on voudra plus précisément calculer des formes explicites d'isogénies.  
+\end{Rem}
+
+\begin{Ex}
+	\begin{enumerate}
+		\item Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique. Si $P\in E$, on désigne par $\tau_{P}$ la translation par $P$. On rappelle que ce n'est pas une isogénie. 
+		\item Soit $E$ une courbe elliptique. On note $[m]$ l'endomorphisme de $E$ consistant en la multiplication scalaire des points par $m$. On note $E[m]$ l'ensemble des points de $m$-torsions de $E$ (la notation $E[m]$ est donc aussi définie à isomorphisme prêt si l'on ne précise pas de modèle).
+		\item Si $\phi$ est une isogénie, on note $\hat{\phi}$ son isogénie duale.
+	\end{enumerate}
+\end{Ex}
+
+\begin{Def}
+	Soit $E$, $E'$ deux courbes elliptiques définies sur un corps $\K$. Soit $\phi : E\rightarrow E'$ est une isogénie explicite. On définit son application contravariante (ou Pullback) par
+	\begin{equation*}
+		\phi^{*} : \Kb(E') \rightarrow \Kb(E), f\mapsto f\circ\phi
+	\end{equation*} 
+\end{Def}
+
+\begin{Rem}
+	Si une isogénie $\phi : E\rightarrow E'$ est défini sur un corps $\K$ et que l'on se donne une forme explicite définie sur $\K$, alors le noyau de $\phi$ n'est pas forcément défini sur $\K$.
+\end{Rem}
+
+
+
+
+
+\subsubsection{Noyaux d'isogénies}
+
+
+Lorsque deux courbes elliptiques $E$ et $E'$ sont défini sur un corps $\K$, on sait que l'on peut associé à une isogénie $\phi : E\mapsto E'$ une extension $\Kb(E)/\phi^{*}\left( \Kb(E')\right)$. Par exemple les notions de degré ou de séparabilité de $\phi$ sont définies par rapport à cette extension. Les résultats présentés ici sont obtenus en appliquant la théorie de Galois à cette extension. On démontre que le groupe de Galois $Gal\left( \Kb(E)/\phi^{*}\left( \Kb(E')\right)\right)$ est isomorphes au noyaux de $\phi$.
+
+
+\begin{The}\cite{Sil09}[III 4.10]
+	
+	Soit $E$, $E'$ deux courbes elliptiques défini sur un corps $\K$, et $\phi : E\rightarrow E'$ une isogénie non nulle. 
+	\begin{enumerate}
+		\item L'application 
+		\begin{equation*}
+			\ker(\phi) \rightarrow Aut\left( \left[ \Kb(E) : \phi^{*}\left( \Kb(E')\right) \right] \right) , P\mapsto \tau_{P}^{*}
+		\end{equation*} 
+		est un isomorphisme.
+		\item Si $\phi$ est séparable, l'extension $\Kb(E)/\phi^{*}\left( \Kb(E')\right)$ est galoisienne, i.e $deg(\phi) = |Ker(\phi)|$
+	\end{enumerate}
+\end{The}
+
+\begin{Coro}\cite{Sil09}[III 4.12]\label{unicitéIsogénieIso}
+	
+	Soit $E$ une courbe elliptique et $G$ un sous groupe fini de $E$. Il existe une unique courbe elliptique $E'$ et une isogénie séparable $\phi : E \rightarrow E'$ telles que $Ker(\phi) = G$.
+\end{Coro}
+
+\begin{Rem}
+	On fera attention à l'unicité dans ce corollaire : il n'y a pas unicité de la forme explicite. En pratique le modèle de départ sera donné, et il faudra fixer un modèle d'arrivé, et expliciter un moyen de calculer l'image d'un point $P$ du modèle de départ. Un objectif de cette section est de définir une convention pour choisir les formes explicites. 
+\end{Rem} 
+
+\begin{Def}
+	Soit $E$ une courbe elliptique et $G$ un sous groupe fini de $E$. L'unique courbe elliptique image d'une isogénie de noyau $G$ est noté $E/G$.
+\end{Def}
+
+Lorsque le noyau $G$ est donné comme sous groupe d'un modèle de courbe elliptique, on peut calculer une version explicite de l'isogénie de noyau $G$ avec une formule dû à Vélu donnant un modèle d'arrivé et l'image d'un point $P$:
+
+\begin{Prop}{Formule de Vélu}\cite{Velu71}\label{FormuleVélu}
+	
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique défini sur un corps $\K$. Soit $G\subset E(\Kb)$ un sous-groupe fini. L'isogénie $\phi : E\rightarrow E/G$ de noyaux $G$ admet une forme explicite partant du modèle $E$, où l'image d'un point $P\in E(\Kb)$ est définie par :
+	
+	\begin{equation*}
+		\phi(P) = \left( x(P) + \sum_{Q\in G\setminus{\OR}} x(P+Q) - x(Q)\;,\;y(P) + \sum_{Q\in G\setminus{\OR}} y(P+Q) - y(Q)\right) 
+	\end{equation*} 
+	
+	Et le modèle d'arrivé est donné par l'équation $E' : y^2 = x^3 + a'x + b'$ avec
+	\begin{equation*}
+		a' = a - 5\sum_{Q\in G\setminus{\OR}}(3 (x(Q))^2 + a )
+	\end{equation*}
+	
+	\begin{equation*}
+		b' = b - 7\sum_{Q\in G\setminus{\OR}}(5 (x(Q))^3 + 3ax(Q) + b )
+	\end{equation*}
+\end{Prop}
+
+Lorsqu'une courbe elliptique est définie sur un corps $\K$, on souhaitera calculer des formes explicites d'isogénies définies sur $\K$. On énonce un critère sur $G$ pour assurer l'existence de telles formes explicites.
+
+\begin{Def}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique définie sur un corps $\K$. Soit $G$ un sous groupe fini de $E(\Kb)$, et $P\in E(\Kb)$. Le groupe $Gal(\Kb/\K)$ agit sur $P$ et $G$ de la façon suivante
+	\begin{align*}
+		\forall\sigma\in Gal(\Kb/\K),\;& P^{\sigma} = \left( \sigma(x(P)), \sigma(y(P))\right)\\
+		& G^{\sigma} = \left\lbrace P^{\sigma},\; P\in G \right\rbrace 
+	\end{align*}
+\end{Def}
+
+\begin{Prop}\cite{Sil09}[II 4.12, 4.13.2]
+	
+	Soit $E$ et $E'$ deux courbes elliptiques définies sur un corps $\K$. Une isogénie $\phi : E\rightarrow E'$ est définie sur $\K$ si et seulement si son noyau est stable sous l'action de $Gal(\Kb/\K)$, c'est à dire
+	\begin{equation*}
+		\forall\sigma\in Gal(\Kb/\K),\; \ker(\phi)^{\sigma} \subset \ker(\phi)
+	\end{equation*}
+\end{Prop}
+
+On s'intéresse maintenant aux isogénies séparables de degré donné, c'est à dire dont on connaît le cardinal du noyau.
+
+\begin{Def}
+	On dira qu'une $\phi : E\rightarrow E'$ entre deux courbe elliptique est une $l$-isogénie si elle est de degré $l$. 
+\end{Def}
+
+\begin{Prop}
+	Si $\phi : E\rightarrow E'$ est une $l$-isogénie entre les courbes elliptiques $E$ et $E'$, alors $\ker(\phi)\subset E\left[ l\right] $
+\end{Prop}
+
+\begin{proof}
+	On rappelle la propriété fondamentale de l'isogénie duale : $\left[ l\right] = \hat{\phi}\circ\phi$. Ainsi si $P$ est un point d'un modèle de $E$, et si $P\in Ker(\phi)$, alors $lP = \hat{\phi}\circ\phi(P) = \hat{\phi}(\OR) = \OR $. Donc $P$ est un point de $l$-torsion de son modèle.
+\end{proof}
+
+On en déduit le nombre exacte de $l$-isogénie séparable sur une courbe elliptique $E$ :
+
+\begin{Prop}
+	Soit $E$ une courbe elliptique et $l\in\N$.
+	\begin{enumerate}
+		\item(rappel) $E[l] \simeq \Z/l\Z\times\Z/l\Z$
+		\item Il existe exactement $l+1$ sous groupes d'ordre $l$ dans $\Z/l\Z\times\Z/l\Z$.
+		\item Il existe exactement $l+1$ $l$-isogénie séparable sur $E$.
+	\end{enumerate}
+\end{Prop}
+
+
+\begin{proof}
+	Soit $P$, $Q$ une base de $E\left[ l\right]$ comme $\Z/l\Z$ module. $P$ et $Q$ sont ordre $l$ et sont libre sur $\Z/l\Z$, donc $\forall i\in\left[ 0 , l - 1\right] $, $P + iQ$ est d'ordre $l$. Ces points engendres des groupes disjoints (à l'exception du neutre $\OR$). On a donc trouvé $l + 1$ sous groupes d'ordre $l$ qui n'ont deux à deux que le neutre en commun. Ils regroupent au total de $1 + (l+1)*(l - 1) = l^2$ points distincts. Comme $E[l]$ est de cardinal $l^2$, on a trouvé exactement tout les sous groupes d'ordre $l$. Chacun d'eux défini exactement une isogénie séparable sur $E$.
+\end{proof}
+
+
+
+
+
+\subsubsection{Invariant différentiel et normalisation d'isogénies}
+
+
+
+Pour fixer une convention sur le choix de formes explicites d'isogénie, on utilise la notion d'invariant différentiel. On commence par la définir sur une courbe algébrique de genre quelconque. Dans toute la suite, $C$ désigne une courbe algébrique projective supposée lisse, et $\Kb(C)$ l'ensemble de fonction rationnel sur $C$. 
+
+\begin{Def}
+	L'ensemble des formes différentielles de $C$, noté $\Omega_{C}$, est un $Kb(C)$-espace vectoriel engendré par des symboles $dx$ où $x$ parcours $\Kb(C)$.
+	$dx$ est une dérivée formelle : on demande que trois relations soit vérifiée
+	\begin{enumerate}
+		\item $d(x+y) = dx + dy$ pour tout $x, y \in\Kb(C)$
+		\item $d(xy) = xdy + ydx$ pour tout $x, y \in\Kb(C)$
+		\item $da = 0$ pour tout $a\in\Kb$
+	\end{enumerate}
+\end{Def}
+
+\begin{Prop}\cite{Sil09}[II 4.2]
+	
+	\begin{enumerate}
+		\item $\Omega_{C}$ est de dimension 1 sur $\Kb(C)$
+		\item Pour $x \in \Kb(C)$, $dx$ est une base de $\Omega_{C}$ si et seulement si l'extension $\Kb(C) / \Kb(x)$ est fini et séparable. 
+	\end{enumerate}
+\end{Prop}
+
+
+\begin{Rem} On sait que l'extension $\Kb(C) / \Kb(x)$ est fini pour tout $x\in\Kb(C)$ non constant (d'après le théorème de normalisation de Noether, vu dans le cours de Courbes algébriques). En caractéristique 0, $dx$ est donc toujours une base de $Omega_{C}$ car la séparabilité de l'extension est garantie. 
+\end{Rem}
+
+On peut étendre l'application contravariante d'un morphisme de courbe algébrique $\phi$ à aux formes différentielles. Cela donne notamment un critère de séparabilité qui nous sera utile par la suite.
+
+\begin{Def}
+	Soit $\phi : C \rightarrow C'$ un morphisme entre courbes algébriques $C$ et $C'$. On défini $\phi^{*} : \Omega_{C'} \rightarrow \Omega_{C}$ de la façon suivante :
+	\begin{equation*}
+		\phi^{*}\left(\sum f_idx_i \right) = \sum \left( \phi^{*}(f_i) \right) d\left( \phi^{*}(x_i)\right) 
+	\end{equation*}
+\end{Def}
+
+\begin{Prop}\cite{Sil09}[II 4.2]
+	
+	Soit $\phi : C \rightarrow C'$ un morphisme entre courbes algébriques $C$ et $C'$. $\phi$ est séparable si et seulement si $\phi^{*} : \Omega_{C'} \rightarrow \Omega_{C}$ est injective, ce qui équivaut à ce que $\phi^{*}$ soit non nulle. 
+\end{Prop}
+
+Sur une courbe algébrique lisse $C$, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est constante. On va généraliser la notion de diviseur aux formes différentielles. Certaines vont alors avoir un diviseur nulle : ceux seront les invariants différentiels. 
+
+\begin{Prop}\cite{Sil09}[II 1.4]
+	
+	Soit $C$ une courbe algébrique lisse. Soit $P\in C$ et $u\in \Kb(C)$ une uniformisante en $P$. Alors $du$ est une base de $\Omega_{C}$. 
+\end{Prop}
+
+\begin{Def}
+	Soit $C$ une courbe algébrique lisse et $\omega\in\Omega_{C}$. Soit $P\in C$ et $u\in \Kb(C)$ une uniformisante en $P$. Il existe $g\in\Kb(C)$ tel que $\omega = gdu$. On note $\frac{\omega}{du} = g$
+\end{Def}
+
+\begin{Prop}\cite{Sil09}[III 4.3]
+	
+	Soit $C$ une courbe algébrique lisse et $\omega\in\Omega_{C}$. Soit $P\in C$ et $u\in \Kb(C)$ une uniformisante en $P$. L'ordre en $P$ de $\frac{\omega}{du} = g$ ne dépend pas du choix d'uniformisante $u$. On note donc $ord_{P}(\omega) = ord_{P}(\frac{\omega}{du})$. Alors $ord_{P}(\omega)$ est nul sauf pour un nombre fini de points $P$.
+\end{Prop}
+
+
+
+\begin{Def}
+	Avec les notation précédentes, On défini $div(\omega) = \sum_{P\in C} ord_{P}(\omega)(P) \in Div(C)$. On dira que $\omega\in\Omega_{C}$ est holomorphe si $div(\omega)\geq 0$, et sans zéros si $div(\omega)\leq 0$. Un invariant différentiel $\omega$ est une forme différentielle holomorphe sans zéros, c'est à dire telle que $div(\omega) = 0$.
+\end{Def}
+
+\begin{Rem}
+	
+	\begin{enumerate}
+		\item On peut montrer que l'application $div$ se comporte sur $\Omega_{C}$ comme sur $\Kb(C)$, en particulier si $f\in\Kb(C)$ et $\omega\in\Omega_{C}$ alors $div(f\omega) = div(f) + div(\omega)$. Cela implique que tout les diviseurs de formes différentielles sont égaux dans le groupe $Pic(C)$. On appelle cette classe la classe canonique de $Pic(C)$. 
+		
+		\item S'il existe un invariant différentiel, alors la classe canonique est la classe trivial. On peut montrer avec le théorème de Riemann-Roch que s'il existe un invariant différentiel sur $C$, alors $C$ est de genre $1$.
+		
+	\end{enumerate}
+\end{Rem}
+
+L'existence d'un invariant différentiel est en réalité une propriété propre au genre $1$.
+
+\begin{Prop}\cite{Sil09}[II 4.6]
+	
+	Soit $E : y^2 = x^3 + ax + b$ un modèle courbe elliptique. Alors $\omega = \frac{dx}{2y}\in\Omega_{E}$ est un invariant différentiel de $E$.
+\end{Prop}
+
+\begin{Def}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle courbe elliptique. On note $\omega_{E}$ l'invariant différentiel défini par $\omega_{E} = \frac{dx}{2y}$. 
+\end{Def}
+
+\begin{Rem}
+	Puisque si $f\in\Kb(C)$ et $\omega\in\Omega_{C}$ alors $div(f\omega) = div(f) + div(\omega)$, tout les invariants différentiels d'une courbe elliptique $E$ sont égaux à une constante multiplicative prêt.
+\end{Rem}
+
+Étant donné un modèle $E$ de courbe elliptique d'invariant différentiel $\omega_{E}$, il est facile de trouver un modèle isomorphe $E'$ d'invariant différentiel $u\omega_{E}$ pour tout $u\in\Kb$
+
+\begin{Prop}\cite{Sil09}[III table 3.1]
+	
+	Soit $E : y^2 = x^3 + ax + b$ un modèle courbe elliptique définie sur un corps $\K$, et $u\in\Kb$. Le modèle $E' : y^2 = x^3 + a'x + b'$ obtenue à partir de $E$ par le changement de variable $(x,y)\mapsto(u^{2}x,u^{3}y)$ est isomorphe à $E$ et vérifie $\omega_{E'} = u\omega_{E}$.
+\end{Prop}
+
+
+\begin{Def}	
+	Soit $\phi : E\rightarrow E'$ une isogénie sous forme explicite, $\omega_{E}$ et $\omega_{E'}$ les invariants différentiels associés respectivement aux modèles de départ et d'arrivé. On dira que cette forme explicite de $\phi$ est normalisée si $\phi^{*}(w_{E'}) = w_E$	
+\end{Def}
+
+On énonce alors une version explicite du corollaire \ref{unicitéIsogénieIso}.
+
+\begin{Prop}\label{unicitéIsogénieModèles}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle courbe elliptique et $G$ un sous-groupe fini de $E$. Soit $\phi : E\rightarrow E/G$ l'isogénie de noyau $G$. La courbe elliptique $E/G$ admet un unique modèle $E' : y^2 = x^3 + a'x + b'$ tel que la forme explicite de $\phi$ de départ $E$ et d'arrivé $E'$ soit normalisée. 
+\end{Prop}
+
+\begin{Rem}
+	La formule de Vélu \ref{FormuleVélu} énoncée ne fournit pas une forme explicite normalisée a priori.
+\end{Rem}
+
+
+
+
+\subsubsection{Anneaux d'endomorphisme}
+
+\begin{Def}
+	Soit $E$ une courbe elliptique définie sur un corps $\K$. On note $End(E)$ l'anneau d'endomorphisme de $E$
+\end{Def}
+
+\begin{Rem}
+	Si $E : y^2 = x^3 + ax + b$ et $E' : y^2 = x^3 + a'x + b'$ sont deux modèles isomorphes, une isogénie ayant une forme explicite $\phi : E\rightarrow E'$ est un endomorphisme, même si les modèles $E$ et $E'$ sont différents. Il sera souvent nécessaire pour normaliser d'écrire un endomorphisme sous une forme explicite où les modèles de départ et d'arrivé sont distincts. 
+\end{Rem}
+
+Il n'existe que $3$ structure possible pour un anneau d'endomorphisme de courbe elliptique.
+
+\begin{The}\cite{Sil09}[III 9.4]
+	
+	Soit $E$ une courbe elliptique définie sur un corps $\K$. L’anneau $End(E)$ est isomorphe soit à $\Z$, soit à un ordre d'un corps quadratique imaginaire, soit à un ordre dans une algèbre de quaternions.
+\end{The}
+
+\begin{Rem} Soit $E$ une courbe elliptique définie sur un corps $\K$.
+	\begin{itemize}
+		\item Si $\K$ est de caractéristique nulle, $End(E)$ est un anneaux commutatif, donc soit isomorphe à $\Z$, soit à un ordre d'un corps quadratique imaginaire.
+		\item Si $\K$ est fini de caractéristique $p>0$, $End(E)$ n'est jamais isomorphe à $\Z$.
+	\end{itemize}
+\end{Rem}
+
+  
+\begin{Def}
+	Une courbe elliptique $E$ est dite à multiplication complexe si $End(E)$ n'est pas isomorphes à $\Z$. Si $E$ est définie sur un corps fini, elle est dite ordinaire si $End(E)\sim \OR_{\Delta}$ un ordre quadratique imaginaire de discriminant $\Delta$, et supersingulière sinon.  
+\end{Def}
+
+L'action de l'application contravariante d'une isogénie sur un invariant différentiel $\omega_{E}$ va s'avérer très simple, ce qui sera utile par la suite pour étudier les endomorphismes. 
+
+\begin{The}\cite{Sil09}[III, 5.2]
+	
+	Soit $E$, $E'$ deux courbes elliptiques définie sur un corps $\K$, et $\phi$, $\psi : E \rightarrow E'$ deux isogénie. Soit $\omega$ un invariant différentiel d'un modèle de $E'$. Alors
+	\begin{equation*}
+		\left( \phi + \psi\right) ^{*}\left( \omega\right) = \phi^{*}\left( \omega\right) + \psi^{*}\left( \omega\right)
+	\end{equation*} 
+\end{The}
+
+
+\begin{Coro}\cite{Sil09}[III, 5.3]
+	
+	Soit $E$ une courbes elliptiques sur $\K$, $\omega$ un invariant différentiel d'un modèle de $E$. Alors pour $m\in\Z^{*}$,
+	$[m]^{*}(\omega) = m\omega$. En particulier $[m]^{*}(\omega) \neq 0 $ et on retrouve que $[m]$ est séparable.
+\end{Coro}
+
+
+\begin{Coro}\cite{Sil09}[III, 5.6]\label{LinéarisationEndomorphisme}
+	
+	Soit $E$ une courbe elliptique sur $\K$, $\omega$ un invariant différentiel d'un modèle de $E$. Pour tout endomorphisme $\phi\in End(E)$, soit $a_{\phi}\in\Kb(E)$ tel que $\phi^{*}(\omega) = a_{\phi}\omega$. On considère
+	
+	\begin{equation*}
+		f : End(E)\rightarrow\Kb(E) , \phi\longmapsto a_{\phi}
+	\end{equation*}
+	Alors
+	\begin{enumerate}
+		\item $a_{\phi}\in\Kb$ et $f: End(E)\rightarrow\Kb$ est un morphisme d'anneaux. 
+		\item $\ker(f)$ est exactement l'ensemble des endomorphisme inséparable de $E$
+		\item Si $car(K) = 0$ alors $End(E)$ est commutatif
+	\end{enumerate}
+	
+\end{Coro}
+
+
+
+\subsubsection{Courbes elliptiques complexes et tores}
+
+Dans cette section, toutes les courbes seront définie sur $\Kb = \C$. On énonce une équivalence de catégorie entre les courbes elliptiques définie sur $\C$ et les tores complexes, c'est à dire les quotients de $\C$ par un réseau. Il y a alors une correspondance entre les isogénies et les morphismes de tores, qui sont des homothéties. 
+
+\begin{Def}
+	Soit $\Lambda$ un réseau. on lui associe la fonction de Weierstrass $\wp$ relative à $\Lambda$, définie par
+	\begin{equation*}
+		\wp(z,\Lambda) = \frac{1}{z^2} + \sum_{\omega\in\Lambda\setminus\left\lbrace 0\right\rbrace }\left( \frac{1}{\left( z - \omega^2\right)} - \frac{1}{\omega^{2}} \right) 
+	\end{equation*}
+	On lui associe aussi pour tout entier $k>1$ sa série d'Eisenstein de poids $2k$ défini par
+	\begin{equation*}
+		G_{2k}(\Lambda) = \sum_{\omega\in\Lambda\setminus\left\lbrace 0\right\rbrace }\omega^{-2k}
+	\end{equation*}
+\end{Def}
+
+\begin{Prop}\cite{Sil09}[VI 3.1, 3.5]
+	
+	Soit $\Lambda$ un réseau.
+	\begin{enumerate}
+		\item Pour tout entier $k>1$, la série $G_{2k}(\Lambda)$ est absolument convergente
+		\item $\wp(z,\Lambda)$ vérifie l'équation différentielle
+		\begin{equation*}
+			(\wp')^{2} = 4\wp^{3} - 60G_{4}\wp - 140G_{6}
+		\end{equation*}
+	\end{enumerate}
+\end{Prop}
+
+\begin{Def}
+	Soit $\Lambda$ un réseau. On utilise les notations standard $g_{2}(\Lambda)$ et $g_{3}(\Lambda)$ pour désigner les valeurs respectives de $G_{4}(\Lambda)$ et $G_{6}(\Lambda)$.
+\end{Def}
+
+\begin{Prop}\cite{Sil09}[VI 3.6]
+	
+	Soit $\Lambda$ un réseau. L'équation $E : y^2 = 4x^2 - g_{2}x - g_{3}$ défini un modèle de courbe elliptique (qui n'est pas sous forme de Weierstrass). L'application
+	\begin{equation*}
+		\psi : \C/\Lambda \rightarrow E(\C)\; ,\; z\mapsto \left(\wp(z), \wp'(z)\right)
+	\end{equation*}
+	est un isomorphisme. 
+\end{Prop}
+
+\begin{Rem}
+	L'isomorphisme énoncé est au sens de groupe de Lie complexe. Nous utiliseront en particulier le fait que c'est un isomorphisme de groupe. 
+\end{Rem}
+
+\begin{Def}
+	Soit $\Lambda$ un réseau. On note $E_{\Lambda}$ le modèle de courbe elliptique d'équation $y^{2} = 4x^{2} - g_2 x - g_3$.
+\end{Def}
+
+Le théorème suivant, appelé théorème d'uniformisation, permet réciproquement d'associer à toute courbe elliptique complexe un réseau défini à homothétie prêt.
+
+\begin{The}{Théorème d'uniformisation}\cite{Sil09}[VI, 5.1]
+	
+	Soit $A$, $B\in\C$ tels que $4A^3 - 27B^2\neq0$. Il existe un unique réseau $\Lambda$ tel que $g_{2}(\Lambda) = A$ et $g_{3}(\Lambda) = B$. 
+\end{The}
+
+\begin{Coro}\cite{Sil09}[VI, 5.2]
+	
+	Soit $E$ une courbe elliptique définie sur $\C$. Il existe un réseau $\Lambda$ unique à homothétie prêt tel que l'application
+	\begin{equation*}
+		\psi : \C/\Lambda \rightarrow E(\C)\; ,\; z\mapsto \left(\wp(z), \wp'(z)\right)
+	\end{equation*}
+	soit un isomorphisme entre le tore $\C/\Lambda$ et un modèle de $E$.
+\end{Coro}
+
+
+\begin{Def}
+	Soit $\C/\Lambda_1$, $\C/\Lambda_2$ deux tores, et $\alpha\in\C$ tel que
+	\begin{equation*}
+		\alpha\in\left\lbrace \alpha\in\C : \alpha\Lambda_1 \subset \Lambda_2\right\rbrace  
+	\end{equation*} 
+	Un morphisme de tores est une application de la forme
+	\begin{equation*}
+		\phi_{\alpha} : \C/\Lambda_1 \rightarrow \C/\Lambda_2\; ,\; z \mapsto \alpha z
+	\end{equation*}
+	
+\end{Def}
+
+L'isomorphisme entre un réseau $\Lambda$ et sa courbe associée $E_\Lambda$ induit un isomorphisme entre anneaux d'endomorphismes.
+
+\begin{The}\cite{Sil09}[VI 4.1, 5.3]
+	
+	Les catégories suivantes sont équivalentes
+	\begin{enumerate}
+		\item Les courbes elliptiques complexes, munies de leurs isogénies
+		\item Les réseaux à homothéties prêt, munis des morphismes de tores
+	\end{enumerate}
+\end{The}
+
+\begin{Coro}\label{EndoToresIsoEndoCourbes}
+	Soit $\Lambda$ un réseau. Soit $R\in\C$ l'anneau des complexes représentant les endomorphisme du tore $\C/\Lambda$
+	\begin{equation*}
+		R = \left\lbrace \phi_{\alpha} :  \alpha\in\C ,\; \alpha\Lambda \subset \Lambda \right\rbrace 
+	\end{equation*}
+	
+	Alors on a l'isomorphisme d'anneau $R\simeq End(E_{\Lambda})$
+\end{Coro}
+
+
+Lorsque $E$ est une courbe elliptique à multiplication complexe, $End(E)$ peut être inclus dans $\C$ de deux manières (à conjugaison prêt dans le corps quadratique imaginaire). On souhaite normaliser le choix de l'injection de $End(E)$ dans $\C$. Pour cela, on veut associer à tout $\alpha$ tel que $\alpha\Lambda\subset\Lambda$, un endomorphisme de $E$ notée $[\alpha]$. Le corollaire \ref{EndoToresIsoEndoCourbes} fourni une première convention. On va cependant définir une seconde convention de normalisation à l'aide de l'invariant différentiel et et du corollaire \ref{LinéarisationEndomorphisme}. Celle-ci se généralisera aux courbes elliptiques ordinaires sur corps finis, dans la section suivante. On montrera que les deux conventions de normalisation d'endomorphismes coïncident.
+
+\begin{Def}
+	Soit $E : y^2 = x^3 + ax + b$ un modèle d'une courbe elliptique $E$, et $\phi\in End(E)$. $\phi$ admet une unique forme explicite dont le modèle de départ et d'arrivé est $E : y^2 = x^3 + ax + b$. Il existe une constante $c\in\C$ telle que 
+	\begin{equation*}
+		(\phi)^{*}(\omega_E) = c\omega_E
+	\end{equation*}
+	La constante $c$ ne dépend pas du modèle de $E$ choisi, et est appelée le facteur de l'endomorphisme $\phi$.
+\end{Def}
+
+On souhaite construire un morphisme d'anneau $\alpha\mapsto\left[ \alpha\right]\in End(E)$ de sorte que le facteur de $\left[ \alpha\right]$ soit $\alpha$. 
+
+\begin{Prop}\cite{Sil09}[III, 5.6]
+	Soit $E$ une courbe elliptique définie sur $\C$ à multiplication complexe, $\omega$ un invariant différentiel de $E$. Pour tout endomorphisme $\phi\in End(E)$, on note $a_{\phi}\in\Kb$ tel que $\phi^{*}(\omega) = a_{\phi}\omega$. Alors $a_\phi$ ne dépend pas du choix d'invariant différentiel. De plus le morphisme d'anneau
+	\begin{equation*}
+		f : End(E)\rightarrow\C , \phi\longmapsto a_{\phi}
+	\end{equation*}
+	est injectif.
+\end{Prop}
+
+
+Soit $\OR$ l'image de l'application $f$ de la proposition précédente. L'application $[.] : \OR \rightarrow End(E)$ recherchée est la réciproque de $f$. 
+
+\begin{Prop}
+	Soit $E$ une courbe elliptique sur $\C$ à multiplication complexe. Il existe un unique isomorphisme d'anneaux
+	\begin{equation*}
+		[.] : \OR\subset\C\rightarrow End(E)
+	\end{equation*}
+	tel que pour tout invariant différentiel $\omega$ d'un modèle de $E$,
+	\begin{equation*}
+		\forall\alpha\in\OR\;,\; [\alpha]^{*}(\omega) = \alpha\omega
+	\end{equation*}
+\end{Prop}
+
+
+\begin{Def}
+	Soit $E$ une courbe elliptique définie sur $\C$ à multiplication complexe. Soit $[.] : \OR\subset\C\rightarrow End(E)$ un isomorphisme d'anneaux. Le couple $(E,[.])$ est normalisé si pour tout invariant différentiel $\omega$ d'un modèle de $E$.
+	\begin{equation*}
+		\forall\alpha\in\OR\;,\; [\alpha]^{*}(\omega) = \alpha\omega
+	\end{equation*}
+\end{Def}
+
+Avec cette convention de normalisation, l'image $\OR$ de $End(E)$ dans $\C$ correspond à l'anneau d'endomorphisme des tores équivalent à $E$.
+
+\begin{Prop}\cite{Sil94}[II 1.1]
+	
+	Soit $(E,[.])$ une courbe elliptique définie sur $\C$ à multiplication complexe normalisé. Soit $[\alpha]$ un endomorphisme de facteur $\alpha$. Si $\Lambda$ est un réseau associé à $E$, alors $\alpha\Lambda\in\Lambda$ et l'endomorphisme $[\alpha]$ est équivalent à l'endomorphisme de tore $\phi_{\alpha}$.
+\end{Prop}
+
+La donnée d'un réseau associé à une courbe elliptique $E$ à multiplication complexe permet d'expliciter le corps quadratique imaginaire dont l'anneau d'endomorphisme est un ordre.
+
+\begin{Prop}\cite{Sil09}[VI 5.5]
+	
+	Soit $\Lambda = \left[ z_{1}, z_{2}\right] $ un réseau , et $E_{\Lambda}$ sa courbe elliptique associée. Si $E_{\Lambda}$ est à multiplication complexe, alors $\K = \Q\left( \frac{z_1}{z_2}\right)$ est un corps quadratique imaginaire dont $End(E)$ est un ordre. 
+\end{Prop}
+
+
+
+\subsection{Représentation d'isogénies par des idéaux quadratiques imaginaires.}
+
+
+
+Dans les sections \ref{SECTION action} et \ref{SECTIONtorsion}, on introduit la théorie de la multiplication complexe. Les preuves seront rédigés. On se réfère à \cite{Sil94}[II], où les résultat sont énoncé pour des courbes elliptiques complexes, à multiplication complexe d'anneaux endomorphisme supposé être un ordre quadratique imaginaire maximal. On se place dans le cadre des ordres quadratiques imaginaires quelconques $\OR_{\Delta}$. Les preuves faites dans \cite{Sil94}[II] se généralise pour la plupart directement, en considérant toujours des idéaux propres. On supposera toujours l'isomorphisme $End(E)\simeq\OR_{\Delta}$ normalisé. Dans la suite, $\K\subset\C$ est le corps quadratiques imaginaire dont $\OR_{\Delta}$ est un ordre.
+
+
+
+\subsubsection{Action du groupe des classes d'idéaux}\label{SECTION action}
+
+
+\begin{Def}
+	On note $Ell_{\C}(\OR_{\Delta})$ l'ensemble des courbes elliptiques à multiplication complexes d'anneaux d'endomorphismes $\OR_{\Delta}$. 
+\end{Def}
+
+Si $\LR\in I(\OR_{\Delta})$, alors $\LR$ est un réseau de $\C$. On peut donc lui associer une courbe elliptique $E_{\LR}$.
+
+\begin{Prop}
+	Soit $\OR_{\Delta}$ un ordre quadratique imaginaire, et $\LR\subset I(\OR_{\Delta})$. Alors $End(E_{\LR})\sim\OR_{\Delta}$, et $E_{\LR}\in Ell_{\C}(\OR_{\Delta})$.
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[II, 1]
+	
+	Par hypothèse, $\LR$ est un idéal fractionnaire propre, donc :
+	\begin{align*}
+		End(E_{\LR})&\simeq\left\lbrace\alpha\in\C : \alpha\LR\subset\LR\right\rbrace\\
+		&= \left\lbrace\alpha\in\K : \alpha\LR\subset\LR\right\rbrace = \OR_{\Delta}
+	\end{align*}
+\end{proof}
+
+Pour tout $c\in\K$ et $\LR\in I(\OR_{\Delta})$, $c\LR$ est à la fois un idéal équivalent à $\LR$ et un réseau homothétique à $\LR$. On s'intéresse donc aux classes d'idéaux. Soit $Cl(\OR_{\Delta})$ le groupe de classes de $\OR_{\Delta}$, et $\CL$ la classe de $\LR$. L'application
+\begin{equation*}
+	Cl(\OR_{\Delta})\rightarrow Ell_{\C}(\OR_{\Delta}),\; \CL\mapsto E_{\LR}
+\end{equation*} 
+est donc bien définie. On va montrer qu'il s'agit d'une bijection
+
+\begin{Def}
+	Soit $\Lambda$ un réseau et $\LR\in I(\OR_{\Delta})$. On défini le produit $\LR\Lambda$ par
+	\begin{equation*}
+		\LR\Lambda = \left\lbrace \alpha_1\lambda_1 + \ldots + \alpha_r\lambda_r : \alpha_i\in\LR , \lambda_i\in\Lambda , r\in\N\right\rbrace 
+	\end{equation*}
+\end{Def}
+
+\begin{Prop}
+	Soit $\Lambda$ un réseau et $\LR\in I(\OR_{\Delta})$.  Alors $\LR\Lambda$ est un réseau de $\C$. De plus, si $E_{\Lambda}\in Ell_{\C}(\OR_{\Delta})$ alors $E_{\LR\Lambda}\in Ell_{\C}(\OR_{\Delta})$
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[II 1.2]
+	
+	Puisque $End(E_{\Lambda}) \sim \OR_{\Delta}$ est normalisé, d'après la proposition \ref{EndoToresIsoEndoCourbes}, $\OR_{\Delta}\Lambda = \Lambda$. De plus d'après \ref{denomid}, il existe $d\in\Z$ tel que $d\LR\subset\OR_{\Delta}$. Alors $\LR\Lambda\subset\frac{1}{d}\Lambda$, donc $\LR\Lambda$ est inclus dans un réseau de $\C$. Maintenant soit $a\in\Z\cap\LR$. Alors $a\OR_{\Delta}\subset\LR$ donc $a\Lambda\subset\LR\Lambda$. Ainsi $\LR\Lambda$ contient un réseau de $\C$. $\LR\Lambda$ est compris entre deux réseaux, donc est lui même un réseau de $\C$. Pour montrer que $E_{\LR\Lambda}\in Ell_{\C}(\OR_{\Delta})$, il suffit de montrer que $End(E_{\LR\Lambda}) = End(E_{\Lambda})$, ce qui est clair car $\LR$ est inversible. 
+\end{proof}
+
+
+\begin{Prop}\label{ActionClassesSTrans}
+	Soit $\Lambda$ un réseau tel que $E_{\Lambda}\in Ell_{\C}(\OR_{\Delta})$, et $\LR$, $\LR'\in I(\OR_{\Delta})$. 
+	\begin{enumerate}
+		\item $E_{\LR\Lambda} = E_{\LR'\Lambda}$ si et seulement si $\CL = \CL'$
+		\item Le groupe $C(\OR_{\Delta})$ agit sur $Ell_{\C}(\OR_{\Delta})$ par $\CL\cdot E_{\Lambda} = E_{\LR^{-1}\Lambda}$
+		\item Cette action est simplement transitive. En particulier $\left| C(\OR_{\Delta})\right| = \left| Ell_{\C}(\OR_{\Delta})\right| $
+	\end{enumerate}
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[II,1.2]
+	
+	\begin{enumerate}
+		\item $E_{\LR\Lambda} \sim E_{\LR'\Lambda}$ si et seulement s'il existe $c\in\C^{*}$ tel que $\LR\Lambda = c\LR'\Lambda$. $\LR$ et $\LR'$ étant inversible, cela équivaut à 
+		\begin{equation*}
+			\Lambda = c\LR^{-1}\LR'\Lambda = c^{-1}\LR'^{-1}\LR\Lambda
+		\end{equation*}
+		D'après la proposition \ref{EndoToresIsoEndoCourbes}, cela équivaut à ce que $c\LR^{-1}\LR'$ et $c^{-1}\LR'^{-1}\LR$ soit inclus dans $\OR_{\Delta}$. Étant inverse l'un de l'autre, le seul idéal entier de $\OR_{\Delta}$ dont l'inverse est aussi entier est $\OR_{\Delta}$ lui même. Donc cela équivaut à $c\LR^{-1}\LR' = \OR_{\Delta}$ et $\LR = c\LR'$. 
+		
+		\item L'action est bien définie sans difficulté, la présence de l'inverse dans la définition n'est pas nécessaire pour définir l'action, mais sera utile par la suite. 
+		
+		\item On se donne deux réseaux $\Lambda_1$ et $\Lambda_2$ dont les courbes elliptiques associées sont dans $Ell_{\C}(\OR_{\Delta})$, et on cherche $\CL$ tel que $\CL\cdot E_{\Lambda_1} = E_{\Lambda_2}$. Cela équivaut à trouver un idéal fractionnaire $\LR$ tel que $\Lambda_2$ et $\LR^{-1}\Lambda_1$ soient homothétiques. Mais puisque $E_{\Lambda_1}\in Ell_{\C}(\OR_{\Delta})$, $\OR_{\Delta}\Lambda_1 = \Lambda_1$ et 
+		\begin{equation*}
+			\left\lbrace \alpha\in\C : \alpha\Lambda_1\subset\Lambda_1\right\rbrace = \OR_{\Delta}
+		\end{equation*}
+		De plus 
+		\begin{equation*}
+			\forall \beta\in\C^{*}\;,\; \alpha\Lambda_1\subset\Lambda_1\iff\alpha\beta\Lambda_1\subset\beta\Lambda_1
+		\end{equation*}
+		Donc si l'on trouve $\beta$ tel que $\beta\Lambda_1\subset\K$, $\beta\Lambda_1$ sera un idéal fractionnaire propre de $\OR_{\Delta}$. Soit $z_1$, $z_2$ des générateurs de $\Lambda_1$. Si $\beta = z_1/z_2$ alors $\beta\Lambda_1\subset\K$. Et $\OR_{\Delta}\beta\Lambda_1 = \beta\Lambda_1$ donc $\beta\Lambda_1$ est un $\OR_{\Delta}$-module de type fini, donc c'est un idéal fractionnaire propre de $\OR_{\Delta}$. Soit $\LR_1 = \beta\Lambda_1$, et $\LR_2$ définie de la même manière à partir de $\Lambda_2$. Alors $\LR = \LR_2\LR_1^{-1}$ convient : $\LR^{-1}\Lambda_1$ est homothétique à $\Lambda_2$. on a donc démontré la transitivité, et la simple transitivité découle du point 1.
+		
+	\end{enumerate}
+	
+\end{proof}
+
+L'application
+\begin{equation*}
+	Cl(\OR_{\Delta})\rightarrow Ell_{\C}(\OR_{\Delta}),\; \CL\mapsto E_{\LR}
+\end{equation*} est donc une bijection. Notons que l'on peut normaliser les anneaux d'endomorphismes de toutes les courbes elliptiques de $Ell_{\C}(\OR_{\Delta})$ de façon cohérente.
+
+\begin{Prop}
+	Soit $(E_1,[.]_1)$ et $(E_2,[.]_2)$ deux courbes elliptiques définies sur $\C$, à multiplication complexe, normalisées et de même anneaux d'endomorphisme $\OR_{\Delta}$. Soit $\phi : E_1 \rightarrow E_2$ une isogénie. Alors 
+	\begin{equation*}
+		\forall\alpha\in\OR_{\Delta},\;\phi\circ[\alpha]_1 = [\alpha]_2\circ\phi
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[II, 1.1.1]
+	
+	Si $\omega$ est un invariant différentiel de $E_2$, alors $\phi^{*}(\omega)$ en est un pour $E_1$. L'endomorphsime $[\alpha]_{1}^{*}$ agit dessus par multiplication par $\alpha$. Ainsi
+	\begin{align*}
+		(\phi\circ[\alpha]_1)^{*}(\omega) &= [\alpha]_{1}^{*}(\phi^{*}(\omega))\\
+		&= \alpha\phi^{*}(\omega)\\
+		&= \phi^{*}(\alpha\omega)\\
+		&= \phi^{*}([\alpha]_{2}^{*}(\omega))\\
+		&= ([\alpha]_2\circ\phi)^{*}(\omega)\\
+	\end{align*}
+	Donc 
+	\begin{equation*}
+		(\phi\circ[\alpha]_1)^{*} = ([\alpha]_2\circ\phi)^{*}
+	\end{equation*}
+	D'après le corollaire \ref{LinéarisationEndomorphisme}, puisque sur $\C$ tout les endomorphismes sont séparables, 
+	\begin{equation*}
+		\phi\circ[\alpha]_1 = [\alpha]_2\circ\phi
+	\end{equation*}
+\end{proof}
+
+
+
+
+
+
+\subsubsection{Groupes de torsions d'idéaux entiers}
+\label{SECTIONtorsion}
+
+Si $\phi : E \rightarrow E'$ est une isogénie entre deux courbes elliptiques $E$, $E'\in Ell_\C(\OR_{\Delta})$, alors $\phi$ correspond à l'action d'un unique élément $\CL\in Cl(\OR_{\Delta})$ sur $E$, puisque l'action est simplement transitive. On ne pourra pas déterminer $\phi$ à partir de $\CL$, car $\CL$ défini $\phi$ à endomorphisme prêt au départ et à l'arrivé. On souhaite définir à partir d'un idéal $\LR$ une isogénie $\phi : E\rightarrow \CL\cdot E$. Cela équivaut à définir le noyau de $\phi$ à partir de $\LR$. On n'y parviendra que dans le cas où $\LR$ est un idéal entier propre. 
+
+\begin{Def}
+	Soit $E\in Ell_\C(\OR_{\Delta})$, normalisée. Soit $\LR\in\OR_{\Delta}$ un idéal entier propre. Le sous-groupe de $\LR$-torsion d'un modèle de $E$ est 
+	\begin{equation*}
+		E\left[ \LR\right] = \left\lbrace P\in E : \left[ \alpha\right] (P) = \OR \; \forall\alpha\in\LR \right\rbrace 
+	\end{equation*}
+\end{Def}
+
+
+\begin{Ex}
+	\begin{enumerate}
+		
+		\item Si $\LR = m\OR_{\Delta}$ avec $m\in\Z$, alors $E\left[ \LR\right] = E\left[ m\right] $ est le groupe de $m$-torsion.
+		
+		\item Si $\alpha\in\OR_{\Delta}$, $E[\alpha\OR_{\Delta}] = \ker([\alpha])$ (l'égalité se démontre par double inclusions).
+		
+	\end{enumerate}
+	
+\end{Ex}
+
+On montre que $E[\LR]$ est le noyau de l'isogénie $\phi : E\rightarrow \CL\cdot E$. La présence d'un inverse dans la définition de l'action $\CL\cdot E$ est nécessaire pour ce résultat.
+
+\begin{Def}
+	Soit $\LR\subset\OR_{\Delta}$ un idéal entier propre, et $\Lambda$ un réseau tel que $E_{\Lambda}\in Ell_{\C}(\OR_{\Delta})$. On associe à $\LR$ le morphisme de tores
+	\begin{equation*}
+		\phi_{\LR} : \C/\Lambda\rightarrow\C/\LR^{-1}\Lambda\; , \; z\mapsto z
+	\end{equation*}
+\end{Def}
+
+\begin{Prop}\label{IsogénieIdealEntierIdentité}
+	Soit $\LR\subset\OR_{\Delta}$ un idéal entier propre, et $\Lambda$ un réseau tel que $E_{\Lambda}\in Ell_{\C}(\OR_{\Delta})$. Alors $E_{\Lambda}\left[ \LR\right]$ est un sous-groupe fini de $E_{\Lambda}$, et la courbe $\CL\cdot E_{\Lambda}$ est l'unique courbe elliptique telle qu'il existe une isogénie $\phi : E_{\Lambda}\rightarrow \CL\cdot E_{\Lambda}$ de noyau $E_{\Lambda}\left[ \LR\right]$. Cette isogénie est celle associée par équivalence de catégorie à $\phi_{\LR}$, et sera encore notée $\phi_{\LR}$.
+	
+\end{Prop}
+
+
+\begin{proof}\cite{Sil94}[II,1.4]
+	
+	On montre que $E_{\Lambda}\left[ \LR\right]$ est le noyau de $\phi_{\LR}$. D'abord, par normalisation des endomorphismes,
+	\begin{align*}
+		E_{\Lambda}\left[ \LR\right]&\sim \left\lbrace z\in\C/\Lambda : \alpha z = 0 \;,\; \forall\alpha\in\LR\right\rbrace \\
+		&=\left\lbrace z\in\C : \alpha z\in\Lambda \;,\;\forall\alpha\in\LR\right\rbrace / \Lambda\\
+		&=\left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace / \Lambda
+	\end{align*}
+	Or $\LR\Lambda = \Lambda$ car $\LR\subset\OR_{\Delta}$, donc $ \LR^{-1}\Lambda \subset \left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace $. Inversement si $z\in\C$ est tel que $z\LR\subset\Lambda$, alors $z\OR_{\Delta}\subset\LR^{-1}\Lambda$, donc en particulier $z\in\LR^{-1}\Lambda$. Donc $ \LR^{-1}\Lambda \subset \left\lbrace z\in\C : z\LR\subset\Lambda\right\rbrace $ et
+	\begin{equation*}
+		E_{\Lambda}\left[ \LR\right]\sim\LR^{-1}\Lambda/\Lambda = \ker(\phi_{\LR})
+	\end{equation*}
+	En particulier $E_{\Lambda}\left[ \LR\right]$ est un sous-groupe fini de $E$ en tant que noyau d'une isogénie non nulle. 
+	
+\end{proof}
+
+Lorsque $\LR\subset\OR_{\Delta}$ est plus précisément un idéal premier avec le conducteurs, le degré de l'isogénie $\phi_{\LR}$ est la norme de $\LR$. 
+
+\begin{Prop}
+	Soit $\LR\subset\OR_{\Delta}$ un idéal premier avec le conducteur, et $\Lambda$ un réseau tel que $E_{\Lambda}\in Ell_{\C}(\OR_{\Delta})$. Alors :
+	\begin{enumerate}
+		\item $E\left[\LR\right]$ est un $\OR_{\Delta}/\LR$-module libre de rang $1$.
+		\item $\phi_{\LR}$ est de degré $N\left( \LR\right)$ 
+		\item Si $\alpha\in\OR_{\Delta}$, $[\alpha]$ est de degré $N_{\Q}^{\K}\left( \alpha\right) $
+	\end{enumerate}
+	
+\end{Prop}
+
+\begin{proof}\cite{Sil94}[II, 1.4, 1.5]
+	
+	\begin{enumerate}
+		\item (Admis) La preuve de \cite{Sil94} utilise une version du théorème des restes chinois sur les idéaux fractionnaire, sur l'anneau des entiers $\OR_{\K}$. La preuve ne se généralise donc aux ordres quelconques $\OR_{\Delta}$ qu'en se restreignant aux idéaux entier premier avec le conducteur.  
+		
+		\item Découle de 1. car $\left| E\left[\LR\right]\right| = \left| \OR_{\Delta}/\LR\right| = N\left( \LR\right)$.
+		
+		\item En particulier si $\LR = \alpha\OR_{\Delta}$ est principal, $[\alpha]$ est l'endomorphisme de noyau $E\left[\alpha\OR_{\Delta}\right]$. Donc 
+		\begin{equation*}
+			\deg \left( \left[\alpha \right] \right) = N\left( \alpha\OR_{\Delta}\right) = N_{\Q}^{\K}\left( \alpha\right) 
+		\end{equation*}
+	\end{enumerate}
+\end{proof}
+
+
+
+
+\subsubsection{Réduction de courbe elliptique et relèvement de Deuring}
+
+Dans cette section, on souhaite généraliser les résultats précédents aux courbes elliptiques ordinaires, sur des corps finis. Plusieurs problèmes se posent. L'équivalence de catégories avec les tores complexes ne se généralise pas directement, et les isogénies inséparables seront de facteurs nuls. On énonce des résultats de réduction et de relèvement de courbes elliptiques, permettant de définir des isogénies à partir d'idéaux propres
+
+\textbf{TODO : ajouter structure de volcan et théorie sur corps finis. ici ou avant}
