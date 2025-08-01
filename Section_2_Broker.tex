@@ -1,14 +1,19 @@
 \section{Algorithme de Broker Charles et Lauter}
 
-L'objectif de cette section est d'énoncé l'algorithme de Broker Charles et Lauter, qui prend en entrée une courbe elliptique ordinaire donnée avec son anneaux d'endomorphisme et un idéal premier de ce dernier, et qui renvoie l'isogénie résultant de l'action de l'idéal sur la courbe. Cette algorithme ramène le cas général à des calculs d'actions d'idéaux de normes plus petites, et utilise des algorithmes adaptés à ces cas. On explique la méthode puis on propose une implémentation dont on analyse la complexité, pour la comparer avec l'état de l'art. 
+L'objectif de cette section est d'énoncé l'algorithme de Broker Charles et Lauter \cite{BrokerCharlesLauter}, qui prend en entrée une courbe elliptique ordinaire $E$ défini sur $\F_{q}$ de caractéristique $p$, son anneaux d'endomorphisme $\OR_{\Delta}$, un point $P\in E(\F_{q^{n}})$ avec $n\geq1$ et un idéal $\LR$ de norme $l$ premier, et qui calcule une isogénie $\phi$ résultant de l'action de $\LR$ sur $E$. L'entrée de l'algorithme doit vérifier l'hypothèse suivante. 
 
-\subsection{Calculs d'isogénies horizontales de petits degrés}
-%Vélu (avant ?), sqrtVélu, Elkies, CheckElkies
+\begin{Hyp}\label{HypothèseInversion}
+	Soit $f$ le conducteur de $E$, $f_m$ son conducteur maximal sur $\F_{q}$. On suppose que $E$, $l$ et $n$ sont choisis tel que $l$ ne divise pas $A = pf_m|E(\F_{q^{n}})$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux.
+\end{Hyp}
+
+On a déjà vu pourquoi on suppose $l$ premier avec $p$ et $f_m$, le reste de l'hypothèse \ref{HypothèseInversion} sera expliquer au cours de la présentation de la méthode. L'idée est de se ramener à des calculs d'actions d'idéaux de normes plus petites, pour lesquels on énoncera des algorithmes adaptés. On propose une implémentation dont on analyse la complexité, pour la comparer avec l'état de l'art.
+
+\subsection{Isogénies horizontales de petits degrés}
 
 
 \subsubsection{Algorithme SquareVélu}
 
-Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu permettent de construire une forme explicite d'une $l$-isogénie $\phi$ à partir de la connaissance de son noyau. Appliquer naïvement les formules demande cependant $O(l)$ opérations sur la courbe. On explique ici comment le noyau peut être représenter efficacement, puis l'on énonce les résultat de \cite{Velusqrt} permettant d'obtenir une complexité en $O(\sqrt{l})$. $\ker(\phi)$ peut être donné sous deux formes : un générateur $K\in E(\F_{q^{r}})$ avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. 
+Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu \ref{FormuleVélu} permettent de construire une forme explicite d'une $l$-isogénie $\phi$ à partir de la connaissance de son noyau. Appliquer naïvement les formules demande cependant $O(l)$ opérations sur la courbe. On explique ici comment le noyau peut être représenter efficacement, puis l'on énonce les résultat de \cite{Velusqrt} permettant d'obtenir une complexité en $O(\sqrt{l})$. $\ker(\phi)$ peut être donné sous deux formes : un générateur $K\in E(\F_{q^{r}})$ avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. 
 
 \begin{Def}
 	Soit $E$ un modèle de courbe elliptique et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. On sépare $Ker(\phi)$ en une partition $\left\lbrace \OR \right\rbrace \cup R\cup R'$, où $R$ regroupe $(l-1)/2$ points finis distincts, et $R'$ leurs inverses. Un polynôme $F$ décrit le noyau de $\phi$ sur $E$ si c'est un polynôme unitaire de degré $(l-1)/2$ dont les racines sont les abscisses des points finis de $R$. Un tel polynôme ne dépend pas de la partition choisie. 
@@ -26,7 +31,7 @@ Pour calculer une $l$-isogénie, \cite{Velusqrt} propose une méthode pour éval
 
 On décrit maintenant comment adapter les formules de Vélu à l'utilisation de polynômes décrivant le noyau d'une isogénie.
 
-\begin{Prop}\cite{Kohel}[\S 2.4]
+\begin{Prop}[\cite{Kohel}(\S 2.4)]
 	
 	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique défini sur $\F_{q}$, et $\phi$ une $l$-isogénie, avec $l$ premier impair. Soit $F$ le polynôme décrivant le noyau de $\phi$ sur $E$. Alors on peut obtenir une forme explicite de $\phi$ avec
 	\begin{equation*}
@@ -42,29 +47,23 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 
 
 
+\subsubsection{Générateurs de groupes de torsion d'idéaux}
 
 
-
-
-
-
-\subsubsection{Générateur d'un groupe de torsion}
-
-
-Dans cette partie, on suppose connu une courbe elliptique $E$ définie sur $\F_{q}$ ordinaire avec $End(E)\simeq\OR_{\Delta}$ normalisé, et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose $l$ premier avec le conducteur maximal $f_{m}$ de $E(\F_{q})$.
+Dans cette partie, on suppose connu une courbe elliptique $E$ définie sur $\F_{q}$ ordinaire avec $End(E)\simeq\OR_{\Delta}$ normalisé, et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose \ref{HypothèseInversion} donc $l$ est premier avec le conducteur maximal $f_{m}$ de $E(\F_{q})$.
 
 \begin{Rem}
-	Si $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$, $\LR$ est primitif car de norme premier. La proposition 4.23 permet alors d'obtenir
+	Si $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$, $\LR$ est primitif car de norme premier. La proposition \ref{formeIdeauxBaseFq} permet alors d'obtenir
 	\begin{equation*}
 		\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right], \; c,\; d\in\Z, d|f_m.
 	\end{equation*}
 	Dans la suite on suppose $\LR$ donné sous cette forme. 
 \end{Rem}
 
-$E\left[ \LR\right]$ est alors par définition l'intersection de $E\left[ l\right] $ avec le noyau de $\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. Avec une base $\left\lbrace P,\; Q\right\rbrace$ de $E[l]$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible (voir proposition 2.6). On souhaite trouver parmi eux celui appartenant à $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. Or comme $l$ est premier avec $f_m$, l'endomorphisme $[f_m]$ restreint à $E[l]$ est inversibles. Donc les restrictions à $E\left[ l\right]$ des endomorphismes $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right]$ ont même noyaux. On en déduit l’algorithme 5, proposé dans \cite{BrokerCharlesLauter}[\S 3.2] comme méthode générale pour obtenir un point générateur du noyau d'une isogénie de degré $l$ premier.
+$E\left[ \LR\right]$ est alors par définition l'intersection de $E\left[ l\right] $ avec le noyau de $\left[\frac{c + d\pi_{q}}{f_{m}}\right]$. Avec une base $\left\lbrace P,\; Q\right\rbrace$ de $E[l]$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible (voir proposition \ref{NbDeLIsogenies}). On souhaite trouver parmi eux celui appartenant à $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. Or comme $l$ est premier avec $f_m$, l'endomorphisme $[f_m]$ restreint à $E[l]$ est inversibles. Donc les restrictions à $E\left[ l\right]$ des endomorphismes $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right]$ ont même noyaux. On en déduit l’algorithme \ref{ALGO Pointgénérateur1}, proposé dans \cite{BrokerCharlesLauter}(\S 3.2) comme méthode générale pour obtenir un point générateur du noyau d'une isogénie de degré $l$ premier.
 
 \begin{algorithm}
-	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 1}
+	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 1}\label{ALGO Pointgénérateur1}
 	\begin{algorithmic}[1]
 		\Require Une courbe elliptique $E$ ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, de conducteur $f$ et de conducteur maximal $f_{m}$, un nombre $l$ premier et premier avec $f_m$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
 		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
@@ -97,9 +96,9 @@ En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ et $q 
 
 \subsubsection{Optimisation de la recherche d'extension de corps}
 
-On propose une amélioration de la première méthode. Avec les mêmes notations que la section précédente, puisque $d|f_m$, $d$ est inversible modulo $l$. Si $P$ est un générateur du groupe de torsion, alors $\pi_{q}(P) = -cd^{-1}P$. Ainsi $P$ est un vecteur propre du morphisme $\pi_{q}$ restreint à $E[l]$. Il existe des résultats généraux sur les espaces propre de ce morphisme.
+On propose une amélioration de la première méthode. on reprend les notations précédentes. On commence par remarquer que d'après la proposition \ref{formeIdeauxBaseFq}, $d|f_m$ donc $d$ est inversible modulo $l$. Si $P$ est un générateur du groupe de $\LR$-torsion, alors en particulier $\pi_{q}(P) = -cd^{-1}P$. Ainsi $P$ est un vecteur propre du morphisme $\pi_{q}$ restreint à $E[l]$. Il existe des résultats généraux sur les espaces propre de ce morphisme.
 
-\begin{Prop}\cite{MMSTV}[Prop 1]
+\begin{Prop}[\cite{MMSTV}(Prop 1)]
 	
 	Soit $E$ définie sur $\F_{q}$ de $j$-invariant différent de $0$, $1728$. Soit $l$ un nombre premier, différent de la caractéristique $p$. 
 	\begin{enumerate}
@@ -112,29 +111,28 @@ On propose une amélioration de la première méthode. Avec les mêmes notations
 
 Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait qu'il existe exactement $2$ $l$-isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$ restreint à $E[l]$. 
 
-\begin{Prop}\cite{MMSTV}
-	
+\begin{Prop}[\cite{MMSTV}(Prop 2)]
 	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $. Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$ (en particulier $r_{i}$ divise $l-1$ ). De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
 \end{Prop}
 
-La proposition précédente nous donne alors le degré de l'extension dans laquelle on doit chercher $E[l]$ en résolvant un problème de logarithme discret dans $\F_{l}^{*}$. On note $r$ ce degré. On cherche alors $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-cd^{-1}$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
+La proposition précédente nous donne alors le degré de l'extension dans laquelle on doit chercher $E[l]$ en résolvant un problème de logarithme discret dans $\F_{l}^{*}$. On note $r$ ce degré. On cherche $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-cd^{-1}$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
 \begin{equation*}
 	E(\F_{q^{r}}) \simeq \Z/n_{1}\Z\times\Z/n_{2}\Z,
 \end{equation*}
 
 \textbf{TODO : Faire le lien avec l'étude de la torsion ici, CF Pairing the volcano}
 
-avec $n_{1}$ divisant $n_{2}$, alors un point choisi au hasard sera probablement d'ordre $n_{2}$. Cependant on connaît seulement le cardinal $N = n_{1}n_{2}$
+avec $n_{1}$ divisant $n_{2}$, alors un point choisi au hasard sera probablement d'ordre $n_{2}$. Cependant on connaît seulement le cardinal $N = n_{1}n_{2}$.
 
-\begin{Prop}\cite{Sil09}[Exercice 5.6]
+\begin{Prop}[\cite{Sil09}(Ex 5.6)]
 	
 	Avec les notations précédentes, $n_{1}^2$ divise $N$ et $q^r = 1$ modulo $n_{1}$.
 \end{Prop}
 
-On peut donc chercher toute les valeurs de $n_{1}$ possible, en utilisant la proposition précédente pour limiter le nombre de tests. On en déduit l'algorithme 6, qui améliore l'algorithme 5. 
+On peut donc chercher toute les valeurs de $n_{1}$ possible, en utilisant la proposition précédente pour limiter le nombre de tests. On en déduit l'algorithme \ref{ALGO Pointgénérateur2}, qui améliore l'algorithme \ref{ALGO Pointgénérateur1}. 
 
 \begin{algorithm}
-	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 2}
+	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 2}\label{ALGO Pointgénérateur2}
 	\begin{algorithmic}[1]
 		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier décomposé ne divisant pas $pf_{m}$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
 		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
@@ -170,9 +168,7 @@ On peut donc chercher toute les valeurs de $n_{1}$ possible, en utilisant la pro
 
 \subsubsection{Méthode d'Elkies}
 
-l'algorithme 6 est une net amélioration de l'algorithme 5, mais nécessite parfois de manipuler des groupes $E(F_{q^{r}})$ avec $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisamment souvent pour être problématique. On présente ici une troisième méthode, proposé par \cite{Bostan_2008}[\S 4.3, fastElkies'] ayant pour avantage d'éviter tout calcul dans des extensions de $\F_{q}$.\\ 
-
-On résume l'idée de la méthode en admettant les résultats utilisés. Soit $E$ une courbe elliptique ordinaire de $j$-invariant $j$, définie sur $\F_{q}$.
+Même en utilisant l'algorithme \ref{ALGO Pointgénérateur2}, on est parfois contraint de manipuler des groupes $E(F_{q^{r}})$ avec $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisamment souvent pour être problématique. On présente ici une troisième méthode, proposé par \cite{Bostan_2008}(\S 4.3, fastElkies') ayant pour avantage d'éviter tout calcul dans des extensions de $\F_{q}$. En contrepartie cette méthode impose des conditions sur la taille du degré $l$. On résume l'idée de la méthode en admettant les résultats utilisés. Soit $E$ une courbe elliptique ordinaire de $j$-invariant $j$, définie sur $\F_{q}$.
 
 \begin{enumerate}
 	
@@ -194,7 +190,7 @@ On résume l'idée de la méthode en admettant les résultats utilisés. Soit $E
 Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent principalement à minimiser et optimiser des calculs de séries de Laurent nécessaires pour obtenir $\tilde{F}_{h}$.
 
 \begin{Def}
-	En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}[\S 4.3, fastElkies'], prenant en entrée $E$, $E'$ deux modèles de courbe elliptique à multiplication complexe définie sur $\F_{q}$ et $l < 4(p+1)$ un nombre premier tel qu'il existe au moins une $l$-isogénie horizontale normalisée $\phi : E \rightarrow E'$. Cette algorithme renvoie un polynôme $F$ qui décrit le noyau de $\phi$ sur $E$.  
+	En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}(\S 4.3, fastElkies'), prenant en entrée $E$, $E'$ deux modèles de courbe elliptique à multiplication complexe définie sur $\F_{q}$ et $l < 4(p+1)$ un nombre premier tel qu'il existe au moins une $l$-isogénie horizontale normalisée $\phi : E \rightarrow E'$. Cette algorithme renvoie un polynôme $F$ qui décrit le noyau de $\phi$ sur $E$.  
 \end{Def}
 
 Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, on ne peut pas connaître à l'avance le bon choix parmi ces deux racines. Il faut donc un moyen de tester si le polynôme $F$ obtenue décrit le bon noyau. Pour cela on vérifie formellement la valeur propre avec laquelle agit le morphisme de Frobenius sur l'ensemble de points décrit par $F$.
@@ -215,10 +211,10 @@ Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans 
 \end{Rem}
 
 
-On en déduit l'algorithme $7$ permettant de calculer le polynôme décrivant le noyau d'une isogénie, à partir d'un modèle de départ et d'un idéal associé. On suppose aussi que le polynôme modulaire $\Psi_{l}$ est pré-calculé.  
+On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le polynôme décrivant le noyau d'une isogénie, à partir d'un modèle de départ et d'un idéal associé. On suppose aussi que le polynôme modulaire $\Psi_{l}$ est pré-calculé.  
 
-\begin{algorithm}
-	\caption{Méthode d'Elkies}
+\begin{algorithm}[h]
+	\caption{Méthode d'Elkies}\label{ALGO BMSSCheckElkies}
 	\begin{algorithmic}[1]
 		\Require Une courbe elliptique $E$ ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, de conducteur maximal $f_m$. Un nombre $l$ premier décomposé et premier avec $p$ et $f_m$, avec $l < min (4p + 4, 4|\Delta|)$. Un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$, le polynôme modulaire $\Psi_{l}$.
 		\Ensure Un polynôme $F\in\F_{q}\left[ X\right]$ décrivant $E[\LR]$. 
@@ -237,7 +233,7 @@ On en déduit l'algorithme $7$ permettant de calculer le polynôme décrivant le
 \end{algorithm}
 
 \begin{Rem}
-	Lorsque l'on calcul plusieurs $l$-isogénie horizontale à la suite, associée à l'action d'un même idéal $\LR$, on peut éviter d'avoir à deviner le bon $j$-invariant avec CheckElkies en retenant les $j$-invariants vus aux étapes précédentes. Puisque l'on agit toujours avec le même idéal, on parcours le niveau du volcan d'isogénie associée à $\OR_{\Delta}$ dans un sens fixe.  
+	Lorsque l'on calcul à la suite plusieurs $l$-isogénie horizontale associées à l'action d'un même idéal $\LR$, on peut éviter d'avoir à deviner le bon $j$-invariant avec CheckElkies en retenant les $j$-invariants vus aux étapes précédentes. Puisque l'on agit toujours avec le même idéal, on parcours le niveau du volcan d'isogénie associée à $\OR_{\Delta}$ dans un sens fixe.  
 \end{Rem}
 
 \subsection{Calculs d'isogénies par équivalence friable}
@@ -246,17 +242,30 @@ On en déduit l'algorithme $7$ permettant de calculer le polynôme décrivant le
 
 Avec ce qui précède, on sait uniquement calculer des $l$-isogénies avec $l < min (4p + 4, 4|\Delta|)$, et avec une complexité exponentielle en $l$. On se donne un idéal $\LR\in\OR_{\Delta}$, et on suppose que l'on peut trouver 
 \begin{equation}
-	\LR \sim \PR = \PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}},
+	\LR \sim \LR' = \PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
 \end{equation} 
-où les idéaux $\PR_{p_{i}}$ sont de normes $p_{i}$ appartenant à une liste $L_{premier}$ de nombres premiers décomposés premier avec $pf_m$ dont on sait calculer l'action sur des courbes de $Ell_{\F_{q}}{\OR_{\Delta}}$. On peut donc calculer l'action de $\PR$ en calculant $e_1 + \ldots + e_g$ actions d'idéaux avec la méthode d'Elkies. On souhaite en déduire l'action de l'idéal $\LR$. Pour cela il faut d'abord expliciter $\alpha\in\K$ vérifiant  
+où les idéaux $\PR_{p_{i}}$ sont de normes $p_{i}$ appartenant à une liste $L_{premier}$ de nombres premiers vérifiant la même hypothèse \ref{HypothèseInversion} que $l$, et dont on sait calculer l'action sur des courbes de $Ell_{\F_{q}}{\OR_{\Delta}}$ avec \ref{ALGO BMSSCheckElkies}. On peut donc calculer l'action de $\LR'$ en calculant $e_1 + \ldots + e_N$ actions d'idéaux de petites normes. On souhaite en déduire l'action de l'idéal $\LR$. 
+
+\begin{Def}
+	Soit $\phi_\LR : E \rightarrow E/E[\LR]$. Avec les notations précédentes, es composantes de $\phi_\LR$ associée à $\LR'$ sont les isogénies obtenues par la suite
+	\begin{equation*}
+		E\rightarrow E/E\left[ \PR_{1}\right] \rightarrow E/E\left[ \PR_{1}^{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\right] \rightarrow
+	\end{equation*}
+	\begin{equation*}
+		\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\right] \rightarrow\ldots\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right].
+	\end{equation*}
+	Les composantes explicites sont les uniques formes explicites normalisées des composantes. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec normalisation. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes (normalisées).
+\end{Def}
+
+$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi : E \rightarrow E/E[\LR]$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ a priori. On a cependant la relation
+\begin{equation*}
+	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
+\end{equation*}
+où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. Pour expliciter $\alpha$, on rappelle que l'idéal conjugué $\bar{\PR_{i}}$ de $\PR_{i}$ est un représentant de $\CP_{p_{i}}^{-1}$, donc
 \begin{equation}
-	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}},
-\end{equation} 
-On commence par se ramener à chercher un élément de $\OR_{\Delta}$. L'idéal conjugué $\bar{\PR_{i}}$ de $\PR_{i}$ est un représentant de $\CP_{p_{i}}^{-1}$, donc
-\begin{equation}
-	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \beta\OR_{\Delta},
+	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{N}}^{e_{N}} = \beta\OR_{\Delta},
 \end{equation}
-où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
+où $\beta\OR_{\Delta}$ est un idéal principal entier. Ainsi $\beta\in\OR_{\Delta}$.
 
 \begin{Prop}
 	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$. Alors $\alpha = \frac{\beta}{m}$.
@@ -274,25 +283,10 @@ où $\beta\OR_{\Delta}$ est un idéal entier. Ainsi $\beta\in\OR_{\Delta}$.
 	Donc $\beta = \alpha m$.
 \end{proof}
 
-Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Ceci est résolue par l'algorithme \ref{ALGOidealprincipal}.
+Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Ceci est résolue par l'algorithme \ref{ALGO idealprincipal}.\\
 
 
-\begin{Def}
-	Soit $\phi : E \rightarrow E/E[\LR]$. Soit $\CL = \CP_{1}^{e_{1}} \ldots\CP_{N}^{e_{N}}$ une factorisation de $\CL$. Les composantes de $\phi$ associée à cette factorisation sont les isogénies obtenues par la suite
-	\begin{equation*}
-		E\rightarrow E/E\left[ \PR_{1}\right] \rightarrow E/E\left[ \PR_{1}^{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\right] \rightarrow
-	\end{equation*}
-	\begin{equation*}
-		\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\right] \rightarrow\ldots\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]
-	\end{equation*}
-	Les composantes explicites sont les uniques formes explicites normalisées des composantes de sorte que la première parte du modèle $E$. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec le calcul de la dernière composante. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes
-\end{Def}
-
-$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi : E \rightarrow E/E[\LR]$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ a priori. On a cependant la relation
-\begin{equation*}
-	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
-\end{equation*}
-où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer $\alpha = \beta/m$ avec $\beta = \frac{u + v\pi_{q}}{f_{m}}\in\OR_{\Delta}$. D'après l'hypothèse 1, les nombres premiers $p_{i}$ sont premiers avec $|E(\F_{q^{n}})|$, donc $m$ est aussi premier avec ce cardinal. On a de plus supposé que $f_{m}$ est premier avec $|E(\F_{q^{n}})|$ dans l'hypothèse 1, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. L'endomorphisme $k(u + v\pi_{q})$ est donc bien défini. 
+On sait donc calculer $\alpha = \beta/m$ avec $\beta = \frac{u + v\pi_{q}}{f_{m}}\in\OR_{\Delta}$. D'après l'hypothèse \ref{HypothèseInversion}, les nombres premiers $p_{i}$ sont premiers avec $|E(\F_{q^{n}})|$, donc $m$ est aussi premier avec ce cardinal. De plus $f_{m}$ est aussi supposé premier avec $|E(\F_{q^{n}})|$, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. L'endomorphisme $k(u + v\pi_{q})$ est donc bien défini. 
 
 \begin{Prop}
 	On reprend les notations précédentes. Alors
@@ -302,40 +296,39 @@ où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. On sait calculer
 \end{Prop}
 
 \begin{proof}
-	Soit $\tilde{E}$, $\tilde{E_c}$, $\tilde{E'} = \widetilde{E/E\left[\LR\right] }$ trois courbse elliptiques définies sur $\Qb$, obtenues par le théorème de relèvement de Deuring appliqué via l'endomorphisme de Frobenius. Soit $\Lambda$ un réseau de $\C$ tel que $E_{Lambda} = \tilde{E}$. Alors la factorisation de $\LR$ implique que
+	Soit $\tilde{E}$, $\tilde{E_c}$, $\tilde{E'} = \widetilde{E/E\left[\LR\right] }$ trois courbse elliptiques définies sur $\Qb$, obtenues par le théorème de relèvement de Deuring appliqué via l'endomorphisme de Frobenius. Soit $\Lambda$ un réseau de $\C$ tel que $E_{\Lambda} = \tilde{E}$. Alors la factorisation de $\LR$ implique que
 	\begin{equation*}
-		\tilde{E'}\simeq\C/\LR^{-1}\Lambda = \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \simeq \tilde{E'}.
+		\tilde{E'}\simeq\C/\LR^{-1}\Lambda = \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda.
 	\end{equation*}
 	De plus,
 	\begin{equation*}
 		\tilde{E_c} \simeq \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda.
 	\end{equation*}
-	Par définition, $\phi_{\LR}$ et $\phi_c$ correspondent au niveau des tores au morphisme identité (voir section 3.4). L'action de $\alpha$ correspond donc à l'identité. On pose
+	Par définition, $\phi_{\LR}$ et $\phi_c$ correspondent au niveau des tores au morphisme identité (voir \ref{IsogénieIdealEntierIdentité}). On pose pour tout $\lambda\in\K$
 	\begin{equation*}
-		\phi_{\alpha} : \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \rightarrow \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda, z \mapsto z
+		\phi_{\lambda} : \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \rightarrow \C/\left( (\lambda\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda, z \mapsto z
 	\end{equation*}
 	Puisque $\alpha = \beta/m$, 
 	\begin{equation*}
 		\phi_{\alpha} = [\beta]\circ\phi_{m^{-1}} = [u + v\pi_{q}]\circ\phi_{(mf_{m}^{-1})}
 	\end{equation*}
-	Il reste à montrer que la réduction de l'isogénie associée au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. $k$ est bien défini car $mf_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux. En particulier la restriction de $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
+	Il reste à montrer que la réduction de l'isogénie équivalente au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. Or la restriction de l'endomorphisme $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
 \end{proof}
 
-On en déduit un algorithme qui déduit de l'équation d'équivalence (Cf label) l'isogénie souhaité. \textbf{Ecrire l'algorithme} : 
+On en déduit l'algorithme \label{ALGO isogénieEquivalente} qui calcule l'action d'un idéal à partir de celle d'un idéal équivalent. \textbf{TODO : Ecrire l'algorithme} : 
 
 
 \subsection{Calculs dans le groupe de classes d'idéaux}
 %marche aléatoire, analyse complexité, expréiences
 
-On explique dans cette question comment trouver un idéal friable équivalent à un idéal donné. 
+On explique dans cette section comment trouver un idéal friable $\LR'$ équivalent à un idéal $\LR$ donné, de norme $l$ premier. On souhaite de plus que l'hypothèse \ref{HypothèseInversion} soit vérifier par les normes de tout les idéaux premier dans l'écriture de $\LR'$. 
 
 \subsubsection{Famille génératrice du groupe des classes d'idéaux}
 
-
-On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant formé uniquement d'idéaux dont on sait calculer l'action sur $Ell_{\F_{q}}{\OR_{\Delta}}$. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables inférieur à une borne $N$. On fixe alors une convention pour associer à chacun d'eux un idéal premier de même norme. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes parmi les idéaux premier associés pour obtenir une famille génératrice.
+On commence par former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant composé uniquement d'idéaux dont on sait calculer l'action sur $Ell_{\F_{q}}{\OR_{\Delta}}$ avec l'algorithme \ref{ALGO BMSSCheckElkies}, et de norme vérifiant l'hypothèse \ref{HypothèseInversion}. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables inférieur à une borne $N$. On fixe alors une convention pour associer à chacun d'eux un idéal premier de même norme. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes pour obtenir une famille génératrice.
 
 \begin{Def}
-	Soit $p$ premier décomposé dans $\OR_{\Delta}$. On fixe un algorithme prenant entrée $p$ et $\OR_{\Delta}$ qui calcule une racine de $\OR_{\Delta}$ modulo $4p$. On définit la forme quadratique première de discriminant $\Delta$ associée à $p$ comme étant $f(p,b_{p})$, où $b_{p}\in\N$ vérifie $b_{p}^2 = \Delta [4p]$ et est obtenue par l’algorithme choisit. On définit l'idéal premier associé à $p$ par $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. On fixe un algorithme déterministe prenant entrée $p$ et $\OR_{\Delta}$ qui calcule une racine de $\OR_{\Delta}$ modulo $4p$. On définit la forme quadratique première de discriminant $\Delta$ associée à $p$ comme étant $f(p,b_{p})$, où $b_{p}\in\N$ vérifie $b_{p}^2 = \Delta [4p]$ et est obtenue par l’algorithme choisi. On définit l'idéal premier associé à $p$ par $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
 \end{Def}
 
 \begin{Rem}
@@ -348,7 +341,7 @@ On veut former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un 
 
 La proposition suivante permet de choisir la borne $N$.
 
-\begin{Prop}\cite{Seysen}[Th 3.3]
+\begin{Prop}[\cite{Seysen}(Th 3.3)]
 	
 	Sous l'hypothèse de Riemann généralisée, il existe une constante $C$ telle que $Cl(\OR_{\Delta})$ soit engendré par les classes des éléments de $P_{N}$, avec 
 	\begin{equation*}
@@ -362,17 +355,17 @@ La proposition suivante permet de choisir la borne $N$.
 \end{Rem}
 
 \begin{Rem}
-	Comme les nombres premiers divisant $pf_{m}|E(\F_{q^{n}})|$ sont en nombre fini, les exclure de $P_{N}$ ne change pas le comportement asymptotique de la borne $N$. Prenant en compte ceci et la remarque précédente, on suppose donc que $P_{N}$ reste une famille génératrice si l'on ignore les diviseurs de $pf_{m}|E(\F_{q^{n}})|$. 
+	Comme les nombres premiers contredisant l'hypothèse \ref{HypothèseInversion} sont en nombre fini, les exclure de $P_{N}$ ne change pas le comportement asymptotique de la borne $N$. Prenant en compte ceci et la remarque précédente, on suppose donc que $P_{N}$ reste une famille génératrice si l'on ignore les idéaux de normes ne vérifiant pas l'hypothèse \ref{HypothèseInversion}. 
 \end{Rem} 
 
-Comme on peut choisir $N$ de taille asymptotiquement raisonnable, on énonce  l'algorithme 3 qui sera utilisé pour établir une liste de représentant d'une famille génératrice du groupe des classes d'idéaux. 
+Comme on peut choisir $N$ de taille asymptotiquement polynomiale, on énonce  l'algorithme \ref{ALGO FamilleGénératrice} qui sera utilisé pour établir une liste de représentant d'une famille supposée génératrice du groupe des classes d'idéaux. 
 
 
 \begin{algorithm}[h]
-	\caption{Famille génératrice du groupe de classes}
+	\caption{Famille génératrice du groupe de classes}\label{ALGO FamilleGénératrice}
 	\begin{algorithmic}[1]
 		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$.
-		\Ensure Une liste $L_{premiers}$ de nombres premiers vérifiant l'hypothèse 1, la liste $L_{ideaux}$ de leurs idéaux premiers associés respectifs, la liste $L_{formes}$ de leurs formes premières associées respectives. 
+		\Ensure Une liste $L_{premiers}$ de nombres premiers vérifiant l'hypothèse \ref{HypothèseInversion}, la liste $L_{ideaux}$ de leurs idéaux premiers associés respectifs, la liste $L_{formes}$ de leurs formes premières associées respectives. 
 		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets$ \O
 		\State $n \gets 2$
 		\While{$n < N$}
@@ -398,24 +391,21 @@ Comme on peut choisir $N$ de taille asymptotiquement raisonnable, on énonce  l'
 \subsubsection{Écriture d'une classe dans une famille génératrice}
 
 
-Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Soit $L_{premiers}$, $L_{ideaux}$ et $L_{formes}$ les listes retournées par l'algorithme $3$. On note $k$ leurs tailles, et $ L_{ideaux} = \left\lbrace \PR_{1}\ldots\PR_{k}\right\rbrace $. Alors il existe $e_{1},\ldots,e_{k}\in\Z$ tels que
+Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Soit $L_{premiers}$, $L_{ideaux}$ et $L_{formes}$ les listes retournées par l'algorithme \ref{ALGO FamilleGénératrice}. On note $k$ leurs tailles, et $L_{ideaux} = \left\lbrace \PR_{1}\ldots\PR_{k}\right\rbrace$. Alors il existe $e_{1},\ldots,e_{k}\in\Z$ tels que
 \begin{equation*}
 	\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{k}^{e_{k}}
 \end{equation*}
-De plus il existe $\alpha\in\K$ tel que
-\begin{equation*}
-	\LR = (\alpha\OR_{\Delta})\PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\ldots\PR_{k}^{e_{k}}
-\end{equation*}
-Dans cette section on ne cherche pas à expliciter $\alpha$ mais seulement des exposants $e_{i}$. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
+
+On cherche à expliciter des exposants $e_{i}$ vérifiant cette équation. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
 
 \begin{enumerate}
 	\item Certaines classes représentées par des formes réduites ayant de bonnes propriétés vont être explicitement et rapidement factorisable.
-	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités de terminer en un temps sous-exponentiel sur une classe facilement factorisable.
+	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités de terminer sur une classe facilement factorisable.
 \end{enumerate}
 
-D'abord on cite le théorème sur la factorisation de classes:
+On commence par citer le théorème qui nous permettra de factoriser une classe donnée.
 
-\begin{The}\cite{Seysen}[Th 3.1]
+\begin{The}[\cite{Seysen}(Th 3.1)]\label{factorisationClasseIdéaux}
 	
 	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ ait une forme réduite $(a,b)$. Si $g\in\N$ et $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en facteurs premiers de l'entier $a$, alors
 	\begin{enumerate}
@@ -427,10 +417,10 @@ D'abord on cite le théorème sur la factorisation de classes:
 \end{The}
 
 \begin{Coro}
-	On reprend les notations du théorème précédent. Si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{premiers}$ obtenue par l'algorithme 3, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$ grâce au point 3 du théorème 5.11. 
+	On reprend les notations du théorème précédent. Si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{premiers}$ obtenue par l'algorithme \ref{ALGO FamilleGénératrice}, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$, grâce au point 3 du théorème \ref{factorisationClasseIdéaux}. 
 \end{Coro}
 
-On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. Sans rappeler la théorie des graphes expanseurs, on cite les résultats principaux.
+On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. On admet la théorie des graphes expanseurs, dont on cite les résultats principaux.
 
 \begin{Def}
 	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
@@ -441,7 +431,7 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 	S est supposé stable par inverse pour que le graphe ne soit pas orienté.
 \end{Def}
 
-\begin{Prop}\cite{Jao_2009}[Lem 2.1]
+\begin{Prop}[\cite{Jao_2009}(Lem 2.1)]\label{grapheExpanseurProba}
 	
 	Soit $G = Cl(\OR_{\Delta})$ et $S = L_{ideaux}\cup (L_{ideaux})^{-1}$. on pose
 	\begin{equation*}
@@ -451,22 +441,21 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 \end{Prop}
 
 \begin{Rem}
-	Concrètement, dès que l'on enchaîne des marches aléatoires de taille de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$. Puisque le groupe est abélien, la norme $l_{1}$ du vecteurs des exposants, que l'on notera $x$, est au pire le nombre de pas $t$ de la marche aléatoire. 
+	En pratique, dès que l'on enchaîne des marches aléatoires de taille de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$. Puisque le groupe est abélien, la norme $l_{1}$ du vecteurs des exposants, que l'on notera $x$, est au pire le nombre de pas $t$ de la marche aléatoire. 
 \end{Rem}
 
-On en déduit l'algorithme $4$ permettant de trouver les exposants $e_{i}$ cherché. L'idée est de choisir $S_{0}$ dans la proposition 5.13 comme étant l'ensemble des classes que l'on sait factoriser grâce au théorème 5.11. 
+L'idée est alors de choisir $S_{0}$ dans la proposition \ref{grapheExpanseurProba} comme étant l'ensemble des classes que l'on sait factoriser grâce au théorème \ref{factorisationClasseIdéaux}. On en déduit l'algorithme \ref{ALGO FactoClasse} permettant de trouver des exposants $e_{i}$ qui conviennent.  
 
 \begin{algorithm}
-	\caption{Factorisation de la classe d'un idéal dans une famille génératrice donnée}
+	\caption{Factorisation de la classe d'un idéal}\label{ALGO FactoClasse}
 	\begin{algorithmic}[1]
 		\Require Un entier positif $N$, une borne de pas de marche aléatoire $t$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un idéal $\LR\subset\OR_{\Delta}$. 
 		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ décrivant une factorisation de $\CL$.
-		\State $L_{ideaux}$, $L_{formes}$, $L_{premiers}\gets$ résultat de l'algorithme 3 appliqué à $N$, $\Delta$, $p$, $f_{m}$, $|E(\F_{q^{n}})|$. 
+		\State $L_{ideaux}$, $L_{formes}$, $L_{premiers}\gets$ résultat de l'algorithme \ref{ALGO FamilleGénératrice} appliqué à $N$, $\Delta$, $p$, $f_{m}$, $|E(\F_{q^{n}})|$. 
 		\State $classe_{test}\gets$ forme réduite de $\LR$
 		\State $k\gets$ taille de $L_{ideaux}$
 		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
-		
-		\While{$classe_{test}$ ne se factorise pas avec le théorème 5.12}
+		\While{$classe_{test}$ ne se factorise pas avec le théorème \ref{factorisationClasseIdéaux}}
 		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
 		\For{$0<i<t $}
 		\State $Indice\gets$ indice aléatoire de $L_{x}$.
@@ -477,13 +466,12 @@ On en déduit l'algorithme $4$ permettant de trouver les exposants $e_{i}$ cherc
 		\State $x_{i}\gets L_{x}[i]$
 		\For{$1 \leq j \leq x_{i}$}
 		\State $classe_{test}\gets classe_{test}L_{formes}[i]$
-		\State $classe_{test}\gets classe_{test}$ réduit par l'algorithme 2
+		\State $classe_{test}\gets classe_{test}$ réduit par l'algorithme \ref{ALGO reduction}
 		\State Factoriser le coefficient dominant de $classe_{test}$ (avec ECM).
 		\EndFor
 		\EndFor
 		\EndWhile
-		
-		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème 5.12.
+		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème \ref{factorisationClasseIdéaux}.
 		\State $L_{exposants}\gets L_{y} - L_{x}$
 		\State $L_{facteurs}\gets L_{ideaux}$
 		\For{$e_i$ parcourant $L_{exposants}$ }
@@ -492,7 +480,6 @@ On en déduit l'algorithme $4$ permettant de trouver les exposants $e_{i}$ cherc
 		\State $\left( L_{facteurs}\right) _{i} \gets $ idéal conjugué de $\left( L_{facteurs}\right) _{i}$
 		\EndIf
 		\EndFor
-		
 		\State \Return $L_{exposants}$, $L_{facteurs}$
 	\end{algorithmic}
 \end{algorithm}
