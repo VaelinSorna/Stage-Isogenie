@@ -34,7 +34,7 @@ Dans cette section, on énonce des résultats généraux de théorie des nombres
 \end{Def}
 
 
-\begin{Prop}[\cite{Cox}(Prop 5.14, 7.2)]
+\begin{Prop}[\cite{Cox}(Prop 5.14, 7.2)]\label{baseOrdreWk}
 	
 	Soit $\K$ un corps quadratique imaginaire. Alors $\OR_{\K} = \Z\left[ w_{\K}\right] $. De plus si $\K = \Q(\sqrt{D})$ avec $D$ sans facteur carré, alors
 	\begin{enumerate}
@@ -207,9 +207,9 @@ On sera amené à calculer dans le groupe $Cl(\OR)$. On peut déjà remarquer qu
 
 \begin{Def}
 	Soit $\K$ un corps quadratique imaginaire. Il admet un unique automorphisme de corps non trivial, appelé conjugaison. Pour tout $\alpha\in\K$, on note $\bar{\alpha}$ son conjugué dans $\K$. Pour tout idéal $\LR$ d'un ordre $\OR$ de $\K$, on note 
-	\begin{equation}
+	\begin{equation*}
 		\bar{\LR} = \left\lbrace \bar{\alpha}, \alpha\in\LR\right\rbrace 
-	\end{equation}
+	\end{equation*}
 \end{Def}
 
 \begin{Prop}[\cite{Cox}(Prop 7.14)]\label{NormesId}
@@ -421,7 +421,9 @@ Cette extension de $\K$ est liée au groupe de classe de $\OR_{\K}$ par le théo
 
 
 
+\subsection{Algorithmes pour les réseaux structurés quadratiques}
 
+Un réseau structuré est un idéal fractionnaire d'un ordre d'un corps de nombres. Le but de cette section est d'exposé les méthodes et les algorithmes utilisés pour manipuler les réseaux structurés quadratiques, pour lesquels le problème du vecteur le plus court est résolue en temps polynomial. 
 
 \subsubsection{Forme standard d'un idéal et formes quadratiques binaires}
 
@@ -515,16 +517,22 @@ Ainsi la restriction de l'application $F$ à $I(\OR_{\Delta})$ induit une struct
 	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$. Les applications $I$ et $F$ induisent des isomorphismes réciproques entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$.
 \end{Prop}
 
+\begin{Rem}
+	On peut donc calculer la forme standard d'un produit d'idéaux eux mêmes sous formes standards, en calculant un produit de Dirichlet.
+\end{Rem}
+
+\subsubsection{Réduction de formes quadratiques binaires et applications}
+
+
 La proposition suivante donne plusieurs moyens de trouver des formes équivalentes à une forme quadratique binaire donnée. On peut alors chercher une forme équivalente aux coefficients les plus petits possibles. 
 
 \begin{Prop}[\cite{Cox}(Thm 2.8)]\label{actionMatriceForme}
 	Les changements de variables en $(x,y)$ suivant appliqués à une forme quadratique binaire $f(a,b,c)$ permettent d'obtenir $f' = f(a',b',c')$ équivalente à $f$. 
 	\begin{enumerate}
-		\item $(x,y)\mapsto (x - qy, y),\;\forall\;q\in\Z$
-		\item $(x,y)\mapsto (x + y, y)$ 
-		\item $(x,y)\mapsto(-y,-x)$  
+		\item $(x,y)\mapsto (x - qy, y),\;\forall\;q\in\Z$, alors $f' = f(a,b - 2aq, c - bq + aq^2)$  
+		\item $(x,y)\mapsto(-y,-x)$, alors $f' = f(c, -b, a) $
 	\end{enumerate}
-	Ces changements de variables correspondent à l'action de certaines matrices de $SL_{2}(\Z)$ sur les formes quadratiques binaires (voir \cite{Cox}[Eq 2.2]). 
+	Ces changements de variables correspondent à l'action de certaines matrices de $SL_{2}(\Z)$ sur les formes quadratiques binaires (voir \cite{Cox}[Eq 2.2]). Si $f$ est primitive alors $f'$ l'est aussi. 
 \end{Prop}
 
 \begin{Def}
@@ -532,24 +540,16 @@ La proposition suivante donne plusieurs moyens de trouver des formes équivalent
 \end{Def}
 
 \begin{Prop}[\cite{Cox}(2.8)]\label{uniciteReduite}
-	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire. Toute classe de $Cl(\Delta)$ contient une unique forme quadratique réduite.  
+	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire. Toute classe de $Cl(\Delta)$ contient une unique forme quadratique réduite, qui est primitive. 
 \end{Prop}
 
-\begin{Prop}[\cite{Cox}(2.12)]
-	Une forme quadratique réduite $f = f(a,b)$ vérifie 
-	\begin{equation*}
-		|b|\leq|a|\leq\sqrt{\frac{|\Delta|}{3}}.
-	\end{equation*}
-	On peut donc représenter chaque classe $Cl(\OR_{\Delta})$ en $O(\log(|\Delta|))$ bits. 
-\end{Prop}
-
-La preuve de la proposition \ref{uniciteReduite} fournit un algorithme donnant l'élément réduit de la classe d'une forme quadratique binaire donnée, en $\OR(\log(\Delta)^{2})$ opération dans $\Z$. Les différentes étapes de l'algorithme utilise les changements de variables cités dans la proposition \ref{actionMatriceForme}. 
+La preuve de la proposition \ref{uniciteReduite} fournit un algorithme donnant l'élément réduit de la classe d'une forme quadratique binaire donnée. Les différentes étapes de l'algorithme utilise les changements de variables cités dans la proposition \ref{actionMatriceForme}. 
 
 \begin{algorithm}[h]
-	\caption{Réduction de forme quadratique binaire}
+	\caption{Réduction de formes quadratiques binaires}
 	\label{ALGO reduction}
 	\begin{algorithmic}[1]
-		\Require Une forme quadratique binaire $(a,b,c)$
+		\Require Une forme quadratique binaire $f(a,b,c)$
 		\Ensure Une forme quadratique réduite équivalente.
 		\State $test \gets False$
 		\While{test = False}
@@ -560,7 +560,7 @@ La preuve de la proposition \ref{uniciteReduite} fournit un algorithme donnant l
 		\EndIf
 		\State $test \gets True$
 		\If{$a > c$}
-		\State Echanger $a$ et $c$
+		\State Échanger $a$ et $c$
 		\State $b \gets -b$
 		\State $test \gets False$
 		\EndIf
@@ -570,17 +570,44 @@ La preuve de la proposition \ref{uniciteReduite} fournit un algorithme donnant l
 		\EndIf
 		\EndIf
 		\EndWhile
-		\State \Return $(a,b,c)$
+		\State \Return $f(a,b,c)$
 	\end{algorithmic}
 \end{algorithm}
+
+
+L'algorithme \ref{ALGO reduction} est polynomial en la taille des coefficients de la forme quadratique binaire donnée. Plus précisément on a le résultat suivant. 
+
+\begin{Prop}[\cite{Coh00}(5.4.3)]\label{nbEtapesReduction}
+	
+	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'algorithme \ref{ALGO reduction} renvoie une forme de réduite de $(a,b,c)$ en utilisant au plus $2 + \log\left( \frac{a}{\sqrt{|\Delta|}} \right)$ divisions euclidiennes.
+\end{Prop}
+
+\begin{Coro}\label{COMPLEX reduction}
+	Soit $f = f(a,b,c) = F(\LR)$ une forme quadratique binaire associé à un idéal $\LR$ d'un ordre $\OR_{\Delta}$. La complexité de l'algorithme \ref{ALGO reduction} appliqué à $f(a,b,c)$ est en 
+	\begin{equation*}
+		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
+	\end{equation*}
+	
+\end{Coro}
+
+\begin{proof}
+	La complexité de chaque passage dans la boucle de la ligne $2$ est dominée par l'étape de la ligne $4$, qui correspond à une division euclidienne de la variable $b$ par la variable $2a$. Puisque la forme $f$ correspond à un idéal sous forme standard, initialement $|b| \leq a$, donc toutes les divisions euclidienne seront de complexité en $O(\log(a))$. On conclut avec la proposition \ref{nbEtapesReduction}.
+\end{proof}
 
 
 \begin{Rem}
 	On peut vérifier avec l'algorithme \ref{ALGO reduction} que deux idéaux entiers sont dans la même classe : il suffit de réduire leurs formes quadratiques binaires associées et vérifier que l'on trouve le même résultat. 
 \end{Rem}
 
+On énonce plusieurs propriétés des coefficients d'une forme quadratique réduite.
 
-Il sera utile par la suite de trouver des générateurs d'idéaux (primitifs) principaux à partir de leur forme standard. On peut utiliser l'algorithme \ref{ALGO reduction} pour cela. Soit $id(1,a,b)$ un idéal supposé principal, et soit $\beta$ un générateur. D'après \ref{NormesId}, $N((1,a,b)) = a = N_{\Q}^{\K}(\beta)$, donc étant donné la forme standard, on connaît la norme d'un générateur. 
+\begin{Prop}[\cite{Cox}(2.12)]
+	Une forme quadratique réduite $f = f(a,b)$ de discriminant $\Delta$ vérifie 
+	\begin{equation*}
+		|b|\leq a\leq\sqrt{\frac{|\Delta|}{3}}.
+	\end{equation*}
+	On peut donc représenter chaque classe $Cl(\OR_{\Delta})$ en $O(\log(|\Delta|))$ bits. 
+\end{Prop}
 
 \begin{Def}
 	Un entier $m\in\N$ est dit représenté par une forme quadratique binaire $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
@@ -588,8 +615,20 @@ Il sera utile par la suite de trouver des générateurs d'idéaux (primitifs) pr
 
 \begin{Prop}[\cite{Cox}(Th 7.7)]
 	
-	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe un idéal $\LR\sim I(f)$ tel que $N(\LR) = m$.
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe un idéal entier $\LR\sim I(f)$ tel que $N(\LR) = m$.
 \end{Prop}
+
+\begin{Prop}[\cite{Cox}(Thm 2.8, 2.9)]\label{représentationEntierMinimaux}
+	
+	Soit $f = f(a,b,c)$ une forme quadratique binaire primitive. Alors tout les entiers représentés par $f$ sont positifs. Si $f$ est réduite, alors $a$ et $c$ sont les deux plus petits entiers représentés par $f$, avec $f(1,0) = a$ et $f(0,1) = c$. En particulier $a$ et $c$ sont premier entre eux.  
+\end{Prop}
+
+\begin{Coro}
+	Si $f = f(a,b,c)$ est une forme quadratique réduite, et si $f' = f(c,-b,a)$, alors $I(f)$ et $I(f')$ sont les deux idéaux entier de plus petites de normes de leur classe d'équivalence. 
+\end{Coro}
+
+
+Il sera utile par la suite de trouver des générateurs d'idéaux principaux à partir de leur forme standard. Soit $\LR = id(m,a,b)$ un idéal entier supposé principal, et soit $\beta$ un générateur. D'après \ref{NormesId}, $N(\LR) = a = N_{\Q}^{\K}(\beta)$, donc étant donné la forme standard, on connaît la norme d'un générateur. On se ramène au cas où $\LR = id(1,a,b)$ est primitif, quitte à multiplier par $m$ le résultat final. 
 
 \begin{Prop}
 	Soit $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ primitif sous forme standard. Soit $f = F(\LR)$ sa forme quadratique binaire primitive associée. Alors 
@@ -617,62 +656,76 @@ Il sera utile par la suite de trouver des générateurs d'idéaux (primitifs) pr
 	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(x,y) = 1$ d'après ce qui précède.
 \end{proof}
 
-On cherche donc $(x,y)\in\Z^2$ solution de $f(x,y) = 1$. La notion de forme réduite va nous permettre de conclure. 
-
-\begin{Prop}[\cite{Cox}(Thm 2.8, 2.9)]
-	
-	Soit $r = ax^2 + bxy + cy^2$ une forme quadratique binaire primitive. Alors tout les entiers représentés par $r$ sont positifs. Si $r$ est réduite, alors $a$ est le plus petit entier représenté par $r$, avec $r(1,0) = a$.
-\end{Prop}
-
-Ainsi lorsque $f$ est une forme quadratique binaire qui représente $1$, sa forme réduite $r$ est de la forme $x^2 \pm xy + cy^2$. On en déduit l'algorithme \ref{ALGOidealprincipal} permettant de trouver le générateur $\beta$ d'un idéal principal. Ceci est l'algorithme utilisé par défaut dans Sage pour la recherche de générateur.  
+On cherche une représentation de $1$ par $f$. D'après la proposition \ref{représentationEntierMinimaux}, lorsque $f$ est une forme quadratique binaire qui représente $1$, sa forme réduite $r$ est de la forme $x^2 \pm xy + cy^2$, et $r(1,0) = 1$. En appliquant en sens inverse les changements de variables utilisés lors de la réduction, on peut calculer une représentation de $1$ par $f$. On en déduit l'algorithme \ref{ALGO idealprincipal} permettant de trouver un générateur d'un idéal principal. Ceci est l'algorithme utilisé par défaut dans Sage pour la recherche de générateur.  
 
 \begin{algorithm}[h]
-	\caption{Générateur d'un idéal principal primitif donné sous forme standard}
+	\caption{Générateur d'un idéal principal donné sous forme standard}
 	\label{ALGO idealprincipal}
 	\begin{algorithmic}[1]
-		\Require $(1,a,b)$ un idéal primitif d'un ordre $\OR_{\Delta}$ supposé principal.
-		\Ensure Un élément $\beta$ tel que $(1,a,b) = \beta\OR_{\Delta}$. 
+		\Require $(m,a,b)$ un idéal entier d'un ordre $\OR_{\Delta}$ supposé principal.
+		\Ensure Un élément $\beta$ tel que $(m,a,b) = \beta\OR_{\Delta}$. 
 		\State $f\gets ax^2 + bxy + cy^2$
 		\State $r\gets$ résultat de l'algorithme \ref{ALGO reduction} appliqué à $f$
 		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$ (voir la proposition \ref{actionMatriceForme}).
 		\State $(x,y)\gets(1,0)$
 		\State $(x,y)\gets(x',y')$ obtenus en appliquant tout les changements de variables retenus dans $L$ dans le sens inverse d'apparition.
-		\State \Return $(x,y)$
+		\State $\beta\gets m\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right)$
+		\State \Return $\beta$
 	\end{algorithmic}
 \end{algorithm}
 
-Les algorithmes \ref{ALGO reduction} et \ref{ALGOidealprincipal} sont polynomiaux en les coefficients et le discriminant de la forme donnée en entrée. Plus précisément on a le résultat suivant. 
 
-\begin{Prop}[\cite{Coh00}(5.4.3)]\label{nbEtapesReduction}
-	
-	Soit $(a,b,c)$ une forme quadratique binaire primitive de discriminant $\Delta$. L'algorithme \ref{ALGO reduction} renvoie une forme de réduite de $(a,b,c)$ en utilisant au plus $2 + \log\left( \frac{a}{\sqrt{|\Delta|}} \right)$ divisions euclidiennes.
-\end{Prop}
-
-\begin{Coro}\label{COMPLEX reduction}
-	Soit $(a,b,c)$ une forme quadratique binaire de discriminant $\Delta$. La complexité de l'algorithme \ref{ALGO reduction} appliqué à $(a,b,c)$ est en 
-	\begin{equation*}
-		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right) +\log(b)\right).
-	\end{equation*}
-	En particulier si $b\leq 2a$ alors la complexité de l'algorithme \ref{ALGO reduction} est majorée en $O(log(a)^2)$.
-	
-\end{Coro}
-
-\begin{proof}
-	La complexité de chaque passage dans la boucle de la ligne $2$ est essentiellement dominée par l'étape de la ligne $4$, qui correspond à une division euclidienne de $b$ par $2a$ donc en $O(\log(b))$. Après le premier passage dans la boucle, $|b|<a$ et les futures divisions euclidiennes seront toutes en $O(\log(a))$. On conclut avec la proposition \ref{nbEtapesReduction}.
-\end{proof}
-
-\begin{Coro}\label{COMPLEX idealprincipal}
-	Soit $(1,a,b) = \beta\OR_{\Delta}$ un idéal principal primitif de $\OR_{\Delta}$ donné sous forme standard (en particulier $a$ est la norme de $\beta$). L'algorithme \ref{ALGOidealprincipal} renvoie $\beta$ avec une complexité en
+\begin{Prop}\label{COMPLEX idealprincipal}
+	Soit $(m,a,b) = \beta\OR_{\Delta}$ un idéal entier principal de $\OR_{\Delta}$ donné sous forme standard (en particulier $ma$ est la norme de $\beta$). L'algorithme \ref{ALGO idealprincipal} renvoie $\beta$ avec une complexité en
 	\begin{equation*}
 		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
 	\end{equation*}
-\end{Coro}
+\end{Prop}
 
 
 \begin{Rem}
-	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre le problème de l'idéal principal. Ils énoncent une complexité en $O(\log(N(\beta)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme utilisé. Après analyse du problème il semble que cette algorithme ne fonctionne pas dans tout les cas. On estime que l'algorithme \ref{ALGOidealprincipal} a une complexité satisfaisante. De plus par défaut Sage utilise aussi l'algorithme \ref{ALGOidealprincipal}. 
+	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre le problème de l'idéal principal. Ils énoncent une complexité en $O(\log(N(\beta)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme utilisé. Après analyse du problème il semble que cette approche ne fonctionne pas dans tout les cas. Dans toute la suite une utilisera l'algorithme \ref{ALGO idealprincipal}, utilisé par défaut dans Sage. 
 \end{Rem}
 
+L'algorithme \ref{ALGO idealprincipal} résout en particulier le problème du vecteur le plus court dans un réseau structuré quadratique principal. On généralise l'approche pour trouver une base de vecteurs court à partir de la proposition \ref{représentationEntierMinimaux}.
+
+\begin{Prop}[\cite{Clapoti}(Prop 2.1)]\label{correspondanceIdeqElement}
+	Soit $\OR_\Delta$ un ordre quadratique imaginaire, et $\LR$ un idéal entier. Soit $\alpha\in\LR$. Alors $\frac{\bar\alpha}{N(\LR)}\LR$ est un idéal entier de norme $N_{\Q}^{\K}(\alpha)$. De plus, pour tout idéal entier $\LR'\neq\LR$ de $\OR_{\Delta}$,
+	\begin{equation*}
+		\LR'\sim\LR\iff\exists\alpha\in\LR,\;\bar{\LR}\LR' = \bar{\alpha}\OR_{\Delta}\iff\exists\alpha\in\LR,\;\LR' = \frac{\bar\alpha}{N(\LR)}\LR.
+	\end{equation*}
+\end{Prop}
+
+\begin{Rem}
+	La proposition précédente donne une correspondance entre les élément $\alpha$ d'un idéal entier de $\OR_{\Delta}$ et les idéaux entiers $\LR'$ de la même classe. Connaissant $\LR$ et $\LR'$ sous forme standard, on utilise l'algorithme \ref{ALGO idealprincipal} pour trouver $\bar{\alpha}$ générateur de $\bar{\LR}\LR'$. Connaissant $\LR$ sous forme standard et $\alpha\in\LR$, on calcule la forme standard de $\frac{\bar\alpha}{N(\LR)}\OR_{\Delta}$ puis celle de $\LR'$.
+\end{Rem}
+
+On en déduit l'algorithme \ref{ALGO baseVecteurCourt}, prenant en entrée un idéal $\LR$ entier primitif d'un ordre $\OR_{\Delta}$, qui calcule les deux éléments de $\LR$ correspondant aux deux idéaux entiers de normes minimales obtenues avec la proposition \ref{représentationEntierMinimaux}. Ils forment une base de $\LR$ car leurs normes sont des entiers premiers entre eux. Si $\LR = id(m,a,b)$ n'est pas primitif, il suffit de traiter le cas primitif puis multiplier les éléments obtenus par $m$. 
+
+\begin{algorithm}[h]
+	\caption{Base de vecteurs courts d'un idéal (primitif) sous forme standard}
+	\label{ALGO baseVecteurCourt}
+	\begin{algorithmic}[1]
+		\Require $\LR = id(1,a,b)$ un idéal entier d'un ordre quadratique imaginaire $\OR_{\Delta}$.
+		\Ensure Deux éléments $\alpha$, $\beta\in\LR$ de normes minimales tels que $\LR = [\alpha,\beta]$. 
+		\State $f\gets F(id(1,a,b))$
+		\State $r = f(a',b',c')\gets$ résultat de l'algorithme \ref{ALGO reduction} appliqué à $f$
+		\State $\LR_1\gets I(f(a',b',c'))$
+		\State $\LR_2\gets I(f(c',-b',a'))$
+		\State $\alpha\gets$ conjugué du générateur de $\bar{\LR}\LR_1$ (Algorithme \ref{ALGO idealprincipal}).
+		\State $\beta\gets$ conjugué du générateur de $\bar{\LR}\LR_2$ (Algorithme \ref{ALGO idealprincipal}).
+		\State \Return $(\alpha,\beta)$
+		
+		
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{Prop}\label{COMPLEX baseVecteursCourts}
+	Soit $\LR = id(m,a,b)$ un idéal entier de $\OR_{\Delta}$ donné sous forme standard. Quitte à se ramener au cas primitif, L'algorithme \ref{ALGO baseVecteurCourt} renvoie une base de normes minimales $\alpha, \beta$ avec une complexité en
+	\begin{equation*}
+		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
+	\end{equation*}
+\end{Prop}
 
 \subsection{Isogénies de courbes elliptiques}
 
@@ -982,63 +1035,18 @@ L'action de l'application contravariante d'une isogénie sur un invariant diffé
 
 Dans cette section, toutes les courbes seront définie sur $\Kb = \C$. On énonce une équivalence de catégorie entre les courbes elliptiques définie sur $\C$ et les tores complexes, c'est à dire les quotients de $\C$ par un réseau. Il y a alors une correspondance entre les isogénies et les morphismes de tores, qui sont des homothéties. 
 
-\begin{Def}
-	Soit $\Lambda$ un réseau. on lui associe la fonction de Weierstrass $\wp$ relative à $\Lambda$, définie par
-	\begin{equation*}
-		\wp(z,\Lambda) = \frac{1}{z^2} + \sum_{\omega\in\Lambda\setminus\left\lbrace 0\right\rbrace }\left( \frac{1}{\left( z - \omega^2\right)} - \frac{1}{\omega^{2}} \right) 
-	\end{equation*}
-	On lui associe aussi pour tout entier $k>1$ sa série d'Eisenstein de poids $2k$ défini par
-	\begin{equation*}
-		G_{2k}(\Lambda) = \sum_{\omega\in\Lambda\setminus\left\lbrace 0\right\rbrace }\omega^{-2k}
-	\end{equation*}
-\end{Def}
-
-\begin{Prop}[\cite{Sil09}(VI 3.1, 3.5)]
-	
-	Soit $\Lambda$ un réseau.
-	\begin{enumerate}
-		\item Pour tout entier $k>1$, la série $G_{2k}(\Lambda)$ est absolument convergente
-		\item $\wp(z,\Lambda)$ vérifie l'équation différentielle
-		\begin{equation*}
-			(\wp')^{2} = 4\wp^{3} - 60G_{4}\wp - 140G_{6}
-		\end{equation*}
-	\end{enumerate}
-\end{Prop}
-
-\begin{Def}
-	Soit $\Lambda$ un réseau. On utilise les notations standard $g_{2}(\Lambda)$ et $g_{3}(\Lambda)$ pour désigner les valeurs respectives de $G_{4}(\Lambda)$ et $G_{6}(\Lambda)$.
-\end{Def}
-
 \begin{Prop}[\cite{Sil09}(VI 3.6)]
-	Soit $\Lambda$ un réseau. L'équation $E : y^2 = 4x^2 - g_{2}x - g_{3}$ défini un modèle de courbe elliptique (qui n'est pas sous forme de Weierstrass). L'application
-	\begin{equation*}
-		\psi : \C/\Lambda \rightarrow E(\C)\; ,\; z\mapsto \left(\wp(z), \wp'(z)\right)
-	\end{equation*}
-	est un isomorphisme. 
+	Soit $\Lambda$ un réseau. Il existe une courbe elliptique, notée $E_\Lambda$, isomorphe (en tant que groupe de Lie complexe) au tore $\C/\Lambda$.
 \end{Prop}
 
 \begin{Rem}
-	L'isomorphisme énoncé est au sens de groupe de Lie complexe. Nous utiliseront en particulier le fait que c'est un isomorphisme de groupe. 
+	L'isomorphisme est rendu explicite par la fonction de Weierstrass associée au réseaux $\Lambda$. Pour plus de précision on se réfère à l'énoncé \cite{Sil09}(VI 3.6).
 \end{Rem}
 
-\begin{Def}
-	Soit $\Lambda$ un réseau. On note $E_{\Lambda}$ le modèle de courbe elliptique d'équation $y^{2} = 4x^{2} - g_2 x - g_3$.
-\end{Def}
-
-Le théorème suivant, appelé théorème d'uniformisation, permet réciproquement d'associer à toute courbe elliptique complexe un réseau défini à homothétie prêt.
-
-\begin{The}[Théorème d'uniformisation\cite{Sil09}(VI, 5.1)]
+\begin{The}[Théorème d'uniformisation\cite{Sil09}(VI, 5.1, 5.2)]
 	
-	Soit $A$, $B\in\C$ tels que $4A^3 - 27B^2\neq0$. Il existe un unique réseau $\Lambda$ tel que $g_{2}(\Lambda) = A$ et $g_{3}(\Lambda) = B$. 
+	Soit $E$ une courbe elliptique définie sur $\C$. Il existe un réseau $\Lambda$ unique à homothétie prêt tel que $E = E_\Lambda$.
 \end{The}
-
-\begin{Coro}[\cite{Sil09}(VI, 5.2)]
-	Soit $E$ une courbe elliptique définie sur $\C$. Il existe un réseau $\Lambda$ unique à homothétie prêt tel que l'application
-	\begin{equation*}
-		\psi : \C/\Lambda \rightarrow E(\C)\; ,\; z\mapsto \left(\wp(z), \wp'(z)\right)
-	\end{equation*}
-	soit un isomorphisme entre le tore $\C/\Lambda$ et un modèle de $E$.
-\end{Coro}
 
 
 \begin{Def}
@@ -1050,7 +1058,6 @@ Le théorème suivant, appelé théorème d'uniformisation, permet réciproqueme
 	\begin{equation*}
 		\phi_{\alpha} : \C/\Lambda_1 \rightarrow \C/\Lambda_2\; ,\; z \mapsto \alpha z
 	\end{equation*}
-	
 \end{Def}
 
 L'isomorphisme entre un réseau $\Lambda$ et sa courbe associée $E_\Lambda$ induit un isomorphisme entre anneaux d'endomorphismes.
@@ -1395,17 +1402,20 @@ On n'aura pas besoin de se placer sur le corps $\Qb$ tout entier, mais seulement
 
 \section{Représentations d'isogénies de courbes elliptiques ordinaires}
 
+Une partie conséquente du stage consistait à comprendre comment la théorie de la multiplication complexe s'applique aux courbes elliptiques ordinaires, définies sur des corps finis. Plusieurs problèmes se posent : l'absence d'équivalence de catégories avec les tores complexes, et l'absence de bijection entre les endomorphismes et leurs facteurs. Pour palier à cela, dans la section \ref{SECTION ReducRelev} on énonce des résultats de réduction et de relèvement de courbes elliptiques. On démontre la proposition \ref{DefActionIdeauxSurCourbeOrdinaire}, qui justifie la définition d'une action de groupes de classes sur des courbes elliptiques ordinaires. Cette proposition, admise dans les articles cités, est à l'origine de tout les algorithmes de calculs d'isogénies étudiés. La section \ref{SECTION RepFrobenius} s'interresse à la description explicite d'endomorphismes dans le but de les calculer et les évaluer. Enfin la section \ref{SECTION volcanIsogenie} explicite comment utiliser la théorie de la multiplication complexe pour décrire la majorité des isogénies. 
 
-\subsection{Réduction de courbes elliptiques et relèvement de Deuring}
 
-Dans cette section, on généralise les résultats précédents aux courbes elliptiques ordinaires, sur des corps finis. Plusieurs problèmes se posent. L'équivalence de catégories avec les tores complexes ne se généralise pas directement, et il n'y a pas de bijection entre les endomorphismes et leurs facteurs puisque certains seront inséparables donc de facteurs nuls. Pour palier à cela, on énonce des résultats de réduction et de relèvement de courbes elliptiques. Soit $E$ une courbe elliptique à multiplication complexe définie sur $\Qb$, et $p$ un nombre premier. On veut construire une courbe elliptique $E_p$ définie sur un corps fini $\F_{q}$ de caractéristique $p$, telle que $End(E)\simeq End(E_p)$.
+\subsection{Réduction de courbes elliptiques et relèvement de Deuring}\label{SECTION ReducRelev}
+
+
+Soit $E$ une courbe elliptique à multiplication complexe définie sur $\Qb$, et $p$ un nombre premier. On veut construire une courbe elliptique $E_p$ définie sur un corps fini $\F_{q}$ de caractéristique $p$, telle que $End(E)\simeq End(E_p)$.
 
 \begin{Rem}
-	La théorie générale de la réduction de courbes elliptiques utilise la notion de corps de nombres $p$-adiques. Cependant pour les courbes elliptiques à multiplication complexe, le fait de toujours être définie sur un corps de nombres permet de simplifier les énoncés. On n'énoncera pas la théorie générale et on admettra les résultats 
+	La théorie générale de la réduction de courbes elliptiques utilise la notion de corps de nombres $p$-adiques. Cependant pour les courbes elliptiques à multiplication complexe, le fait de toujours être définie sur un corps de nombres permet de simplifier les énoncés. On n'énoncera pas la théorie générale.
 \end{Rem}  
 
 \begin{Def}
-	On note $\Zb$ l'anneaux des entiers algébriques. Si $\PR$ est un idéal premier de $\Zb$, on dira que $\PR$ est au dessus d'un nombre premier $p$ si $\PR\cap\Z = p\Z$. 
+	On note $\Zb$ l'anneaux des entiers algébriques. Si $\PR$ est un idéal maximal de $\Zb$, on dira que $\PR$ est au dessus d'un nombre premier $p$ si $\PR\cap\Z = p\Z$. 
 \end{Def}
 
 \begin{Prop}
@@ -1414,7 +1424,7 @@ Dans cette section, on généralise les résultats précédents aux courbes elli
 
 \begin{proof}
 	Soit $E : y^2 = x^3 + ax + b$ un modèle de $E$ définie sur $\Qb$. Pour tout $u\in\C^{*}$, on peut se ramener à isomorphisme prêt au modèle 
-	$E : y^2 = x^3 + u^4ax + u^6b$. Si $a$ et $b$ ne sont pas dans $\Zb$, puisque $\Qb$ est le corps de fraction de $\Zb$, en choisissant pour $u$ le $ppcm$ des dénominateurs de $a$ et $b$, on se ramène à un modèle définie sur $\Zb$. 
+	$E : y^2 = x^3 + u^4ax + u^6b$. Si $a$ et $b$ ne sont pas dans $\Zb$, puisque $\Qb$ est le corps de fraction de $\Zb$, en choisissant pour $u$ le ppcm des dénominateurs de $a$ et $b$, on se ramène à un modèle définie sur $\Zb$. 
 \end{proof}
 
 \begin{Def}
@@ -1430,7 +1440,7 @@ Dans cette section, on généralise les résultats précédents aux courbes elli
 	
 \end{Rem}
 
-Il se peut que des points finis de $E$ se réduise sur le point à l'infini de $E_\PR$. Cependant cela n'arrivera pas pour les points d'ordre fini de $E$ premier avec la caractéristique $p$.
+Il est possible que des points finis de $E$ se réduisent sur le point à l'infini de $E_\PR$. Cependant cela n'arrivera pas pour les points de $E$ d'ordres finis premier avec la caractéristique $p$.
 
 \begin{Prop}\label{ReductionPointInjectivité}
 	Soit $\PR$ un idéal premier de $\Zb$ au dessus d'un nombre premier $p$. Soit $E$ une courbe elliptique définie sur un corps de nombre $\HR$ ayant une bonne réduction modulo $\PR$. On note $k = \OR_{\HR}/\PR\cap\OR_{\HR}$. Soit $n$ premier avec la caractéristique $p$. L'application
@@ -1480,27 +1490,21 @@ On cherche à savoir sous quelles conditions on obtient un isomorphisme $End(E)\
 	Soit $E$ une courbe elliptique à multiplication complexe et $p$ un nombre premier. On dira que $E$ se réduit complètement l'idéal maximal $\PR\subset\Zb$ si elle admet une bonne réduction modulo $\PR$ et que de plus $End(E)\simeq End(E_\PR)$.
 \end{Def}
 
-Dans le cas d'une réduction complète, on peut étendre la normalisation de $End(E)$ à $End(E_\PR)$ en réduisant le facteur modulo $\PR$.
+Dans le cas d'une réduction complète, on peut étendre la normalisation de $End(E)$ à $End(E_\PR)$ en considérant les facteurs modulo $\PR$.
 
 \begin{Prop}[\cite{Lang1987}(9 \S4)]
 	
-	Soit $(E,[.])$ une courbe elliptique complexe normalisée d'anneau d'endomorphisme isomorphe à $\OR_{\Delta}$, et $\alpha\in\OR_{\Delta}$. Soit $\omega$ un invariant différentiel d'un modèle de $E$, $\tilde{\omega}$ l'invariant différentiel de $E_\PR$ en considérant $\omega$ modulo $\PR$. On suppose que $E$ se réduit complètement modulo $\PR\subset\Zb$. Alors 
+	Soit $(E,[.])$ une courbe elliptique complexe normalisée d'anneau d'endomorphismes isomorphe à $\OR_{\Delta}$, et $\alpha\in\OR_{\Delta}$. Soit $\omega$ un invariant différentiel d'un modèle de $E$, $\tilde{\omega}$ l'invariant différentiel de $E_\PR$ en considérant $\omega$ modulo $\PR$. On suppose que $E$ se réduit complètement modulo $\PR\subset\Zb$. Alors 
 	\begin{equation*}
 		\left( \widetilde{\left[ a\right] }\right)^{*}\left( \tilde{\omega}\right) = \tilde{\alpha}\tilde{\omega}
 	\end{equation*}
-	En particulier $\widetilde{[a]}$ est inséparable si et seulement si $\alpha\in\PR$
+	En particulier $\widetilde{[\alpha]}$ est inséparable si et seulement si $\alpha\in\PR$
 \end{Prop}
 
 \begin{Rem}
-	D'après la proposition précédente, la notation $\left[ \tilde{\alpha} \right]$ n'a donc pas de sens par il existe plusieurs endomorphisme de $E_\PR$ de facteur $\tilde{\alpha}$.
+	D'après la proposition précédente, la notation $\left[ \tilde{\alpha} \right]$ n'a donc pas de sens par il existe plusieurs endomorphismes de $E_\PR$ de facteur $\tilde{\alpha}$.
 \end{Rem}
 
-\begin{Prop}[\cite{Lang1987}(Cor 13.5)]\label{DescriptionFrobReduction}
-	
-	Soit $E\in Ell_{\Qb}(\OR_\Delta)$, $End(E)$ étant un ordre du corps $\K$. On suppose que $E$ se réduit complètement modulo $\PR\subset\Zb$. Ainsi existe un corps finis $\F_{q}$ sur lequel $E_\PR$ est défini (voir la remarque \ref{RemarqueReductionCorpsFinis}), et la caractéristique $p$ est décomposé dans $\OR_{\Delta}$. Soit $\pi_{q}$ l'endomorphisme de Frobenius, et $\alpha\in\OR_{\Delta}$ tel que $\widetilde{[\alpha]} = \pi_{q}$. Alors $\alpha\in \PR\cap\OR_{\Delta}$. De plus l'un des deux idéaux au dessus de $p$ dans $\OR_{\Delta}$ est $\PR\cap\OR_{\Delta}$. Enfin si $q = p^d$, $\alpha\OR_{\Delta} = \left(\PR\cap\OR_{\Delta} \right) ^{d}$
-	
-
-\end{Prop}
 
 
 On se donne désormais une courbe elliptique $E$ ordinaire définie sur un corps fini $\F_{q}$. On souhaite voir $E$ comme la réduction d'une certaine courbe $E'$ définie sur $\Qb$, modulo un idéal maximal $\PR\subset\Zb$. Il faut d'abord que le critère du théorème \ref{CritèreReductionComplete} soit respecté. C'est en réalité toujours le cas.
@@ -1513,13 +1517,20 @@ On se donne désormais une courbe elliptique $E$ ordinaire définie sur un corps
 
 Le théorème de relèvement de Deuring énonce que la surjectivité de la réduction. 
 
-\begin{The}[Théorème de relèvement de Deuring\cite{Lang1987}(13.14)]
+\begin{The}[Théorème de relèvement de Deuring\cite{Lang1987}(13.14)]\label{RelevementDeuring}
 	
 	Soit $E$ une courbe elliptique ordinaire définie sur un corps fini $\F_{q}$, et $\phi\in End(E)$ qui n'est pas une multiplication scalaire. Il existe une courbe elliptique $E'$ définie sur un corps de nombre $\HR$, munie d'un endomorphisme $\phi'$ et d'un idéal maximal $\PR\subset\Zb$ au dessus de $p$, tels que $E'_\PR = E$ et $\tilde{\phi'} = \phi$.
 	
 \end{The}
 
-On peut de plus voir les éléments de $Ell_{\F_{q}}(\OR_{\Delta})$ comme des réductions modulo même idéal maximal $\PR\in\Zb$. 
+Il est possible de voir tout les éléments de $Ell_{\F_{q}}(\OR_{\Delta})$ comme des réductions complètes modulo un même idéal maximal $\PR\in\Zb$. En particulier la proposition \ref{DescriptionFrobReduction} implique que l'idéal $\PR\cap\OR_{\Delta}$ est déterminé par l'image du morphisme de Frobenius dans $\OR_{\Delta}$. 
+
+\begin{Prop}[\cite{Lang1987}(Cor 13.5)]\label{DescriptionFrobReduction}
+	
+	Soit $E\in Ell_{\Qb}(\OR_\Delta)$, $End(E)$ étant un ordre du corps $\K$. On suppose que $E$ se réduit complètement modulo $\PR\subset\Zb$. Ainsi existe un corps finis $\F_{q}$ tel que $E_\PR$ y soit définie (Remarque \ref{RemarqueReductionCorpsFinis}), et tel que la caractéristique $p$ soit décomposé dans $\OR_{\Delta}$. Soit $\pi_{q}$ l'endomorphisme de Frobenius, et $\alpha\in\OR_{\Delta}$ tel que $\widetilde{[\alpha]} = \pi_{q}$. Alors $\alpha\in \PR\cap\OR_{\Delta}$. De plus l'un des deux idéaux au dessus de $p$ dans $\OR_{\Delta}$ est $\PR\cap\OR_{\Delta}$. Enfin si $q = p^d$, $\alpha\OR_{\Delta} = \left(\PR\cap\OR_{\Delta} \right) ^{d}$.
+	
+	
+\end{Prop}
 
 \begin{Prop}[\cite{BrokerCharlesLauter}(\S2)]
 	
@@ -1536,10 +1547,10 @@ L'action de $Cl(\OR_{\Delta})$ sur $Ell_{\Qb}(\OR_{\Delta})$ induit une action d
 \end{Def}
 
 \begin{Rem}
-	Ainsi l'injectivité de la réduction des isogénies (proposition \ref{reductionIsogenieInjectivité}) permet d'associer à toute isogénie entre courbes de $Ell_{\Qb}(\OR_{\Delta})$ une isogénie entre leurs courbes réduites de $Ell_{\F_{q}}(\OR_{\Delta})$. On rappelle cependant que l'on n'a pas la surjectivité au niveau des isogénies à priori.
+	Ainsi l'injectivité de la réduction des isogénies (proposition \ref{reductionIsogenieInjectivité}) permet d'associer à toute isogénie entre courbes de $Ell_{\Qb}(\OR_{\Delta})$ une isogénie entre leurs courbes réduites de $Ell_{\F_{q}}(\OR_{\Delta})$. On rappelle cependant que l'on n'a pas la surjectivité en général.
 \end{Rem}
 
-On peut expliciter le noyau d'une isogénie réduite à partir d'un idéal entier propre $\LR\subset\OR_{\Delta}$ en généralisant la notion de groupe de torsion.
+On montre alors que l'on peut généraliser la description du noyau d'une isogénie partir d'un idéal entier propre $\LR\subset\OR_{\Delta}$, en généralisant la notion de groupe de torsion. Il s'agit de montrer que la réduction et l'action par un idéal commutent. 
 
 \begin{Def}
 	Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui se réduit complètement modulo un idéal maximal $\PR\subset\Zb$. On associe à un idéal entier propre $\LR\subset\OR_{\Delta}$ un sous groupe de $E'_\PR$, noté $E'_\PR\left[ \LR\right]$, défini par
@@ -1581,7 +1592,7 @@ On peut expliciter le noyau d'une isogénie réduite à partir d'un idéal entie
 
 
 
-\subsection{Représentation de l'endomorphisme de Frobenius}
+\subsection{Représentation complexe de l'endomorphisme de Frobenius}\label{SECTION RepFrobenius}
 
 Soit $E$ une courbe elliptique définie sur un corps fini $\F_{q}$. Alors le morphisme de Frobenius $\pi_{q}$ est un endomorphisme de $E$ et $End(E)$ contient $\Z[\pi_{q}]$. Dans le cas où $E$ est ordinaire, ces deux ensembles sont des ordres d'un même corps quadratique imaginaire $\K$, et
 \begin{equation*}
@@ -1598,60 +1609,82 @@ Soit $E$ une courbe elliptique définie sur un corps fini $\F_{q}$. Alors le mor
 
 On va se servir du conducteur maximal pour représenter $\pi_{q}$ dans $\OR_{\Delta}\subset\C$, puis pour obtenir une base de l'ordre $End(E)$ à partir d'endomorphismes entiers et de $\pi_{q}$.
 
-\textbf{TODO : def ou remarque, definition canonique d'une normalisation de End(E)}
-
 \begin{Prop}
+	\label{lienEntierWkFq}
 	Soit $E$ une courbe elliptique ordinaire définie sur $\F_{q}$ munit d'un isomorphisme $End(E)\simeq\OR_{\Delta}$. Soit $\alpha\in\OR_{\Delta}$ l'image du morphisme de Frobenius $\pi_{q}$.
-	Alors $\alpha\in\C$ une racine complexe du polynôme caractéristique de $E$. Soit $\OR_{\K} = \left[ 1, w_{\K}\right] $, de sorte que $\OR_{\Delta} = \left[ 1, fw_{\K}\right] $ et $Z[\alpha] = \left[ 1, f_{m}w_{\K}\right] $. Alors il existe un entier $s_{\alpha}$ tel que $\pm\alpha = f_{m}w_{\K} + s_{\alpha}$
+	Alors $\alpha$ est une racine du polynôme caractéristique de $E$. Soit $\OR_{\K} = \left[ 1, w_{\K}\right] $ (voir proposition \ref{baseOrdreWk}). Alors il existe un entier $s$ tel que $\pm\alpha = f_{m}w_{\K} + s$
 	
 \end{Prop}
 
 \begin{proof}
-	Soit $X^{2} - tX + q$ le polynôme caractéristique de $E$. Il annule $\pi_{q}\in End(E)$. Donc $\alpha$ est racine de $X^{2} - tX + q$ de discriminant $\Delta_{m} = t^{2} - 4q = f_{m}^{2}d_{\K}$. Donc $\alpha = \frac{t\pm f_{m}\sqrt{d_{\K}}}{2}$, et $w_{\K} = \frac{d_{\K} + \sqrt{d_{\K}}}{2}$. On en déduis que  $\pm\alpha = f_{m}d_{\K} - \frac{f_{m}d_{\K} \pm t}{2}$ selon le choix de $\alpha$. Or $t^{2} - f_{m}^{2}d_{\K} = 4q$ est pair, donc $t$ et $f_{m}d_{\K}$ ont même parité et $s = -\frac{f_{m}d_{\K} \pm t}{2}$ est un entier.
+	Soit $X^{2} - tX + q$ le polynôme caractéristique de $E$. Il annule $\pi_{q}\in End(E)$. Donc $\alpha$ est racine de $X^{2} - tX + q$ de discriminant $\Delta_{m} = t^{2} - 4q = f_{m}^{2}d_{\K}$. Donc $\alpha = \frac{t\pm f_{m}\sqrt{d_{\K}}}{2}$, et $w_{\K} = \frac{d_{\K} + \sqrt{d_{\K}}}{2}$ par définition. On en déduis que  $\pm\alpha = f_{m}d_{\K} - \frac{f_{m}d_{\K} \pm t}{2}$. Or $t^{2} - f_{m}^{2}d_{\K} = 4q$ est pair, donc $t$ et $f_{m}d_{\K}$ ont même parité et $s = -\frac{f_{m}d_{\K} \pm t}{2}$ est un entier.
 	
 \end{proof}
 
 \begin{Rem}
-	D'après le théorème de relèvement de During, il existe une courbe $\left( E',\left[ .\right] \right) $ définie sur $\C$ à multiplication complexe, munie d'un endomorphisme $\left[ \alpha\right] $ et d'un idéal maximal $\PR\subset\Zb$, de sorte que $E'_PR = E$ et $\tilde{\alpha} = \pi_{q}$. Alors $\alpha$ est l'une des deux racines complexes du polynôme caractéristique de $E$. Sa valeur dépend de l'idéal de réduction $\PR$ : d'après la proposition \ref{DescriptionFrobReduction}, 
+	Soit $q = p^d$. D'après le théorème de relèvement de Deuring \ref{RelevementDeuring}, il existe une courbe $\left( E',\left[ .\right] \right) $ définie sur $\C$ à multiplication complexe, munie d'un endomorphisme $\left[ \alpha\right] $ et d'un idéal maximal $\PR\subset\Zb$, tels que 
 	\begin{equation*}
-		\alpha\OR_{\Delta} = \left(\PR\cap\OR_{\Delta} \right) ^{d}
-	\end{equation*} 
+		E'_\PR = E,\;\;\widetilde{\left[ \alpha\right] } = \pi_{q},\;\;\alpha\OR_{\Delta} = \left(\PR\cap\OR_{\Delta} \right)^{d}
+	\end{equation*}
+	Alors $\alpha$ est l'une des deux racines complexes du polynôme caractéristique de $E$, mais sa valeur dépend de l'idéal de réduction $\PR$.
+	
 \end{Rem}
 
 \begin{Def}
-	Dans toutes la suite, on note indifféremment $\pi_{q}$ et son image $\alpha\in\OR_{\Delta}$. Par abus de notation, on écrira parfois $\pi_{q} = \frac{t \pm f_{m}\sqrt{d_{\K}}}{2}$.
+	Dans toutes la suite, on note indifféremment $\pi_{q}$ et son image $\alpha\in\OR_{\Delta}$. On suppose l'idéal de réduction $\PR$ choisit de sorte que $\pi_{q} = \frac{t + f_{m}\sqrt{d_{\K}}}{2}$. On note $s$ l'entier donné par la proposition \ref{lienEntierWkFq}, tel que $\pi_{q} = f_mw_\K + s$
 \end{Def}
 
 \begin{Prop}\label{formeIdeauxBaseFq}
 	
-	Avec les notation précédentes, il existe deux entiers $x$ et $y$ tels que
+	Avec les notation précédentes, et celles de la proposition \ref{baseOrdreWk},
 	\begin{equation*}
-		\OR_{\Delta} = \left[ 1, \frac{x + y\pi_{q}}{f_{m}}\right] 
+		\OR_{\Delta} = \left[ 1, fw_\K\right] = \left[ 1, f\frac{\pi_{q} - s}{f_{m}}\right],\; x\in\Z
 	\end{equation*}
-	De plus, pour tout idéal $\LR\in\OR_{\Delta}$ il existe trois entier entiers $a$, $c$ et $d$ tels que 
+	De plus, pour tout idéal $\LR\in\OR_{\Delta}$ il existe trois entier entiers $m$, $a$, $b$ et $c$ tels que 
 	\begin{equation*}
-		\LR = \left[ a, \frac{c + d\pi_{q}}{f_{m}}\right] 
+		\LR = m\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right] = m\left[ a, \frac{c + f\pi_{q}}{f_{m}}\right] 
 	\end{equation*}
 	
 \end{Prop}
 
 \begin{proof}
-	Ces résultats découlent de l'égalité $\pm w_{\K} = \frac{\pi_{q} - s}{f_{m}}$ où $s\in\Z$.
+	Ces résultats découlent de l'égalité $w_{\K} = \frac{\pi_{q} - s}{f_{m}}$ et des propositions \ref{baseOrdreWk},  \ref{formestandard}. En particulier,
+	\begin{equation*}
+		c = f_m\frac{-b - \sqrt{|\Delta|}}{2}  - sf
+	\end{equation*}
+	est un entier car $b$ et $\sqrt{|\Delta|}$ ont même parité. 
 \end{proof}
 
-\begin{Rem}
-	On peut ainsi représenter un idéal de tout ordre de corps quadratiques imaginaires par trois entier $a$, $c$ et $d$ tels que $\LR = \left[ a, \frac{c + d\pi_{q}}{f_{m}}\right] $. Si $\LR$ n'est pas un idéal d'un ordre maximal, $c$, $d$ et $f_{m}$ ne sont pas premier entre eux. Dans cette représentation $a$ est la norme de l'idéal (voir proposition 1.6). 
+On sait évaluer sur toutes courbes elliptiques les endomorphismes entiers et l'endomorphisme de Frobenius. Cependant on ne pourra évaluer un endomorphisme quelconque que sur des points d'ordre premier avec $f_m$.
+
+\begin{Prop}\label{evalEndoAvecDenom}
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ de conducteur $f$ et conducteur maximal $f_m$. Soit $n\in\N$ premier avec $f_m$, $k\in\N$ un inverse de $f_m$ modulo $n$. Alors pour tout $x\in\Z$,
+	\begin{equation*}
+		\forall\;P\in E[n],\; \widetilde{\left[ \frac{x + f\pi_{q}}{f_m}\right]}(P) = \left[ k\right] (\left[ x\right]  + f\pi_{q}).
+	\end{equation*}
+\end{Prop}
+
+\begin{proof}
+	$\OR_{\Delta}$ est un ordre quadratique imaginaire d'un corps $\K$. Soit $\Lambda$ un réseau associé à un relèvement de Deuring de $E$. On pose pour tout $\lambda\in\K$ le morphisme de tore
+	\begin{equation*}
+		\phi_{\lambda} : \C/\Lambda\rightarrow \C/\lambda^{-1}\Lambda, z \mapsto z
+	\end{equation*}
+	Soit $\alpha = \frac{x + f\pi_{q}}{f_m}$. Alors
+	\begin{equation*}
+		\phi_{\alpha} = [x + f\pi_{q}]\circ\phi_{(f_{m}^{-1})}
+	\end{equation*}
+	 La restriction de l'endomorphisme $[f_{m}]$ à $E[n]$ est bijective d'inverse $[k]$. Or au niveau des tores $[f_{m}]\circ\phi_{(f_{m}^{-1})}$ est l'identité sur $\C/\Lambda$. Donc après réduction, $\widetilde{\phi_{(f_{m}^{-1})}}$ est l'inverse de $[f_{m}]$ sur $E[n]$. Donc sur $E[n]$, $\phi_{(f_{m}^{-1})} = [k]$ et $\widetilde{\left[ \alpha\right] } = \left[ k\right] (\left[ x\right]  + f\pi_{q})  $
+\end{proof}
+
+\begin{Rem}\label{endomorphismeFractionnaire}
+	Soit $N\in\N^{*}$ et $\alpha =  \frac{x + f\pi_{q}}{Nf_m}\in\K$. Si $N > 1$, $\alpha$ n'est pas un élément de $\OR_{\Delta}$. Cependant l'idéal fractionnaire principal qu'il engendre agit sur $Ell_{\F_{q}}(\OR_{\Delta})$ comme la classe neutre, donc comme un endomorphisme. Donc un idéal fractionnaire principal défini aussi un endomorphisme, mais dont on ne peut pas expliciter le noyau avec un groupe de torsion. Connaissant $\alpha$, on pourra évaluer l'endomorphisme associé uniquement sur des points d'ordre premier avec le dénominateur $Nf_m$, avec la même méthode que la proposition précédente. 
 \end{Rem}
 
 
 
 
 
-
-
-
-
-\subsection{Structure du graphe d'isogénie}
+\subsection{Structure du graphe d'isogénie}\label{SECTION volcanIsogenie}
 
 Dans cette section, $E$ est une courbe elliptique ordinaire définie sur $\F_{q}$ de caractéristique $p$. Dans sa thèse \cite{Kohel}, David Kohel décrit la structure des graphes de $l$-isogénies, avec $l$ premier, $l\neq p$. Ce sont des graphes où les sommets sont des courbes elliptiques et où les arêtes représentent les isogénies entre elles. On énonce, en les admettant, les résultats sur ces structures dites de "volcans d'isogénies". On distingue d'abord deux types d'isogénies : celles "horizontales" et celles "verticales".
 
@@ -1675,7 +1708,7 @@ Dans cette section, $E$ est une courbe elliptique ordinaire définie sur $\F_{q}
 
 On s'intéresse maintenant aux $l$-isogénies définies sur $\F_{q}$.
 
-\begin{Prop}[\cite{Kohel}(Prop 21, 22, 23)]
+\begin{Prop}[\cite{Kohel}(Prop 21, 22, 23)]\label{KohelStructureVolcan}
 	
 	Soit $E$ une courbe elliptique à multiplication complexe définie sur $\F_{q}$, de conducteur $f$ et de conducteur maximal $f_{m}$. Soit
 	$r = f_{m}/f$. Alors

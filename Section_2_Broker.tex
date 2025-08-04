@@ -3,10 +3,10 @@
 L'objectif de cette section est d'énoncé l'algorithme de Broker Charles et Lauter \cite{BrokerCharlesLauter}, qui prend en entrée une courbe elliptique ordinaire $E$ défini sur $\F_{q}$ de caractéristique $p$, son anneaux d'endomorphisme $\OR_{\Delta}$, un point $P\in E(\F_{q^{n}})$ avec $n\geq1$ et un idéal $\LR$ de norme $l$ premier, et qui calcule une isogénie $\phi$ résultant de l'action de $\LR$ sur $E$. L'entrée de l'algorithme doit vérifier l'hypothèse suivante. 
 
 \begin{Hyp}\label{HypothèseInversion}
-	Soit $f$ le conducteur de $E$, $f_m$ son conducteur maximal sur $\F_{q}$. On suppose que $E$, $l$ et $n$ sont choisis tel que $l$ ne divise pas $A = pf_m|E(\F_{q^{n}})$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux.
+	Soit $f$ le conducteur de $E$, $f_m$ son conducteur maximal sur $\F_{q}$. On suppose que $E$, $l$ et $n$ sont choisis tel que $l$ ne divise pas $A = pf_m|E(\F_{q^{n}})|$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux.
 \end{Hyp}
 
-On a déjà vu pourquoi on suppose $l$ premier avec $p$ et $f_m$, le reste de l'hypothèse \ref{HypothèseInversion} sera expliquer au cours de la présentation de la méthode. L'idée est de se ramener à des calculs d'actions d'idéaux de normes plus petites, pour lesquels on énoncera des algorithmes adaptés. On propose une implémentation dont on analyse la complexité, pour la comparer avec l'état de l'art.
+Ainsi l'isogénie $\phi$ est horizontale, et on pourra évaluer des endomorphismes quelconque sur n'importe quel point de $E(\F_{q^{n}})$ (voir propositions \ref{evalEndoAvecDenom} et \ref{KohelStructureVolcan}). L'approche consiste à se ramener à des calculs d'actions d'idéaux de normes plus petites, pour lesquels on énoncera des algorithmes adaptés, puis en déduire l'action souhaitée. On propose une implémentation dont on analyse la complexité, pour la comparer avec l'état de l'art.
 
 \subsection{Isogénies horizontales de petits degrés}
 
@@ -53,50 +53,23 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 Dans cette partie, on suppose connu une courbe elliptique $E$ définie sur $\F_{q}$ ordinaire avec $End(E)\simeq\OR_{\Delta}$ normalisé, et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose \ref{HypothèseInversion} donc $l$ est premier avec le conducteur maximal $f_{m}$ de $E(\F_{q})$.
 
 \begin{Rem}
-	Si $\LR$ donné sous forme standard $\left[ l, \frac{b + \sqrt{d_{\K}}}{2}\right]$, $\LR$ est primitif car de norme premier. La proposition \ref{formeIdeauxBaseFq} permet alors d'obtenir
-	\begin{equation*}
-		\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right], \; c,\; d\in\Z, d|f_m.
-	\end{equation*}
+	 $\LR$ est primitif car de norme $l$ premier. La proposition \ref{formeIdeauxBaseFq} permet alors d'obtenir
+	\begin{equation}
+		\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right], \; c\in\Z.
+	\end{equation}
 	Dans la suite on suppose $\LR$ donné sous cette forme. 
 \end{Rem}
 
-$E\left[ \LR\right]$ est alors par définition l'intersection de $E\left[ l\right] $ avec le noyau de $\left[\frac{c + d\pi_{q}}{f_{m}}\right]$. Avec une base $\left\lbrace P,\; Q\right\rbrace$ de $E[l]$, on peut obtenir les générateurs des $l+1$ noyaux de $l$-isogénie possible (voir proposition \ref{NbDeLIsogenies}). On souhaite trouver parmi eux celui appartenant à $E\left[  \frac{c + d\pi_{q}}{f_{m}}\right]$. Or comme $l$ est premier avec $f_m$, l'endomorphisme $[f_m]$ restreint à $E[l]$ est inversibles. Donc les restrictions à $E\left[ l\right]$ des endomorphismes $ \left[  \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right]$ ont même noyaux. On en déduit l’algorithme \ref{ALGO Pointgénérateur1}, proposé dans \cite{BrokerCharlesLauter}(\S 3.2) comme méthode générale pour obtenir un point générateur du noyau d'une isogénie de degré $l$ premier.
 
-\begin{algorithm}
-	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 1}\label{ALGO Pointgénérateur1}
-	\begin{algorithmic}[1]
-		\Require Une courbe elliptique $E$ ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, de conducteur $f$ et de conducteur maximal $f_{m}$, un nombre $l$ premier et premier avec $f_m$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
-		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
-		\State Calculer le polynôme de $l$-division sur $E$.
-		\State En déduire une extension $\F_{q^r}$ sur laquelle le polynôme de $l$-division se factorise. (Ainsi $E(\F_{q^r})$ contient $E[l]$).
-		\State Calculer une base $P$, $Q$ de $E\left[ l\right] $. 
-		\For{$i$ allant de $0$ à $l - 1$}
-		\If{$\left[ c + d\pi_{q}\right](P + iQ) = 0$} 
-		\Return $P + iQ$ 
-		\EndIf
-		\EndFor
-		\State \Return $Q$
-	\end{algorithmic}
-\end{algorithm}
+\begin{Prop}
+	Avec les notations précédentes, $E[\LR]$ est un espace propre de l'endomorphisme $\pi_q$ restreint à $E[l]$, de valeur propre $cf^{-1}$ modulo $l$. 
+\end{Prop}
 
-Cette algorithme peut être implémenté sur Sage, mais pose plusieurs problèmes :
+\begin{proof}
+	$E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ avec le noyau de $\left[\frac{c + f\pi_{q}}{f_{m}}\right]$. Or comme $l$ est premier avec $f_m$, l'endomorphisme $[f_m]$ restreint à $E[l]$ est inversible. Donc les restrictions à $E\left[ l\right]$ des endomorphismes $ \left[ \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right]$ ont même noyaux. Si $P\in E[\LR]$, alors en particulier $\pi_{q}(P) = -cf^{-1}P$.
+\end{proof}
 
-\begin{enumerate}
-	\item L'extension $\F_{q^r}$ peut être très grande, avec $r$ de l'ordre de $l$. 
-	\item Le polynôme de $l$-division est degré $\frac{l^2 - 1}{2}$ et peut être lourd à calculer, et à factoriser.
-\end{enumerate}
-
-En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ et $q = 1O1$. Malgré ces petites valeurs le calcul prend déjà une dizaine de secondes.
-
-
-
-
-
-
-
-\subsubsection{Optimisation de la recherche d'extension de corps}
-
-On propose une amélioration de la première méthode. on reprend les notations précédentes. On commence par remarquer que d'après la proposition \ref{formeIdeauxBaseFq}, $d|f_m$ donc $d$ est inversible modulo $l$. Si $P$ est un générateur du groupe de $\LR$-torsion, alors en particulier $\pi_{q}(P) = -cd^{-1}P$. Ainsi $P$ est un vecteur propre du morphisme $\pi_{q}$ restreint à $E[l]$. Il existe des résultats généraux sur les espaces propre de ce morphisme.
+On peut relier cette proposition avec la structure de volcan d'isogénie.
 
 \begin{Prop}[\cite{MMSTV}(Prop 1)]
 	
@@ -115,12 +88,18 @@ Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait qu'il exis
 	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $. Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$ (en particulier $r_{i}$ divise $l-1$ ). De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
 \end{Prop}
 
-La proposition précédente nous donne alors le degré de l'extension dans laquelle on doit chercher $E[l]$ en résolvant un problème de logarithme discret dans $\F_{l}^{*}$. On note $r$ ce degré. On cherche $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-cd^{-1}$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
+La proposition précédente nous donne alors le degré de l'extension dans laquelle on doit chercher $E[l]$ en résolvant un problème de logarithme discret dans $\F_{l}^{*}$. On note $r$ ce degré. Il est alors possible que $r$ soit de l'ordre de $l$, ce qui devient très vite trop gros pour mener des calculs dans $E(\F_{q^{r}})$
+
+
+\textbf{TODO : Faire le lien avec l'étude de la torsion ici, CF Pairing the volcano}
+
+
+
+On cherche $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-cd^{-1}$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
 \begin{equation*}
 	E(\F_{q^{r}}) \simeq \Z/n_{1}\Z\times\Z/n_{2}\Z,
 \end{equation*}
-
-\textbf{TODO : Faire le lien avec l'étude de la torsion ici, CF Pairing the volcano}
+En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ et $q = 101$. Malgré ces petites valeurs le calcul prend déjà une dizaine de secondes.
 
 avec $n_{1}$ divisant $n_{2}$, alors un point choisi au hasard sera probablement d'ordre $n_{2}$. Cependant on connaît seulement le cardinal $N = n_{1}n_{2}$.
 
@@ -129,34 +108,7 @@ avec $n_{1}$ divisant $n_{2}$, alors un point choisi au hasard sera probablement
 	Avec les notations précédentes, $n_{1}^2$ divise $N$ et $q^r = 1$ modulo $n_{1}$.
 \end{Prop}
 
-On peut donc chercher toute les valeurs de $n_{1}$ possible, en utilisant la proposition précédente pour limiter le nombre de tests. On en déduit l'algorithme \ref{ALGO Pointgénérateur2}, qui améliore l'algorithme \ref{ALGO Pointgénérateur1}. 
-
-\begin{algorithm}
-	\caption{Point générateur d'un groupe de $\LR$-torsion, méthode 2}\label{ALGO Pointgénérateur2}
-	\begin{algorithmic}[1]
-		\Require Une courbe elliptique $E$ à multiplication complexe définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, un nombre $l$ premier décomposé ne divisant pas $pf_{m}$ et tel que $\left( \frac{\Delta}{l}\right) = 1$, un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$
-		\Ensure Un point $K\in E(\Kb)$ générateur de $E[\LR]$. 
-		\State $r\gets$ ordre de $-c$ dans $\F_{l}^{*}$.
-		\State $N\gets$ Cardinal de $E(\F_{q^{r}})$
-		\State $n_{max} \gets pgcd(N, q^r - 1)$
-		\State $L\gets$\O
-		\For{$i$ divisant $n_{max}$}
-		\If{$i^2$ divise $N$}
-		\State Mettre $i$ dans $L$
-		\EndIf
-		\EndFor
-		\State $P\gets$ Point aléatoire de $E(\F_{q^{r}})$
-		\For{$i$ parcourant $L$}
-		\State $K\gets (N/i)P$
-		\If{$K\neq \OR$}
-		\If{$\pi_{q}(K)=-cK$}
-		\Return $K$ 
-		\EndIf
-		\EndIf
-		\EndFor
-		\State Reprendre l'étape $10$
-	\end{algorithmic}
-\end{algorithm}
+On peut donc chercher toute les valeurs de $n_{1}$ possible, en utilisant la proposition précédente pour limiter le nombre de tests. 
 
 
 
@@ -174,59 +126,53 @@ Même en utilisant l'algorithme \ref{ALGO Pointgénérateur2}, on est parfois co
 	
 	\item Il existe un polynôme $\Psi_{l}(X,Y)$, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des courbes $l$-isogènes à $E$. Les racines appartenant à $\F_{q}$ correspondent aux courbes images des $l$-isogénies définies sur $\F_{q}$.
 	
-	\item Soit $h\in\F_{q}$ une racine de $\Psi_{l}(j,Y)$, alors il est possible d'obtenir un modèle défini sur $\F_{q}$ de la courbe $E'$ de $j$-invariant $h$, à partir de la donnée de $E$, $h$ et $l$, en un nombre constant d'opérations dans $\F_{q}$. On utilise des formules explicites qui impose
+	\item Soit $h\in\F_{q}$ une racine de $\Psi_{l}(j,Y)$, alors il est possible d'obtenir un modèle défini sur $\F_{q}$ de la courbe elliptique $E'$ de $j$-invariant $h$, à partir de la donnée de $E$, $h$ et $l$, en un nombre constant d'opérations dans $\F_{q}$. On utilise des formules explicites qui imposent
 	\begin{equation*}
 		l < 4|\Delta|.
 	\end{equation*}
 	
-	\item  Soit $p_{1}\in\F_{q}$ la somme des abscisses des $l-1$ points finis du noyau de la $l$-isogénie $\phi : E\rightarrow E'$. Alors $p_{1}$ peut être obtenues à partir de la connaissance de $E$, $h$ et $l$, en menant des calculs uniquement dans $\F_{q}$.
-	
-	\item Soit $F_{h}$ le polynôme qui décrit le noyau de $\phi : E\rightarrow E'$. Soit $\tilde{F}_{h}$ défini de la même façon à partir de relèvements de Deuring de $E$, $E'$ et $\phi$. On peut alors retrouver explicitement les coefficients de $\tilde{F}_{h}$. Si chaque terme a une bonne réduction modulo $p$, alors on obtient directement les coefficient de $F_{h}$. La bonne réduction n'est cependant pas garantie, il faut que $l$ vérifie
+	\item Soit $F_{h}$ le polynôme qui décrit le noyau de la $l$-isogénie $\phi: E\rightarrow E'$. Soit $\tilde{F}_{h}$ défini de la même façon à partir d'un relèvement de Deuring de $E$, $E'$ et $\phi$. On peut alors retrouver explicitement les coefficients de $\tilde{F}_{h}$. Si chaque terme a une bonne réduction modulo $p$, alors on obtient les coefficient de $F_{h}$. La bonne réduction n'est cependant pas garantie, il faut que $l$ vérifie
 	\begin{equation*}
 		l < 4(p+1).
 	\end{equation*}
+	Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent principalement à minimiser et optimiser des calculs de séries de Laurent nécessaires pour obtenir $\tilde{F}_{h}$. En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}(\S 4.3, fastElkies') calculant $F_{h}$ à partir de $E$, $E'$ et $l$.
+
+
+	\item Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, il faut pouvoir tester si le polynôme $F$ obtenue par BMSS décrit le bon noyau. Pour cela on vérifie formellement la valeur propre avec laquelle agit le morphisme de Frobenius sur l'ensemble de points décrit par $F$.
+
 \end{enumerate}
 
-Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent principalement à minimiser et optimiser des calculs de séries de Laurent nécessaires pour obtenir $\tilde{F}_{h}$.
-
-\begin{Def}
-	En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}(\S 4.3, fastElkies'), prenant en entrée $E$, $E'$ deux modèles de courbe elliptique à multiplication complexe définie sur $\F_{q}$ et $l < 4(p+1)$ un nombre premier tel qu'il existe au moins une $l$-isogénie horizontale normalisée $\phi : E \rightarrow E'$. Cette algorithme renvoie un polynôme $F$ qui décrit le noyau de $\phi$ sur $E$.  
-\end{Def}
-
-Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, on ne peut pas connaître à l'avance le bon choix parmi ces deux racines. Il faut donc un moyen de tester si le polynôme $F$ obtenue décrit le bon noyau. Pour cela on vérifie formellement la valeur propre avec laquelle agit le morphisme de Frobenius sur l'ensemble de points décrit par $F$.
-
 \begin{Prop}
-	Soit $E : y^2 = x^3 + ax + b$ un modèle de courbe elliptique ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$. Soit $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$ un idéal de $\OR_{\Delta}$ de norme $l$ premier. Soit $F\in\F_{q}[X]$. On pose 
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Soit $\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right]$ un idéal de $\OR_{\Delta}$ de norme $l$ premier avec le conducteur maximal $f_m$, et $k$ l'inverse de $f$ modulo $l$. Soit $F\in\F_{q}[X]$. On pose 
 	\begin{equation*}
 		R = \F_{q}\left[ X,Y\right] / \left( F, Y^2 - X^3 - aX - b\right).
 	\end{equation*}
-	Soit $(R_{1}(X), YR_{2}(X))$ les fonctions rationnelles définissant l'endomorphisme $[-cd^{-1}]$. Alors $F$ est le polynôme décrivant $E\left[ \LR\right]$ si et seulement si, dans le corps de fraction de $R$,
+	Soit $(R_{1}(X), YR_{2}(X))$ les fonctions rationnelles définissant l'endomorphisme $[-ck]$. Alors $F$ est le polynôme décrivant $E\left[ \LR\right]$ si et seulement si, dans le corps de fraction de $R$,
 	\begin{equation*}
 		\bar{X}^q = R_{1}(\bar{X})\;,\;\bar{Y}^{q} = \bar{Y}R_{2}(\bar{X}).
 	\end{equation*}
 \end{Prop}
 
 \begin{Rem}
-	Dans toute la suite, pour vérifier si un polynôme donné décrit le bon noyau, on utilise l'algorithme CheckElkies de l'implémentation sage de \cite{Pegasis}. Cela résout des problèmes rencontrés lors de l'implémentation personnelle pour travailler avec les polynômes $X^p$ et $X^p - X$ lorsque la caractéristique $p$ est très grande. 
+	Dans toute la suite, pour vérifier si un polynôme donné décrit le bon noyau, on utilise l'algorithme CheckElkies de l'implémentation Sage de \cite{Pegasis}. Cela résout des problèmes rencontrés lors de l'implémentation personnelle pour travailler avec les polynômes $X^p$ et $X^p - X$ lorsque la caractéristique $p$ est très grande. 
 \end{Rem}
-
 
 On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le polynôme décrivant le noyau d'une isogénie, à partir d'un modèle de départ et d'un idéal associé. On suppose aussi que le polynôme modulaire $\Psi_{l}$ est pré-calculé.  
 
 \begin{algorithm}[h]
 	\caption{Méthode d'Elkies}\label{ALGO BMSSCheckElkies}
 	\begin{algorithmic}[1]
-		\Require Une courbe elliptique $E$ ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, de conducteur maximal $f_m$. Un nombre $l$ premier décomposé et premier avec $p$ et $f_m$, avec $l < min (4p + 4, 4|\Delta|)$. Un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + d\pi_{q}}{f_{m}}\right]$, le polynôme modulaire $\Psi_{l}$.
+		\Require Une courbe elliptique $E$ ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, de conducteur maximal $f_m$. Un nombre $l$ premier décomposé et premier avec $p$ et $f_m$, avec $l < \min (4p + 4, 4|\Delta|)$. Un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right]$, le polynôme modulaire $\Psi_{l}$.
 		\Ensure Un polynôme $F\in\F_{q}\left[ X\right]$ décrivant $E[\LR]$. 
 		\State $P_{invariants}(Y)\gets PGCD(\Psi_{l}(j,Y),Y^q - Y)$ ($P_{invariants}$ est de degré 2 et à racines simples)
 		\State $h_{1}, h_{2}\gets$ racines de $P_{invariants}$
 		\State $E_{1}\gets$ modèle normalisé de $h_{1}$ (formules explicites selon $E$, $l$ et $h_1$)
 		\State $F_{1}\gets BMSS(E,E_{1},l)$
-		\If{$F_{1}$ décrit $E[\LR]$} (vérifier avec CheckElkies)
+		\If{$F_{1}$ décrit $E[\LR]$} 
 		\State \Return $F_{1}$
 		\Else 
 		\State $E_{2}\gets$ modèle normalisé de $h_{2}$ (formules explicites selon $E$, $l$ et $h_1$)
-		\State $F_{2}\gets BMSS(E,E_{2},l)$ (vérifier avec CheckElkies)
+		\State $F_{2}\gets BMSS(E,E_{2},l)$
 		\State \Return $F_{2}$
 		\EndIf
 	\end{algorithmic}
@@ -240,82 +186,32 @@ On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le 
 %Ici problème de l'idéal principale, explication des conditions sur le conducteur/cardinal
 %Calculs de composantes, sans analyses de complexité générale (lemmes ?)
 
-Avec ce qui précède, on sait uniquement calculer des $l$-isogénies avec $l < min (4p + 4, 4|\Delta|)$, et avec une complexité exponentielle en $l$. On se donne un idéal $\LR\in\OR_{\Delta}$, et on suppose que l'on peut trouver 
-\begin{equation}
+Avec ce qui précède, on sait uniquement calculer des $l$-isogénies avec $l < \min (4p + 4, 4|\Delta|)$, et avec une complexité exponentielle en $l$. On se donne un idéal $\LR\in\OR_{\Delta}$, et on suppose que l'on peut trouver 
+\begin{equation*}
 	\LR \sim \LR' = \PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
-\end{equation} 
-où les idéaux $\PR_{p_{i}}$ sont de normes $p_{i}$ appartenant à une liste $L_{premier}$ de nombres premiers vérifiant la même hypothèse \ref{HypothèseInversion} que $l$, et dont on sait calculer l'action sur des courbes de $Ell_{\F_{q}}{\OR_{\Delta}}$ avec \ref{ALGO BMSSCheckElkies}. On peut donc calculer l'action de $\LR'$ en calculant $e_1 + \ldots + e_N$ actions d'idéaux de petites normes. On souhaite en déduire l'action de l'idéal $\LR$. 
+\end{equation*} 
+où les idéaux $\PR_{p_{i}}$ sont de normes $p_{i}$ appartenant à une liste $L_{premier}$ de nombres premiers vérifiant la même hypothèse \ref{HypothèseInversion} que $l$, et dont on sait calculer l'action sur des courbes de $Ell_{\F_{q}}(\OR_{\Delta})$ avec l'algorithme \ref{ALGO BMSSCheckElkies}. On peut donc calculer l'action de $\LR'$ en calculant $e_1 + \ldots + e_N$ actions d'idéaux de petites normes. On souhaite en déduire l'action de l'idéal $\LR$. 
 
 \begin{Def}
-	Soit $\phi_\LR : E \rightarrow E/E[\LR]$. Avec les notations précédentes, es composantes de $\phi_\LR$ associée à $\LR'$ sont les isogénies obtenues par la suite
+	Soit $\phi_\LR : E \rightarrow E/E[\LR]$. Avec les notations précédentes, on appelle composantes de $\phi_\LR$ associées à $\LR'$ les isogénies obtenues par la suite
 	\begin{equation*}
 		E\rightarrow E/E\left[ \PR_{1}\right] \rightarrow E/E\left[ \PR_{1}^{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\right] \rightarrow
 	\end{equation*}
 	\begin{equation*}
 		\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\right] \rightarrow\ldots\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right].
 	\end{equation*}
-	Les composantes explicites sont les uniques formes explicites normalisées des composantes. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec normalisation. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes (normalisées).
+	Les composantes explicites sont les formes explicites normalisées des composantes. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec normalisation. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes explicites.
 \end{Def}
 
-$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi : E \rightarrow E/E[\LR]$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ a priori. On a cependant la relation
+$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi_\LR$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ a priori. On a cependant la relation
 \begin{equation*}
 	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
 \end{equation*}
 où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. Pour expliciter $\alpha$, on rappelle que l'idéal conjugué $\bar{\PR_{i}}$ de $\PR_{i}$ est un représentant de $\CP_{p_{i}}^{-1}$, donc
-\begin{equation}
+\begin{equation*}
 	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{N}}^{e_{N}} = \beta\OR_{\Delta},
-\end{equation}
-où $\beta\OR_{\Delta}$ est un idéal principal entier. Ainsi $\beta\in\OR_{\Delta}$.
-
-\begin{Prop}
-	Avec les notations précédentes, Soit $m = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$. Alors $\alpha = \frac{\beta}{m}$.
-\end{Prop}
-
-\begin{proof}
-	Partant de l'équation $(2)$, on multiplie chaque membre par $\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}$. Le membre de gauche est égale à $\beta\OR_{\Delta}$ par définition de $\beta$ par l'équation $(3)$. Le membre de gauche est
-	\begin{equation*}
-		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}}.
-	\end{equation*}
-	Or d'après la proposition \ref{NormesId}, $\PR_{p_{i}}^{e_{i}}\bar{\PR_{i}}^{e_{i}} = p_{i}^{e_{i}}\OR_{\Delta}$, donc 
-	\begin{equation*}
-		(\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{g}}^{e_{g}}\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{g}}^{e_{g}} = \alpha m\OR_{\Delta}.
-	\end{equation*}
-	Donc $\beta = \alpha m$.
-\end{proof}
-
-Puisque l'on connaît l'idéal $\LR$ et les idéaux $\PR_{p_{i}}$ sous forme standard, on connaît la forme standard de $\beta\OR_{\Delta}$ grâce à l'équation $(3)$. De plus le produit d'idéaux primitif est primitif (C'est une conséquence de l'isomorphisme entre les idéaux primitif et les formes quadratiques binaires primitives). On se ramène donc au problème suivant : étant donné un idéal entier primitif principal $(1,a,b)$, trouver un générateur $\beta$. Ceci est résolue par l'algorithme \ref{ALGO idealprincipal}.\\
-
-
-On sait donc calculer $\alpha = \beta/m$ avec $\beta = \frac{u + v\pi_{q}}{f_{m}}\in\OR_{\Delta}$. D'après l'hypothèse \ref{HypothèseInversion}, les nombres premiers $p_{i}$ sont premiers avec $|E(\F_{q^{n}})|$, donc $m$ est aussi premier avec ce cardinal. De plus $f_{m}$ est aussi supposé premier avec $|E(\F_{q^{n}})|$, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. L'endomorphisme $k(u + v\pi_{q})$ est donc bien défini. 
-
-\begin{Prop}
-	On reprend les notations précédentes. Alors
-	\begin{equation*}
-		\forall\; P\in E[|E(\F_{q^{n}})|]\;,\;\phi(P) = (k(u + v\pi_{q}))\circ\phi_c(P).
-	\end{equation*}
-\end{Prop}
-
-\begin{proof}
-	Soit $\tilde{E}$, $\tilde{E_c}$, $\tilde{E'} = \widetilde{E/E\left[\LR\right] }$ trois courbse elliptiques définies sur $\Qb$, obtenues par le théorème de relèvement de Deuring appliqué via l'endomorphisme de Frobenius. Soit $\Lambda$ un réseau de $\C$ tel que $E_{\Lambda} = \tilde{E}$. Alors la factorisation de $\LR$ implique que
-	\begin{equation*}
-		\tilde{E'}\simeq\C/\LR^{-1}\Lambda = \C/\left( (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda.
-	\end{equation*}
-	De plus,
-	\begin{equation*}
-		\tilde{E_c} \simeq \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda.
-	\end{equation*}
-	Par définition, $\phi_{\LR}$ et $\phi_c$ correspondent au niveau des tores au morphisme identité (voir \ref{IsogénieIdealEntierIdentité}). On pose pour tout $\lambda\in\K$
-	\begin{equation*}
-		\phi_{\lambda} : \C/\left(\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda \rightarrow \C/\left( (\lambda\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}} \right)^{-1}\Lambda, z \mapsto z
-	\end{equation*}
-	Puisque $\alpha = \beta/m$, 
-	\begin{equation*}
-		\phi_{\alpha} = [\beta]\circ\phi_{m^{-1}} = [u + v\pi_{q}]\circ\phi_{(mf_{m}^{-1})}
-	\end{equation*}
-	Il reste à montrer que la réduction de l'isogénie équivalente au morphisme de tores $\phi_{(mf_{m}^{-1})}$ agit sur $E_c(\F_{q^{n}})$ comme la multiplication par $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. Or la restriction de l'endomorphisme $[mf_{m}]$ à $E_c(\F_{q^{n}})$ est bijective d'inverse $[k]$. Mais au niveau des tores $[mf_{m}]\circ\phi_{(mf_{m}^{-1})} = id$ par définition. Donc après réduction, et restriction à $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})}$ est l'inverse de $[mf_{m}]$. Donc sur $E_c(\F_{q^{n}})$, $\phi_{(mf_{m}^{-1})} = [k]$ ce qui achève la démonstration.
-\end{proof}
-
-On en déduit l'algorithme \label{ALGO isogénieEquivalente} qui calcule l'action d'un idéal à partir de celle d'un idéal équivalent. \textbf{TODO : Ecrire l'algorithme} : 
+\end{equation*}
+où $\beta\OR_{\Delta}$ est un idéal principal entier. Ainsi $\beta\in\OR_{\Delta}$ et $\alpha = \frac{\beta}{m}$ avec $m = p_1^{e_1}\ldots p_N^{e_N}$. On calcule $\beta$ en utilisant l'algorithme \ref{ALGO idealprincipal}, et on trouve ainsi $\alpha = \frac{u + v\pi_{q}}{mf_{m}}\in\OR_{\Delta}$. D'après l'hypothèse \ref{HypothèseInversion}, les nombres premiers $p_{i}$ sont premiers avec $|E(\F_{q^{n}})|$, donc $m$ l'est aussi. $f_{m}$ est aussi supposé premier avec $|E(\F_{q^{n}})|$, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. D'après la proposition \ref{evalEndoAvecDenom} et la remarque \ref{endomorphismeFractionnaire}, l'endomorphisme représenté par l'action de l'idéal $\alpha\OR_{\Delta}$ est $\left[ k\right] (u + \left[ v\right] \pi_{q})$. On en déduit l'algorithme \label{ALGO isogénieEquivalente} qui calcule l'action d'un idéal à partir de celle d'un idéal équivalent. \textbf{TODO : Ecrire l'algorithme} : 
 
 
 \subsection{Calculs dans le groupe de classes d'idéaux}
