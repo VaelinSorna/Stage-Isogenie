@@ -1,19 +1,19 @@
 \section{Algorithme de Broker Charles et Lauter}
 
-L'objectif de cette section est d'énoncé l'algorithme de Broker Charles et Lauter \cite{BrokerCharlesLauter}, qui prend en entrée une courbe elliptique ordinaire $E$ défini sur $\F_{q}$ de caractéristique $p$, son anneaux d'endomorphisme $\OR_{\Delta}$, un point $P\in E(\F_{q^{n}})$ avec $n\geq1$ et un idéal $\LR$ de norme $l$ premier, et qui calcule une isogénie $\phi$ résultant de l'action de $\LR$ sur $E$. L'entrée de l'algorithme doit vérifier l'hypothèse suivante. 
+L'objectif de cette section est d'énoncé l'algorithme de Broker Charles et Lauter \cite{BrokerCharlesLauter}, optimisé par Jao et soukharev \cite{JaoSoukharev}. Il prend en entrée une courbe elliptique ordinaire $E$ défini sur $\F_{q}$ de caractéristique $p$, son anneaux d'endomorphisme $\OR_{\Delta}$, un point $P\in E(\F_{q^{n}})$ avec $n\geq1$ et un idéal $\LR$ de norme $l$ premier, et qui calcule la $l$-isogénie $\phi$ résultant de l'action de l'idéal $\LR$ sur $E$. L'entrée de l'algorithme doit vérifier l'hypothèse suivante, pour que l'isogénie $\phi$ soit horizontale, et pour que l'on puisse évaluer des endomorphismes sur des points de $E(\F_{q^{n}})$ (voir propositions \ref{evalEndoAvecDenom} et \ref{KohelStructureVolcan}). 
 
 \begin{Hyp}\label{HypothèseInversion}
 	Soit $f$ le conducteur de $E$, $f_m$ son conducteur maximal sur $\F_{q}$. On suppose que $E$, $l$ et $n$ sont choisis tel que $l$ ne divise pas $A = pf_m|E(\F_{q^{n}})|$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premier entre eux.
 \end{Hyp}
 
-Ainsi l'isogénie $\phi$ est horizontale, et on pourra évaluer des endomorphismes quelconque sur n'importe quel point de $E(\F_{q^{n}})$ (voir propositions \ref{evalEndoAvecDenom} et \ref{KohelStructureVolcan}). L'approche consiste à se ramener à des calculs d'actions d'idéaux de normes plus petites, pour lesquels on énoncera des algorithmes adaptés, puis en déduire l'action souhaitée. On propose une implémentation dont on analyse la complexité, pour la comparer avec l'état de l'art.
+ Les méthodes pour calculer explicitement une isogénie sont présentées dans la section \ref{SECTION isogénieDegrésPetits}. Elles dérivent toutes des formules de Vélu \ref{FormuleVélu}, et sont de complexité exponentielle en $l$. Cependant dans la section \ref{SECTION isogenieFriable}, on explique comment ramener le calcul de la $l$-isogénie $\phi$ à celui de plusieurs isogénies de petit degrés. L'approche de \cite{BrokerCharlesLauter} est expliqué dans la section \ref{SECTION CalculfactoClasse}, et l'algorithme est énoncé dans la section \ref{SECTION Broker}. On propose une implémentation prenant en compte l'optimisation de \cite{JaoSoukharev} ainsi que des initiatives personnelles. On en analyse la complexité pour comparer les résultats à ceux de \cite{JaoSoukharev}.
 
 \subsection{Isogénies horizontales de petits degrés}
+\label{SECTION isogénieDegrésPetits}
 
+\subsubsection{Algorithme SquareVélu}\label{SECTION squareVélu}
 
-\subsubsection{Algorithme SquareVélu}
-
-Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu \ref{FormuleVélu} permettent de construire une forme explicite d'une $l$-isogénie $\phi$ à partir de la connaissance de son noyau. Appliquer naïvement les formules demande cependant $O(l)$ opérations sur la courbe. On explique ici comment le noyau peut être représenter efficacement, puis l'on énonce les résultat de \cite{Velusqrt} permettant d'obtenir une complexité en $O(\sqrt{l})$. $\ker(\phi)$ peut être donné sous deux formes : un générateur $K\in E(\F_{q^{r}})$ avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. 
+Étant donné un modèle de courbe elliptique $E$ défini sur $\F_{q}$, les formules de Vélu \ref{FormuleVélu} permettent de construire une forme explicite d'une $l$-isogénie $\phi$ à partir de la connaissance de son noyau. Appliquer naïvement les formules demande cependant $O(l)$ opérations sur la courbe. On peut obtenir une complexité en $O(\sqrt{l})$ selon la méthode de \cite{Velusqrt}. Il faut cependant préciser comment on représente le noyau. En effet $\ker(\phi)$ peut être donné sous deux formes : un générateur $K\in E(\F_{q^{r}})$ avec $r \geq 1$, ou un polynôme $F$ dont les racines sont les abscisses des points finis du noyau. 
 
 \begin{Def}
 	Soit $E$ un modèle de courbe elliptique et $\phi : E\rightarrow E'$ une $l$-isogénie, avec $l$ premier impair. On sépare $Ker(\phi)$ en une partition $\left\lbrace \OR \right\rbrace \cup R\cup R'$, où $R$ regroupe $(l-1)/2$ points finis distincts, et $R'$ leurs inverses. Un polynôme $F$ décrit le noyau de $\phi$ sur $E$ si c'est un polynôme unitaire de degré $(l-1)/2$ dont les racines sont les abscisses des points finis de $R$. Un tel polynôme ne dépend pas de la partition choisie. 
@@ -47,7 +47,7 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 
 
 
-\subsubsection{Générateurs de groupes de torsion d'idéaux}
+\subsubsection{Générateurs de groupes de torsion d'idéaux}\label{SECTION generateurTorsion}
 
 
 Dans cette partie, on suppose connu une courbe elliptique $E$ définie sur $\F_{q}$ ordinaire avec $End(E)\simeq\OR_{\Delta}$ normalisé, et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose \ref{HypothèseInversion} donc $l$ est premier avec le conducteur maximal $f_{m}$ de $E(\F_{q})$.
@@ -66,7 +66,7 @@ Dans cette partie, on suppose connu une courbe elliptique $E$ définie sur $\F_{
 \end{Prop}
 
 \begin{proof}
-	$E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ avec le noyau de $\left[\frac{c + f\pi_{q}}{f_{m}}\right]$. Or comme $l$ est premier avec $f_m$, l'endomorphisme $[f_m]$ restreint à $E[l]$ est inversible. Donc les restrictions à $E\left[ l\right]$ des endomorphismes $ \left[ \frac{c + d\pi_{q}}{f_{m}}\right]$ et $\left[ c + d\pi_{q}\right]$ ont même noyaux. Si $P\in E[\LR]$, alors en particulier $\pi_{q}(P) = -cf^{-1}P$.
+	$E\left[ \LR\right]$ est par définition l'intersection de $E\left[ l\right] $ avec le noyau de $\left[\frac{c + f\pi_{q}}{f_{m}}\right]$. Or comme $l$ est premier avec $f_m$, l'endomorphisme $[f_m]$ restreint à $E[l]$ est inversible. Donc les restrictions à $E\left[ l\right]$ des endomorphismes $ \left[ \frac{c + f\pi_{q}}{f_{m}}\right]$ et $\left[ c + f\pi_{q}\right]$ ont même noyaux. Si $P\in E[\LR]$, alors en particulier $f\pi_{q}(P) + cP = 0$, donc $\pi_{q}(P) = -cf^{-1}P$.
 \end{proof}
 
 On peut relier cette proposition avec la structure de volcan d'isogénie.
@@ -82,49 +82,26 @@ On peut relier cette proposition avec la structure de volcan d'isogénie.
 	
 \end{Prop}
 
-Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait qu'il existe exactement $2$ $l$-isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$ restreint à $E[l]$. 
+Puisque $l$ est supposé décomposé et premier avec $f_{m}$, on sait qu'il existe exactement deux $l$-isogénies définies sur $\F_{q}$. On note $v_{1}$ et $v_{2}$ les deux valeurs propres de $\pi_{q}$ restreint à $E[l]$. 
 
 \begin{Prop}[\cite{MMSTV}(Prop 2)]
 	Soit $G_{1}$, $G_{2}$ les deux sous groupes de $E$ noyaux des deux $l$-isogénies définies sur $\F_{q}$. Soit $r_{1}$, $r_{2}$ minimaux tels que $G_{i}\subset E\left( \F_{q^{r_{i}}}\right) $. Alors $r_{i}$ est l'ordre de $v_{i}$ dans $\F_{l}^{*}$ (en particulier $r_{i}$ divise $l-1$ ). De plus si $r_{i}$ est pair, les abscisses des points de $G_{i}$ sont dans $\F_{q^{r_{i}/2}}$.
 \end{Prop}
 
-La proposition précédente nous donne alors le degré de l'extension dans laquelle on doit chercher $E[l]$ en résolvant un problème de logarithme discret dans $\F_{l}^{*}$. On note $r$ ce degré. Il est alors possible que $r$ soit de l'ordre de $l$, ce qui devient très vite trop gros pour mener des calculs dans $E(\F_{q^{r}})$
+La proposition précédente nous donne alors le degré de l'extension dans laquelle on doit chercher $E[l]$ en résolvant un problème de logarithme discret dans $\F_{l}^{*}$, que l'on note $r$. L'arithmétique dans l'extension $\F_{q^{r}}$ est de complexité en $O(r\log(q))$, donc exponentielle en $r$. Or il est possible que $r$ soit de taille de l'ordre de $l$. Par la suite, on voudra dès que possible mener des calculs uniquement sur le corps de base $\F_{q}$. On évitera donc de représenter le noyau $E[\LR]$ par un générateur, mais plutôt par un polynôme.
 
-
-\textbf{TODO : Faire le lien avec l'étude de la torsion ici, CF Pairing the volcano}
-
-
-
-On cherche $\K\in E(\F_{q^{r}})$ un vecteurs propre de $\pi_{q}$ pour la valeurs propres $-cd^{-1}$, d'ordre $l$. L'idée et que si la structure de groupe de $E(F_{q^{r}})$ est 
-\begin{equation*}
-	E(\F_{q^{r}}) \simeq \Z/n_{1}\Z\times\Z/n_{2}\Z,
-\end{equation*}
-En pratique sur l'exemple "small" de \cite{BrokerCharlesLauter}, $l = 31$ et $q = 101$. Malgré ces petites valeurs le calcul prend déjà une dizaine de secondes.
-
-avec $n_{1}$ divisant $n_{2}$, alors un point choisi au hasard sera probablement d'ordre $n_{2}$. Cependant on connaît seulement le cardinal $N = n_{1}n_{2}$.
-
-\begin{Prop}[\cite{Sil09}(Ex 5.6)]
-	
-	Avec les notations précédentes, $n_{1}^2$ divise $N$ et $q^r = 1$ modulo $n_{1}$.
-\end{Prop}
-
-On peut donc chercher toute les valeurs de $n_{1}$ possible, en utilisant la proposition précédente pour limiter le nombre de tests. 
+\textbf{TODO : expérience pour comparer ?}
 
 
 
 
+\subsubsection{Représentation polynomiale de groupes de torsion d'idéaux.}\label{SECTION méthodeElkies}
 
-
-
-
-
-\subsubsection{Méthode d'Elkies}
-
-Même en utilisant l'algorithme \ref{ALGO Pointgénérateur2}, on est parfois contraint de manipuler des groupes $E(F_{q^{r}})$ avec $r$ est de l'ordre de $l-1$. En pratique, cela arrive suffisamment souvent pour être problématique. On présente ici une troisième méthode, proposé par \cite{Bostan_2008}(\S 4.3, fastElkies') ayant pour avantage d'éviter tout calcul dans des extensions de $\F_{q}$. En contrepartie cette méthode impose des conditions sur la taille du degré $l$. On résume l'idée de la méthode en admettant les résultats utilisés. Soit $E$ une courbe elliptique ordinaire de $j$-invariant $j$, définie sur $\F_{q}$.
-
+ On reprend les notations de la section précédentes.
+ On présente ici une méthode pour représenter un groupe de torsion d'un idéal $\LR$ par un polynôme. Elle a l'avantage d'éviter tout calcul dans des extensions de $\F_{q}$. En contrepartie cette méthode impose des conditions sur la taille du degré $l$. On résume l'idée de la méthode en admettant les résultats utilisés.
 \begin{enumerate}
 	
-	\item Il existe un polynôme $\Psi_{l}(X,Y)$, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des courbes $l$-isogènes à $E$. Les racines appartenant à $\F_{q}$ correspondent aux courbes images des $l$-isogénies définies sur $\F_{q}$.
+	\item Il existe un polynôme $\Psi_{l}(X,Y)$, appelé polynôme modulaire, dépendant uniquement de $l$, tel que les racines de $\Psi_{l}(j,Y)$ dans $\Fb_{p}$ sont exactement les $j$-invariants des courbes $l$-isogènes à $E$. Les racines appartenant à $\F_{q}$ correspondent aux courbes images des $l$-isogénies définies sur $\F_{q}$.
 	
 	\item Soit $h\in\F_{q}$ une racine de $\Psi_{l}(j,Y)$, alors il est possible d'obtenir un modèle défini sur $\F_{q}$ de la courbe elliptique $E'$ de $j$-invariant $h$, à partir de la donnée de $E$, $h$ et $l$, en un nombre constant d'opérations dans $\F_{q}$. On utilise des formules explicites qui imposent
 	\begin{equation*}
@@ -138,11 +115,11 @@ Même en utilisant l'algorithme \ref{ALGO Pointgénérateur2}, on est parfois co
 	Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent principalement à minimiser et optimiser des calculs de séries de Laurent nécessaires pour obtenir $\tilde{F}_{h}$. En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}(\S 4.3, fastElkies') calculant $F_{h}$ à partir de $E$, $E'$ et $l$.
 
 
-	\item Lorsque $l$ est décomposé, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. Si l'on souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$ où $\LR$ est un idéal de norme $l$, il faut pouvoir tester si le polynôme $F$ obtenue par BMSS décrit le bon noyau. Pour cela on vérifie formellement la valeur propre avec laquelle agit le morphisme de Frobenius sur l'ensemble de points décrit par $F$.
+	\item D'après l'hypothèse $\ref{HypothèseInversion}$, $\Psi_{l}(j,Y)$ admet exactement deux racines dans $\F_{q}$. On souhaite trouvé l'unique isogénie normalisée de noyau $E[\LR]$. Il faut donc tester si le polynôme $F$ obtenue par BMSS décrit le bon noyau. Pour cela on vérifie formellement la valeur propre avec laquelle agit le morphisme de Frobenius sur l'ensemble de points décrit par $F$, comme énoncé dans la proposition \ref{propositionCheckElkies}.
 
 \end{enumerate}
 
-\begin{Prop}
+\begin{Prop}\label{propositionCheckElkies}
 	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Soit $\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right]$ un idéal de $\OR_{\Delta}$ de norme $l$ premier avec le conducteur maximal $f_m$, et $k$ l'inverse de $f$ modulo $l$. Soit $F\in\F_{q}[X]$. On pose 
 	\begin{equation*}
 		R = \F_{q}\left[ X,Y\right] / \left( F, Y^2 - X^3 - aX - b\right).
@@ -157,15 +134,19 @@ Même en utilisant l'algorithme \ref{ALGO Pointgénérateur2}, on est parfois co
 	Dans toute la suite, pour vérifier si un polynôme donné décrit le bon noyau, on utilise l'algorithme CheckElkies de l'implémentation Sage de \cite{Pegasis}. Cela résout des problèmes rencontrés lors de l'implémentation personnelle pour travailler avec les polynômes $X^p$ et $X^p - X$ lorsque la caractéristique $p$ est très grande. 
 \end{Rem}
 
-On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le polynôme décrivant le noyau d'une isogénie, à partir d'un modèle de départ et d'un idéal associé. On suppose aussi que le polynôme modulaire $\Psi_{l}$ est pré-calculé.  
+\begin{Hyp}\label{HypothèseElkies}
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Un nombre premier $l$ vérifie l'hypothèse \ref{HypothèseElkies} si $l < \min (4(p+1), 4|\Delta|)$.
+\end{Hyp}
+
+On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le polynôme décrivant le sous-groupe de $\LR$ torsion d'un courbe $E\in Ell_{\F_{q}}(\OR_{\Delta})$. On suppose ici que le polynôme modulaire $\Psi_{l}$ est pré-calculé.  
 
 \begin{algorithm}[h]
 	\caption{Méthode d'Elkies}\label{ALGO BMSSCheckElkies}
 	\begin{algorithmic}[1]
-		\Require Une courbe elliptique $E$ ordinaire définie sur $\F_{q}$, d'anneau d'endomorphisme $\OR_{\Delta}$, de conducteur maximal $f_m$. Un nombre $l$ premier décomposé et premier avec $p$ et $f_m$, avec $l < \min (4p + 4, 4|\Delta|)$. Un idéal propre $\LR\subset\OR_{\Delta}$ sous la forme $\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right]$, le polynôme modulaire $\Psi_{l}$.
+		\Require Une courbe elliptique $E\in Ell_{\F_{q}}(\OR_{\Delta})$, de conducteur maximal $f_m$. Un nombre $l$ premier  vérifiant les hypothèses \ref{HypothèseInversion} et \ref{HypothèseElkies}. Un idéal $\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right]$. Le polynôme modulaire $\Psi_{l}$.
 		\Ensure Un polynôme $F\in\F_{q}\left[ X\right]$ décrivant $E[\LR]$. 
-		\State $P_{invariants}(Y)\gets PGCD(\Psi_{l}(j,Y),Y^q - Y)$ ($P_{invariants}$ est de degré 2 et à racines simples)
-		\State $h_{1}, h_{2}\gets$ racines de $P_{invariants}$
+		\State $P(Y)\gets PGCD(\Psi_{l}(j,Y),Y^q - Y)$ ($P$ est de degré 2 scindé.)
+		\State $h_{1}, h_{2}\gets$ racines de $P$
 		\State $E_{1}\gets$ modèle normalisé de $h_{1}$ (formules explicites selon $E$, $l$ et $h_1$)
 		\State $F_{1}\gets BMSS(E,E_{1},l)$
 		\If{$F_{1}$ décrit $E[\LR]$} 
@@ -182,49 +163,87 @@ On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le 
 	Lorsque l'on calcul à la suite plusieurs $l$-isogénie horizontale associées à l'action d'un même idéal $\LR$, on peut éviter d'avoir à deviner le bon $j$-invariant avec CheckElkies en retenant les $j$-invariants vus aux étapes précédentes. Puisque l'on agit toujours avec le même idéal, on parcours le niveau du volcan d'isogénie associée à $\OR_{\Delta}$ dans un sens fixe.  
 \end{Rem}
 
-\subsection{Calculs d'isogénies par équivalence friable}
+\subsection{Calculs d'isogénies par équivalence friable}\label{SECTION isogenieFriable}
 %Ici problème de l'idéal principale, explication des conditions sur le conducteur/cardinal
 %Calculs de composantes, sans analyses de complexité générale (lemmes ?)
 
-Avec ce qui précède, on sait uniquement calculer des $l$-isogénies avec $l < \min (4p + 4, 4|\Delta|)$, et avec une complexité exponentielle en $l$. On se donne un idéal $\LR\in\OR_{\Delta}$, et on suppose que l'on peut trouver 
-\begin{equation*}
-	\LR \sim \LR' = \PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
-\end{equation*} 
-où les idéaux $\PR_{p_{i}}$ sont de normes $p_{i}$ appartenant à une liste $L_{premier}$ de nombres premiers vérifiant la même hypothèse \ref{HypothèseInversion} que $l$, et dont on sait calculer l'action sur des courbes de $Ell_{\F_{q}}(\OR_{\Delta})$ avec l'algorithme \ref{ALGO BMSSCheckElkies}. On peut donc calculer l'action de $\LR'$ en calculant $e_1 + \ldots + e_N$ actions d'idéaux de petites normes. On souhaite en déduire l'action de l'idéal $\LR$. 
+Avec ce qui précède, on sait uniquement calculer des $l$-isogénies avec $l$ vérifiant les hypothèses \ref{HypothèseInversion} et\ref{HypothèseElkies}, avec une complexité exponentielle en $l$. 
 
 \begin{Def}
-	Soit $\phi_\LR : E \rightarrow E/E[\LR]$. Avec les notations précédentes, on appelle composantes de $\phi_\LR$ associées à $\LR'$ les isogénies obtenues par la suite
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Un idéal $\LR\in\OR_{\Delta}$ est dit friable s'il vérifie 
+	\begin{equation*}
+		\LR = \PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
+	\end{equation*} 
+	où $e_{i}\in\N$ et les idéaux $\PR_{p_{i}}\in\OR_{\Delta}$ sont de normes $p_{i}$, appartenant à une liste $L_{premier}$ de nombres premiers vérifiant les hypothèses \ref{HypothèseInversion} et \ref{HypothèseElkies}.
+\end{Def}
+
+On se donne un idéal $\LR\in\OR_{\Delta}$, et on suppose que l'on peut trouver un idéal entier $\LR'$ équivalent à $\LR$ et friable. On peut donc calculer l'action de $\LR'$ sur $E$ en calculant $e_1 + \ldots + e_N$ actions d'idéaux avec l'algorithme \ref{ALGO BMSSCheckElkies}. On souhaite en déduire l'action de $\LR$ sur $E$. 
+
+\begin{Def}
+	 Avec les notations précédentes, soit $\phi_\LR : E \rightarrow E/E[\LR]$. On appelle composantes de $\phi_\LR$ associées à $\LR'$ les isogénies obtenues par la suite
 	\begin{equation*}
 		E\rightarrow E/E\left[ \PR_{1}\right] \rightarrow E/E\left[ \PR_{1}^{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\right] \rightarrow
 	\end{equation*}
 	\begin{equation*}
 		\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}\right] \rightarrow\ldots\rightarrow E/E\left[ \PR_{1}^{e_{1}}\PR_{2}^{e_{2}}\right] \rightarrow\ldots\rightarrow E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right].
 	\end{equation*}
-	Les composantes explicites sont les formes explicites normalisées des composantes. On note $E_{c}$ le modèle explicite de $E/E\left[\PR_{1}^{e_{1}} \ldots\PR_{N}^{e_{N}}\right]$ obtenue avec normalisation. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes explicites.
+	Les composantes explicites sont les formes explicites normalisées des composantes. On note $\phi_c : E\rightarrow E_c$ la composée de toutes les composantes explicites.
 \end{Def}
 
-$E_c$ est un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi_\LR$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ a priori. On a cependant la relation
+$E_c$ est donc un modèle de $E/E[\LR]$. Cependant la $l$-isogénie $\phi_\LR$ n'est pas égale à $\phi_c$, qui n'est pas de degré $l$ a priori. On a cependant la relation
 \begin{equation*}
 	\LR = (\alpha\OR_{\Delta})\PR_{p_{1}}^{e_{1}}\PR_{p_{2}}^{e_{2}}\ldots\PR_{p_{N}}^{e_{N}},
 \end{equation*}
-où $\alpha\OR_{\Delta}$ est un idéal principal fractionnaire. Pour expliciter $\alpha$, on rappelle que l'idéal conjugué $\bar{\PR_{i}}$ de $\PR_{i}$ est un représentant de $\CP_{p_{i}}^{-1}$, donc
+où $\alpha\OR_\Delta$ est un idéal fractionnaire principal. A priori $\alpha\in\K$, cependant
 \begin{equation*}
 	\LR\bar{\PR_{1}}^{e_{1}}\bar{\PR_{2}}^{e_{2}}\ldots\bar{\PR_{N}}^{e_{N}} = \beta\OR_{\Delta},
 \end{equation*}
-où $\beta\OR_{\Delta}$ est un idéal principal entier. Ainsi $\beta\in\OR_{\Delta}$ et $\alpha = \frac{\beta}{m}$ avec $m = p_1^{e_1}\ldots p_N^{e_N}$. On calcule $\beta$ en utilisant l'algorithme \ref{ALGO idealprincipal}, et on trouve ainsi $\alpha = \frac{u + v\pi_{q}}{mf_{m}}\in\OR_{\Delta}$. D'après l'hypothèse \ref{HypothèseInversion}, les nombres premiers $p_{i}$ sont premiers avec $|E(\F_{q^{n}})|$, donc $m$ l'est aussi. $f_{m}$ est aussi supposé premier avec $|E(\F_{q^{n}})|$, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. D'après la proposition \ref{evalEndoAvecDenom} et la remarque \ref{endomorphismeFractionnaire}, l'endomorphisme représenté par l'action de l'idéal $\alpha\OR_{\Delta}$ est $\left[ k\right] (u + \left[ v\right] \pi_{q})$. On en déduit l'algorithme \label{ALGO isogénieEquivalente} qui calcule l'action d'un idéal à partir de celle d'un idéal équivalent. \textbf{TODO : Ecrire l'algorithme} : 
+où $\beta\OR_{\Delta}$ est un idéal principal entier. Ainsi $\beta\in\OR_{\Delta}$ et $\alpha = \frac{\beta}{m}$ avec $m = p_1^{e_1}\ldots p_N^{e_N}$. On calcule $\beta$ en utilisant l'algorithme \ref{ALGO idealprincipal}, et on trouve ainsi $\alpha = \frac{u + v\pi_{q}}{mf_{m}}\in\OR_{\Delta}$, $u$, $v\in\Z$. D'après l'hypothèse \ref{HypothèseInversion}, les nombres premiers $p_{i}$ sont premiers avec $|E(\F_{q^{n}})|$, donc $m$ et $f_{m}$ le sont aussi, ce qui permet de calculer $k = (mf_{m})^{-1}$ modulo $|E(\F_{q^{n}})|$. D'après la proposition \ref{evalEndoAvecDenom} et la remarque \ref{endomorphismeFractionnaire}, l'endomorphisme correspondant à l'action de l'idéal $\alpha\OR_{\Delta}$ est $k(u + v\pi_{q})$. D'après la proposition \ref{facteurEndomorphismeReduction}, son facteur est $ku$ modulo $p$. On en déduit l'algorithme \ref{ALGO IsogenieEquivalenceFriable} qui calcule l'action d'un idéal à partir de celle d'un idéal équivalent friable, sous forme explicite normalisé. 
+
+\begin{algorithm}[h]
+	\caption{Calcul d'isogénie par équivalence friable}\label{ALGO IsogenieEquivalenceFriable}
+	\begin{algorithmic}[1]
+		\Require $E\in Ell_{\F_{q}}(\OR_{\Delta})$. un entier positif $n$ et un nombre premier $l$ vérifiant l'hypothèse \ref{HypothèseInversion}. Un idéal $\LR\subset\OR_{\Delta}$ de norme $l$. Un point $P\in E(\F_{q^{n}})$. Un idéal $\LR'$ friable équivalent à $\LR$, $L_{facteurs}$ la liste des idéaux premier de la factorisaiton de $\LR'$, et $L_{exposants}$ la liste des exposants associés.
+		\Ensure Un modèle normalisé $E'$ de la courbe elliptique image de la $l$-isogénie $\phi_\LR$. L'image $\phi_\LR(P)$ du point $P$. 
+		\State $L_{composantes}\gets$\O
+		\State $E_{depard}\gets E$
+		\State $\LR_{principal}\gets\LR$
+		\State $Q\gets P$
+		\For {$e_{i}$, $\PR_{i}$ parcourant $L_{exposants}$, $L_{facteurs}$}
+		\State$\LR_{principal}\gets\LR_{principal}\times\bar{\PR_{i}}^{ei}$
+		\State$\Psi\gets \Psi_{p_{i}}$ le polynôme modulaire de $p_{i}$ norme de $\PR_{i}$. 
+		\For {$j\in\left[ 1\ldots e_{i}\right]$ }
+		\State Calculer $\phi_c : E_{depard} \rightarrow E_{depard}/ E_{depard}[\PR_{i}]$ avec l'algorithme \ref{ALGO BMSSCheckElkies}.
+		\State $E_c\gets$ modèle explicite normalisé de $E_{depard}/ E_{depard}[\PR_{i}]$ 
+		\State $E_{depard}\gets E_c$ 
+		\State $Q\gets \phi_c(Q)$
+		\State Mettre $\phi_c$ dans $L_{composantes}$
+		\EndFor
+		\EndFor
+		\State $\beta\gets$ générateur de l'idéal principal $\LR_{principal}$ via l'algorithme \ref{ALGO idealprincipal}.
+		\State Calculer $u$, $v$ tels que $\beta = \frac{u + v\pi_{q}}{f_{m}}$ (proposition \ref{formeIdeauxBaseFq}).
+		\State $m\gets p_{1}^{e_{1}}\ldots p_{g}^{e_{g}}$, où $\PR_{i}$ est de norme $p_{i}$ 
+		\State $k\gets (mf_m)^{-1}$ modulo $|E(\F_{q^{n}}|)$
+		\State $c\gets uk$
+		\State $a$, $b\gets$ coefficient du modèle $E_c : y^2 = x^3 + ax + b$
+		\State Poser $E' : y^2 = x^3 + c^4ax + c^6b$
+		\State $Q\gets (k(u + v\pi_{q}))(Q)$
+		\State \Return E', Q
+	\end{algorithmic}
+\end{algorithm}
 
 
-\subsection{Calculs dans le groupe de classes d'idéaux}
+\subsection{Relations dans le groupe de classes d'idéaux}\label{SECTION CalculfactoClasse}
 %marche aléatoire, analyse complexité, expréiences
 
-On explique dans cette section comment trouver un idéal friable $\LR'$ équivalent à un idéal $\LR$ donné, de norme $l$ premier. On souhaite de plus que l'hypothèse \ref{HypothèseInversion} soit vérifier par les normes de tout les idéaux premier dans l'écriture de $\LR'$. 
+On explique dans cette section l'approche de \cite{BrokerCharlesLauter} pour trouver un idéal friable $\LR'$ équivalent à un idéal $\LR$ donné. 
 
 \subsubsection{Famille génératrice du groupe des classes d'idéaux}
 
-On commence par former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant composé uniquement d'idéaux dont on sait calculer l'action sur $Ell_{\F_{q}}{\OR_{\Delta}}$ avec l'algorithme \ref{ALGO BMSSCheckElkies}, et de norme vérifiant l'hypothèse \ref{HypothèseInversion}. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables inférieur à une borne $N$. On fixe alors une convention pour associer à chacun d'eux un idéal premier de même norme. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes pour obtenir une famille génératrice.
+On commence par former une famille génératrice de $Cl(\OR_{\Delta})$ définie avec un système de représentant composé uniquement d'idéaux de norme vérifiant les hypothèses \ref{HypothèseInversion} et \ref{HypothèseElkies}. Une idée naïve est d'établir la liste croissante des nombres premiers acceptables inférieurs à une borne $N$. On fixe alors une convention pour associer à chacun d'eux un idéal premier de même norme. Pour $N$ suffisamment grand on peut espérer avoir assez de représentant de classes distinctes pour obtenir une famille génératrice.
 
 \begin{Def}
-	Soit $p$ premier décomposé dans $\OR_{\Delta}$. On fixe un algorithme déterministe prenant entrée $p$ et $\OR_{\Delta}$ qui calcule une racine de $\OR_{\Delta}$ modulo $4p$. On définit la forme quadratique première de discriminant $\Delta$ associée à $p$ comme étant $f(p,b_{p})$, où $b_{p}\in\N$ vérifie $b_{p}^2 = \Delta [4p]$ et est obtenue par l’algorithme choisi. On définit l'idéal premier associé à $p$ par $\PR_{p} = I((p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
+	Soit $p$ premier décomposé dans $\OR_{\Delta}$. On fixe un algorithme déterministe prenant entrée $p$ et $\OR_{\Delta}$ qui calcule une racine de $\OR_{\Delta}$ modulo $4p$. On définit la forme quadratique première de discriminant $\Delta$ associée à $p$ comme étant $f(p,b_{p})$, où $b_{p}\in\N$ vérifie $b_{p}^2 = \Delta [4p]$ et est obtenue par l’algorithme choisi. On définit l'idéal premier associé à $p$ par $\PR_{p} = I(f(p,b_{p}))$. En particulier $N(\PR_{p}) = p$.
 \end{Def}
 
 \begin{Rem}
@@ -237,7 +256,7 @@ On commence par former une famille génératrice de $Cl(\OR_{\Delta})$ définie 
 
 La proposition suivante permet de choisir la borne $N$.
 
-\begin{Prop}[\cite{Seysen}(Th 3.3)]
+\begin{Prop}[\cite{Seysen}(Th 3.3)]\label{BorneThéorique}
 	
 	Sous l'hypothèse de Riemann généralisée, il existe une constante $C$ telle que $Cl(\OR_{\Delta})$ soit engendré par les classes des éléments de $P_{N}$, avec 
 	\begin{equation*}
@@ -247,21 +266,20 @@ La proposition suivante permet de choisir la borne $N$.
 \end{Prop}
 
 \begin{Rem}
-	Pour estimer la constante $C$, \cite{Seysen} cite deux résultats proposant $C= 280$ ou même $C = 2$. \cite{Coh00} propose $C = 6$. Cependant d'après \cite{Coh00}, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$.
+	Pour estimer la constante $C$, \cite{Seysen} cite deux résultats proposant $C= 280$ ou même $C = 2$. \cite{Coh00} propose $C = 6$. Cependant d'après \cite{Coh00}, en pratique cette borne $N$ est pessimiste et l'on conjecture une borne en $O(\log(\Delta)^{1+\epsilon})$ pour tout $\epsilon > 0$. On choisira $C=2$ et on supposera $p$ suffisamment grand pour que les nombres premiers inférieurs à $N$ vérifient l'hypothèse \ref{HypothèseElkies}.
 \end{Rem}
 
 \begin{Rem}
-	Comme les nombres premiers contredisant l'hypothèse \ref{HypothèseInversion} sont en nombre fini, les exclure de $P_{N}$ ne change pas le comportement asymptotique de la borne $N$. Prenant en compte ceci et la remarque précédente, on suppose donc que $P_{N}$ reste une famille génératrice si l'on ignore les idéaux de normes ne vérifiant pas l'hypothèse \ref{HypothèseInversion}. 
+	Comme les nombres premiers qui contredisent l'hypothèse \ref{HypothèseInversion} sont en nombre fini, les exclure de $P_{N}$ ne change pas le comportement asymptotique de la borne $N$. Prenant en compte ceci et la remarque précédente, on suppose que $P_{N}$ reste une famille génératrice si l'on ignore les idéaux de normes ne vérifiant pas l'hypothèse \ref{HypothèseInversion}. 
 \end{Rem} 
 
-Comme on peut choisir $N$ de taille asymptotiquement polynomiale, on énonce  l'algorithme \ref{ALGO FamilleGénératrice} qui sera utilisé pour établir une liste de représentant d'une famille supposée génératrice du groupe des classes d'idéaux. 
-
+En supposant $N$ choisit selon la proposition \ref{BorneThéorique}, on énonce  l'algorithme \ref{ALGO FamilleGénératrice} qui sera utilisé pour établir une liste de représentant d'une famille supposée génératrice du groupe des classes d'idéaux. 
 
 \begin{algorithm}[h]
 	\caption{Famille génératrice du groupe de classes}\label{ALGO FamilleGénératrice}
 	\begin{algorithmic}[1]
-		\Require Un entier positif $N$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$.
-		\Ensure Une liste $L_{premiers}$ de nombres premiers vérifiant l'hypothèse \ref{HypothèseInversion}, la liste $L_{ideaux}$ de leurs idéaux premiers associés respectifs, la liste $L_{formes}$ de leurs formes premières associées respectives. 
+		\Require Un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un entier $N > 2\log(|\Delta|)$.
+		\Ensure Une liste $L_{premiers}$ de nombres premiers vérifiant les hypothèses \ref{HypothèseInversion} et \ref{HypothèseElkies}, la liste $L_{ideaux}$ de leurs idéaux premiers associés respectifs, la liste $L_{formes}$ de leurs formes premières associées respectives. 
 		\State $L_{premiers}$, $L_{ideaux}$, $L_{formes} \gets$ \O
 		\State $n \gets 2$
 		\While{$n < N$}
@@ -287,7 +305,7 @@ Comme on peut choisir $N$ de taille asymptotiquement polynomiale, on énonce  l'
 \subsubsection{Écriture d'une classe dans une famille génératrice}
 
 
-Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Soit $L_{premiers}$, $L_{ideaux}$ et $L_{formes}$ les listes retournées par l'algorithme \ref{ALGO FamilleGénératrice}. On note $k$ leurs tailles, et $L_{ideaux} = \left\lbrace \PR_{1}\ldots\PR_{k}\right\rbrace$. Alors il existe $e_{1},\ldots,e_{k}\in\Z$ tels que
+Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Soit $L_{premiers}$, $L_{ideaux}$ et $L_{formes}$ les listes retournées par l'algorithme \ref{ALGO FamilleGénératrice}. On note $k$ leurs tailles, et $L_{ideaux} = \left\lbrace \PR_{1}\ldots\PR_{k}\right\rbrace$. Alors d'après la proposition \ref{BorneThéorique}, il existe $e_{1},\ldots,e_{k}\in\Z$ tels que
 \begin{equation*}
 	\CL = \CP_{1}^{e_{1}}\CP_{2}^{e_{2}}\ldots\CP_{k}^{e_{k}}
 \end{equation*}
@@ -295,25 +313,25 @@ Soit $\LR\subset\OR_{\Delta}$ un idéal entier. Soit $L_{premiers}$, $L_{ideaux}
 On cherche à expliciter des exposants $e_{i}$ vérifiant cette équation. Une idée naïve consiste à chercher de tels exposants au hasard. Deux faits vont permettre de rendre cela effectif :
 
 \begin{enumerate}
-	\item Certaines classes représentées par des formes réduites ayant de bonnes propriétés vont être explicitement et rapidement factorisable.
-	\item Les marches aléatoires dans le groupe de classe vont avoir de bonnes probabilités de terminer sur une classe facilement factorisable.
+	\item On peut expliciter des exposants pour certaines classes représentées par des formes quadratiques réduites ayant de bonnes propriétés.
+	\item Les marches aléatoires dans le groupe de classe vont terminer de façon uniforme sur une classe quelconque.
 \end{enumerate}
 
-On commence par citer le théorème qui nous permettra de factoriser une classe donnée.
+On commence par citer le théorème qui nous permettra d'expliciter des exposants pour certaines classes.
 
 \begin{The}[\cite{Seysen}(Th 3.1)]\label{factorisationClasseIdéaux}
 	
 	Soit $\LR\subset\OR_{\Delta}$ un idéal tel que $\CL$ ait une forme réduite $(a,b)$. Si $g\in\N$ et $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en facteurs premiers de l'entier $a$, alors
 	\begin{enumerate}
 		\item Chaque $p_{i}$ est décomposé dans $\OR_{\Delta}$.
-		\item Si $\PR_{p_{i}} = (1,p_{i},b_{p_{i}})$ est l'idéal premier associé à $p_{i}$, alors $b = \pm b_{p_{i}} $ mod $2a$.
-		\item $\CL = \CP_{p_{1}}^{\pm e_{1}}\CP_{p_{2}}^{\pm e_{2}}\ldots\CP_{p_{g}}^{\pm e_{g}}$ 
-		\item L'exposant de $\PR_{p_{i}}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$
+		\item Si $\PR_{p_{i}} = id(1,p_{i},b_{p_{i}})$ est l'idéal premier associé à $p_{i}$, alors $b = \pm b_{p_{i}} $ mod $2a$.
+		\item $\CL = \CP_{p_{1}}^{\pm e_{1}}\CP_{p_{2}}^{\pm e_{2}}\ldots\CP_{p_{g}}^{\pm e_{g}}$.
+		\item L'exposant de $\PR_{p_{i}}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$.
 	\end{enumerate}
 \end{The}
 
 \begin{Coro}
-	On reprend les notations du théorème précédent. Si $a$ se factorise entièrement avec des premiers $p_{i}\in L_{premiers}$ obtenue par l'algorithme \ref{ALGO FamilleGénératrice}, alors $\CL$ est facilement factorisable connaissant la factorisation de $a$, grâce au point 3 du théorème \ref{factorisationClasseIdéaux}. 
+	On reprend les notations du théorème précédent. Si $a$ se factorise entièrement par des éléments de $L_{premiers}$ obtenue par l'algorithme \ref{ALGO FamilleGénératrice}, alors on peut expliciter des exposants d'une écriture de $\CL$ dans la famille $L_{ideaux}$ connaissant la factorisation de $a$. 
 \end{Coro}
 
 On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. On admet la théorie des graphes expanseurs, dont on cite les résultats principaux.
@@ -337,13 +355,13 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 \end{Prop}
 
 \begin{Rem}
-	En pratique, dès que l'on enchaîne des marches aléatoires de taille de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$. Puisque le groupe est abélien, la norme $l_{1}$ du vecteurs des exposants, que l'on notera $x$, est au pire le nombre de pas $t$ de la marche aléatoire. 
+	En pratique, dès que l'on enchaîne des marches aléatoires de taille de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$. Puisque le groupe est abélien, la norme $l_{1}$ du vecteurs des exposants est au pire le nombre de pas $t$ de la marche aléatoire. 
 \end{Rem}
 
-L'idée est alors de choisir $S_{0}$ dans la proposition \ref{grapheExpanseurProba} comme étant l'ensemble des classes que l'on sait factoriser grâce au théorème \ref{factorisationClasseIdéaux}. On en déduit l'algorithme \ref{ALGO FactoClasse} permettant de trouver des exposants $e_{i}$ qui conviennent.  
+On choisit alors l'ensemble $S_{0}$ de la proposition \ref{grapheExpanseurProba} comme étant l'ensemble des classes dont on sait expliciter l'écriture dans $L_{ideaux}$ grâce au théorème \ref{factorisationClasseIdéaux}. On en déduit l'algorithme \ref{ALGO FactoClasse}, permettant de trouver des exposants $e_{i}$ d'une écriture d'une classe $\CL$ donnée dans une famille génératrice construite avec l'algorithme \ref{ALGO FamilleGénératrice}.  
 
 \begin{algorithm}
-	\caption{Factorisation de la classe d'un idéal}\label{ALGO FactoClasse}
+	\caption{Recherche d'exposants de la classe d'un idéal}\label{ALGO FactoClasse}
 	\begin{algorithmic}[1]
 		\Require Un entier positif $N$, une borne de pas de marche aléatoire $t$, un discriminant $\Delta$, la caractéristique $p$, le conducteur maximal $f_{m}$, le cardinal $|E(\F_{q^{n}})|$. Un idéal $\LR\subset\OR_{\Delta}$. 
 		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ décrivant une factorisation de $\CL$.
@@ -363,9 +381,9 @@ L'idée est alors de choisir $S_{0}$ dans la proposition \ref{grapheExpanseurPro
 		\For{$1 \leq j \leq x_{i}$}
 		\State $classe_{test}\gets classe_{test}L_{formes}[i]$
 		\State $classe_{test}\gets classe_{test}$ réduit par l'algorithme \ref{ALGO reduction}
+		\EndFor
+		\EndFor
 		\State Factoriser le coefficient dominant de $classe_{test}$ (avec ECM).
-		\EndFor
-		\EndFor
 		\EndWhile
 		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème \ref{factorisationClasseIdéaux}.
 		\State $L_{exposants}\gets L_{y} - L_{x}$
@@ -380,36 +398,37 @@ L'idée est alors de choisir $S_{0}$ dans la proposition \ref{grapheExpanseurPro
 	\end{algorithmic}
 \end{algorithm}
 
-
+\begin{Rem}
+	L'algorithme \ref{ALGO FactoClasse} n'est pas exactement celui utilisé dans \cite{BrokerCharlesLauter} et \cite{JaoSoukharev}, la différence étant faite lors de l'implémentation de la marche aléatoire (ligne $7$ à $11$). Dans la section suivante, on analyse la complexité de l'algorithme énoncé. On étudiera l'influence du changement d'implémentation lors de l'analyse de complexité de la section \ref{SECTION Broker}.
+\end{Rem}
 
 
 \subsubsection{Analyse de complexité}
 
 
-\textbf{TODO relire et faire des labels/ref}
 
-La complexité des algorithmes $3$ et $4$ nécessite de préciser comment on choisit le paramètre $N$ bornant les nombres premiers utilisés.  
+
+L'analyse des algorithmes \ref{ALGO FamilleGénératrice} et \ref{ALGO FactoClasse} dépend du choix du paramètre $N$ bornant les nombres premiers utilisés.  
 
 \begin{Prop}
-	Soit $N$ un entier positif, $\Delta$ un discriminant. L'algorithme $3$ renvoie une famille supposée génératrice du groupe de classe de représentants de normes bornées par $N$ avec une complexité majorée par 
+	Soit $N$ un entier positif, $\Delta$ un discriminant. L'algorithme \ref{ALGO FamilleGénératrice} renvoie une famille supposée génératrice du groupe de classe de représentants de normes bornées par $N$ avec une complexité majorée par 
 	\begin{equation*}
-		O(N\log(N)^4).
+		O(N\log(N)^7).
 	\end{equation*} 
 \end{Prop}
 
 \begin{proof}
-	On parcourt tout les entiers plus petit que $N$, en testant s'ils sont premier à chaque fois. Pour chaque nombre premier $n$ regardé, le calcul intermédiaire le plus coûteux est celui d'une racine $b_{n}$ de $\Delta$ modulo $4n$, en $O(\log(n)^4)$ avec l'algorithme de Tonelli et Shanks \cite{Coh00}[1.5.1] (on peut faire plus rapide lorsque $n\neq 1$ modulo $8$, mais ceci est la meilleure méthode générale. L'implémentation Sage applique la méthode la plus rapide connue selon la valeur de $n$.). D'où une complexité globale majorée en $O(N\log(N)^4)$.
+	On parcourt tout les entiers $n$ plus petit que $N$, en testant s'ils sont premier en $O(\log(n)^4)$ (Algorithme de Miller-Rabin). Pour chaque nombre premier $n$ regardé, le calcul intermédiaire le plus coûteux est celui d'une racine $b_{n}$ de $\Delta$ modulo $4n$, en $O(\log(n)^4)$ (Algorithme de Tonelli et Shanks \cite{Coh00}[1.5.1]). Le nombre de nombre premier inférieur à $N$ est approché par $N/\log(N)$. D'où une complexité globale majorée en $O(N\log(N)^7)$.
 \end{proof}
 
-\cite{JaoSoukharev} et \cite{Coh00}[\S 5.5.1] propose une optimisation du choix du paramètre $N$ les algorithmes 3 et 4 : Si $N$ est trop petit, on risque de ne pas avoir une famille génératrice avec l'algorithme 3, et il est plus difficile de trouver par hasard une classe facilement factorisable lors de l'algorithme 4. Mais si $N$ est trop grand, l'algorithme $3$ prend plus de temps. Il sera aussi plus lent de vérifier si un entier se factorise dans la famille de nombres premiers $L_{premier}$.
+\cite{JaoSoukharev} et \cite{Coh00}[\S 5.5.1] propose une optimisation du choix du paramètre $N$. Si $N$ est trop petit, on risque de ne pas avoir une famille génératrice avec l'algorithme \ref{ALGO FamilleGénératrice}, et il est plus difficile de trouver par hasard une classe facilement factorisable lors de l'algorithme \ref{ALGO FactoClasse}. Mais si $N$ est trop grand, l'algorithme \ref{ALGO FamilleGénératrice} prend plus de temps. Il sera aussi plus lent de vérifier la friabilité d'un entier dans la famille de nombres premiers $L_{premier}$, et on devra par la suite calculer des isogénies de degrés plus grand. 
 
 \begin{Def}
-	
 	On définit la complexité sous-exponentielle en $\log(|P|)$, pour un certain paramètre $P$, par la fonction suivante. Pour $\alpha\in\left] 0,1 \right[$ et $z>0$, on pose
 	\begin{equation*}
 		L_P(\alpha,z) = e^{\left( z\log^{\alpha}(|P|)\log^{1-\alpha}(\log(|P|))\right) }.
 	\end{equation*}
-	On dira qu'une procédure est sous-exponentielle en $\log(|P|)$ s'il existe des constante $\alpha$, $z$ telles que la complexité soit en $O(L_P(\alpha,z))$. Pour toute fonction $f$, on notera une complexité en $\tilde{O}(f(P))$ lorsque l'on omet des facteurs de tailles asymptotiquement négligeables devant $f(P)$.
+	On dira qu'une procédure est sous-exponentielle en $\log(|P|)$ s'il existe des constante $\alpha$, $z$ telles que sa complexité soit en $O(L_P(\alpha,z))$. Pour toute fonction $f$, on notera une complexité en $\tilde{O}(f(P))$ lorsque l'on omet des facteurs de tailles asymptotiquement négligeables devant $f(P)$.
 	
 \end{Def}
 
@@ -418,95 +437,98 @@ La complexité des algorithmes $3$ et $4$ nécessite de préciser comment on cho
 \end{Def}
 
 \begin{Rem}
-	Même si la borne théorique est asymptotiquement plus petite que la borne pratique, pour des discriminants de moins d'une centaine de chiffres c'est la borne sous-exponentielle qui sera plus petite \cite{Coh00}[5.5.1]. Dans \cite{JaoSoukharev}, la borne pratique est cependant supposée (sans preuve) suffisamment grande pour que l'algorithme $3$ appliquée à $N_{p}$ retourne une famille génératrice.
+	Même si la borne théorique est asymptotiquement plus petite que la borne pratique, pour des discriminants de moins d'une centaine de chiffres c'est la borne sous-exponentielle qui sera plus petite \cite{Coh00}[5.5.1]. Dans \cite{JaoSoukharev}, la borne pratique est cependant supposée (sans preuve) suffisamment grande pour que l'algorithme \ref{ALGO FamilleGénératrice} appliqué à $N_{p}$ retourne une famille génératrice.
 \end{Rem}
 
-Les deux propositions suivantes vont permettre d'analyser la complexité de l'algorithme $4$ et des algorithmes suivant.
+Les deux propositions suivantes vont permettre d'analyser la complexité de l'algorithme \ref{ALGO FactoClasse}.
 
-\begin{Prop}
+\begin{Prop}\label{espéranceExposant}
 	On pose
 	\begin{equation*}
 		t = C_{t}\log\left( |\Delta|\right) /\log\left( \log\left( |\Delta|\right) \right)\;,\; C_{t} \geq 1
 	\end{equation*}
-	et l'on considère dans l'algorithme $4$ une marche aléatoire de $t$ pas. Soit $k$ la taille des listes retournées par l'algorithme $3$, avec $N \geq N_{t}$. Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues avec les lignes $7$ à $11$ de l'algorithme $4$. Alors les $|x_{i}|$ sont des variables aléatoires d'espérance majorée par $\frac{C_{t}}{\log(|\Delta|)}$. 
+	 Soit $k$ la taille des listes retournées par l'algorithme \ref{ALGO FamilleGénératrice} appliqué à $N \geq N_{t}$. Soit $x_{i}$, $0\leq i \leq k-1$ les éléments de $L_{x}$ obtenues lors d'une itération de la boucle While de l'algorithme \ref{ALGO FactoClasse} appliqué à $N$ et $t$ (lignes $7$ à $11$,). Alors les $|x_{i}|$ sont des variables aléatoires identiquement distribuées, d'espérance vérifiant
+	 \begin{equation*}
+	 	E(|x_{i}|)\leq\frac{C_{t}}{\log(|\Delta|)}. 
+	 \end{equation*} 
 \end{Prop}
 
 \begin{proof}
-	La liste d'exposants $L_{x}$ est de taille $k$. Le choix de la ligne $8$ est aléatoire et uniforme. Donc au cours de la boucle des lignes $7$ à $11$, chaque élément $x_{i}$ de $L_{x}$ est incrémenté en moyenne $\frac{t}{k}$ fois. D'après le théorème des nombres premiers, si l'on suppose qu'environ la moitié des nombres premiers plus petit que $N$ sont décomposé dans $\OR_{\Delta}$, on en déduit $k \simeq (N/2log(N))$. En particulier si $N = N_{t}$,
+	La liste d'exposants $L_{x}$ est de taille $k$. Le choix de la ligne $8$ est aléatoire et uniforme. Donc au cours de la boucle des lignes $7$ à $11$, chaque élément $x_{i}$ de $L_{x}$ est incrémenté en moyenne $\frac{t}{k}$ fois. On suppose qu'environ la moitié des nombres premiers plus petit que $N$ sont décomposé dans $\OR_{\Delta}$. On en déduit que $k \simeq (N/2log(N))$. En particulier si $N = N_{t}$,
 	\begin{equation*}
 		\frac{t}{k} \simeq C_{t}\frac{\log\left( |\Delta|\right)}{\log\left( \log\left( |\Delta|\right) \right)}\frac{2\log(\log(|\Delta|))}{2\log(|\Delta|)^2} = \frac{C_{t}}{\log(|\Delta|)}.
 	\end{equation*}
 	Or $|x_{i}|$ est majoré par le nombre d'incrémentation, d'où le résultat. Si $N \geq N_{t}$, cela implique d'augmenter $k$ sans influencer $t$, donc cela ne fera que diminuer l'espérance et le résultat précédent reste une majoration. 
 \end{proof}
 
-\begin{Rem}
-	On propose en pratique $C_{t} = 1$. Ainsi la construction des relations aléatoires selon les lignes $7$ à $11$ de l'algorithme $4$ fournit en moyenne $t$ exposant non nuls, tous égaux à $\pm 1$. Plus $\Delta$ est grand, plus la variance des $|x_{i}|$ tendra vers $0$. On supposera donc dès que possible que la suite $L_{x}$ contient $t$ éléments non nuls, tous égaux à $\pm$. La liste $L_{exposant}$ est obtenue en déduisant des coefficients de $L_{x}$ les exposants de la factorisation de $classe_{test}$. Ces derniers sont supposé petit car la forme $classe_{test}$ est au préalable réduite \cite{JaoSoukharev}. On supposera dans l'analyse de complexité que $L_{exposant}$ se comporte comme $L_{x}$, l'erreur commise étant négligeable. 
+\begin{Rem}\label{comportementListeExposant}
+	On propose en pratique $C_{t} = 1$. Asymptotiquement selon $|\Delta|$, l'espérance des variables $|x_{i}|$ tend vers $0$. Ainsi on supposera donc que la suite $L_{x}$ contient en moyenne $t$ éléments non nuls, tous égaux à $\pm 1$. Dans la suite de l'algorithme \ref{ALGO FactoClasse}, la liste $L_{exposant}$ est obtenue en soustrayant aux éléments de $L_{x}$ les exposants correspondant issus de l'écriture de $classe_{test}$. Ces derniers sont supposé négligeable dans \cite{JaoSoukharev}, car la forme $classe_{test}$ est réduite. On supposera dans l'analyse de complexité que $L_{exposant}$ se comporte comme $L_{x}$. 
 \end{Rem}
 
 \begin{Rem}
-	Pour éviter d'estimer $C_{t}$, on peut choisir $t = \log(|\Delta|)$, l'espérance sera alors majorée par $\frac{\log(\log(|\Delta|))}{\log(|\Delta|)}$ et tend toujours vers $0$ lorsque $|\Delta|$ augmente. 
+	Pour éviter d'estimer $C_{t}$, on peut choisir $t = \log(|\Delta|)$, l'espérance ds variables $|x_i|$ sera alors majorée par $\frac{\log(\log(|\Delta|))}{\log(|\Delta|)}$ et tend toujours vers $0$ lorsque $|\Delta|$ augmente. 
 \end{Rem}
 
-\begin{Prop}
-	Le nombre d'itérations de la boucle while des lignes $5$ à $19$ de l'algorithme $4$ est minorée par 
+\begin{Prop}\label{minorationNombreEssaisFacto}
+	Le nombre d'itérations de la boucle while de l'algorithme \ref{ALGO FactoClasse} est minorée par 
 	\begin{equation*}
 		O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N \right)  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N \right)} \right) \right).
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
-	Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. On majore cela par la probabilité d'être $N$-friable, c'est à dire en regardant tout les nombres premiers plus petit que $N$ au lieu de seulement $L_{premier}$. Le théorème de Canfield Erdös Pomerance (voir  \cite{Coh00}[Th 10.2.1] ) permet d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $N$-friable. Le résultat énoncé est une application directe de ce théorème.
+	Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. D'après la proposition \ref{factorisationClasseIdéaux}, le coefficient $a$ ne se factorise qu'avec des nombres premiers décomposés. On s'intéresse donc à la probabilité que $a$ soit $N$-friable. Le théorème de Canfield Erdös Pomerance  \cite{Coh00}(Th 10.2.1) permet d'estimer cette probabilité. Le résultat énoncé est une application directe de ce théorème.
 \end{proof}
 
-On en déduit la complexité de l'algorithme $4$
-
-\begin{Prop}
-	Le nombre d'opération de chaque itération de la boucle while des lignes $5$ à $19$ de l'algorithme $4$ est en moyenne 
+\begin{Prop}\label{Complex iterationBoucleWhile}
+	Le nombre d'opérations de chaque itération de la boucle While de l'algorithme \ref{ALGO FactoClasse} est en moyenne 
 	\begin{equation*}
 		O\left(\log(\log(|\Delta|))L_{N}\left( \frac{1}{2},\frac{\sqrt{2}}{2}\right) \right) 
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
-	Soit $t$ le nombre de pas de la marche aléatoire de l'algorithme $4$, choisit selon la proposition 5.22. Soit $k$ la taille des listes retournées par l'algorithme $3$. Durant la marche aléatoire, chaque indice est choisi en moyenne $t/k$ fois. Si $N \geq N_{t}$, d'après la proposition 5.22 on peut supposer qu'en moyenne chaque indice est incrémenté au plus une fois, et que la liste $L_{x}$ ne contient que des éléments nuls sauf $t$ valeurs égales à $\pm 1$. Sous cette hypothèse le calcul de $classe_{test}$ des lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un $p_{i} \leq N$, et à chaque fois suivi d'une réduction par l'algorithme $2$. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
+	Soit $t$ le nombre de pas de la marche aléatoire de l'algorithme \ref{ALGO FactoClasse}, choisit selon la proposition \ref{espéranceExposant}. Soit $k$ la taille des listes retournées par l'algorithme \ref{ALGO FamilleGénératrice}. D'après la remarque \ref{comportementListeExposant}, le calcul de $classe_test$ lors ds lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un nombre premier $p_{i} \leq N$, et à chaque fois suivi d'une réduction par l'algorithme \ref{ALGO reduction}. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
 	\begin{equation*}
 		|b| \leq a \leq \sqrt{\frac{|\Delta|}{3}},
 	\end{equation*} 
-	la complexité d'un produit d'une forme réduite avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ \cite{JaoSoukharev}. On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée par 
+	la complexité d'un produit d'une forme réduite avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ (d'après \cite{JaoSoukharev}). On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée d'après \ref{COMPLEX reduction} par 
 	\begin{equation*}
-		O(\log(a p_{i})\log(p_{i}) + \log(2a^2 p_{i})) = O(\log(N)^2\log(|\Delta|)^2)
+		 O(\log(N)^2\log(|\Delta|)^2)
 	\end{equation*}
-	La complexité du calcul du produit est négligeable devant celle de la réduction qui le suit. Donc le calcul de $classe_{test}$ des lignes $12$ à $18$ se fait en
+	Donc la complexité du calcul du produit est négligeable devant celle de la réduction qui le suit. Ainsi le calcul de $classe_{test}$ des lignes $12$ à $18$ a une complexité en
 	\begin{equation*}
-		O(t\log(N)^2\log(|\Delta|)^2) = O\left( \frac{\log(N)^2\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right) .
+		O(t\log(N)^2\log(|\Delta|)^2) = O\left( \frac{\log(N)^2\log(|\Delta|)^3}{\log(\log(|\Delta|))}\right).
 	\end{equation*}
-	Après avoir calculer $classe_{test}$, il faut tester s'il se factorise via le théorème 5.12. On note maintenant $classe_{test} = (a,b,c)$. Il s'agit de déterminer si $a$ est $L_{premier}$-friable. On applique ECM pour factoriser $a$. Si l'on majore les facteurs premier de $a$ par $N$, ECM trouve un facteur non premier de $a$ en $L_{N}(1/2,\sqrt{2}/2)$ opérations. Pour chaque facteur $p_i$ trouvé, on peut calculer la valuation $p_i$-adique de $a$ par divisions euclidiennes successives, ce qui est négligeable. Comme $a \leq \sqrt{|\Delta|}/3$, le nombre de diviseurs premiers distincts de $a$ est en $O(\log(\log(|\Delta|)))$ \cite{Riesel1985}[équation 5.8]. La factorisation de $a$ est donc de complexité
+	 On note maintenant $classe_{test} = (a,b,c)$. Il reste à déterminer si $a$ est $L_{premier}$-friable. Si l'on majore les facteurs premier de $a$ par $N$, ECM trouve un facteur de $a$ en $L_{N}(1/2,\sqrt{2}/2)$ opérations. Comme $a \leq \sqrt{|\Delta|}/3$, le nombre de diviseurs premiers distincts de $a$ est en $O(\log(\log(|\Delta|)))$ (\cite{Riesel1985}[5.8]). La factorisation de $a$ est donc de complexité
 	\begin{equation*}
 		O\left( \log(\log(|\Delta|))L_{N}\left( \frac{1}{2},\frac{\sqrt{2}}{2}\right) \right), 
 	\end{equation*}
 	et domine asymptotiquement les calculs précédents. 
 \end{proof}
 
-\begin{Prop}
-	
-	Si $N = N_{t}$, alors L'algorithme $4$ a une complexité moyenne en 
+On déduit de ce qui précède la complexité de l'algorithme \ref{ALGO FactoClasse}. On énonce deux proposition selon si l'on choisit $N_t$ ou $N_p$, pour prouver l'avance asymptotique de l'opimisation proposé par \cite{JaoSoukharev} en choisissant $N_p$. 
+
+\begin{Prop}\label{COMPLEX factoClasseTh}
+	 L'algorithme \ref{ALGO FactoClasse} appliqué à $N = N_t$ admet une complexité moyenne exponentielle en $\log(|\Delta|)$, majorée par
 	\begin{equation*}
-		O(\log(l)^2 + \sqrt{|\Delta|})
+		\tilde{O}(\log(l)^2 + \sqrt{|\Delta|})
 	\end{equation*}
 	
 \end{Prop}
 
 \begin{proof}
-	La seule étape de l'algorithme dépendant de $l$ est la réduction initiale de l'idéal $\LR$, en $O(\log(l)^2)$. Avec $N = N_{t}$, Le nombre d'itérations de la boucle des lignes $5$ à $19$ est minoré d'après la proposition $5.32$ par
+	La seule étape de l'algorithme dépendant de $l$ est la réduction initiale de l'idéal $\LR$, en $O(\log(l)^2)$. Avec $N = N_{t}$, Le nombre d'itérations de la boucle While est minoré d'après la proposition \ref{minorationNombreEssaisFacto} par
 	\begin{equation*}
 		O\left( \exp \left(  \log\log\left(|\Delta| \right)  \frac{\log\left(|\Delta| \right)}{4\log(\log(|\Delta|))} \right) \right) = O(\sqrt[4]{|\Delta|}).
 	\end{equation*}
-	La complexité est donc au moins exponentielle en $\log(|\Delta|)$. On peut majorer le nombre d'itérations en considérant le cas où l'on ne cherche pas à factoriser, c'est à dire arrêter la boucle lorsque $classe_{test}$ est la classe neutre du groupe $Cl(\OR_{\Delta})$. Comme le cardinal du groupe de classe est en $O(\sqrt{|\Delta|})$, en supposant les valeurs de $classe_{test}$ uniforme dans $Cl(\OR_{\Delta})$ grâce au choix de $t$, le nombre d'itérations est dans ce cas en moyenne $O(\sqrt{|\Delta|})$, donc exponentiel en $\log(|\Delta|)$. 
+	La complexité est donc au moins exponentielle en $\log(|\Delta|)$. On peut majorer le nombre d'itérations en considérant le cas où l'on arrête la boucle While uniquement lorsque $classe_{test}$ est la classe neutre du groupe $Cl(\OR_{\Delta})$. Comme le cardinal du groupe de classe est en $O(\sqrt{|\Delta|})$ d'après la proposition \ref{cardinalGroupeClasse}, le nombre d'itérations est en moyenne $O(\sqrt{|\Delta|})$, donc exponentiel en $\log(|\Delta|)$. 
 	
 \end{proof}
 
-\begin{Prop}
-	Si $N = N_{p}$, l'algorithme $4$ a une complexité moyenne sous-exponentielle en $\log(|\Delta|)$. Plus précisément si $N_{p} = L\left(\frac{1}{2}, z \right)$ alors l'algorithme $4$ a une complexité moyenne en
+
+\begin{Prop}\label{COMPLEX factoClasseJao}
+	L'algorithme \ref{ALGO FactoClasse} appliqué à $N = N_p$ admet une complexité moyenne sous-exponentielle en $\log(|\Delta|)$. Plus précisément si $N_{p} = L\left(\frac{1}{2}, z \right)$ alors l'algorithme \ref{ALGO FactoClasse} admet une complexité moyenne en
 	
 	\begin{equation*}
 		\tilde{O}\left(\log(l)^2 + L_\Delta\left(\frac{1}{2}, \frac{1}{4z} \right)\right)
@@ -515,16 +537,15 @@ On en déduit la complexité de l'algorithme $4$
 \end{Prop}
 
 \begin{proof}
-	La seule étape de l'algorithme dépendant de $l$ est la réduction initiale de l'idéal $\LR$, en $O(\log(l)^2)$. On rappelle que $N_{p} = L_\Delta(1/2,z)$ avec $z\in\R$ fixé à déterminer. Ainsi la complexité de chaque itération de la boucle while est d'après la proposition 5.24 :
+	La seule étape de l'algorithme dépendant de $l$ est la réduction initiale de l'idéal $\LR$, en $O(\log(l)^2)$. La complexité des itérations de la boucle While est d'après la proposition \ref{Complex iterationBoucleWhile} 
 	\begin{equation*}
-		O\left( \log(\log(|\Delta|))L_{N_p}\left( \frac{1}{2},\frac{\sqrt{2}}{2}\right) \right) = \tilde{O}\left(  L_\Delta\left( \frac{1}{4}, \frac{\sqrt{2z}}{4} \right) \right) 
+		O\left( \log(\log(|\Delta|))L_{N_p}\left( \frac{1}{2},\frac{\sqrt{2}}{2}\right) \right) = \tilde{O}\left(  L_\Delta\left( \frac{1}{4}, \frac{\sqrt{2z}}{4} \right) \right).
 	\end{equation*}
-	La complexité de chaque itération de la boucle des ligne $5$ à $19$ est dominé par cette étape. Le nombre d'itérations est quand à lui de l'ordre de 
+	Le nombre d'itérations est quand à lui d'après \ref{minorationNombreEssaisFacto} de l'ordre de 
 	\begin{align*}
-		&O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N_{p} \right)  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right) \\&= O\left( \exp \left( \log\log\left(|\Delta|  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right) = O\left( L_\Delta\left( \frac{1}{2},\frac{1}{4z}\right) \right) 
+		&O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N_{p} \right)  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right) \\&= O\left( \exp \left( \log\log\left(|\Delta|  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N_{p} \right)} \right) \right) = O\left( L_\Delta\left( \frac{1}{2},\frac{1}{4z}\right) \right).
 	\end{align*}
-	
-	La complexité selon $\log(|\Delta|)$ de l'algorithme $4$ est donc en 
+	La complexité selon $\log(|\Delta|)$ de l'algorithme \ref{ALGO FactoClasse} est donc en 
 	\begin{equation*}
 		\tilde{O}\left(  L_\Delta\left( \frac{1}{4},\frac{\sqrt{2z}}{4}\right)L_\Delta\left( \frac{1}{2},\frac{1}{4z}\right)\right)  = \tilde{O}\left( L_\Delta\left(\frac{1}{2}, \frac{1}{4z} \right) \right) 
 	\end{equation*}
@@ -533,64 +554,35 @@ On en déduit la complexité de l'algorithme $4$
 
 
 \begin{Rem}
-	Lorsque l'on choisit $N = N_t$, la complexité exponentielle est dû au fait que $N_t$ est trop petit, ce qui implique une probabilité de réussite trop faible lors des marches aléatoires. Il faut donc choisir $N \geq N_t$. Si $N_p$ dépasse $N_t$ asymptotiquement, pour des valeurs de $\Delta$ de moins d'une centaine de chiffres c'est $N_p$ qui est plus petit et donc à éviter d'autant plus. Le choix de $N$ optimal est donc
+	Lorsque l'on choisit $N = N_t$, la complexité exponentielle est dû au fait que $N_t$ est trop petit, ce qui implique une probabilité de réussite trop faible lors des marches aléatoires. Il faut donc choisir $N \geq N_t$. Si $N_p$ dépasse $N_t$ asymptotiquement, pour des valeurs de $\Delta$ de moins d'une centaine de chiffres c'est $N_p$ qui est plus petit, et donc à éviter d'autant plus. Le choix de $N$ optimal est donc
 	\begin{equation*}
 		N = \max(N_p,N_t).
 	\end{equation*}
-	On a alors asymptotiquement $N = N_p$ et la proposition $5.26$ s'applique. 
+	On a alors asymptotiquement $N = N_p$ et la proposition \ref{COMPLEX factoClasseJao} s'applique. 
 \end{Rem}
 
 
-\subsection{Applications au calculs d'isogénies horizontales} 
+\subsection{Applications au calculs d'isogénies horizontales}\label{SECTION Broker}
 %Enoncés de l'algo, analyse de complexité
 
-Énoncer l'algorithme général de broker
-
-On se résume ce qui précède en énonçant l'algorithme 9, qui améliore l'algorithme 1. 
+On énonce l'algorithme de Broker Charle et Lauter \cite{BrokerCharlesLauter}, déduit des algorithmes des sections précédentes.
 
 \begin{algorithm}[h]
-	\caption{Algorithme de Borker Charle Lauter}
+	\caption{Algorithme de Broker Charle Lauter}\label{ALGO Broker}
 	\begin{algorithmic}[1]
-		\Require Un modèle $E$ défini sur $\F_{q}$ de courbe elliptique à multiplication complexe, le discriminant $\Delta$ de son anneaux d'endomorphisme, un entier positif $n$ et un nombre $l$ premier vérifiant l'hypothèse 1, un entier positif $N$, un point $P\in\F_{q^{n}}$
-		\Ensure Un modèle $E'$ d'une courbe elliptique tel qu'il existe une forme explicite normalisée d'une $l$-isogénie $\phi : E \rightarrow E'$ partant de $E$. L'image $phi(P)$ du point $P$.
-		\State $\LR\gets$ idéal de Seysen de $l$
-		\State $L_{exposants}$, $L_{facteurs}\gets$ résultats des algorithmes 3 et 4 avec un choix de borne $N$
-		\State $L_{composantes}\gets$\O
-		\State $E_{depard}\gets E$
-		\State $\LR_{principal}\gets\LR$
-		\State $Q\gets P$
-		\For {$e_{i}$, $\PR_{i}$ parcourant $L_{exposants}$, $L_{facteurs}$}
-		\State$\LR_{principal}\gets\LR_{principal}\times\bar{\PR_{i}}^{ei}$
-		\State$\Psi\gets \Psi_{p_{i}}$ le polynôme modulaire de $p_{i}$ norme de $\PR_{i}$. 
-		\For {$j\in\left[ 1\ldots e_{i}\right]$ }
-		\State Calculer $\phi_c : E_{depard} \rightarrow E_{depard}/ E_{depard}[\PR_{i}]$ avec l'algorithme 8.
-		\State $E_c\gets$ le modèle de $E_{depard}/ E_{depard}[\PR_{i}]$ calculé avec l'algorithme 7.
-		\State Mettre $\phi_c$ dans $L_{composantes}$
-		\State $Q\gets phi_c(Q)$
-		\State $E_{depard}\gets E_c$
-		\EndFor
-		\EndFor
-		\State $\beta\gets$ générateur de l'idéal principal $\LR_{principal}$ via l'algorithme 5
-		\State Calculer $u$, $v$ tels que $\beta = \frac{u + v\pi_{q}}{f_{m}}$
-		\State $m\gets p_{1}^{e_{1}}\ldots p_{g}^{e_{g}}$, où $\PR_{i}$ est de norme $p_{i}$ 
-		\State $c\gets\frac{u}{mf_{m}}$ 
-		\State Poser $a$, $b$ tels que $E_c : y^2 = x^3 + ax + b$
-		\State Poser $E' : y^2 = x^3 + c^4ax + c^6b$
-		\State $k\gets (mf_m)^{-1}$ modulo $|E(\F_{q^{n}}|)$
-		\State $Q\gets (k(u + v\pi_{q}))(Q)$
+		\Require $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Un entier positif $n$. Un nombre $l$ premier vérifiant l'hypothèse \ref{HypothèseInversion}, et un idéal $\LR$ de norme $l$. Un entier positif $N > 2\log(|\Delta|)$. Un point $P\in\F_{q^{n}}$
+		\Ensure Un modèle normalisé de la courbe elliptique image de $\phi_\LR : E \rightarrow E'$ partant de $E$. L'image $\phi_\LR(P)$ du point $P$.
+		\State $L_{exposants}$, $L_{facteurs}\gets$ résultat de l'algorithme \ref{ALGO FactoClasse} appliqué avec la borne $N$.
+		\State $E'$, $Q\gets$ résultat de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} appliqué à l'idéal friable $\LR'$ décrit par $L_{exposants}$ et $L_{facteurs}$.
 		\State \Return E', Q
 		
 	\end{algorithmic}
 \end{algorithm}
 
 
-\textbf{TODO : déplacer l'analyse de compléxité aux sections précédentes, et faire le final ici uniquement}
+On analyse la complexité de l'algorithme \ref{ALGO idealprincipal} lorsqu'il est appliqué à un idéal équivalent friable obtenu par l'algorithme \ref{ALGO FactoClasse}. Celle-ci est principalement dominée par le calcul et de la manipulation des polynômes modulaires. 
 
-
-
-L'algorithme $4$ influence fortement le temps de calcul de l'algorithme $9$. La seconde étape coûteuse est le calcul des composantes de l'isogénie $\phi$, principalement à cause du calcul et de la manipulation des polynômes modulaires. 
-
-\begin{Prop}\cite{Bostan_2008}
+\begin{Prop}[\cite{Bostan_2008}]
 	
 	Soit $M : \N\times\N\rightarrow\N$ une fonction telle que $M(n,q)$ soit la complexité de la multiplication de deux polynômes de degrés au plus $n$ sur $\F_{q}$. L'algorithme BMSS calcul le polynôme décrivant le noyaux d'une isogénie définie sur $\F_{q}$ de degré $p_{i}$ avec une complexité en 
 	\begin{equation*}
@@ -599,21 +591,19 @@ L'algorithme $4$ influence fortement le temps de calcul de l'algorithme $9$. La 
 \end{Prop}
 
 \begin{Prop}
-	L'algorithme 8, appliqué à une courbe elliptique $E$ et un idéal $\PR_{i}\subset\OR_{\Delta}$ de norme $p_{i}$, retourne un polynôme $F$ décrivant $E[\PR_{i}]$ avec une complexité en 
+	La méthode d'Elkies (algorithme \ref{ALGO BMSSCheckElkies}), appliqué à une courbe elliptique $E$ et un idéal $\PR_{i}\subset\OR_{\Delta}$ de norme $p_{i}$, retourne un polynôme $F$ décrivant $E[\PR_{i}]$ avec une complexité en 
 	\begin{equation*}
 		O(log(q) + M(p_{i},q)\log(p_{i}))
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
-	L'algorithme d'Euclide pour calculer le PGCD à la ligne $1$ se fait en $O(\log(q))$. L'étape suivante est une application de l'algorithme BMSS. Enfin, il faut vérifier le choix de $j$-invariant avec le théorème 5.24.
-	Pour cela, des divisions de polynômes multivariées sont nécessaires. On approxime la complexité en $O(\log(q))$. $R_{1}$ et $R_{2}$ peuvent être obtenu à l'aide de polynômes de division. Ici $p_{i}$ est supposé petit, et l'endomorphisme $[-c]$ restreint à la $p_i$-torsion est défini modulo $p_{i}$, donc si besoin on se ramène à calculer un polynôme de $c'$-division avec $0<c'<\leq p_{i}$.
-	
-	\textbf{complexité polynôme de division ?}
+	L'algorithme d'Euclide pour calculer le PGCD à la ligne $1$ se fait en $O(\log(q))$. L'étape suivante est une application de l'algorithme BMSS. Enfin, il faut vérifier le choix de $j$-invariant avec la proposition \ref{propositionCheckElkies}.
+	La compléxité de cette étape est dominée par les divisions de polynômes nécessaires. L'implémentation de \cite{Pegasis} se ramène à des polynôme en $X$ en exprimant les puissances paires de $Y$ comme polynôme en $X$. On approxime donc la complexité en $O(\log(q))$, d'où le résultat.
 \end{proof}
 
 \begin{Prop}
-	La complexité du calcul de la liste d'isogénies $L_{composantes}$ lors des lignes $7$ à $17$ de l'algorithme $9$ est en 
+	On considère que l'entrée $\LR'$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est issue de l'algorithme \ref{ALGO FactoClasse} appliquée avec des paramètre $N$, $t$. La complexité du calcul de la liste d'isogénies $L_{composantes}$ lors de la boucle For des lignes $5$ à $15$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est en 
 	\begin{equation*}
 		O\left( t\left(N^3\log(N)^{2} + N^2\log(q) \right) \right). 
 	\end{equation*}
@@ -621,7 +611,7 @@ L'algorithme $4$ influence fortement le temps de calcul de l'algorithme $9$. La 
 \end{Prop}
 
 \begin{proof}
-	On se place dans le cadre de la proposition $5.22$ et on suppose en moyenne que chaque exposant non nul est égal à $1$. Pour tout exposant $e_{i}$ non nul, il faut calculer et manipuler le polynôme modulaire $\Psi_{p_{i}}$. Dans l'analyse de \cite{JaoSoukharev}, la complexité citée du calcul de  $\Psi_{p_{i}}$ est en
+	 La liste $L_{exposant}$ contient en moyenne $t$ exposants non nuls, tous égaux à $1$ (voir proposition \ref{espéranceExposant} et les remarques qui la suive). Pour tout indice $i$ tel que $e_{i}$ soit non nul, il faut calculer et manipuler le polynôme modulaire $\Psi_{p_{i}}$. Dans l'analyse de \cite{JaoSoukharev}, la complexité citée du calcul de  $\Psi_{p_{i}}$ est en
 	\begin{equation*}
 		O\left( p_{i}^{3 + \epsilon}\log\left( p_{i}\right)^{3 + \epsilon} \right)\;,\;\forall\epsilon >0.
 	\end{equation*}
@@ -629,7 +619,7 @@ L'algorithme $4$ influence fortement le temps de calcul de l'algorithme $9$. La 
 	\begin{equation*}
 		O\left(p_{i}^{2 + \epsilon}\log\left( q \right)^{1 + \epsilon} \right)\;,\;\forall\epsilon >0.
 	\end{equation*}
-	En majorant $p_{i}$ par $N$, et d'après la proposition $5.22$, si l'on suppose que les manipulations de $\Psi_{p_{i}}$ dominent la complexité du calcul d'une composante, alors la complexité totale du calcul de $L_{composantes}$ est
+	En majorant $p_{i}$ par $N$, la complexité totale du calcul de $L_{composantes}$ est
 	\begin{equation*}
 		O\left( t \left( N^3\log(N)^{2} + N^2\log(q) \right) \right). 
 	\end{equation*}
@@ -638,67 +628,102 @@ L'algorithme $4$ influence fortement le temps de calcul de l'algorithme $9$. La 
 Le calcul de l'image du point $P$ demande de l'arithmétique dans $\F_{q^{n}}$, ce qui devient coûteux selon le paramètre $n$.  
 
 \begin{Prop}
-	La complexité de l'ensemble des évaluations dû à la répétition de la ligne $14$ et à la ligne $25$ de l'algorithme $9$ est en $O(tN^2\log(q^n))$.
+	On considère que l'entrée $\LR'$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est issue de l'algorithme \ref{ALGO FactoClasse} appliquée avec des paramètre $N$, $t$. La complexité de l'ensemble des évaluations d'isogènie lors de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est en $O(tN^2\log(q^n))$.
 \end{Prop}
 
 \begin{proof}
-	Contrairement au reste de l'algorithme, ici les calculs se font dans le corps $\F_{q^{n}}$ car $P\in E(\F_{q^{n}})$. L'évaluation d'une isogénie de degré $p_{i}$ obtenue avec les formules de Vélu et l'algorithme BMSS est d'après \cite{JaoSoukharev} de $O(p_{i}^{2})$ opérations dans $\F_{q^{n}}$. Chacune demande $O(\log(q^n))$ opérations élémentaires. D'après la proposition $5.22$, on effectue au total $t$ évaluations de ce type. En majorant $p_{i}$ par $N$, on obtient que la complexité des répétitions de la ligne $14$ est en $O(tN^2\log(q^n))$. L’évaluation à la ligne $25$ est un calcul d'une isogénie scalaire explicite, ce qui est négligeable devant ce qui précède.  
+	Contrairement au reste de l'algorithme, ici les calculs se font dans le corps $\F_{q^{n}}$ car $P\in E(\F_{q^{n}})$. L'évaluation d'une isogénie de degré $p_{i}$ obtenue avec les formules de Vélu et l'algorithme BMSS nécessite d'après \cite{JaoSoukharev} $O(p_{i}^{2})$ opérations dans $\F_{q^{n}}$. Chacune demande $O(\log(q^n))$ opérations élémentaires. On évalue au total en moyenne $t$ isogénies. En majorant $p_{i}$ par $N$, on obtient une complexité en $O(tN^2\log(q^n))$.  
 \end{proof}
 
-Le calcul d'un générateur d'un l'idéal primitif principal dépend de sa norme. La proposition $5.22$ va assurer que la norme de $\LR_{principal}$ est petite et que lui trouver un générateur n'est pas une étape coûteuse. 
+La complexité du calcul d'un générateur d'un idéal primitif principal et polynomial en sa norme. La proposition suivante va assurer que la norme de l'idéal $\LR_{principal}$ est petite et que lui trouver un générateur n'est pas une étape coûteuse. 
 
 \begin{Prop}
-	La norme de l'idéal $\LR_{principal}$ calculé lors de la boucle des lignes $7$ à $17$ de l'algorithme $9$ est en $O(lN^t)$. Avec le choix de $t$ de la proposition $5.22$, le calcul de $\LR_{principal}$ demande une complexité en $O\left( \left( log(l) + tlog(N)\right) \right)$. La complexité de la recherche de $\beta$ à la ligne $18$ de l'algorithme $9$ est en $O\left( \left( \log(l) + t\log(N)\right)^{2} \right)$.
+	On considère que l'entrée $\LR'$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est issue de l'algorithme \ref{ALGO FactoClasse} appliquée avec des paramètre $N$, $t$. La norme de l'idéal $\LR_{principal}$ calculé lors de la boucle For des lignes $5$ à $15$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est en $O(lN^t)$. le calcul de $\LR_{principal}$ est en $O\left( \left( log(l) + tlog(N)\right) \right)$. La complexité de la recherche du générateur est en $O\left( \left( \log(l) + t\log(N)\right)^{2} \right)$.
 \end{Prop}
 
 \begin{proof}
-	On majore chaque norme des idéaux premier $\PR_{i}$ intervenant dans le calcul de $\LR_{principal}$ par $N$. D'après la proposition $5.22$ et la multiplicativité de la norme, $N\left(\LR_{principal} \right) \leq lN^t$. La complexité du calcul du produit de deux idéaux entier $\IR$ et $\LR$ donné sous forme standard est en $O\left( \max\left( N(\IR),N(\LR)\right) \right)$ (voir \cite{JaoSoukharev}), donc la complexité du calcul de $\LR_{principal}$ peut être majorée en 
+	On majore chaque norme des idéaux premier $\PR_{i}$ intervenant dans le calcul de $\LR_{principal}$ par $N$. Puisque le nombre d'isogénie calculé est en moyenne égale à $t$, $N\left(\LR_{principal} \right) \leq lN^t$. La complexité du calcul du produit de deux idéaux entier $\IR$ et $\LR$ donné sous forme standard est en $O\left( \max\left( N(\IR),N(\LR)\right) \right)$ (d'après \cite{JaoSoukharev}), donc la complexité du calcul de $\LR_{principal}$ peut être majorée en 
 	\begin{equation*}
 		O\left(\log\left(N\left(\LR_{principal}\right)\right)\right) = O\left( \left( \log(l) + t\log(N)\right) \right).
 	\end{equation*} 
-	Si $(1,a,b) = \beta\OR_{\Delta}$ est obtenu par produit successif d'idéaux sous forme standard, alors $b\leq 2a$ et la complexité de l'algorithme $5$ appliqué à $\LR_{principal}$ est majorée en 
+	Ainsi $\LR_{principal} = (m,a,b) = \beta\OR_{\Delta}$ est obtenu par produit successif d'idéaux sous forme standard, donc $b\leq 2a$ et la complexité de l'algorithme \ref{ALGO reduction} appliqué à $\LR_{principal}$ est majorée par
 	\begin{equation*}
 		O\left( \log\left(a  \right)^2 \right) = O\left( \log\left(N\left(\LR_{principal} \right)  \right)^2 \right) = O\left( \left( \log(l) + t\log(N)\right)^{2} \right).
 	\end{equation*}
 \end{proof}
 
-On déduit de ce qui précède la complexité de l'algorithme $9$. 
+On déduit de ce qui précède la complexité de l'algorithme \ref{ALGO Broker}. 
 
 \begin{Prop}
-	Si $N = N_{t}$, l'algorithme $9$ admet une complexité en $O(\log(l)^2)$, $O(log(q))$, $O(n)$ et $O(\sqrt{|\Delta|})$
+	Si $N = N_{t}$, l'algorithme \ref{ALGO Broker} admet une complexité en $O(\log(l)^2)$, $O(log(q))$, $O(n)$ et $O(\sqrt{|\Delta|})$
 \end{Prop}
 
 \begin{proof}
-	Il s'agit de remarquer pour chaque paramètre quelle étape domine la complexité. Les seules étapes dépendant de $l$ sont des produits ou des réductions d'idéaux, en $O(\log(l)^2)$. La dépendance en $q$ est en $O(log(q^n))$ pour le calcul de l'image du point $P$, d'où une complexité en $O(log(q))$ et en $O(n)$. La dépendance en $\Delta$ est dominé par la recherche de relation dans l'algorithme $4$, qui est majorée en $O(\sqrt{|\Delta|})$. 
+	Il s'agit de déterminer pour chaque paramètre quelle étape domine la complexité. Les seules étapes dépendant de $l$ sont des produits ou des réductions d'idéaux, en $O(\log(l)^2)$. La dépendance en $q$ est en $O(log(q^n))$ pour le calcul de l'image du point $P$, d'où une complexité en $O(log(q))$ et en $O(n)$. La dépendance en $\Delta$ est dominé par la recherche de relation dans l'algorithme \ref{ALGO FactoClasse}, qui est majorée en $O(\sqrt{|\Delta|})$. 
 \end{proof}
 
 \begin{Prop}
-	Si $N = \max(N_t,N_{p})$, l'algorithme $9$ admet une complexité en 
+	Si $N = \max(N_t,N_{p})$, l'algorithme \ref{ALGO Broker} admet une complexité en 
 	\begin{equation*}
-		\tilde{O}\left( \log(l)^2 + L_\Delta\left(\frac{1}{2}, \frac{1}{4z}\right) + L_\Delta\left(\frac{1}{2}, 3z\right) + L_\Delta\left( \frac{1}{2}, 2z\right) \log\left( q^{n+1}\right)\right) 
+		\tilde{O}\left( \log(l)^2 + L_\Delta\left(\frac{1}{2}, \frac{1}{4z}\right) + L_\Delta\left(\frac{1}{2}, 3z\right) + L_\Delta\left( \frac{1}{2}, 2z\right) \log\left( q^{n+1}\right)\right).
 	\end{equation*}
-	Le temps de calcul théorique de l'algorithme est minimal lorsque $z = \frac{1}{2\sqrt{3}}$, et est en 
+	Celle-ci est minimal lorsque $z = \frac{1}{2\sqrt{3}}$, et devient
 	\begin{equation*}
-		\tilde{O}\left( \log(l)^2 + L_\Delta\left(\frac{1}{2}, \frac{\sqrt{3}}{2}\right) + L_\Delta\left( \frac{1}{2}, \frac{1}{\sqrt{3}}\right) \log\left( q^{n+1}\right)  \right)
+		\tilde{O}\left( \log(l)^2 + L_\Delta\left(\frac{1}{2}, \frac{\sqrt{3}}{2}\right) + L_\Delta\left( \frac{1}{2}, \frac{1}{\sqrt{3}}\right) \log\left( q^{n+1}\right)  \right).
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
 	Seule la dépendance en $\Delta$ change comparé à la proposition précédente. Les étapes dominantes sont
 	\begin{enumerate}
-		\item L'algorithme $3$, en $O(N\log(N)^4) = \tilde{O}(L_\Delta(\frac{1}{2}, z))$,
-		\item L'algorithme $4$, en $\tilde{O}(\log(l)^2 + L_\Delta(\frac{1}{2}, \frac{1}{4z}))$,
+		\item L'algorithme \ref{ALGO FamilleGénératrice}, en $O(N\log(N)^7) = \tilde{O}(L_\Delta(\frac{1}{2}, z))$,
+		\item L'algorithme \ref{ALGO FactoClasse}, en $\tilde{O}\left( \log(l)^2 + L_\Delta(\frac{1}{2}, \frac{1}{4z})\right) $,
 		\item Le calcul de $L_{composantes}$, en $O\left( t\left(N^3\log(N)^{2} + N^2\log(q) \right) \right) = \tilde{O}(L_\Delta(\frac{1}{2}, 3z) + L_\Delta(\frac{1}{2}, 2z)\log(q) )$.
-		\item Le calcul de l'image du point $P$, en $O(tN^2\log(q^n)) = \tilde{O}(L_\Delta(\frac{1}{2}, 2z)\log(q^n))$
+		\item Les évaluations d'isogènies, en $O(tN^2\log(q^n)) = \tilde{O}(L_\Delta(\frac{1}{2}, 2z)\log(q^n))$
 	\end{enumerate}
-	Pour tout $z$, le calcul de $L_{composantes}$ domine en complexité selon $\log(|\Delta|)$ à la fois l'algorithme $3$ et le calcul de l'image de $P$. Ainsi la complexité selon $\log(|\Delta|)$ de l'algorithme $9$ est
+	On en déduit directement la formule énoncée. En particulier pour tout $z$, selon $\log(|\Delta|)$, le calcul de $L_{composantes}$ domine en complexité à la fois l'algorithme \ref{ALGO FamilleGénératrice} et les évaluations d'isogénies. Ainsi la complexité selon $\log(|\Delta|)$ de l'algorithme \ref{ALGO Broker} est
 	\begin{equation*}
 		\tilde{O}\left( L_\Delta\left(\frac{1}{2}, \frac{1}{4z} \right) + L_\Delta\left(\frac{1}{2}, 3z \right) \right). 
 	\end{equation*}
-	On choisit $z > 0$ minimisant cette complexité : on veut équilibrer ces deux termes, c'est à dire choisir $z$ tel que
+	On choisit $z > 0$ minimisant cette complexité en équilibrant ces deux termes. Il faut donc choisir $z$ tel que
 	\begin{equation*}
-		\frac{1}{4z} = 3z \iff z^2 = \frac{1}{12}
+		\frac{1}{4z} = 3z \iff z^2 = \frac{1}{12}.
 	\end{equation*}
 	On choisit donc $z = \frac{1}{2\sqrt{3}}$, et on en déduit le résultat énoncé. 
 	
 \end{proof}
+
+\subsubsection{Comparaison des implémentations}
+
+L'analyse de complexité de \cite{JaoSoukharev}[\S 4.4], aboutit au même résultat asymptotique, avec le même paramètre $z$ optimal. Cependant il y a plusieurs différences entre l'algorithme proposé dans \cite{JaoSoukharev} et l'approche décrite précédemment, notamment sur l'implémentation de la marche aléatoire. Dans \cite{JaoSoukharev}, on choisit indépendamment et au hasard des exposants $x_1,\ldots,x_N$, en bornant le nombre maximal d'exposants non nuls, ainsi que leurs valeurs absolues. Cette approche conduit à des nombres de pas plus grands, donc beaucoup de calculs d'isogénies intermédiaires. 
+
+Cependant l'approche énoncée dans ce rapport amène asymptotiquement à plus d'exposants non nuls, donc à calculer plus de polynômes modulaires distincts. Il est possible d'aller chercher ces derniers dans des bases de données publiques, mais en pratique il faudrait alors avoir accès aux polynômes $\Psi_{l}$ pour $l\simeq 3000$. On présente les résultats d'une expérience menée dans le but de tester sur de grandes valeurs de $|\Delta|$ laquelle des deux méthodes est la plus efficace.
+
+Soit $\Delta$ choisit au hasard (un entier négatif congrue à $0$ ou $1$ modulo $4$). Pour $10^{20} < l < 10^{21}$ un nombre premier décomposé aléatoire, on calcule un idéal entier $\LR$ de $\OR_{\Delta}$ de norme $l$. Choisissant $N = \max(N_p, N_t)$, on cherche à calculer des exposants d'une écriture de $\CL$ d'abord avec la méthode de \cite{JaoSoukharev} (appelée méthode 1), puis avec l'approche de ce rapport (appelée méthode 2). On répète cela $30$ fois, avec une valeur de $l$ différente à chaque fois. Le tableau \ref{tableauexp} regroupe les moyennes des sommes des exposants, des temps de calculs, du nombre de tentatives de marches aléatoires, du nombre d'exposants non nuls et des normes maximales parmi les idéaux d'exposant non nuls, le tout sur deux valeurs de $\Delta$.\\
+
+
+\begin{table}[h]
+	\begin{center}
+		\begin{tabular}{|c|cc|cc|}
+			\hline
+			Discriminant & \multicolumn{2}{c|}{$\Delta = -3635657473865223$} & \multicolumn{2}{c|}{$\Delta = -48221266355996583$}  \\
+			\hline
+			Méthode & 1 & 2 & 1 & 2 \\
+			\hline
+			Somme exposants & 6266 & 12,9 & 262377 & 13 \\
+			\hline
+			Temps & 18,6s & 4,27s & 79s & 5,0s \\
+			\hline
+			Tentatives & 11,8 & 12,7 & 14,2 & 16,8 \\
+			\hline
+			Exposants non nuls & 12,5 & 11,9 & 15,1 & 12,2 \\
+			\hline
+			Norme maximale & 4515 & 4646 & 5457 & 5163 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Comparaison des méthodes 1 et 2}
+	\label{tableauexp}
+\end{table}
+
+La somme des exposants correspond au nombre de calculs d'isogénies nécessaires lors de l'algorithme \ref{ALGO IsogenieEquivalenceFriable}. Le tableau \ref{tableauexp} montre l'avantage de la méthode 2 sur ce point. Le désavantage théorique est le nombre d'exposants non nuls, qui correspond au nombre de polynômes modulaires distincts à calculer. Ce désavantage est asymptotique, et pour ces valeurs de $\Delta$ la méthode 2 reste avantageuse.
