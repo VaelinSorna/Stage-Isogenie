@@ -1,18 +1,121 @@
 \section{Diamants d'isogénies et applications }
 
-\subsection{Diamants d'isogénies et lemme de Kani}
+Pour pouvoir calculer des isogénies des façon polynomiales en tout paramètre, il semble nécessaire d'éviter de calculer dans le groupe de classe. 2tant donné un idéal d'un ordre quadratique imaginaire, on cherche un moyen de trouver un idéal équivalent, et de calculer l'isogénie associée sans pour autant le supposer friable.
+
+\subsection{Méthode CLAPOTI}
 %Enonce du lemme, remarque noyau accessible
 %Construction de diamants : recherche d'idéaux équivalents
 %Kani effectif : theta calcul, admis (enoncé complexité)
 
-\subsection{Méthode Clapoti et équation de normes}
+Le fondement théoriques de toutes les méthodes présentées par la suite est le lemme \ref{Kani}, dû à Kani.
+
+\begin{Def}
+	
+Soit $E$, $E'$, $E_1$ et $E_2$ quatre courbes elliptiques. On suppose qu'il existe un diagramme commutatif suivant composés d'isogénies
+	\[\begin{tikzcd}
+		E \arrow{r}{\phi_1} \arrow[swap]{d}{\phi_2} & E_1 \arrow{d}{\psi_2} \\
+		E_2 \arrow{r}{\psi_1} & E'
+	\end{tikzcd}
+	\]
+tels que $\deg(\phi_1) = \deg(\phi_1) = d_1$ et $\deg(\phi_2) = \deg(\phi_2) = d_2$. Si $d_1$ et $d_2$ sont premier entre eux, le diagramme commutatif est appelé un $(d_1, d_2)$ diamant d'isogénies.
+\end{Def}
+
+\begin{Prop}[Lemme de Kani, cas des courbes elliptiques(\cite{Pegasis} Lem 4)]\label{Kani}
+	contenu...
+\end{Prop}
+
+\begin{Prop}[Complexité Theta Calcul]
+	
+	
+\end{Prop}
+
+\begin{Prop}[Diamant de Clapoti, avec endomorphisme]
+	\[\begin{tikzcd}
+		E \arrow{r}{\phi_u\circ\phi_\LR} \arrow[swap]{d}{\phi_v\circ\phi_\PR} & E_\LR \arrow{d}{\phi_\PR} \\
+		E_{\bar{\LR}} \arrow{r}{\phi_\LR} & E
+	\end{tikzcd}
+	\]
+\end{Prop}
+
+\begin{Prop}[énoncé équation de norme]
+	Version idéaux, version éléments
+\end{Prop}
+
+Algo idéaux équivalents, liste avec hypothèse inversion. (cité section \ref{SECTION isogenieFriable}) (pas d'algo pour les listes car fait plus tard avec friable)
+
+Analyse compléxité : choix du paramètre $m$.
 %Recherche d'isogénie équivalente, diamants utilisé, condition sur les normes
 %Evaluer l'isogénie equivalente à partir de l'isogénie de kani ? conclusion sur l'évaluation
 %Disctinguer la courbe ellitpique d'arrivée : avec pairing, détail ?
 
+\subsection{Torsions accessible d'une courbe ellitpique ordinaire}
+
+Objectif : éviter les problème de \ref{SECTION generateurTorsion}, ici choix possible de Torsion, necessaire pour  
+
+\begin{Prop}[PGCD Pairing the volcano]
+	contenu...
+\end{Prop}
+
+\begin{Prop}
+	Equations de normes avec conditions accessibles
+\end{Prop}
+
+remarques aléatoire + taille attendue/pratique; Distinction selon le discriminant mod 4. Important ?
+Exemples/expérience
+
+Faire le lien, voir fusionner avec section \ref{SECTION generateurTorsion}. 
+
+Algo d'étude de torsion. avec Nmin, Nmax ?
+
 \subsection{Algorithme KLPT pour Clapoti}
 %Rapide, mise en valeur de l'expérience
+Idée pour résoudre sans faire de liste. Equation quaternion (explication KLaPoTi VS Pegasis)
 
-\subsection{Algorithme Pegasis et endomorphisme de Zharin}
+Algorithme n'est pas écrit, juste énoncé. Explication résolution d'une équation à 4 variable avec algo Cornacchia (cité Cohen) Condition pratique et pourquoi ça marche avec supersingulier (Donc tuto supersingulier ici)
+
+Conclusion difficulté de resté en dimension 1
+
+\subsection{Endomorphismes de Zharin et Méthode Pegasis}
+
+
+\begin{Prop}
+	Endomorphisme de Zharin dim 8 (dim 4 ?)
+\end{Prop}
+
+\begin{Prop}[\cite{Clapoti}]
+	Kani version produits de courbes
+\end{Prop}
+
+\begin{Prop}
+	Diamant de Pegasis dim 8 (Zharin + friable)
+	
+	\[\begin{tikzcd}
+		E \arrow{r}{\phi_LR} 
+			& E \arrow{r}{\phi_u\circ\phi_\LR} \arrow[swap]{d}{\phi_v\circ\phi_\PR} 
+				& E_\LR \arrow{d}{\phi_\PR} \\
+			& E_{\bar{\LR}} \arrow{r}{\phi_\LR} 
+				& E \arrow{r}{\phi_\PR} 
+				   	& E
+	\end{tikzcd}
+	\]
+	
+\end{Prop}
+
+\begin{Prop}
+	Equation de norme dim 8 (ou remarque)
+\end{Prop}
+
+Algo liste d'idéaux équivalent avec partie friable 
+(Algo partie friable (équivalente ?) d'un idéal)
+
+Algo Sol Equation 
 %Parti friable d'idéaux (vérifier le thm de seysen ?)
 %utilisation d'endomorphisme, dim 8, mentionner dim 4
+
+\subsection{Complexité et expérience}
+
+Sans démo (problème Theta calcul), justifier pourquoi c'est polynomial, remarque problème proba.
+
+Remarque rencontre d'idéaux friables, "accélération" possible. 
+
+Expérience, conclusion et questions. Isogénie de Kani décomposable ? 
