@@ -45,12 +45,33 @@
 \newcommand{\LR}[0]{\mathfrak{L}}
 \newcommand{\PR}[0]{\mathfrak{P}}
 \newcommand{\IR}[0]{\mathfrak{I}}
+\newcommand{\aR}[0]{\mathfrak{a}}
+\newcommand{\bR}[0]{\mathfrak{b}}
+\newcommand{\cR}[0]{\mathfrak{c}}
 \newcommand{\HR}[0]{\mathcal{H}}
 \newcommand{\CL}[0]{\tilde{\LR}}
 \newcommand{\CP}[0]{\tilde{\PR}}
 \newcommand{\F}[0]{\mathbb{F}}
 \newcommand{\A}[0]{\mathbb{A}}
 
+\makeatletter
+\newcommand*\rel@kern[1]{\kern#1\dimexpr\macc@kerna}
+\newcommand*\widebar[1]{%
+	\begingroup
+	\def\mathaccent##1##2{%
+		\rel@kern{0.8}%
+		\overline{\rel@kern{-0.8}\macc@nucleus\rel@kern{0.2}}%
+		\rel@kern{-0.2}%
+	}%
+	\macc@depth\@ne
+	\let\math@bgroup\@empty \let\math@egroup\macc@set@skewchar
+	\mathsurround\z@ \frozen@everymath{\mathgroup\macc@group\relax}%
+	\macc@set@skewchar\relax
+	\let\mathaccentV\macc@nested@a
+	\macc@nested@a\relax111{#1}%
+	\endgroup
+}
+\makeatother
 
 
 \newtheorem{The}{Théorème}[section]
