@@ -247,7 +247,7 @@ Dans $\Z$, l'idéal engendré par un nombre premier $p$ est un idéal premier. A
 
 
 \begin{Def}
-	Soit $\OR$ un ordre d'un corps quadratique imaginaire $\K$. Soit $p$ un nombre premier, premier avec le conducteur Si un idéal premier $\PR$ apparaît dans la factorisation de $p\OR$, on dira que $\PR$ est au dessus de $p$. 
+	Soit $\OR$ un ordre d'un corps quadratique imaginaire $\K$. Soit $p$ un nombre premier, premier avec le conducteur. Si un idéal premier $\PR$ apparaît dans la factorisation de $p\OR$, on dira que $\PR$ est au dessus de $p$. 
 \end{Def}
 
 Il est possible d'expliciter une factorisation de $p\OR$, d'après un théorème dû à Kummer. On énonce ce théorème dans le cas des corps quadratique imaginaire. Pour un énoncé général pour tout corps de nombre, on se réfère à \cite{Coh00}[Th 4.8.13].
@@ -350,7 +350,7 @@ Un réseau structuré est un idéal fractionnaire d'un ordre d'un corps de nombr
 
 \subsubsection{Forme standard d'un idéal et formes quadratiques binaires}
 
-On énonce une correspondance entre d'une part les idéaux d'un ordre d'un corps quadratique imaginaire $\OR_{\Delta}$, et d'autre part certaines formes quadratiques définies positives de discriminant $\Delta$. Cela sera en particulier utile pour mener des calculs dans le groupe de classe. 
+On énonce une correspondance entre d'une part les idéaux d'un ordre d'un corps quadratique imaginaire $\OR_{\Delta}$, et d'autre part certaines formes quadratiques définies positives de discriminant $\Delta$. Cela sera en particulier utile pour mener des calculs dans les groupes de classes d'idéaux. 
 
 \begin{Def}
 	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique. $f$ est dite binaire si elle est définie positive et à coefficients dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$. On notera $f = f(a,b,c)$ pour désigner une forme quadratique binaire, ou $f = f(a,b)$ si le discriminant $\Delta$ est connu. $f$ est dite primitive si ses coefficients $a$, $b$ et $c$ sont premiers entre eux.
@@ -513,7 +513,7 @@ L'algorithme \ref{ALGO reduction} est polynomial en la taille des coefficients d
 
 On énonce plusieurs propriétés des coefficients d'une forme quadratique réduite.
 
-\begin{Prop}[\cite{Cox}(2.12)]
+\begin{Prop}[\cite{Cox}(2.12)]\label{tailleCoefReduit}
 	Une forme quadratique réduite $f = f(a,b)$ de discriminant $\Delta$ vérifie 
 	\begin{equation*}
 		|b|\leq a\leq\sqrt{\frac{|\Delta|}{3}}.
@@ -543,9 +543,9 @@ On énonce plusieurs propriétés des coefficients d'une forme quadratique rédu
 Il sera utile par la suite de trouver des générateurs d'idéaux principaux à partir de leur forme standard. Soit $\LR = id(m,a,b)$ un idéal entier supposé principal, et soit $\beta$ un générateur. D'après \ref{NormesId}, $N(\LR) = a = N_{\Q}^{\K}(\beta)$, donc étant donné la forme standard, on connaît la norme d'un générateur. On se ramène au cas où $\LR = id(1,a,b)$ est primitif, quitte à multiplier par $m$ le résultat final. 
 
 \begin{Prop}
-	Soit $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ primitif sous forme standard. Soit $f = F(\LR)$ sa forme quadratique binaire primitive associée. Alors 
+	Soit $\LR = m[a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ sous forme standard. Soit $f = F(\LR) = f(a,b)$ sa forme quadratique binaire primitive associée. Alors 
 	\begin{equation*}
-		f(x,y) = ax^2 + bxy + cy^2 = N_{\Q}^{\K}\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) / N(\LR)
+		f(x,y) = N_{\Q}^{\K}\left( m\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) \right) / N(\LR)
 	\end{equation*}
 \end{Prop}
 
@@ -618,9 +618,9 @@ On en déduit l'algorithme \ref{ALGO baseVecteurCourt}, prenant en entrée un id
 	\caption{Base de vecteurs courts d'un idéal (primitif) sous forme standard}
 	\label{ALGO baseVecteurCourt}
 	\begin{algorithmic}[1]
-		\Require $\LR = id(1,a,b)$ un idéal entier d'un ordre quadratique imaginaire $\OR_{\Delta}$.
+		\Require $\LR = id(1,a,b)$ un idéal entier primitif d'un ordre quadratique imaginaire $\OR_{\Delta}$.
 		\Ensure Deux éléments $\alpha$, $\beta\in\LR$ de normes minimales tels que $\LR = [\alpha,\beta]$. 
-		\State $f\gets F(id(1,a,b))$
+		\State $f\gets F(\LR)$
 		\State $r = f(a',b',c')\gets$ résultat de l'algorithme \ref{ALGO reduction} appliqué à $f$
 		\State $\LR_1\gets I(f(a',b',c'))$
 		\State $\LR_2\gets I(f(c',-b',a'))$
@@ -826,7 +826,7 @@ On peut étendre l'application contravariante d'un morphisme de courbe algébriq
 	Soit $\phi : C \rightarrow C'$ un morphisme entre courbes algébriques $C$ et $C'$. $\phi$ est séparable si et seulement si $\phi^{*} : \Omega_{C'} \rightarrow \Omega_{C}$ est injective, ce qui équivaut à ce que $\phi^{*}$ soit non nulle. 
 \end{Prop}
 
-Sur une courbe algébrique lisse $C$, $f\in\Kb(C)$ vérifie $div(f) = O$ si et seulement si $f$ est constante. Lorsque l'on généralise la notion de diviseur aux formes différentielles, certaines vont avoir un diviseur nul : ceux seront les invariants différentiels. 
+Sur une courbe algébrique lisse $C$, $f\in\Kb(C)$ vérifie $div(f) = 0$ si et seulement si $f$ est constante. Lorsque l'on généralise la notion de diviseur aux formes différentielles, certaines vont avoir un diviseur nul : ceux seront les invariants différentiels. 
 
 \begin{Prop}[\cite{Sil09}(II 1.4)]
 	Soit $C$ une courbe algébrique lisse. Soit $P\in C$ et $u\in \Kb(C)$ une uniformisante en $P$. Alors $du$ est une base de $\Omega_{C}$. 
@@ -925,7 +925,7 @@ L'action de l'application contravariante d'une isogénie sur un invariant diffé
 
 \begin{Coro}[\cite{Sil09}(III, 5.3)]
 	Soit $E$ une courbes elliptiques sur $\K$, $\omega$ un invariant différentiel d'un modèle de $E$. Alors pour $m\in\Z^{*}$,
-	$[m]^{*}(\omega) = m\omega$. En particulier $[m]^{*}(\omega) \neq 0 $ et on retrouve que $[m]$ est séparable.
+	$[m]^{*}(\omega) = m\omega$. 
 \end{Coro}
 
 
@@ -1004,7 +1004,7 @@ Lorsque $E$ est une courbe elliptique à multiplication complexe, $End(E)$ peut 
 	\begin{equation*}
 		(\phi)^{*}(\omega_E) = c\omega_E
 	\end{equation*}
-	La constante $c$ ne dépend pas du modèle de $E$ choisi, et est appelée le facteur de l'endomorphisme $\phi$.
+	La constante $c$ ne dépend pas du modèle de $E$ choisi, et est appelée facteur de l'endomorphisme $\phi$.
 \end{Def}
 
 On souhaite construire un morphisme d'anneau $\alpha\mapsto\left[ \alpha\right]\in End(E)$ de sorte que le facteur de $\left[ \alpha\right]$ soit $\alpha$. 
@@ -1025,7 +1025,7 @@ Soit $\OR$ l'image de l'application $f$ de la proposition précédente. L'applic
 	\begin{equation*}
 		[.] : \OR\subset\C\rightarrow End(E)
 	\end{equation*}
-	tel que pour tout invariant différentiel $\omega$ d'un modèle de $E$,
+	tel que pour tout invariant différentiel $\omega$ de $E$,
 	\begin{equation*}
 		\forall\alpha\in\OR\;,\; [\alpha]^{*}(\omega) = \alpha\omega
 	\end{equation*}
@@ -1070,11 +1070,11 @@ Dans les sections \ref{SECTION action} et \ref{SECTIONtorsion}, on introduit la 
 
 Si $\LR\in I(\OR_{\Delta})$, alors $\LR$ est un réseau de $\C$. On peut donc lui associer une courbe elliptique $E_{\LR}$.
 
-\begin{Prop}
+\begin{Prop}[\cite{Sil94}(II, 1)]
 	Soit $\OR_{\Delta}$ un ordre quadratique imaginaire, et $\LR\subset I(\OR_{\Delta})$. Alors $End(E_{\LR})\sim\OR_{\Delta}$, et $E_{\LR}\in Ell_{\C}(\OR_{\Delta})$.
 \end{Prop}
 
-\begin{proof}[\cite{Sil94}(II, 1)]
+\begin{proof}
 	
 	Par hypothèse, $\LR$ est un idéal fractionnaire propre, donc :
 	\begin{align*}
@@ -1243,7 +1243,7 @@ Lorsque $\LR\subset\OR_{\Delta}$ est plus précisément un idéal premier avec l
 \begin{proof}
 	
 	\begin{enumerate}
-		\item (Admis) La preuve de \cite{Sil94} utilise une version du théorème des restes chinois sur les idéaux fractionnaire, sur l'anneau des entiers $\OR_{\K}$. La preuve ne se généralise donc aux ordres quelconques $\OR_{\Delta}$ qu'en se restreignant aux idéaux entier premier avec le conducteur.  
+		\item (Admis) La preuve de \cite{Sil94} utilise une version du théorème des restes chinois sur les idéaux fractionnaire, sur l'anneau des entiers $\OR_{\K}$. Ainsi elle ne se généralise aux ordres quelconques $\OR_{\Delta}$ qu'en se restreignant aux idéaux entier premier avec le conducteur.  
 		
 		\item Découle de 1. car $\left| E\left[\LR\right]\right| = \left| \OR_{\Delta}/\LR\right| = N\left( \LR\right)$.
 		
@@ -1456,9 +1456,9 @@ Il est possible de voir tout les éléments de $Ell_{\F_{q}}(\OR_{\Delta})$ comm
 L'action de $Cl(\OR_{\Delta})$ sur $Ell_{\Qb}(\OR_{\Delta})$ induit une action de $Cl(\OR_{\Delta})$ sur $Ell_{\F_{q}}(\OR_{\Delta})$.
 
 \begin{Def}
-	Soit $\PR\subset\Zb$ idéal maximal tel que la réduction modulo $\PR$ est une bijection entre $Ell_{\Qb}(\OR_{\Delta})$ et $Ell_{\F_{q}}(\OR_{\Delta})$. On défini une action de $Cl(\OR_{\Delta})$ sur $Ell_{\F_{q}}(\OR_{\Delta})$ de la façon suivante : Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$ et $\CL\in Cl(\OR_{\Delta})$. Alors
+	Soit $\PR\subset\Zb$ idéal maximal tel que la réduction modulo $\PR$ est une bijection entre $Ell_{\Qb}(\OR_{\Delta})$ et $Ell_{\F_{q}}(\OR_{\Delta})$. On défini une action de $Cl(\OR_{\Delta})$ sur $Ell_{\F_{q}}(\OR_{\Delta})$ de la façon suivante : Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$, $E = E'_\PR$ et $\CL\in Cl(\OR_{\Delta})$. Alors
 	\begin{equation*}
-		\CL\cdot E'_\PR = (\CL\cdot E')_\PR
+		\CL\cdot E = (\CL\cdot E')_\PR
 	\end{equation*}
 \end{Def}
 
@@ -1466,36 +1466,36 @@ L'action de $Cl(\OR_{\Delta})$ sur $Ell_{\Qb}(\OR_{\Delta})$ induit une action d
 	Ainsi l'injectivité de la réduction des isogénies (proposition \ref{reductionIsogenieInjectivité}) permet d'associer à toute isogénie entre courbes de $Ell_{\Qb}(\OR_{\Delta})$ une isogénie entre leurs courbes réduites de $Ell_{\F_{q}}(\OR_{\Delta})$. On rappelle cependant que l'on n'a pas la surjectivité en général.
 \end{Rem}
 
-On montre alors que l'on peut généraliser la description du noyau d'une isogénie partir d'un idéal entier propre $\LR\subset\OR_{\Delta}$, en généralisant la notion de groupe de torsion. Il s'agit de montrer que la réduction et l'action par un idéal commutent. 
+On montre alors que l'on peut généraliser la notion de groupe de torsion d'un idéal entier propre $\LR\subset\OR_{\Delta}$. Il s'agit de montrer que la réduction et l'action par un idéal commutent. 
 
 \begin{Def}
-	Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui se réduit complètement modulo un idéal maximal $\PR\subset\Zb$. On associe à un idéal entier propre $\LR\subset\OR_{\Delta}$ un sous groupe de $E'_\PR$, noté $E'_\PR\left[ \LR\right]$, défini par
+	Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui se réduit complètement modulo un idéal maximal $\PR\subset\Zb$. Soit $E = E'_\PR$. On associe à un idéal entier propre $\LR\subset\OR_{\Delta}$ un sous groupe de $E$, noté $E\left[ \LR\right]$, défini par
 	\begin{equation*}
-		E'_\PR\left[ \LR\right] = \left\lbrace P\in E'_\PR :\; \widetilde{\left[ \alpha\right] }(P) = 0 \;\forall\alpha\in\LR\right\rbrace .
+		E\left[ \LR\right] = \left\lbrace P\in E :\; \widetilde{\left[ \alpha\right] }(P) = 0 \;\forall\alpha\in\LR\right\rbrace .
 	\end{equation*} 
 	
 \end{Def}
 
 \begin{Prop}\label{DefActionIdeauxSurCourbeOrdinaire}
-	Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui se réduit complètement modulo  un idéal maximal $\PR\subset\Zb$. Soit $\LR\subset\OR_{\Delta}$ un idéal entier propre, et l'isogénie
+	Soit $E'\in Ell_{\Qb}(\OR_{\Delta})$ normalisée, qui se réduit complètement modulo  un idéal maximal $\PR\subset\Zb$. Soit $E = E'_\PR$, $\LR\subset\OR_{\Delta}$ un idéal entier propre, et l'isogénie
 	\begin{equation*}
 		\phi_{\LR} : E'\rightarrow E'/E'\left[ \LR\right] = \CL\cdot E'
 	\end{equation*} 
-	Alors le noyau de l'isogénie réduite $\widetilde{\phi_{\LR}}$ est $E'_\PR\left[ \LR\right]$, et de plus $E'_\PR/E'_\PR\left[ \LR\right] = \CL\cdot E'_\PR$
+	Alors le noyau de l'isogénie réduite $\widetilde{\phi_{\LR}}$ est $E\left[ \LR\right]$, et de plus $E/E\left[ \LR\right] = \CL\cdot E$.
 \end{Prop}
 
 \begin{proof}
-	Tout idéal entier $\LR\subset\OR_{\Delta}$ contient un entier $m\in\N$. Alors $\LR\in m\OR_{\Delta}$ et $E'[\LR]\subset E'[m]$. D'après la proposition \ref{ReductionPointInjectivité}, la réduction de $E'[m]$ modulo $\PR$ est injective. Donc en particulier elle induit une injection de $E'[\LR]$ dans $E'_\PR[\LR]$. Soit $P\in E'[\LR]$ non nul. Alors 
+	Les groupe de torsion sur $E'$ de tout idéal entier $\LR\subset\OR_{\Delta}$ sont finis. Donc il existe $m\in\N^*$ tel que $E'[\LR]\subset E'[m]$. D'après la proposition \ref{ReductionPointInjectivité}, la réduction de $E'[m]$ modulo $\PR$ est injective. Donc en particulier elle induit une injection de $E'[\LR]$ dans $E'_\PR[m]$. Soit $P\in E'[\LR]$ non nul. Alors 
 	\begin{equation*}
-		\tilde{P}\in \ker\left( \widetilde{\phi_{\LR}}\right)  \iff \widetilde{\phi_{\LR}(P)} = \tilde{\OR} \iff \phi_{\LR}(P) = \OR \iff P\in E'[\LR]
+		\tilde{P}\in \ker\left( \widetilde{\phi_{\LR}}\right)  \iff \widetilde{\phi_{\LR}(P)} = \tilde{\OR} \iff \phi_{\LR}(P) = \OR \iff P\in E'[\LR],
 	\end{equation*}
-	Car $\phi(P)$ est d'ordre fini non nul donc sa réduction est non nulle par injectivité. De plus
+	car $\phi(P)$ est d'ordre fini non nul donc sa réduction est non nulle. De plus
 	\begin{equation*}
-		\tilde{P}\in E'_\PR[\LR] \iff \widetilde{\left[ \alpha\right] }(\tilde{P}) = 0,\;\forall\alpha\in\LR \iff {\left[ \alpha\right] }(P) = 0, \;\forall\alpha\in\LR \iff P\in E'[\LR]
+		\tilde{P}\in E[\LR] \iff \widetilde{\left[ \alpha\right] }\left( \tilde{P}\right)  = \widetilde{\left[ \alpha\right] (P)} =  0,\;\forall\alpha\in\LR \iff {\left[ \alpha\right] }(P) = 0, \;\forall\alpha\in\LR \iff P\in E'[\LR].
 	\end{equation*}
-	 Ainsi $\ker\left( \widetilde{\phi_{\LR}}\right)  = E'_\PR[\LR]$. La courbe image de $\widetilde{\phi_{\LR}}$ est $\CL\cdot E'_\PR$ par définition, donc 
+	 Ainsi $\ker\left( \widetilde{\phi_{\LR}}\right)  = E[\LR]$. La courbe image de $\widetilde{\phi_{\LR}}$ est $\CL\cdot E$ par définition, donc 
 	\begin{equation*}
-		E'_\PR/E'_\PR\left[ \LR\right] = \CL\cdot E'_\PR.
+		E/E\left[ \LR\right] = \CL\cdot E.
 	\end{equation*}
 \end{proof}
 
@@ -1576,14 +1576,14 @@ On sait évaluer sur toutes courbes elliptiques les endomorphismes entiers et l'
 \begin{Prop}\label{evalEndoAvecDenom}
 	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ de conducteur $f$ et conducteur maximal $f_m$. Soit $n\in\N$ premier avec $f_m$, $k\in\N$ un inverse de $f_m$ modulo $n$. Alors pour tout $x\in\Z$,
 	\begin{equation*}
-		\forall\;P\in E[n],\; \widetilde{\left[ \frac{x + f\pi_{q}}{f_m}\right]}(P) = \left[ k\right] (\left[ x\right]  + f\pi_{q}).
+		\forall\;P\in E[n],\; \widetilde{\left[ \frac{x + f\pi_{q}}{f_m}\right]}(P) = \left[ k\right] (\left[ x\right]  + f\pi_{q})(P).
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
 	$\OR_{\Delta}$ est un ordre quadratique imaginaire d'un corps $\K$. Soit $\Lambda$ un réseau associé à un relèvement de Deuring de $E$. On pose pour tout $\lambda\in\K$ le morphisme de tore
 	\begin{equation*}
-		\phi_{\lambda} : \C/\Lambda\rightarrow \C/\lambda^{-1}\Lambda, z \mapsto z
+		\phi_{\lambda} : \C/\Lambda\rightarrow \C/\left( \lambda^{-1}\Lambda\right) , z \mapsto z
 	\end{equation*}
 	Soit $\alpha = \frac{x + f\pi_{q}}{f_m}$. Alors
 	\begin{equation*}
@@ -1641,7 +1641,7 @@ On s'intéresse maintenant aux $l$-isogénies définies sur $\F_{q}$.
 \end{Prop}
 
 \begin{Rem}
-	Ainsi "$l$ divise $f$" est une "condition d'existence d'une ascension", tandis que "$l$ ne divise pas $f$" est une "condition d'existence d'horizontalités". Ces critères ne dépendent pas du corps $\F_{q}$ sur lequel on considère $E$. En plus de cela, "$l$ divise $r$" est une "condition d'existence de descentes", qui cette fois dépend du corps de base. Si le corps de base est une extension de degré suffisamment grand, les isogénies descendantes seront toutes définies et le conducteur maximal associé $f_m$ sera tel que $l$ divise $f_m / f$. 
+	Ainsi "$l$ divise $f$" est une "condition d'existence d'une ascension", tandis que "$l$ ne divise pas $f$" est une "condition d'existence d'horizontalités". Ces critères ne dépendent pas du corps $\F_{q}$ sur lequel on considère $E$. En plus de cela, "$l$ divise $f_m/f$" est une "condition d'existence de descentes", qui cette fois dépend du corps de base considéré. Si celui-ci est une extension de degré suffisamment grand, les isogénies descendantes seront toutes définies et le conducteur maximal associé $f_m$ sera tel que $l$ divise $f_m / f$. 
 \end{Rem}
 
 \begin{Rem}
