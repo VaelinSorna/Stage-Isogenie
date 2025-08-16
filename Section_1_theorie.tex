@@ -353,7 +353,7 @@ Un réseau structuré est un idéal fractionnaire d'un ordre d'un corps de nombr
 On énonce une correspondance entre d'une part les idéaux d'un ordre d'un corps quadratique imaginaire $\OR_{\Delta}$, et d'autre part certaines formes quadratiques définies positives de discriminant $\Delta$. Cela sera en particulier utile pour mener des calculs dans les groupes de classes d'idéaux. 
 
 \begin{Def}
-	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique. $f$ est dite binaire si elle est définie positive et à coefficients dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$. On notera $f = f(a,b,c)$ pour désigner une forme quadratique binaire, ou $f = f(a,b)$ si le discriminant $\Delta$ est connu. $f$ est dite primitive si ses coefficients $a$, $b$ et $c$ sont premiers entre eux.
+	Soit $f = ax^2 + bxy + cy^2$ une forme quadratique. $f$ est dite binaire si elle est définie positive et à coefficients dans $\Z$. Son discriminant est $\Delta = b^2 - 4ac$. On notera $f = f(a,b,c)$ pour désigner une forme quadratique binaire, ou $f = f(a,b)$ si le discriminant $\Delta$ est connu. $f$ est dite primitive si ses coefficients $a$, $b$ et $c$ vérifient $\gcd(a, b, c) = 1$. $f$ est dite normale si $-a < b \leq a$.
 \end{Def}
 
 \begin{Prop}[\cite{Coh00}(Th 7.7)]
@@ -362,7 +362,7 @@ On énonce une correspondance entre d'une part les idéaux d'un ordre d'un corps
 	\begin{equation*}
 		I : f(a,b)\mapsto\left[ a, \frac{-b + \sqrt{\Delta}}{2}\right] 
 	\end{equation*}
-	associe à $f$ un idéal de $\OR_{\Delta}$.
+	associe à $f$ un idéal de $\OR_{\Delta}$. 
 \end{Prop}
 
 Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les coefficients $a$ et $b$ à partir d'une écriture adéquate de l'idéal $\LR$.
@@ -373,11 +373,11 @@ Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les
 	\begin{equation*}
 		\LR = m\left[ a , \frac{-b + \sqrt{\Delta}}{2}\right],
 	\end{equation*}
-	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, $-a<b\leq a$ et $c = (b^2 -\Delta)/4a$ avec $a, b, c$ premiers entre eux.
+	avec $m,a \in\N$, $b\in\Z$, $b^{2} = \Delta [4a]$, $-a<b\leq a$, et $4a | (b^2 -\Delta)$.
 \end{Prop}
 
 \begin{Rem}
-	La proposition citée \cite{Buchmann95}(2.5) est énoncée dans le cas des corps quadratique réel, de discriminant positif. Mais à part une condition différente sur le coefficient $b$, la preuve s'adapte sans difficulté au cas imaginaire.
+	La proposition citée \cite{Buchmann95}(2.5) est énoncée dans le cas des corps quadratique réel, de discriminant positif. Mais la preuve s'adapte sans difficulté au cas imaginaire, et l'énoncé est le même que dans le cas ou $a > \sqrt{\Delta}$.
 \end{Rem}
 
 \begin{Def}
@@ -389,48 +389,48 @@ Pour définir la réciproque de l'application $I$, il faut pouvoir retrouver les
 	\begin{equation*}
 		F : id(m,a,b)\mapsto f(a,b) = ax^2 + bxy + cy^2
 	\end{equation*}
-	associe à $\LR$ une forme quadratique binaire de même discriminant. 
+	associe à $\LR$ une forme quadratique binaire normale de même discriminant. 
 \end{Coro}
 
 \begin{Prop}[\cite{Cox}(Th 7.7)]
-	Les applications $I$ et $F$ induisent une bijection entre les idéaux entiers primitifs et les formes quadratiques binaires primitives.
+	Les applications $I$ et $F$ induisent une bijection entre les idéaux entiers primitifs et les formes quadratiques binaires normales.
 \end{Prop}
 
-On peut retrouver facilement la norme et l'inverse d'un idéal entier donné sous forme standard.
+On peut retrouver facilement la norme et l'inverse d'un idéal entier donné sous forme standard, à condition que celui-ci soit propre. On pourra caractériser cela en regardant si la forme quadratique binaire associée est primitive ou non. 
 
 \begin{Prop}[\cite{Coh00}(5.2.5)]
 	
-	Soit $\LR = id(m,a,b)\subset\OR_{\Delta}$ un idéal entier sous forme standard. Soit $\LR' = id\left( \frac{m}{N(\LR)},a,-b\right) $ (qui est un idéal fractionnaire de $\OR_{\Delta}$). Alors
+	Soit $\LR = id(m,a,b)\subset\OR_{\Delta}$ un idéal entier sous forme standard. Soit $\LR' = id\left( \frac{1}{ma},a,-b\right) $ (qui est un idéal fractionnaire de $\OR_{\Delta}$). Alors
 	\begin{enumerate}
 		\item $N(\LR) = m^2a$
 		\item $\LR\LR' = \left[ \gcd(a,b,c),\;\frac{-b + \sqrt{\Delta}}{2}\right]  $
-		\item $\LR$ est propre si et seulement s'il est primitif, et dans ce cas $\LR\LR' = \OR_{\Delta}.$
+		\item $\LR$ est propre si et seulement si $F(\LR)$ est primitive, et dans ce cas $\LR\LR' = \OR_{\Delta}.$
 	\end{enumerate}
 \end{Prop}
 
 \begin{Def}
-	Deux formes quadratiques binaires sont équivalentes si leurs images par $I$ le sont. On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires de discriminant $\Delta$.
+	Deux formes quadratiques binaires sont équivalentes si leurs images par $I$ le sont. En particulier la relation d'équilavence préserve la primitivité des formes. On note $Cl(\Delta)$ les classes d'équivalences de formes quadratiques binaires primitives de discriminant $\Delta$.
 \end{Def}
 
-L'application $F$ induit une structure de groupe sur les formes quadratiques binaires. Ce morphisme passe au quotient et induit un isomorphisme de groupe entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. Cependant la notion d'équivalence entre formes quadratiques binaires peut être définie directement, ainsi qu'une loi de groupe sur les formes et sur leurs classes, via le produit le Dirichlet \cite{Cox}[3.8].
+L'application $F$ induit une structure de groupe sur les formes quadratiques binaires primitives. Ce morphisme passe au quotient et induit un isomorphisme de groupe entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$. Cependant la notion d'équivalence entre formes quadratiques binaires peut être définie directement, ainsi qu'une loi de groupe sur les formes et sur leurs classes, via le produit le Dirichlet. On l'énonce uniquement dans le cas des formes quadratiques binaires primitives \cite{Cox}[3.7]. 
 
 \begin{Def}
-	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante : Soit $B$ défini modulo $2aa'$ par les relations suivantes
+	Soit $f = (a,b)$, $f' = (a', b')$ deux formes quadratiques binaires primitives de même discriminant $\Delta$. On défini le produit de Dirichlet $f*f'$ de la façon suivante : Soit $B$ défini modulo $2aa'$ par les relations suivantes
 	\begin{enumerate}
 		\item $B = b [2a]$
 		\item $B = b' [2a']$
 		\item $B^2 = \Delta [4aa']$
 	\end{enumerate}
-	Alors $f*f' = (aa', B)$ est une forme quadratique binaire de discriminant $\Delta$.
+	Alors $f*f' = (aa', B)$ est une forme quadratique binaire primitives de discriminant $\Delta$.
 \end{Def}
 
 \begin{Prop}[\cite{Cox}(Th 7.7)]
 	
-	Avec les notation précédentes, $I(f*g) = I(f)I(g)$ et $F(\LR\LR') = F(\LR)*F(\LR')$. Les applications $I$ et $F$ induisent des isomorphismes réciproques entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$.
+	Soit $f,$ $g$ deux formes quadratiques binaires primitives de même discriminant. Alors $I(f*g) = I(f)I(g)$. Soit $\LR,$ $\LR'\in I(\OR_{\Delta})$. Alors $F(\LR\LR') = F(\LR)*F(\LR')$. Les applications $I$ et $F$ induisent des isomorphismes réciproques entre $Cl(\OR_{\Delta})$ et $Cl(\Delta)$.
 \end{Prop}
 
 \begin{Rem}
-	On peut donc calculer la forme standard d'un produit d'idéaux eux mêmes sous formes standards, en calculant un produit de Dirichlet.
+	On peut donc calculer la forme standard d'un produit d'idéaux propres eux mêmes donnés sous formes standards, en calculant un produit de Dirichlet.
 \end{Rem}
 
 \subsubsection{Réduction de formes quadratiques binaires et applications}
@@ -438,7 +438,7 @@ L'application $F$ induit une structure de groupe sur les formes quadratiques bin
 
 La proposition suivante donne plusieurs moyens de trouver des formes équivalentes à une forme quadratique binaire donnée. On peut alors chercher une forme équivalente aux coefficients les plus petits possibles. 
 
-\begin{Prop}[\cite{Cox}(Thm 2.8)]\label{actionMatriceForme}
+\begin{Prop}[\cite{Cox}(Th 2.8)]\label{actionMatriceForme}
 	Les changements de variables en $(x,y)$ suivant appliqués à une forme quadratique binaire $f(a,b,c)$ permettent d'obtenir $f' = f(a',b',c')$ équivalente à $f$. 
 	\begin{enumerate}
 		\item $(x,y)\mapsto (x - qy, y),\;\forall\;q\in\Z$, alors $f' = f(a,b - 2aq, c - bq + aq^2)$  
@@ -451,11 +451,11 @@ La proposition suivante donne plusieurs moyens de trouver des formes équivalent
 	Soit $f = f(a,b,c)$ une forme quadratique binaire de discriminant $\Delta < 0$. $f$ est une dite réduite si $|b| \leq a \leq c$ et si de plus lorsque $a = c$, $b \geq 0$. 
 \end{Def}
 
-\begin{Prop}[\cite{Cox}(2.8)]\label{uniciteReduite}
-	Soit $\OR_{\Delta}$ un ordre d'un corps quadratique imaginaire. Toute classe de $Cl(\Delta)$ contient une unique forme quadratique réduite, qui est primitive. 
+\begin{Prop}[\cite{Cox}(Th 2.8)]\label{uniciteReduite}
+	 Toute classe de $Cl(\Delta)$ contient une unique forme quadratique binaire réduite. 
 \end{Prop}
 
-La preuve de la proposition \ref{uniciteReduite} fournit un algorithme donnant l'élément réduit de la classe d'une forme quadratique binaire donnée. Les différentes étapes de l'algorithme utilise les changements de variables cités dans la proposition \ref{actionMatriceForme}. 
+La preuve de la proposition \ref{uniciteReduite} fournit l'algorithme \ref{ALGO reduction} donnant l'élément réduit de la classe d'une forme quadratique binaire donnée. Les différentes étapes de l'algorithme utilise les changements de variables cités dans la proposition \ref{actionMatriceForme}. 
 
 \begin{algorithm}[h]
 	\caption{Réduction de formes quadratiques binaires}
@@ -495,7 +495,7 @@ L'algorithme \ref{ALGO reduction} est polynomial en la taille des coefficients d
 \end{Prop}
 
 \begin{Coro}\label{COMPLEX reduction}
-	Soit $f = f(a,b,c) = F(\LR)$ une forme quadratique binaire associé à un idéal $\LR$ d'un ordre $\OR_{\Delta}$. La complexité de l'algorithme \ref{ALGO reduction} appliqué à $f(a,b,c)$ est en 
+	Soit $f = f(a,b,c)$ une forme quadratique binaire normale de discriminant $\Delta$. La complexité de l'algorithme \ref{ALGO reduction} appliqué à $f(a,b,c)$ est en 
 	\begin{equation*}
 		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
 	\end{equation*}
@@ -503,7 +503,7 @@ L'algorithme \ref{ALGO reduction} est polynomial en la taille des coefficients d
 \end{Coro}
 
 \begin{proof}
-	La complexité de chaque passage dans la boucle de la ligne $2$ est dominée par l'étape de la ligne $4$, qui correspond à une division euclidienne de la variable $b$ par la variable $2a$. Puisque la forme $f$ correspond à un idéal sous forme standard, initialement $|b| \leq a$, donc toutes les divisions euclidienne seront de complexité en $O(\log(a))$. On conclut avec la proposition \ref{nbEtapesReduction}.
+	La complexité de chaque passage dans la boucle de la ligne $2$ est dominée par l'étape de la ligne $4$, qui correspond à une division euclidienne de la variable $b$ par la variable $2a$. Puisque la forme $f$ est normale, initialement $|b| \leq a$, donc toutes les divisions euclidienne seront de complexité en $O(\log(a))$. On conclut avec la proposition \ref{nbEtapesReduction}.
 \end{proof}
 
 
@@ -522,28 +522,28 @@ On énonce plusieurs propriétés des coefficients d'une forme quadratique rédu
 \end{Prop}
 
 \begin{Def}
-	Un entier $m\in\N$ est dit représenté par une forme quadratique binaire $f$ s'il existe $s$, $t$ deux entiers tels que $m = f(s,t)$.
+	Un entier $m\in\N$ est dit représenté par une forme quadratique binaire $f$ s'il existe $s$, $t\in\Z$ tels que $m = f(s,t)$.
 \end{Def}
 
 \begin{Prop}[\cite{Cox}(Th 7.7)]
 	
-	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe un idéal entier $\LR\sim I(f)$ tel que $N(\LR) = m$.
+	Un entier $m\in\N$ est représenté par une forme quadratique binaire primitive $f$ si et seulement s'il existe un idéal entier propre $\LR\sim I(f)$ tel que $N(\LR) = m$.
 \end{Prop}
 
-\begin{Prop}[\cite{Cox}(Thm 2.8, 2.9)]\label{représentationEntierMinimaux}
+\begin{Prop}[\cite{Cox}(Th 2.8, 2.9)]\label{représentationEntierMinimaux}
 	
 	Soit $f = f(a,b,c)$ une forme quadratique binaire primitive. Alors tout les entiers représentés par $f$ sont positifs. Si $f$ est réduite, alors $a$ et $c$ sont les deux plus petits entiers représentés par $f$, avec $f(1,0) = a$ et $f(0,1) = c$. En particulier $a$ et $c$ sont premier entre eux.  
 \end{Prop}
 
 \begin{Coro}
-	Si $f = f(a,b,c)$ est une forme quadratique réduite, et si $f' = f(c,-b,a)$, alors $I(f)$ et $I(f')$ sont les deux idéaux entier de plus petites de normes de leur classe d'équivalence. 
+	Si $f = f(a,b,c)$ est une forme quadratique binaire primitive et réduite, et si $f' = f(c,-b,a)$, alors $I(f)$ et $I(f')$ sont les deux idéaux entier propre de plus petites de normes de leur classe d'équivalence commune. 
 \end{Coro}
 
 
-Il sera utile par la suite de trouver des générateurs d'idéaux principaux à partir de leur forme standard. Soit $\LR = id(m,a,b)$ un idéal entier supposé principal, et soit $\beta$ un générateur. D'après \ref{NormesId}, $N(\LR) = a = N_{\Q}^{\K}(\beta)$, donc étant donné la forme standard, on connaît la norme d'un générateur. On se ramène au cas où $\LR = id(1,a,b)$ est primitif, quitte à multiplier par $m$ le résultat final. 
+Il sera utile par la suite de trouver des générateurs d'idéaux principaux à partir de leur forme standard. Soit $\LR = id(m,a,b)$ un idéal entier supposé principal (donc propre), et soit $\beta$ un générateur. D'après \ref{NormesId}, $N(\LR) = a = N_{\Q}^{\K}(\beta)$, donc étant donné la forme standard, on connaît la norme d'un générateur.  
 
 \begin{Prop}
-	Soit $\LR = m[a , \frac{-b + \sqrt{\Delta}}{2}]$ un idéal de $\OR_{\Delta}$ sous forme standard. Soit $f = F(\LR) = f(a,b)$ sa forme quadratique binaire primitive associée. Alors 
+	Soit $\LR = m[a , \frac{-b + \sqrt{\Delta}}{2}]\in I(\OR_{\Delta})$ sous forme standard. Soit $f = F(\LR) = f(a,b)$ sa forme quadratique binaire primitive associée. Alors 
 	\begin{equation*}
 		f(x,y) = N_{\Q}^{\K}\left( m\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) \right) / N(\LR)
 	\end{equation*}
@@ -554,31 +554,31 @@ Il sera utile par la suite de trouver des générateurs d'idéaux principaux à 
 \end{proof}
 
 \begin{Coro}
-	Soit $\LR = (1,a,b)\subset\OR_{\Delta}$ un idéal primitif sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f$. De plus dans ce cas,
+	Soit $\LR = id(m,a,b)\subset I(\OR_{\Delta})$ sous forme standard. $\LR$ est principal si et seulement si $1$ est représenté par $f = F(\LR)$. De plus dans ce cas, si $f(s,t) = 1$ alors
 	\begin{equation*}
-		\LR = \left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}.
+		\LR = m\left( as - t\frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}.
 	\end{equation*}
 \end{Coro}
 
 \begin{proof}
-	$\LR$ est un idéal principal si et seulement s'il existe un élément de $\LR$ de norme égale à $N(\LR)$. Puisque $\LR = [a , \frac{-b + \sqrt{\Delta}}{2}]$, tout élément $\beta$ de $\LR$ est de la forme
+	$\LR$ est un idéal principal si et seulement s'il existe un élément de $\LR$ de norme égale à $N(\LR)$. Puisque $\LR = m[a , \frac{-b + \sqrt{\Delta}}{2}]$, tout élément $\beta$ de $\LR$ est de la forme
 	\begin{equation*}
-		\beta = \left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right),\; x,y\in\Z.
+		\beta = m\left( as - t\frac{-b + \sqrt{\Delta}}{2}\right),\; s,t\in\Z.
 	\end{equation*}
-	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(x,y) = 1$ d'après ce qui précède.
+	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(s,t) = 1$ d'après ce qui précède.
 \end{proof}
 
-On cherche une représentation de $1$ par $f$. D'après la proposition \ref{représentationEntierMinimaux}, lorsque $f$ est une forme quadratique binaire qui représente $1$, sa forme réduite $r$ est de la forme $x^2 \pm xy + cy^2$, et $r(1,0) = 1$. En appliquant en sens inverse les changements de variables utilisés lors de la réduction, on peut calculer une représentation de $1$ par $f$. On en déduit l'algorithme \ref{ALGO idealprincipal} permettant de trouver un générateur d'un idéal principal. Ceci est l'algorithme utilisé par défaut dans Sage pour la recherche de générateur.  
+Soit $f$ une forme quadratique binaire primitive. On cherche $s, t\in\Z$ tels que $f(s,t) = 1$. D'après la proposition \ref{représentationEntierMinimaux}, si une solution existe, la forme réduite $r$ de la classe de $f$ s'écrit $r(x,y) = x^2 \pm xy + cy^2$, et $r(1,0) = 1$. En appliquant en sens inverse les changements de variables utilisés lors de la réduction, on peut calculer $s$ et $t$. On en déduit l'algorithme \ref{ALGO idealprincipal} permettant de trouver un générateur d'un idéal principal. Ceci est l'algorithme utilisé par défaut dans Sage pour la recherche de générateur.  
 
 \begin{algorithm}[h]
 	\caption{Générateur d'un idéal principal donné sous forme standard}
 	\label{ALGO idealprincipal}
 	\begin{algorithmic}[1]
-		\Require $(m,a,b)$ un idéal entier d'un ordre $\OR_{\Delta}$ supposé principal.
-		\Ensure Un élément $\beta$ tel que $(m,a,b) = \beta\OR_{\Delta}$. 
-		\State $f\gets ax^2 + bxy + cy^2$
-		\State $r\gets$ résultat de l'algorithme \ref{ALGO reduction} appliqué à $f$
-		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$ (voir la proposition \ref{actionMatriceForme}).
+		\Require $id(m,a,b)$ un idéal entier d'un ordre $\OR_{\Delta}$ supposé principal.
+		\Ensure Un élément $\beta$ tel que $id(m,a,b) = \beta\OR_{\Delta}$. 
+		\State $f\gets f(a,b)$
+		\State $r\gets$ forme quadratique réduite équivalente à $f$ (algorithme \ref{ALGO reduction}).
+		\State $L\gets$ liste des changements de variables utilisés durant la réduction de $f$ (proposition \ref{actionMatriceForme}).
 		\State $(x,y)\gets(1,0)$
 		\State $(x,y)\gets(x',y')$ obtenus en appliquant tout les changements de variables retenus dans $L$ dans le sens inverse d'apparition.
 		\State $\beta\gets m\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right)$
@@ -588,7 +588,7 @@ On cherche une représentation de $1$ par $f$. D'après la proposition \ref{repr
 
 
 \begin{Prop}\label{COMPLEX idealprincipal}
-	Soit $(m,a,b) = \beta\OR_{\Delta}$ un idéal entier principal de $\OR_{\Delta}$ donné sous forme standard (en particulier $ma$ est la norme de $\beta$). L'algorithme \ref{ALGO idealprincipal} renvoie $\beta$ avec une complexité en
+	Soit $id(m,a,b) = \beta\OR_{\Delta}$ un idéal entier principal de $\OR_{\Delta}$ donné sous forme standard. L'algorithme \ref{ALGO idealprincipal} renvoie $\beta$ avec une complexité en
 	\begin{equation*}
 		O\left( \log(a)\log\left( \frac{a}{\sqrt{|\Delta|}} \right)\right).
 	\end{equation*}
@@ -599,33 +599,33 @@ On cherche une représentation de $1$ par $f$. D'après la proposition \ref{repr
 	Certaines sources \cite{BrokerCharlesLauter}, \cite{JaoSoukharev} utilisent un algorithme dû à Cornacchia pour résoudre le problème de l'idéal principal. Ils énoncent une complexité en $O(\log(N(\beta)))$. Cependant aucune preuve n'est donné, ni aucune description exacte de l'algorithme utilisé. Après analyse du problème il semble que cette approche ne fonctionne pas dans tout les cas. Dans toute la suite une utilisera l'algorithme \ref{ALGO idealprincipal}, utilisé par défaut dans Sage. 
 \end{Rem}
 
-L'algorithme \ref{ALGO idealprincipal} résout en particulier le problème du vecteur le plus court dans un réseau structuré quadratique principal. On généralise l'approche pour trouver une base de vecteurs court à partir de la proposition \ref{représentationEntierMinimaux}.
+L'algorithme \ref{ALGO idealprincipal} résout en particulier le problème du vecteur le plus court dans un réseau structuré quadratique principal. On généralise l'approche pour trouver une base de vecteurs courts à partir de la proposition \ref{représentationEntierMinimaux}.
 
 \begin{Prop}[\cite{Clapoti}(Prop 2.1)]\label{correspondanceIdeqElement}
-	Soit $\OR_\Delta$ un ordre quadratique imaginaire, et $\LR$ un idéal entier. Soit $\alpha\in\LR$. Alors $\frac{\bar\alpha}{N(\LR)}\LR$ est un idéal entier de norme $N_{\Q}^{\K}(\alpha)$. De plus, pour tout idéal entier $\LR'\neq\LR$ de $\OR_{\Delta}$,
+	Soit $\OR_\Delta$ un ordre quadratique imaginaire, et $\LR\in I(\OR_{\Delta})$. Soit $\alpha\in\LR$. Alors $\frac{\bar\alpha}{N(\LR)}\LR$ est un idéal entier propre de norme $N_{\Q}^{\K}(\alpha)$. De plus, pour tout $\LR\in I(\OR_{\Delta})$,
 	\begin{equation*}
 		\LR'\sim\LR\iff\exists\alpha\in\LR,\;\bar{\LR}\LR' = \bar{\alpha}\OR_{\Delta}\iff\exists\alpha\in\LR,\;\LR' = \frac{\bar\alpha}{N(\LR)}\LR.
 	\end{equation*}
 \end{Prop}
 
 \begin{Rem}
-	La proposition précédente donne une correspondance entre les élément $\alpha$ d'un idéal entier de $\OR_{\Delta}$ et les idéaux entiers $\LR'$ de la même classe. Connaissant $\LR$ et $\LR'$ sous forme standard, on utilise l'algorithme \ref{ALGO idealprincipal} pour trouver $\bar{\alpha}$ générateur de $\bar{\LR}\LR'$. Connaissant $\LR$ sous forme standard et $\alpha\in\LR$, on calcule la forme standard de $\frac{\bar\alpha}{N(\LR)}\OR_{\Delta}$ puis celle de $\LR'$.
+	La proposition précédente donne une correspondance entre les élément $\alpha$ d'un idéal $\LR\in I(\OR_{\Delta})$ et les idéaux entiers propre $\LR'$ équivalent à $\LR$. Connaissant $\LR$ et $\LR'$ sous forme standard, on utilise l'algorithme \ref{ALGO idealprincipal} pour trouver $\bar{\alpha}$ générateur de $\bar{\LR}\LR'$. Connaissant $\LR$ sous forme standard et $\alpha\in\LR$, on calcule la forme standard de $\frac{\bar\alpha}{N(\LR)}\OR_{\Delta}$ puis celle de $\LR'$ avec un produit de Dirichlet.
 \end{Rem}
 
-On en déduit l'algorithme \ref{ALGO baseVecteurCourt}, prenant en entrée un idéal $\LR$ entier primitif d'un ordre $\OR_{\Delta}$, qui calcule les deux éléments de $\LR$ correspondant aux deux idéaux entiers de normes minimales obtenues avec la proposition \ref{représentationEntierMinimaux}. Ils forment une base de $\LR$ car leurs normes sont des entiers premiers entre eux. Si $\LR = id(m,a,b)$ n'est pas primitif, il suffit de traiter le cas primitif puis multiplier les éléments obtenus par $m$. 
+On en déduit l'algorithme \ref{ALGO baseVecteurCourt}, prenant en entrée un idéal $\LR\in I(\OR_{\Delta})$, qui calcule les deux éléments de $\LR$ correspondant aux deux représentants de $\CL$ de normes minimales obtenues avec la proposition \ref{représentationEntierMinimaux}. Ils forment une base de $\LR$ car leurs normes sont des entiers premiers entre eux ($F(\LR)$ est primitive).
 
 \begin{algorithm}[h]
 	\caption{Base de vecteurs courts d'un idéal (primitif) sous forme standard}
 	\label{ALGO baseVecteurCourt}
 	\begin{algorithmic}[1]
-		\Require $\LR = id(1,a,b)$ un idéal entier primitif d'un ordre quadratique imaginaire $\OR_{\Delta}$.
-		\Ensure Deux éléments $\alpha$, $\beta\in\LR$ de normes minimales tels que $\LR = [\alpha,\beta]$. 
+		\Require $\LR = id(m,a,b)\in I(\OR_{\Delta})$.
+		\Ensure Deux éléments $\alpha$, $\beta\in\LR$ de normes minimales, et tels que $\LR = [\alpha,\beta]$. 
 		\State $f\gets F(\LR)$
 		\State $r = f(a',b',c')\gets$ résultat de l'algorithme \ref{ALGO reduction} appliqué à $f$
-		\State $\LR_1\gets I(f(a',b',c'))$
+		\State $\LR_1\gets I(r)$
 		\State $\LR_2\gets I(f(c',-b',a'))$
-		\State $\alpha\gets$ conjugué du générateur de $\bar{\LR}\LR_1$ (Algorithme \ref{ALGO idealprincipal}).
-		\State $\beta\gets$ conjugué du générateur de $\bar{\LR}\LR_2$ (Algorithme \ref{ALGO idealprincipal}).
+		\State $\alpha\gets$ conjugué d'un générateur de l'idéal principale $\bar{\LR}\LR_1$ (Algorithme \ref{ALGO idealprincipal}).
+		\State $\beta\gets$ conjugué d'un générateur de l'idéal principale $\bar{\LR}\LR_2$ (Algorithme \ref{ALGO idealprincipal}).
 		\State \Return $(\alpha,\beta)$
 		
 		
@@ -640,7 +640,7 @@ On en déduit l'algorithme \ref{ALGO baseVecteurCourt}, prenant en entrée un id
 \end{Prop}
 
 \begin{Rem}
-	Certaines sources \cite{Pegasis} utilise l'algorithme LLL pour trouver des bases réduites d'un réseaux structurés quadratiques. L'avantage ici face à LLL est de retourné à coup sûr une base de normes minimales, en restant en complexité polynomial.   
+	Certaines sources \cite{Pegasis} utilise l'algorithme LLL pour trouver des bases réduites d'un réseaux structurés quadratiques. L'avantage ici face à LLL est de retourné à coup sûr une base de normes minimales, en restant en complexité polynomiale.   
 \end{Rem}
 
 \subsection{Isogénies de courbes elliptiques}
