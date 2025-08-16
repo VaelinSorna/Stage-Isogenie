@@ -40,9 +40,9 @@ Le fondement théorique des méthodes présentées par la suite est le lemme \re
 	Pour une définition exact d'une isogénie entre produit de courbes elliptiques, on se réfère à \cite{Pegasis}[2.2]. En particulier on peut en définir le degré, et une isogénie de Kani est de degré $(d_1 + d_2)^2$. On parlera dans ce cas d'une $(d_1 + d_2)$-isogénie. pour définir la proprement la notion d'isogénie duale, il faut munir chaque produit de courbes elliptiques d'un isomorphisme avec son dual, appelé polarisation principale. 
 \end{Rem}
 
-Le calcul de générateurs du noyau d'une isogénie de Kani $F$ ne nécessite d'évaluer aucune des quatre isogénies qui compose le diamant associé. Inversement pour tout $P\in E^g$, $F(P,\OR_{E'^g}) = (\phi_1(P),\;-\phi_2(P))$. Donc savoir évaluer $F$ à partir de son noyau permet d'évaluer les isogénies du diamant. Cependant pour cela il n'y a pas de généralisation directe des formules de Vélu aux produits de courbes elliptiques. On énonce la complexité de l'algorithme présenté dans \cite{ThetaRobert}, utilisant la notion de Thêta coordonnées qui n'a pas été étudiée durant ce stage.
+Le calcul de générateurs du noyau d'une isogénie de Kani $F$ ne nécessite d'évaluer aucune des quatre isogénies qui compose le diamant associé. Inversement pour tout $P\in E^g$, $F(P,\OR_{E'^g}) = (\phi_1(P),\;-\phi_2(P))$. Donc savoir évaluer $F$ à partir de son noyau permet d'évaluer les isogénies du diamant. Cependant il n'y a pas de généralisation directe des formules de Vélu aux produits de courbes elliptiques. On énonce la complexité de l'algorithme présenté dans \cite{ThetaRobert}, utilisant la notion de Thêta coordonnées qui n'a pas été étudiée durant ce stage.
 
-\begin{Prop}[\cite{ThetaRobert}(Thm 1.3)] Soit 
+\begin{Prop}[\cite{ThetaRobert}(Thm 1.3)]\label{COMPLEX ThetaRobert} Soit 
 	\begin{equation*}
 		F : E^g\times E'^g\rightarrow E_1^g\times E_2^g
 	\end{equation*}
@@ -59,7 +59,7 @@ Le calcul de générateurs du noyau d'une isogénie de Kani $F$ ne nécessite d'
 
 \textbf{TODO : trouver des solutions avec $N$ friable ? Calculer une isogénie en plusieurs fois malgrès des gluing ?}
 
-Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal norme $l$ premier, premier avec $f_m$. On explique maintenant comment utiliser ce qui précède pour expliciter une isogénie agissant comme un idéal équivalent à $\LR$. On pourra alors expliciter $\phi_\LR$ (il faudra vérifier l'hypothèse \ref{HypothèseInversion}). La méthode ne va pas dépendre de $\LR$ mais uniquement de sa classe $\CL$, donc on pourra toujours commencer par réduire $\LR$ et travailler avec un idéal $\aR$ équivalent de norme minimale.
+Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal norme $l$ premier, premier avec $f_m$. On explique maintenant comment utiliser ce qui précède pour expliciter une isogénie associée à un idéal équivalent à $\LR$. On pourra alors expliciter $\phi_\LR$ (algorithme \ref{ALGO IsogenieEquivalenceGenerale}). La méthode ne va pas dépendre de $\LR$ mais uniquement de sa classe $\CL$, donc on pourra toujours commencer par réduire $\LR$ et travailler avec un idéal $\aR$ équivalent de norme minimale.
 
 \begin{Def}
 	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal entier propre. Soit $g\in\N^*$
@@ -83,7 +83,7 @@ Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\LR\in\OR_{\Delta}$ un idéal norme 
 	\end{equation*}
 \end{Prop}
 
-Soit $N = uN_1 + vN_2$. D'après \ref{endomorphismeFractionnaire}, si $uN_1$ et $vN_2$ sont premier avec $|E(\F_{q})|$, on pourra évaluer $[\theta]$ en tout point rationnel de $e$. Si le groupe de torsions $E[N]$ est défini sur une extension de degré suffisamment petit, et si $N$ est friable, alors construire un telle diamant permet en particulier d'expliciter $\phi_{\bR}$ en temps polynomial. Soit $P$ un point de $E$. Si de plus la norme $N_1$ est première avec l'ordre de $P$, alors on peut évaluer l'endomorphisme associé à $\bR\bar{\LR}$, et en déduire $\LR$ en adaptant l'algorithme \ref{ALGO IsogenieEquivalenceFriable}, comme énoncé dans l'algorithme \ref{ALGO IsogenieEquivalenceGenerale}.
+Soit $N = uN_1 + vN_2$. D'après la proposition \ref{evalEndoAvecDenom}, si $N_1$ et $N_2$ sont premier avec $|E(\F_{q})|$, on pourra évaluer $[\theta]$ en tout point rationnel de $e$. On suppose de plus pouvoir évaluer $[\alpha_u]$ et $[\alpha_v]$. Alors construire un telle diamant permet en particulier d'expliciter $\phi_{\bR}$. Soit $P$ un point de $E$. Alors on peut en déduire $\phi_\LR$ en adaptant l'algorithme \ref{ALGO IsogenieEquivalenceFriable}, comme énoncé dans l'algorithme \ref{ALGO IsogenieEquivalenceGenerale}.
 
 \begin{algorithm}[h]
 	\caption{Calcul d'isogénie par équivalence friable}\label{ALGO IsogenieEquivalenceGenerale}
@@ -106,24 +106,20 @@ Soit $N = uN_1 + vN_2$. D'après \ref{endomorphismeFractionnaire}, si $uN_1$ et 
 
 \subsubsection{Équation de normes de Clapoti et étude de torsions}
 
-Dans un premier temps, on s'intéresse au diamants d'isogénies de Clapoti de dimension $g = 1$, pour lesquelles le calculs de l'isogénie de Kani est plus simple. On énonce le problème à résoudre pour pouvoir en construire. 
+Dans un premier temps, on s'intéresse au diamants d'isogénies de Clapoti de dimension $g = 1$, pour lesquelles le calculs de l'isogénie de Kani est moins coûteux. On énonce le problème à résoudre pour pouvoir en construire. 
 
 \begin{Def}[Équation de normes de Clapoti]
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in\OR_{\Delta}$ un idéal de norme $a$. On appelle équation de normes sur $(E,\aR)$ le problème suivant: Trouver deux idéaux $\bR$, $\cR$ équivalents à $\aR$, de normes respectives $N_1$ et $N_2$, deux élément $\alpha_u$, $\alpha_v\in\OR_{\Delta}$ de normes $u$, $v$, $N$, et $d\in\N^{*}$ tels que $uN_1$, $vN_2$ soit premier entre eux et chacun avec $|E(\F_{q})|$, et tels que
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in\OR_{\Delta}$ un idéal de norme $a$. On appelle équation de normes sur $(E,\aR)$ le problème suivant: trouver deux idéaux $\bR$, $\cR$ équivalents à $\aR$, de normes respectives $N_1$ et $N_2$, deux élément $\alpha_u$, $\alpha_v\in\OR_{\Delta}$ de normes $u$, $v$, et $N$, $d\in\N^{*}$ tels que $uN_1$, $vN_2$ soit premier entre eux et chacun avec $|E(\F_{q})|$, et tels que
 	\begin{equation*}
 		uN_1 + vN_2 = N \;\mbox{et}\; E[N]\subset E\left(\F_{q^{d}}\right).
 	\end{equation*}
 \end{Def}
 
-Une solution ($\bR, \cR$, $\alpha_u$, $\alpha_v$, $N$, $d$) de ce problème permet de construire un diamant d'isogénie de Clapoti, où le calcul de l'isogénie de Kani nécessite au pire de calculer dans l'extension $\F_{q^{d}}$. On peut espérer $\bR$, $\cR$ de normes de l'ordre de $\sqrt{|\Delta|}$ d'après \ref{tailleCoefReduit}, donc $N$ en $O(\sqrt{|\Delta|})$. On souhaite que $d$ soit de taille polynomiale en $\log(|\Delta|)$ et $\log(q)$. Il faut donc estimer la taille de l'extension sur laquelle une torsion de l'ordre de $O(\sqrt{|\Delta|})$ est définie.
-
-\begin{Prop}[\cite{ionica2011pairingvolcano}]
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Alors $E(\F_{q})$ est isomorphe comme $\OR_{\Delta}$-module à $\OR_{\Delta}/(\pi_{q} - 1)$. 
-\end{Prop}
+Une solution ($\bR, \cR$, $\alpha_u$, $\alpha_v$, $N$, $d$) de ce problème permet de construire un diamant d'isogénie de Clapoti, où le calcul de l'isogénie de Kani nécessite au pire de calculer dans l'extension $\F_{q^{d}}$. On peut espérer $\bR$, $\cR$ de normes de l'ordre de $\sqrt{|\Delta|}$ d'après \ref{tailleCoefReduit}, donc $N$ en $O(\sqrt{|\Delta|})$. On souhaite que $d$ soit de taille polynomiale en $\log(|\Delta|)$ et $\log(q)$. Il faut donc estimer la taille de l'extension sur laquelle une torsion de l'ordre de $O(\sqrt{|\Delta|})$ est définie. pour cela on utilise la proposition suivante.
 
 
 \begin{Prop}[\cite{ionica2011pairingvolcano}]\label{gcdTorsions}
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ de conducteur $f$, et $d\in\N^{*}$. Soit $E(\F_{q^{d}}) = \Z/N\Z\times\Z/M\Z$ avec $N|M$. Soit $f_m$ le conducteur de $\Z[\pi_{q^d}]$. Alors
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ de conducteur $f$, avec $\Delta = f^2d_\K$. Soit  $d\in\N^{*}$ et $E(\F_{q^{d}}) = \Z/N\Z\times\Z/M\Z$ avec $N|M$. Soit $f_m$ le conducteur de $\Z[\pi_{q^d}]$. Alors
 	\begin{equation*}
 		N = \gcd(a_d - 1, f_m/f)
 	\end{equation*}
@@ -134,7 +130,7 @@ où $a_d$ est tel que $\pi_{q^d} = a_d + (f_m/f)g_\K$, avec $g_\K = \frac{\sqrt{
 	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ et $N$, $d\in\N^{*}$. Alors $E[N]\subset E(\F_{q^{d}})$ si et seulement si $N|\gcd(a_d - 1, f_m/f)$.
 \end{Coro}
 
-On déduit de la proposition \ref{gcdTorsions} l'algorithme \ref{ALGO EtudeDeTorsions} permettant de calculer les domaines de définition des groupes de torsions de $E$. On obtient pour chaque degré $d$ la torsion maximale $N$ définie sur $E(\F_{q^{d}})$, et on ne garde en mémoire que les cas où $N$ compris entre deux paramètres $N_{min}$ et $N_{max}$. 
+On déduit de la proposition \ref{gcdTorsions} l'algorithme \ref{ALGO EtudeDeTorsions} permettant de calculer les domaines de définition des groupes de torsions de $E$. On obtient pour chaque degré $d$ la torsion maximale $N$ définie sur $E(\F_{q^{d}})$, et on ne garde en mémoire que les paires $(d,N)$ avec $N$ compris entre deux paramètres $N_{min}$ et $N_{max}$. 
 
 \begin{algorithm}[h]
 	\caption{Etude de torsions}\label{ALGO EtudeDeTorsions}
@@ -170,7 +166,7 @@ Dans la section \ref{SECTION experiences}, on commente les résultats obtenues s
 
 \subsubsection{Algorithme KLPT pour Clapoti}
 
-On s'intéresse maintenant à la résolution d'une équation de normes $(E,\aR)$. On supposera l'idéal $\aR$ de norme minimal dans sa classe. on s'intéresse d'abord à la méthode KLaPoTi \cite{KLaPoTi}, qui commence par reformuler le problème. 
+On s'intéresse maintenant à la résolution d'une équation de normes $(E,\aR)$. On supposera l'idéal $\aR$ de norme minimal dans sa classe. on s'intéresse à la méthode KLaPoTi \cite{KLaPoTi}, qui commence par reformuler le problème. 
 
 \begin{Prop}
 	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in\OR_{\Delta}$ un idéal de norme $a$. L'équation de normes $(E,\aR)$ est équivalente à trouver $\beta$, $\lambda\in\aR$, $N$, $d\in\N^{*}$ tels que
@@ -184,15 +180,15 @@ On résume alors l'idée de la méthode. Soit $B_{|\Delta|,\infty} = \Q(i,j,ij)$
 \begin{equation*}
 	N_\K(\beta) + N_\K(\lambda) = N_{B_{|\Delta|,\infty}}(\beta + i\lambda)
 \end{equation*}
-On se ramène donc à trouver un élément de $Q$ de norme $aN$ avec $N$ à la fois friable et tel que $E[N]$ soit défini sur une extension de degré suffisamment petit. Pour trouver un élément de norme $N$ donnée, \cite{KLaPoTi} propose d'adapté l'algorithme KLPT. On résume les étapes :
+On se ramène donc à trouver un élément de $Q$ de norme $aN$ avec $N$ à la fois friable et tel que $E[N]$ soit défini sur une extension de degré suffisamment petit. Pour trouver un élément de norme $N$ donnée, \cite{KLaPoTi} propose d'adapté l'algorithme KLPT \cite{KLPT}. On en résume les étapes :
 
 \begin{enumerate}
-	\item On écrit $N = N_1N_2$
-	\item On trouve deux élément $\rho, \nu$ de $\Z[i]$ tels que $N(\rho)+|\Delta|N(\nu) = aN_1$, avec l'algorithme de Cornacchia 
+	\item On écrit $N = N_1N_2$ (Dans la version de \cite{KLaPoTi}, $N$ est une puissance de $2$, ici $N\in\N^*$).
+	\item On trouve deux éléments $\rho, \nu$ de $\Z[i]$ tels que $N(\rho)+|\Delta|N(\nu) = aN_1$, avec l'algorithme de Cornacchia. Alors l'élément $\rho + j\nu$ est de norme $aN_1$. 
 	\item On trouve un élément $\mu$ de $j(\Z[i])$ de norme $N_2$, tel que $\mu(\rho + j\nu)\in \aR Q$ soit de norme $aN$ (On utilise entre autre un algorithme de Petit et Smith).
 \end{enumerate} 
 
-Cette méthode est utilisé dans le cas des courbes supersingulière en considérant un ordre $\OR_{\Delta}$ inclus dans l'anneau d'endomorphisme. On choisit de plus $N = 2^e$ avec $e\simeq 500$, et le choix de la courbe et de la caractéristique assure que $E[N]\subset \F_{p^2}$. Ici, on ne peut pas choisir $\Delta$. L'étape $2$ n'a de solution que si $aN_1 - |\Delta|N(\nu) \geq 0$, ce qui impose $N_1$ au moins de l'ordre de $\sqrt{3|\Delta|}$ (d'après \ref{tailleCoefReduit}). De plus, la dernière étape impose à $N_2$ d'être de l'ordre de $|\Delta|^3$. Donc il faut que $N$ est de l'ordre de $|\Delta|^{3,5}$, au lieu de $O(\sqrt{|\Delta|})$. On conclut que l'algorithme proposé par \cite{KLaPoTi} ne permet pas de trouver toutes les solutions d'équations de normes, et celles trouver sont de second membre $N$ plus grand que nécessaire. On montre dans la section \ref{SECTION experiences} que la taille demandé de $N$ conduit à des degré d'extension $d$ considéré trop grand. 
+Dans \cite{KLaPoTi}, cette méthode est utilisé dans le cas des courbes supersingulière, en considérant un ordre $\OR_{\Delta}$ inclus dans l'anneau d'endomorphisme. On y choisit de plus $N = 2^e$ avec $e\simeq 500$, et le choix de la courbe et de la caractéristique assure que $E[N]\subset \F_{p^2}$. Dans notre cas, on ne peut pas choisir $\Delta$. Or l'étape $2$ n'a de solution que si $aN_1 - |\Delta|N(\nu) \geq 0$, ce qui impose $N_1$ au moins de l'ordre de $\sqrt{3|\Delta|}$ (d'après \ref{tailleCoefReduit}). De plus, la dernière étape impose à $N_2$ d'être de l'ordre de $|\Delta|^3$. Donc il faut que $N$ soit de l'ordre de $|\Delta|^{3,5}$, au lieu de $O(\sqrt{|\Delta|})$. On conclut que l'algorithme proposé par \cite{KLaPoTi} ne permet pas de trouver toutes les solutions d'équations de normes, et celles trouvées sont de second membre $N$ plus grand que nécessaire. On montre dans la section \ref{SECTION experiences} que la taille demandé de $N$ conduit à des degré d'extension $d$ considéré trop grand. 
 
 \textbf{TODO : résultats d'expériences} 
 
@@ -201,7 +197,7 @@ Cette méthode est utilisé dans le cas des courbes supersingulière en considé
 
 \subsubsection{Endomorphisme de Zharin et méthode Pegasis}
 
-Sans autre méthode que l'algorithme KLPT pour résoudre des équations de normes, il semble impossible d'améliorer la méthode précédente. Dans l'article initial \cite{Clapoti} ainsi que dans \cite{Pegasis}, la méthode précédente est remise en question et amélioré : Le lemme de kani se généralise à des diamants d'isogénies entre produits de courbes elliptiques, et on peut construire des diamants d'isogénies de Clapoti en dimension supérieur. L'avantage de passer en dimension supérieur est de pouvoir construire simplement des endomorphismes de norme $u$ pour tout $u\in\N^*$. 
+Sans autre méthode que l'algorithme KLaPoTi \cite{KLaPoTi} pour construire des diamants de Clapoti en dimension $1$, il semble impossible d'améliorer la méthode précédente. Les articles \cite{Clapoti} et \cite{Pegasis} proposent des améliorations en dimensions supérieurs. L'avantage est de pouvoir construire simplement des endomorphismes de norme $u$ pour tout $u\in\N^*$. 
 
 \begin{Prop}\cite{Clapoti}\label{EndoDim8}
 	Soit $u\in\N^*$. $u$ s'écrit comme somme de quatre carrés $u = m_1^2 + m_2^2 + m_3^2 + m_4^2$. Soit $E$ une courbe elliptique. L'endomorphisme de $E^4$ défini par la matrice
@@ -213,47 +209,62 @@ Sans autre méthode que l'algorithme KLPT pour résoudre des équations de norme
 			m_4& m_3 & -m_2 & m_1
 		\end{pmatrix}
 	\end{equation*}
-	est de degré $u$. 
+	est de degré $u$, et commute avec toute isogénie définie de façon diagonale. 
 \end{Prop}
 
-Ainsi la méthode proposé dans \cite{Clapoti} utilise un diamant d'isogénies en dimension $4$. Dans \cite{Pegasis} est introduit l'idée supplémentaire de coupler la méthode Clapoti avec l'algorithme BMSS \ref{ALGO BMSSCheckElkies}.
+\begin{Rem}
+	Tout entier $u\in\N^*$ s'écrit comme somme de quatre carré. Il est possible d'expliciter les solutions possibles en temps polynomial (algorithme de Pollack et Trevino,\cite{PolackTrevino}).
+\end{Rem}
+
+Ainsi la méthode proposé dans \cite{Clapoti} utilise un diamant d'isogénies en dimension $4$. De plus, l'article \cite{Pegasis} introduit l'idée supplémentaire de coupler la méthode Clapoti avec l'algorithme \ref{ALGO BMSSCheckElkies}. Pour cela le diagramme commutatif utilisé est différent. 
 
 \begin{Prop}[Diamant d'isogénies de Clapoti-Pegasis, \cite{Clapoti} \cite{Pegasis}]\label{diamantPegasis}
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in\OR_{\Delta}$ un idéal entier propre. Soit $\bR$, $\cR$ deux idéaux équivalents à $\aR$. Soit $u$, $v\in\N$. On considère des matrices $M_u$ et $M_v$ définies selon la proposition \ref{EndoDim8}. De plus on pose $\bR = \bR_e\bR_k$, $\cR = \cR_e\cR_k$, des écritures comme produits d'idéaux entiers, avec $\bR_k$, $\cR_k$ de normes respectives $N_1$ et $N_2$. On suppose que $uN_1$ et $vN_2$ sont premier entre eux et chacun premier avec $|E(\F_{q})|$. Alors le diagramme commutatif
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in I(\OR_{\Delta})$ un idéal entier propre. Soit $\bR$, $\cR$ deux idéaux équivalents à $\aR$. Soit $u$, $v\in\N$. On considère des matrices $M_u$ et $M_v$ définies selon la proposition \ref{EndoDim8}. De plus on pose $\bR = \bR_e\bR_k$, $\cR = \cR_e\cR_k$, des écritures comme produits d'idéaux entiers, avec $\bR_k$, $\cR_k$ de normes respectives $N_1$ et $N_2$. On suppose que $uN_1$ et $vN_2$ sont premier entre eux et chacun premier avec $|E(\F_{q})|$. Alors le diagramme commutatif
 	\[\begin{tikzcd}
 		E^4 \arrow{r}{\phi_{\bR_e}} 
-		& E_1^4 \arrow{r}{\phi_{\bR_k}} \arrow[swap]{d}{M_v\circ\phi_{\bar{\cR}_k}} 
-		& E_\LR^4 \arrow{d}{\phi_{\bar{\cR}_k}\circ M_u} \\
-		& E_{\bar{\LR}}^4 \arrow{r}{\phi_{\bR_k}} 
+		& E_1^4 \arrow{r}{M_u\circ\phi_{\bR_k}} \arrow[swap]{d}{M_v\circ\phi_{\bar{\cR}_k}} 
+		& E_\aR^4 \arrow{d}{M_v\circ\phi_{\bar{\cR}_k}} \\
+		& E_{\bar{\aR}}^4 \arrow{r}{M_u\circ\phi_{\bR_k}} 
 		& E_2^4 \arrow{r}{\phi_{\bar{\cR}_e}} 
 		& E^4
 	\end{tikzcd}
 	\]
-	contient un $(uN_1,vN_2)$-diamants d'isogénies, formé par $E_1^4$, $E_2^4$, $E_\LR^4$, $E_{\bar{\LR}}^4$.
+	contient un $(uN_1,vN_2)$-diamants d'isogénies, formé par $E_1^4$, $E_2^4$, $E_\LR^4$, $E_{\bar{\LR}}^4$. Alors le noyau de l'isogénie de Kani associée est 
+	\begin{equation*}
+		\ker(F)=\left\lbrace \left( uN_1P,\;M_u\circ M_v\circ\phi_{\bR_k}\circ\phi_{\bar{\cR}_k}(P)\right),\;\forall\; P\in E[uN_1 + vN_2] \right\rbrace .
+	\end{equation*}
 \end{Prop}
 
-La construction de diamants d'isogénies de Clapoti en dimension $4$ est plus simple, mais le calcul de l'isogénie de Kani associée est plus coûteux. 
+La construction de diamants d'isogénies de Clapoti en dimension $4$ est plus simple, mais le calcul de l'isogénie de Kani associée est plus coûteux (proposition \ref{COMPLEX ThetaRobert}). De plus pour expliciter le noyau il faut pouvoir évaluer l'isogénie $\phi_{\bR_k}\circ\phi_{\bar{\cR}_k}$ sur $E[N]$.
 
+\begin{Prop}[\cite{Pegasis}(eq 13)]
+	On reprend les notation de la propositions précédentes. Soit $\bR\bar{\cR} = \theta\OR_{\Delta}$, et $M_1, M_2$ les normes respectives de $\bR_e$ et $\cR_e$. Alors
+	\begin{equation*}
+		[M_1M_2]\circ\phi_{\bR_k}\circ\phi_{\bar{\cR}_k} = \phi_{\bar{\bR_e}}\circ[\theta]\circ\phi_{\cR_e}
+	\end{equation*}
+\end{Prop}
+
+Pour pouvoir évaluer $\phi_{\bR_k}\circ\phi_{\bar{\cR}_k}$ sur $E[N]$, il faut donc que $M_1$ et $M_2$ seront premier avec $N$, en plus de se décomposer en produit de nombres premier vérifiant les hypothèses \ref{HypothèseInversion} et \ref{HypothèseElkies}. Une fois cela vérifier, on peut évaluer l'isogénie de Kani, et donc en particulier évaluer $M_u\circ\phi_{\bR_k}$, et donc en particulier évaluer les isogénies $m_i\phi_{\bR_k} : E_1 \rightarrow E_\LR$ avec $i\in\left\lbrace 1,2,3,4\right\rbrace$. \textbf{Si on arrive à en déduire l'évaluation de $\phi_{\bR_k}$ (TODO : Comment ? Supposer l'un des $m_i$ inversible mod $|E(\F_{q^n})|)$ ?}, alors on peut évaluer $\phi_\bR$ en composant par $\phi_{\bR_e}$. On en déduit ensuite $\phi_\LR$ avec l'algorithme \ref{ALGO IsogenieEquivalenceGenerale}. 
 
 \subsubsection{Équation de normes de Clapoti-Pegasis}
 
 On énonce l'équation de normes à résoudre pour construire un diagramme tel qu'énoncé dans la proposition \ref{diamantPegasis}.
 
 \begin{Def}[Équation de normes de Clapoti-Pegasis]
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in\OR_{\Delta}$ un idéal de norme $a$. Soit $B_{premier}\in\N$ On appelle équation de normes Calpoti-Pegasis $(E^4,\aR,B_{premier})$ le problème suivant: Trouver deux idéaux $\bR$, $\cR$ équivalents à $\aR$, qui se factorisent sous la forme $\bR = \bR_e\bR_k$, $\cR = \cR_e\cR_k$, avec $\bR_k$, $\cR_k$ de normes respectives $N_1$ et $N_2$, ainsi que $u$, $v$ $N$, $d\in\N^{*}$ tels que
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$, et $\aR\in\OR_{\Delta}$ un idéal de norme $a$. Soit $B_{premier}\in\N$ On appelle équation de normes Calpoti-Pegasis $(E^4,\aR,B_{premier})$ le problème suivant: Trouver deux idéaux $\bR$, $\cR$ équivalents à $\aR$, qui se factorisent sous la forme $\bR = \bR_e\bR_k$, $\cR = \cR_e\cR_k$, avec $\bR_k$, $\cR_k$ de normes respectives $N_1$ et $N_2$, et $\bR_e$, $\cR_e$ de normes respectives $M_1$ et $M_2$, ainsi que $u$, $v$, $N$, $d\in\N^{*}$ tels que
 	\begin{equation*}
-		uN_1 + vN_2 = N,\; E[N]\subset E\left(\F_{q^{d}}\right).
+		uN_1 + vN_2 = N,\;\gcd(uN_1, vN_2) = 1\;\mbox{et}\; E[N]\subset E\left(\F_{q^{d}}\right).
 	\end{equation*}
-	et tels que $\bR_e$, $\cR_e$ soit de norme $B_{premier}$-friable par des nombres premier décomposé uniquement. 
+	et tels que $M_1$, $M_2$ soit premier avec $N$, et $B_{premier}$-friable par des nombres premier vérifiant les hypothèses \ref{HypothèseInversion} et \ref{HypothèseElkies}. 
 \end{Def}
 
 L'intérêt de factoriser les idéaux $\bR$ et $\cR$ et de ne plus avoir $N_1$ et $N_2$ de l'ordre de $\sqrt{\Delta}$. On peut espérer trouver des solutions avec $N$, et donc a priori $d$, plus petit. On explique maintenant la méthode utilisé pour trouver une solution minimisant $N$ et $d$.
 
 \begin{enumerate}
-	\item A partir d'une base de vecteurs court de $\aR$ (algorithme \ref{ALGO baseVecteurCourt} ), on établie une liste $L_{equivalents}$ d'idéaux équivalents de petites normes. on ne garde que des idéaux de norme premier avec l'ordre du point que l'on veut évaluer, ou premier avec $|E(\F_{q})|$. 
+	\item A partir d'une base de vecteurs court de $\aR$ (algorithme \ref{ALGO baseVecteurCourt} ), on établie une liste $L_{equivalents}$ d'idéaux équivalents de petites normes. On ne garde que des idéaux de norme premier avec l'ordre du point que l'on veut évaluer, ou premier avec $|E(\F_{q})|$. 
 	\item On fixe une borne $B_{premier}\in\N^*$, et on considère pré-calculés les polynômes modulaires $\Phi_l$ pour tout nombres premiers décomposés $l < B_{premier}$. On écrits tout les idéaux $\bR$ de $L_{equivalents}$ sous la forme $\bR_e\bR_k$, avec $\bR_e$ de norme friable par des nombres premiers décomposés inférieur à $B_{premier}$, la plus grande possible, et première avec la caractéristique $p$.
 	\item Avec l'algorithme \ref{ALGO EtudeDeTorsions}, on trouve une suite $L_{torsions}$ de couple $(N_{max}, d)$, où $N_{max}$ est la torsion maximale incluse dans $E(\F_{q^{d}})$.
-	\item Pour toutes paires d'idéaux $\bR$, $\cR$ de $L_{equivalents}$, si $N_1 = N(\bR_k)$ et $N_2 = N(\cR_k)$ sont premier entre eux, on cherche $u$, $v\in\N^*$ tels que $uN_1 + vN_2 = N$, $N|N_{max}$ et $uN_1$ et $vN_2$ sont premier entre eux. Trouver $u,v$ connaissant $N_1, N_2, N$ est un problème classique, appelé problème de pièces. Pour chaque couple $(d, N_max)$, on teste toute les paires $(N_1, N_2)$ possibles. On parcourt les degrés dans l'ordre croissant. 
+	\item Pour toutes paires d'idéaux $\bR$, $\cR$ de $L_{equivalents}$, si $N_1 = N(\bR_k)$ et $N_2 = N(\cR_k)$ sont premier entre eux, on cherche $u$, $v\in\N^*$ tels que $uN_1 + vN_2 = N$, $N|N_{max}$ et $uN_1$ et $vN_2$ sont premier entre eux. Trouver $u,v$ connaissant $N_1, N_2, N$ est un problème classique, appelé problème de pièces. Pour chaque couple $(d, N_{max})$, on teste toute les paires $(N_1, N_2)$ possibles. On parcourt les degrés dans l'ordre croissant. A chaque tentative, on souhaite que $N$ soit premier avec les normes $M_1$, $M_2$ de $\bR_e$, $\cR_e$. Pour cela on commence par diviser calculer $N_{loc}$ le plus grand diviseur de $N_{max}$ premier avec $M_1$ et $M_2$. On cherche ensuite une solution $u, v$ au problème de pièce définie par $N_1$, $N_2$ et $N_{loc}$.
 \end{enumerate}
 
 On explicite les algorithmes utilisés, d'abord l'algorithme \ref{ALGO listeIdeauxCandidats} pour la recherche et la factorisation des idéaux équivalents qui seront utilisés. On suppose partir d'un idéal $\LR$ quelconque. On utilise une base de vecteurs courts (algorithme \ref{ALGO baseVecteurCourt}) pour calculer $\bR_1$, $\bR_2$ les deux idéaux équivalents de plus petites normes (proposition \ref{correspondanceIdeqElement}). On parcourt les idéaux de la forme $x\bR_1 + y\bR_2$, avec $|x|,|y|$ majoré par un entier $m_id$ choisit. On évite de regardé des idéaux identiques, on peut donc supposer $x\geq0$. Étant donné un idéal $\bR$ équivalent sous forme standard $id(m,a,b)$, on calcule sa norme $N = m^2a$ et la partie friable $N_e$ de $N$ par les nombres premiers qui nous intéresse. Pour calculer $\bR_e$ à partir de $\bR$ et $N_e$, on utilise le théorème \ref{factorisationClasseIdéaux}. Cependant celui-ci ne s'applique qu'aux idéaux primitifs. On pose donc $N_e = dM_e$ avec $M_e = \gcd(a,M_e)$, pour pouvoir trouver un idéal $\bR'_e$ divisant $id(1,a,b)$ de norme $M_e$. Alors $d|m^2$, mais $N_e$ est une partie friable de $N$, donc chaque nombre premier divisant $N_e$ divise $N$ avec la même valuation. En particulier $d$ est un carré. On note $d = m_e^2$ et $N_e = m_e^2M_e$. Alors $\bR_e = m_e\bR'_e$.  
@@ -290,7 +301,7 @@ On explicite les algorithmes utilisés, d'abord l'algorithme \ref{ALGO listeIdea
 	\end{algorithmic}
 \end{algorithm}
 
-On énonce ensuite l'algorithme \ref{ALGO solEquation} qui à partir des deux suites $L_{equivalents}$ et $L_{torsions}$ calcule une solution à l'équation de normes Clapoti-Pegasis. Les valeurs minimales et maximales des torsions dans $L_{torsions}$ sont choisit selon $L_{equivalents}$. Si la valeur minimale des normes $N_k$ est $Norme_{min}$, il est inutile de s'intéresser aux torsions $N_{max} < 2Norme_{min}$ car on ne trouvera pas de solutions aux problèmes de pièces $(Norme_{min}, Normes_{min}, N_{max})$. Inversement on sait qu'il existera à coup sûr des solutions au problème de pièce $(Norme_{max}, Normes{max}, N_{max})$ dès que $N_{max} > Norme_{max}^2$. On s'attend à trouver une solution avant d'atteindre de tels torsions, donc on choisit $Norme_{max}^2$ comme valeur maximal des torsions regardés. Une fois $N_{max},$ $N_1,$ $N_2$ donnés, résoudre l'équation $uN_1 + vN_2 = N_{max}$ est classique (problème de pièces, algorithme \ref{ALGO coinEquation}). On cherche des solutions vérifiant en plus que $uN_1$ et $vN_2$ soient premier entre eux et chacun avec $|E(\F_{q})|$, mais on autorise comme second membre tout diviseur de $N_{max}$.
+On énonce ensuite l'algorithme \ref{ALGO solEquation} qui à partir des deux suites $L_{equivalents}$ et $L_{torsions}$ calcule une solution à l'équation de normes Clapoti-Pegasis. Les valeurs minimales et maximales des torsions dans $L_{torsions}$ sont choisit selon $L_{equivalents}$. Si la valeur minimale des normes $N_k$ est $Norme_{min}$, il est inutile de s'intéresser aux torsions $N_{max} < 2Norme_{min}$ car on ne trouvera pas de solutions aux problèmes de pièces $(Norme_{min}, Normes_{min}, N_{max})$. Inversement on sait qu'il existera à coup sûr des solutions au problème de pièce $(Norme_{max}, Normes_{max}, N_{max})$ dès que $N_{max} > Norme_{max}^2$. On s'attend à trouver une solution avant d'atteindre de tels torsions, donc on choisit $Norme_{max}^2$ comme valeur maximal des torsions regardés. Une fois $N_{max},$ $N_1,$ $N_2$ donnés, résoudre l'équation $uN_1 + vN_2 = N_{max}$ est classique (problème de pièces, algorithme \ref{ALGO coinEquation}). On cherche des solutions vérifiant en plus que $uN_1$ et $vN_2$ soient premier entre eux et chacun avec $|E(\F_{q})|$, mais on autorise comme second membre tout diviseur de $N_{max}$.
 
 \begin{algorithm}[h]
 	\caption{Solution d'équation de normes Clapoti-Pegasis}\label{ALGO solEquation}
@@ -303,7 +314,11 @@ On énonce ensuite l'algorithme \ref{ALGO solEquation} qui à partir des deux su
 		\For {$(N_{max},d)\in L_{torsions}$}
 		\For {$(\bR, \bR_e, N_1),\;(\cR, \cR_e, N_2)\in L_{equivalents}$}
 		\If{$\gcd(N_1,N_2) = 1$}
-		\State $u, v, N, verif\gets$ résultat de l'algorithme \ref{ALGO coinEquation} appliqué à $N_1,\; N_2\;, N_{max}$
+		\State $d_1\gets\gcd(N_{max},M_1)$
+		\State $N_{loc}\gets N_{max}/d_1$
+		\State $d_2\gets\gcd(N_{loc},M_2)$
+		\State $N_{loc}\gets N_{loc}/d_2$
+		\State $u, v, N, verif\gets$ résultat de l'algorithme \ref{ALGO coinEquation} appliqué à $N_1,\; N_2\;, N_{loc}$
 		\If{$verif = Vrai$ et $uN_1$, $ vN_2$ sont chacun premier avec $|E(\F_{q})|$}
 		\State\Return $\bR,\bR_e,\cR,\cR_e,u, v, N, d$ 
 		\EndIf

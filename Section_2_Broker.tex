@@ -53,7 +53,7 @@ On décrit maintenant comment adapter les formules de Vélu à l'utilisation de 
 Dans cette partie, on suppose connu une courbe elliptique $E$ définie sur $\F_{q}$ ordinaire avec $End(E)\simeq\OR_{\Delta}$ normalisé, et un idéal $\LR\subset\OR_{\Delta}$ de norme $l$ premier décomposé. On cherche un générateur du groupe de torsion $E\left[ \LR\right]\subset E(\Fb_{p})$. On suppose \ref{HypothèseInversion} donc $l$ est premier avec le conducteur maximal $f_{m}$ de $E(\F_{q})$.
 
 \begin{Rem}
-	 $\LR$ est primitif car de norme $l$ premier. La proposition \ref{formeIdeauxBaseFq} permet alors d'obtenir
+	 $\LR$ est un idéal primitif car de norme $l$ premier. La proposition \ref{formeIdeauxBaseFq} permet alors d'obtenir
 	\begin{equation}
 		\LR = \left[ l, \frac{c + f\pi_{q}}{f_{m}}\right], \; c\in\Z.
 	\end{equation}
@@ -321,20 +321,20 @@ On commence par citer le théorème qui nous permettra d'expliciter des exposant
 
 \begin{The}[\cite{Seysen}(Th 3.1), \cite{Coh00}(Lem 5.5.1)]\label{factorisationClasseIdéaux}
 	
-	Soit $\LR\subset\OR_{\Delta}$ un idéal primitif de forme  $f(a,b)$. Si $g\in\N$ et $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en facteurs premiers de l'entier $a$, alors
+	Soit $\LR = id(1,a,b)\subset I(\OR_{\Delta})$ un idéal entier propre et primitif, et $f(a,b) = F(\LR)$ sa forme quadratique binaire primitive associée. Si $g\in\N$ et $a = p_{1}^{e_{1}}p_{2}^{e_{2}}\ldots p_{g}^{e_{g}}$ est la décomposition en facteurs premiers de $a$, alors
 	\begin{enumerate}
 		\item Chaque $p_{i}$ est décomposé dans $\OR_{\Delta}$.
 		\item Si $\PR_{p_{i}} = id(1,p_{i},b_{p_{i}})$ est l'idéal premier associé à $p_{i}$, alors $b = \pm b_{p_{i}} $ mod $2a$.
-		\item $\CL = \CP_{p_{1}}^{\pm e_{1}}\CP_{p_{2}}^{\pm e_{2}}\ldots\CP_{p_{g}}^{\pm e_{g}}$.
+		\item $\LR = \PR_{p_{1}}^{\pm e_{1}}\PR_{p_{2}}^{\pm e_{2}}\ldots\PR_{p_{g}}^{\pm e_{g}}$.
 		\item L'exposant de $\PR_{p_{i}}$ est $+e_{i}$ si et seulement si $b = b_{i} [2a]$.
 	\end{enumerate}
 \end{The}
 
-\begin{Coro}
-	Soit $\LR\subset\OR_{\Delta}$ tel que $\CL$ ait une forme quadratique réduite $f(a,b)$. Si $a$ se factorise entièrement par des éléments de $L_{premiers}$ obtenue par l'algorithme \ref{ALGO FamilleGénératrice}, alors on peut expliciter des exposants d'une écriture de $\CL$ dans la famille $L_{ideaux}$ connaissant la factorisation de $a$. 
+\begin{Coro}\label{classesFactorisables}
+	Soit $\LR\subset I(\OR_{\Delta})$ tel que $\CL$ soit représentée par une forme quadratique réduite $f(a,b)$. Si $a$ se factorise entièrement par des éléments de $L_{premiers}$ obtenue par l'algorithme \ref{ALGO FamilleGénératrice}, alors on peut expliciter des exposants d'une écriture de $\CL$ dans la famille $L_{ideaux}$ connaissant la factorisation de $a$. 
 \end{Coro}
 
-On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. On admet la théorie des graphes expanseurs, dont on cite les résultats principaux.
+On énonce ensuite les bonnes propriétés des marches aléatoires sur les groupes de classes. On admet la théorie des graphes expanseurs, dont on cite les résultats principaux utiles par la suite.
 
 \begin{Def}
 	Soit $S$ une partie génératrice d'un groupe $G$. Le graphe de Cayley de $G$ selon $S$ est défini ainsi :
@@ -358,7 +358,7 @@ On énonce ensuite les bonnes propriétés des marches aléatoires sur les group
 	En pratique, dès que l'on enchaîne des marches aléatoires de taille de l'ordre de $\frac{\log(|\Delta|)}{\log(\log(|\Delta|))}$, les résultats seront uniformément répartis parmi les éléments de $Cl(\OR_{\Delta})$. Puisque le groupe est abélien, la norme $l_{1}$ du vecteurs des exposants est au pire le nombre de pas $t$ de la marche aléatoire. 
 \end{Rem}
 
-On choisit alors l'ensemble $S_{0}$ de la proposition \ref{grapheExpanseurProba} comme étant l'ensemble des classes dont on sait expliciter l'écriture dans $L_{ideaux}$ grâce au théorème \ref{factorisationClasseIdéaux}. On en déduit l'algorithme \ref{ALGO FactoClasse}, permettant de trouver des exposants $e_{i}$ d'une écriture d'une classe $\CL$ donnée dans une famille génératrice construite avec l'algorithme \ref{ALGO FamilleGénératrice}.  
+On choisit alors l'ensemble $S_{0}$ de la proposition \ref{grapheExpanseurProba} comme étant l'ensemble des classes dont on sait expliciter l'écriture dans $L_{ideaux}$ grâce au corollaire \ref{classesFactorisables}. On en déduit l'algorithme \ref{ALGO FactoClasse}, permettant de trouver des exposants $e_{i}$ d'une écriture d'une classe $\CL$ donnée dans une famille génératrice construite avec l'algorithme \ref{ALGO FamilleGénératrice}.  
 
 \begin{algorithm}
 	\caption{Recherche d'exposants de la classe d'un idéal}\label{ALGO FactoClasse}
@@ -367,9 +367,10 @@ On choisit alors l'ensemble $S_{0}$ de la proposition \ref{grapheExpanseurProba}
 		\Ensure Deux listes $L_{exposants}$, $L_{facteurs}$ décrivant une factorisation de $\CL$.
 		\State $L_{ideaux}$, $L_{formes}$, $L_{premiers}\gets$ résultat de l'algorithme \ref{ALGO FamilleGénératrice} appliqué à $N$, $\Delta$, $p$, $f_{m}$, $|E(\F_{q^{n}})|$. 
 		\State $classe_{test}\gets$ forme réduite de $\LR$
+		\State $a\gets$ coefficient en $x^2$ de $classe_{test}$.
 		\State $k\gets$ taille de $L_{ideaux}$
 		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
-		\While{$classe_{test}$ ne se factorise pas avec le théorème \ref{factorisationClasseIdéaux}}
+		\While{$a$ ne se factorise pas via uniquement des nombres premiers de $L_{premiers}$}
 		\State $L_{x}\gets$ liste de taille $k$ initialisée à $0$
 		\For{$0<i<t $}
 		\State $Indice\gets$ indice aléatoire de $L_{x}$.
@@ -383,9 +384,10 @@ On choisit alors l'ensemble $S_{0}$ de la proposition \ref{grapheExpanseurProba}
 		\State $classe_{test}\gets classe_{test}$ réduit par l'algorithme \ref{ALGO reduction}
 		\EndFor
 		\EndFor
-		\State Factoriser le coefficient dominant de $classe_{test}$ (avec ECM).
+		\State $a\gets$ coefficient en $x^2$ de $classe_{test}$.
+		\State Factoriser $a$ (avec ECM).
 		\EndWhile
-		\State $L_{y}\gets$ une liste de taille $k$ contenant les exposants la factorisation de $classe_{test}$ donnée par le théorème \ref{factorisationClasseIdéaux}.
+		\State $L_{y}\gets$ une liste de taille $k$ de chaque exposant des éléments de $L_{ideaux}$ dans une écriture de $I(classe_{test})$ selon le théorème \ref{factorisationClasseIdéaux}.
 		\State $L_{exposants}\gets L_{y} - L_{x}$
 		\State $L_{facteurs}\gets L_{ideaux}$
 		\For{$e_i$ parcourant $L_{exposants}$ }
@@ -440,7 +442,7 @@ L'analyse des algorithmes \ref{ALGO FamilleGénératrice} et \ref{ALGO FactoClas
 	Même si la borne théorique est asymptotiquement plus petite que la borne pratique, pour des discriminants de moins d'une centaine de chiffres c'est la borne sous-exponentielle qui sera plus petite \cite{Coh00}[5.5.1]. Dans \cite{JaoSoukharev}, la borne pratique est cependant supposée (sans preuve) suffisamment grande pour que l'algorithme \ref{ALGO FamilleGénératrice} appliqué à $N_{p}$ retourne une famille génératrice.
 \end{Rem}
 
-Les deux propositions suivantes vont permettre d'analyser la complexité de l'algorithme \ref{ALGO FactoClasse}.
+Les deux propositions suivantes vont permettre d'analyser la complexité de l'algorithme \ref{ALGO FactoClasse}. C'est ici que l'analyse de complexité diffère de celle de \cite{JaoSoukharev}. 
 
 \begin{Prop}\label{espéranceExposant}
 	On pose
@@ -462,7 +464,7 @@ Les deux propositions suivantes vont permettre d'analyser la complexité de l'al
 \end{proof}
 
 \begin{Rem}\label{comportementListeExposant}
-	On propose en pratique $C_{t} = 1$. Asymptotiquement selon $|\Delta|$, l'espérance des variables $|x_{i}|$ tend vers $0$. Ainsi on supposera donc que la suite $L_{x}$ contient en moyenne $t$ éléments non nuls, tous égaux à $\pm 1$. Dans la suite de l'algorithme \ref{ALGO FactoClasse}, la liste $L_{exposant}$ est obtenue en soustrayant aux éléments de $L_{x}$ les exposants correspondant issus de l'écriture de $classe_{test}$. Ces derniers sont supposé négligeable dans \cite{JaoSoukharev}, car la forme $classe_{test}$ est réduite. On supposera dans l'analyse de complexité que $L_{exposant}$ se comporte comme $L_{x}$. 
+	On propose en pratique $C_{t} = 1$. Asymptotiquement selon $|\Delta|$, l'espérance des variables $|x_{i}|$ tend vers $0$. Ainsi on supposera que la suite $L_{x}$ contient en moyenne $t$ éléments non nuls, tous égaux à $\pm 1$. Dans la suite de l'algorithme \ref{ALGO FactoClasse}, la liste $L_{exposant}$ est obtenue en soustrayant aux éléments de $L_{x}$ les exposants correspondant issus de l'écriture de $classe_{test}$. Ces derniers sont supposé négligeable dans \cite{JaoSoukharev}, car la forme $classe_{test}$ est réduite (proposition \ref{tailleCoefReduit}). On supposera dans l'analyse de complexité que $L_{exposant}$ se comporte comme $L_{x}$. 
 \end{Rem}
 
 \begin{Rem}
@@ -470,14 +472,14 @@ Les deux propositions suivantes vont permettre d'analyser la complexité de l'al
 \end{Rem}
 
 \begin{Prop}\label{minorationNombreEssaisFacto}
-	Le nombre d'itérations de la boucle while de l'algorithme \ref{ALGO FactoClasse} est minorée par 
+	Le nombre d'itérations de la boucle While de l'algorithme \ref{ALGO FactoClasse} est minorée par 
 	\begin{equation*}
 		O\left( \exp \left( \left( \log\log\left(|\Delta| \right) - \log\log\left( N \right)  \right)\frac{\log\left(|\Delta| \right)}{2\log\left( N \right)} \right) \right).
 	\end{equation*}
 \end{Prop}
 
 \begin{proof}
-	Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. D'après la proposition \ref{factorisationClasseIdéaux}, le coefficient $a$ ne se factorise qu'avec des nombres premiers décomposés. On s'intéresse donc à la probabilité que $a$ soit $N$-friable. Le théorème de Canfield Erdös Pomerance  \cite{Coh00}(Th 10.2.1) permet d'estimer cette probabilité. Le résultat énoncé est une application directe de ce théorème.
+	Il s'agit d'estimer la probabilité qu'un entier $a \leq \sqrt{\frac{|\Delta|}{3}}$ soit $L_{premier}$-friable. D'après le théorème \ref{factorisationClasseIdéaux}, le coefficient $a$ ne se factorise qu'avec des nombres premiers décomposés. On s'intéresse donc à la probabilité que $a$ soit $N$-friable. Le théorème de Canfield Erdös Pomerance  \cite{Coh00}(Th 10.2.1) permet d'estimer cette probabilité. Le résultat énoncé est une application directe de ce théorème.
 \end{proof}
 
 \begin{Prop}\label{Complex iterationBoucleWhile}
@@ -488,11 +490,8 @@ Les deux propositions suivantes vont permettre d'analyser la complexité de l'al
 \end{Prop}
 
 \begin{proof}
-	Soit $t$ le nombre de pas de la marche aléatoire de l'algorithme \ref{ALGO FactoClasse}, choisit selon la proposition \ref{espéranceExposant}. Soit $k$ la taille des listes retournées par l'algorithme \ref{ALGO FamilleGénératrice}. D'après la remarque \ref{comportementListeExposant}, le calcul de $classe_test$ lors ds lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un nombre premier $p_{i} \leq N$, et à chaque fois suivi d'une réduction par l'algorithme \ref{ALGO reduction}. Puisque les coefficients $a$, $b$ d'une forme réduite $(a,b,c)$ vérifie
-	\begin{equation*}
-		|b| \leq a \leq \sqrt{\frac{|\Delta|}{3}},
-	\end{equation*} 
-	la complexité d'un produit d'une forme réduite avec un forme première associée à $p_{i}$ est en $O(max(\log(p_{i})\log(|\Delta|)))$ (d'après \cite{JaoSoukharev}). On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée d'après \ref{COMPLEX reduction} par 
+	Soit $t$ le nombre de pas de la marche aléatoire de l'algorithme \ref{ALGO FactoClasse}, choisit selon la proposition \ref{espéranceExposant}. Soit $k$ la taille des listes retournées par l'algorithme \ref{ALGO FamilleGénératrice}. D'après la remarque \ref{comportementListeExposant}, le calcul de $classe_test$ lors ds lignes $12$ à $18$ demande $t$ produits, chacun entre une forme réduite et une forme première associée à un nombre premier $p_{i} \leq N$, et à chaque fois suivi d'une réduction par l'algorithme \ref{ALGO reduction}. En majorant les coefficients d'une forme réduite $(a,b,c)$ selon la proposition \ref{tailleCoefReduit},
+	la complexité d'un produit de Dirichlet d'une forme réduite avec une forme première associée à $p_{i}$ est en $O(max(\log(p_{i}),\log(|\Delta|)))$ (d'après \cite{JaoSoukharev}). On note la forme obtenue $(a',b',c')$, avec $a' = ap_{i}$ et $b'\leq 2aa'$. On majore de plus $p_{i}$ par $N$. La complexité de la réduction de $(a',b',c')$ est donc majorée d'après \ref{COMPLEX reduction} par 
 	\begin{equation*}
 		 O(\log(N)^2\log(|\Delta|)^2)
 	\end{equation*}
@@ -599,7 +598,7 @@ On analyse la complexité de l'algorithme \ref{ALGO idealprincipal} lorsqu'il es
 
 \begin{proof}
 	L'algorithme d'Euclide pour calculer le PGCD à la ligne $1$ se fait en $O(\log(q))$. L'étape suivante est une application de l'algorithme BMSS. Enfin, il faut vérifier le choix de $j$-invariant avec la proposition \ref{propositionCheckElkies}.
-	La compléxité de cette étape est dominée par les divisions de polynômes nécessaires. L'implémentation de \cite{Pegasis} se ramène à des polynôme en $X$ en exprimant les puissances paires de $Y$ comme polynôme en $X$. On approxime donc la complexité en $O(\log(q))$, d'où le résultat.
+	La compléxité de cette étape est dominée par les divisions de polynômes nécessaires. L'implémentation de \cite{Pegasis} se ramène à des polynômes en $X$ en exprimant les puissances paires de $Y$ comme polynômes en $X$. On approxime donc la complexité en $O(\log(q))$, d'où le résultat.
 \end{proof}
 
 \begin{Prop}
@@ -628,14 +627,14 @@ On analyse la complexité de l'algorithme \ref{ALGO idealprincipal} lorsqu'il es
 Le calcul de l'image du point $P$ demande de l'arithmétique dans $\F_{q^{n}}$, ce qui devient coûteux selon le paramètre $n$.  
 
 \begin{Prop}
-	On considère que l'entrée $\LR'$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est issue de l'algorithme \ref{ALGO FactoClasse} appliquée avec des paramètre $N$, $t$. La complexité de l'ensemble des évaluations d'isogènie lors de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est en $O(tN^2\log(q^n))$.
+	On considère que l'entrée $\LR'$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est issue de l'algorithme \ref{ALGO FactoClasse} appliquée avec des paramètre $N$, $t$. La complexité de l'ensemble des évaluations d'isogénies lors de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est en $O(tN^2\log(q^n))$.
 \end{Prop}
 
 \begin{proof}
-	Contrairement au reste de l'algorithme, ici les calculs se font dans le corps $\F_{q^{n}}$ car $P\in E(\F_{q^{n}})$. L'évaluation d'une isogénie de degré $p_{i}$ obtenue avec les formules de Vélu et l'algorithme BMSS nécessite d'après \cite{JaoSoukharev} $O(p_{i}^{2})$ opérations dans $\F_{q^{n}}$. Chacune demande $O(\log(q^n))$ opérations élémentaires. On évalue au total en moyenne $t$ isogénies. En majorant $p_{i}$ par $N$, on obtient une complexité en $O(tN^2\log(q^n))$.  
+	Contrairement au reste de l'algorithme, ici les calculs se font dans le corps $\F_{q^{n}}$ car $P\in E(\F_{q^{n}})$. L'évaluation d'une isogénie de degré $p_{i}$ obtenue avec les formules de Vélu et l'algorithme BMSS nécessite $O(p_{i}^{2})$ opérations dans $\F_{q^{n}}$ (d'après \cite{JaoSoukharev}), chacune de complexité en $O(\log(q^n))$. On évalue au total en moyenne $t$ isogénies. En majorant $p_{i}$ par $N$, on obtient une complexité en $O(tN^2\log(q^n))$.  
 \end{proof}
 
-La complexité du calcul d'un générateur d'un idéal primitif principal et polynomial en sa norme. La proposition suivante va assurer que la norme de l'idéal $\LR_{principal}$ est petite et que lui trouver un générateur n'est pas une étape coûteuse. 
+La complexité du calcul d'un générateur d'un idéal principal est polynomial en sa norme \ref{COMPLEX idealprincipal}. La proposition suivante va assurer que la norme de l'idéal $\LR_{principal}$ est petite et que lui trouver un générateur n'est pas une étape coûteuse. 
 
 \begin{Prop}
 	On considère que l'entrée $\LR'$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est issue de l'algorithme \ref{ALGO FactoClasse} appliquée avec des paramètre $N$, $t$. La norme de l'idéal $\LR_{principal}$ calculé lors de la boucle For des lignes $5$ à $15$ de l'algorithme \ref{ALGO IsogenieEquivalenceFriable} est en $O(lN^t)$. le calcul de $\LR_{principal}$ est en $O\left( \left( log(l) + tlog(N)\right) \right)$. La complexité de la recherche du générateur est en $O\left( \left( \log(l) + t\log(N)\right)^{2} \right)$.
@@ -646,13 +645,13 @@ La complexité du calcul d'un générateur d'un idéal primitif principal et pol
 	\begin{equation*}
 		O\left(\log\left(N\left(\LR_{principal}\right)\right)\right) = O\left( \left( \log(l) + t\log(N)\right) \right).
 	\end{equation*} 
-	Ainsi $\LR_{principal} = (m,a,b) = \beta\OR_{\Delta}$ est obtenu par produit successif d'idéaux sous forme standard, donc $b\leq 2a$ et la complexité de l'algorithme \ref{ALGO reduction} appliqué à $\LR_{principal}$ est majorée par
+	Ainsi $\LR_{principal} = (m,a,b) = \beta\OR_{\Delta}$ est obtenu par produit successif d'idéaux sous forme standard, donc la complexité de l'algorithme \ref{ALGO reduction} appliqué à $\LR_{principal}$ est majorée par
 	\begin{equation*}
 		O\left( \log\left(a  \right)^2 \right) = O\left( \log\left(N\left(\LR_{principal} \right)  \right)^2 \right) = O\left( \left( \log(l) + t\log(N)\right)^{2} \right).
 	\end{equation*}
 \end{proof}
 
-On déduit de ce qui précède la complexité de l'algorithme \ref{ALGO Broker}. 
+On déduit de ce qui précède la complexité de l'algorithme \ref{ALGO Broker}. on énonce les résultats obtenues selon les choix possibles pour le paramètre $N$. 
 
 \begin{Prop}
 	Si $N = N_{t}$, l'algorithme \ref{ALGO Broker} admet une complexité en $O(\log(l)^2)$, $O(log(q))$, $O(n)$ et $O(\sqrt{|\Delta|})$
