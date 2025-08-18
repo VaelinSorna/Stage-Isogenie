@@ -1,4 +1,4 @@
-\section{Diamants d'isogénies et applications }
+\section{Diamants d'isogénies et applications }\label{SECTION Clapoti}
 
 Pour pouvoir calculer des isogénies entre courbes elliptiques en temps polynomial, il semble nécessaire d'éviter de calculer dans le groupe de classe. Étant donné un idéal d'un ordre quadratique imaginaire, on cherche un moyen de trouver un idéal équivalent, et de calculer l'isogénie associée sans pour autant le supposer friable. Dans toute la suite, les courbes elliptiques sont supposées ordinaires et définies sur un corps finis.
 
@@ -126,8 +126,8 @@ Une solution ($\bR, \cR$, $\alpha_u$, $\alpha_v$, $N$, $d$) de ce problème perm
 où $a_d\in\Z$ est tel que $\pi_{q^d} = a_d + (f_m/f)g_\K$, avec $g_\K = \frac{\sqrt{d_\K}}{2}$ si $d_\K = 0$ modulo $4$, sinon $g_\K = \frac{1 + \sqrt{d_\K}}{2}$. 
 \end{Prop}
 
-\begin{Coro}
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ et $N$, $d\in\N^{*}$. Alors $E[N]\subset E(\F_{q^{d}})$ si et seulement si $N|\gcd(a_d - 1, f_m/f)$.
+\begin{Coro}[\cite{ionica2011pairingvolcano}]\label{gcdTorsionsExplicite}
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$ et $N$, $d\in\N^{*}$. Soit $f_m$ le conducteur de $E(\F_{q^d})$ et $t$ sa trace. Alors $E[N]\subset E(\F_{q^{d}})$ si et seulement si $N|\gcd(a_d - 1, f_m/f)$, où $a_d = \frac{t}{2}$ si $d_\K = 0$ modulo $4$, et $a_d = \frac{t - f_m}{2}$ sinon. 
 \end{Coro}
 
 \begin{Def}
@@ -194,8 +194,7 @@ Soit $(N_{max},d)$ un couple degré-torsion fixé. On se ramène donc à trouver
 
 Dans \cite{KLaPoTi}, cette méthode est utilisé dans le cas des courbes supersingulière, en considérant un ordre $\OR_{\Delta}$ inclus dans l'anneau d'endomorphisme. On y choisit de plus $N = 2^e$ avec $e\simeq 500$, et le choix de la courbe et de la caractéristique assure que $E[N]\subset \F_{p^2}$. L'implémentation dans Sage est en libre accès, et les algorithme de bas niveau utilisé sont très généraux et adapté au cas où $N$ n'est pas une puissance de $2$.\\ 
 
-Cependant dans notre cas on ne peut pas choisir $\Delta$. Or l'étape $2$ de KLaPoTi n'a de solutions que si $aN_1 - |\Delta|N(\nu) \geq 0$, ce qui impose $N_1$ au moins de l'ordre de $\sqrt{3|\Delta|}$ (d'après \ref{tailleCoefReduit}). De plus, la dernière étape impose à $N_2$ d'être de l'ordre de $|\Delta|^3$. (d'après \cite{PetitSmith}). Donc il faut que $N$ soit de l'ordre de $|\Delta|^{3,5}$, au lieu de $O(\sqrt{|\Delta|})$. On conclut que l'algorithme proposé par \cite{KLaPoTi} ne permet pas de trouver toutes les solutions d'équations de normes, et celles trouvées sont de second membre $N$ plus grand que nécessaire. On montre dans la section \ref{SECTION experiences} que la taille demandé de $N$ conduit à considérer des degré d'extension $d$ trop grand. 
-
+Cependant dans notre cas on ne peut pas choisir $\Delta$. Or l'étape $2$ de KLaPoTi n'a de solutions que si $aN_1 - |\Delta|N(\nu) \geq 0$, ce qui impose $N_1$ au moins de l'ordre de $\sqrt{3|\Delta|}$ (d'après \ref{tailleCoefReduit}). De plus, la dernière étape impose à $N_2$ d'être de l'ordre de $|\Delta|^3$. (d'après \cite{PetitSmith}). Donc il faut que $N$ soit de l'ordre de $|\Delta|^{3,5}$, au lieu de $O(\sqrt{|\Delta|})$. On conclut que l'algorithme proposé par \cite{KLaPoTi} ne permet pas de trouver toutes les solutions d'équations de normes, et celles trouvées sont de second membre $N$ plus grand que nécessaire. On étudie dans la section \ref{SECTION experiences} la taille des degré d'extension $d$ nécessaire pour que la $N$ torsion soit définie. 
 
 
 \subsection{Clapoti en dimensions supérieurs}
@@ -410,46 +409,50 @@ Donner les équations ? Autres infos pertinentes ?
 
 \subsubsection{Etude de torsions}
 
-Pour chacune des courbes $E$ prises en exemples, on applique l'algorithme \ref{ALGO EtudeDeTorsions} avec $N_{min} = 2$ et $N_{max} = |\Delta|$. Le tableau \ref{tableEtudeTorsion} répertorie pour chacune le degré maximal atteint, La torsion maximale à ce degré d'extension, et le nombre de couple degré-torsion $(N,d)$ retenu (c'est à dire avec $N > 2$). On répète l'expérience avec $N_{max} = |\Delta|^{3,5}$, pour estimer le degré d'extension nécessaire pour espérer avoir une solution avec l'algorithme KLaPoTi. 
+Pour chacune des courbes $E$ prises en exemples, on applique l'algorithme \ref{ALGO EtudeDeTorsions} avec $N_{min} = 2$ et $N_{max} = |\Delta|$. Le tableau \ref{tableEtudeTorsion} répertorie pour chacune le degré à partir duquel la torsion dépasse pour la première fois $N_{max}$, et le nombre de couples degré-torsions $(N,d)$ retenus (c'est à dire avec $N > 2$). On répète l'expérience avec $N_{max} = |\Delta|^{3,5}$, pour estimer le degré d'extension nécessaire pour espérer avoir une solution avec l'algorithme KLaPoTi. 
 
 \begin{table}[h]
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\hline
-		$N_{max} = |\Delta|$	& JaoSmall & BS1 & BS2 & S1 & S2 \\
+			$N_{max} = \sqrt{|\Delta|}$	& JaoSmall & BS1 & BS2 & S1 & S2 \\
+			\hline
+			Degré atteint	& 18 & 84 & 42 & 6 & 144 \\
+			\hline
+			Couples retenus	& 13 & 57 & 22 & 4 & 80 \\
+			\hline
+			\hline
+		$N_{max} = |\Delta|$	&  &  &  &  &  \\
 			\hline
 		Degré atteint	& 120 & 168 & 168 & 6 & 576 \\
 			\hline
 		Couples retenus	& 85 & 117 & 91 & 4 & 327 \\
 			\hline
 			\hline
-		$N_{max} = |\Delta|^{3,5}$	& JaoSmall & BS1 & BS2 & S1 & S2 \\
+		$N_{max} = |\Delta|^{3,5}$	&  &  &  &  &  \\
 			\hline
-		Degré atteint	& 6300 & 4200 & 5040 & 6 &  \\
+		Degré atteint	& 6300 & 4200 & 5040 & 6 & 18480 \\
 			\hline
-		Couples retenus	& 4565 & 2955 & 2881 & 4 &  \\
+		Couples retenus	& 4565 & 2955 & 2881 & 4 & 10896  \\
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{Clapoti Pegasis avec base de donnée de Sage}
+	\caption{Couples degré-torsions selon le discriminant.}
 	\label{tableEtudeTorsion}
 \end{table}
 
-Comparer avec la taille en bits de $p$ et $\Delta$. 
+On constate que l'algorithme KLaPoTi n'est pas praticable sur les courbes JaoSmall, BS1, BS2 et S2. La méthode Clapoti sans utiliser de partie friable (donc avec des torsions de l'ordre de $\sqrt{|\Delta|}$) semble difficilement praticable pour les courbes BS1 et S2. (préciser ?)
 
-Remarque S1 degré 6 : argument discriminant mod 4, valeur de $f_m$ et de $t$.
+Le cas de la courbe S1 est particulier. Les couples degré-torsions retenus sont $(3,2)$, $(4,3)$, $(3,4)$, puis $(N_{S1}, 6)$ où $N_{S1}$ est un entier à $289$ bits. 
 
-Conclusion KLaPoTi : impossible à cause du degré
-
-Remarque degré friable = torsion "plus grande"
-
-\subsubsection{Algorithme KLaPoTi}
+On remarque que les degrés atteint sont tous $7$-friables, sauf 18480 qui est $11$-friable. De manière générale en observant les couples de torsions, on constate que lorsque le degré d'extension est friable, la torsion a tendance à être plus grande, et friable. On explique cela en remarquant que si $d_1|d_2$, alors $E(\F_{q^{d_1}})\subset E(\F_{q^{d_2}})$. Autrement dit lorsque le degré $d$ est friable, $E(\F_{q^{d}})$ contient plusieurs courbes définies sur des sous-corps, et donc leurs torsions. Donc si $(N,d)$ est un couple degré-torsions de $E$ est que $d$ est friable, $N$ a plus de chance d'être friable qu'un entier choisit au hasard, et sera plus grand que les torsions de degrés de même ordre de grandeur qui ne sont pas friables.
 
 \subsubsection{Équation de norme Clapoti-Pegasis}
 
 \textbf{TODO : analyse de complexité algorithme \ref{ALGO listeIdeauxCandidats}, choix du paramètre $m_{id}$}
 
-Pour chacune des courbes $E$ prises en exemples, on utilise l'algorithme \ref{ALGO solEquation} pour trouver une solution à l'équation de norme Clapoti-Pegasis $(E,\LR)$, où $\LR$ est un idéal premier associée à un nombre premier $l$ aléatoire compris entre $10^{20}$ et $10^{21}$. On répète cela $20$ fois. Si lors de l'algorithme \ref{ALGO listeIdeauxCandidats} on trouve un idéal $\bR$ équivalent à $\LR$ et égal à sa partie friable $\bR_e$, on s'arrête et on recommence avec une autre valeur de $\LR$, en comptant le nombre de fois ou cela arrive. Le tableau \ref{tableCalpotiPegasis} récapitule les degrés moyens, maximaux et minimaux des $20$ solutions trouvées, le nombre d'idéaux $\bR = x\bR_1 + y\bR_2$ testés dans l'algorithme \ref{ALGO listeIdeauxCandidats}, et le nombre d'idéaux retenus et factorisé. Enfin on calcule la fréquence des choix d'idéaux $\LR$ qui aboutisse à un idéal équivalent friable (et qui on donc été ignoré). 
+Pour chacune des courbes $E$ prises en exemples, on utilise l'algorithme \ref{ALGO solEquation} pour trouver une solution à l'équation de norme Clapoti-Pegasis $(E,\LR)$, où $\LR$ est un idéal premier associée à un nombre premier $l$ aléatoire compris entre $10^{20}$ et $10^{21}$. On répète cela $20$ fois. Si lors de l'algorithme \ref{ALGO listeIdeauxCandidats} on trouve un idéal $\bR$ équivalent à $\LR$ et égal à sa partie friable $\bR_e$, on s'arrête et on recommence avec une autre valeur de $\LR$, en comptant le nombre de fois ou cela arrive. Le tableau \ref{tableCalpotiPegasis} récapitule les degrés moyens, maximaux et minimaux des $20$ solutions trouvées, le nombre d'idéaux $\bR = x\bR_1 + y\bR_2$ testés dans l'algorithme \ref{ALGO listeIdeauxCandidats}, et le nombre d'idéaux retenus et factorisé. Enfin on calcule la fréquence des choix d'idéaux $\LR$ qui aboutisse à un idéal équivalent friable (et qui on donc été ignoré).
+L'expériences est faites pour chacune deux fois. La première avec $B_{premier} = 370$, ce qui correspond à la taille des polynômes modulaires pré calculé dans la base de donnée de Sage, La seconde avec $B_{premier} = 1000$, ce qui correspond à la taille de la base de donnée de Sutherland. 
 
 \begin{table}[h]
 	\begin{center}
@@ -470,7 +473,7 @@ Pour chacune des courbes $E$ prises en exemples, on utilise l'algorithme \ref{AL
 		Proportions friables	& 0,25 & 0,57 & 0,63 & 0,20 & 0,05 \\
 		\hline
 		\hline
-		$B_{premier} = 1000$	& JaoSmall & BS1 & BS2 & S1 & S2 \\
+		$B_{premier} = 1000$	&  &  &  &  &  \\
 		\hline
 		Degré moyen	& 7,95 & 38,2 & 21 & 6 & 46,5 \\
 		\hline
@@ -490,7 +493,7 @@ Pour chacune des courbes $E$ prises en exemples, on utilise l'algorithme \ref{AL
 	\label{tableCalpotiPegasis}
 \end{table}
 
-Remarque rencontre d'idéaux friables, "accélération" possible.
+Une première remarque est que les probabilité des trouver des idéaux équivalents friables avec l'algorithme \ref{ALGO listeIdeauxCandidats} est non négligeable. Dès que l'on en trouve un, il suffit d'appliquer l'algorithme \ref{ALGO IsogenieEquivalenceFriable} pour conclure. 
 
 \subsection{Conclusion et pistes de réflexions}
 

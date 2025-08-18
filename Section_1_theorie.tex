@@ -1,6 +1,29 @@
 %But : introduire l'action du groupe de classe sur les isogénie
 
-\section{Rappels théoriques et notations}
+\section{Introduction}
+
+\subsection{Cadre du stage}
+
+J'ai effectué mon stage au laboratoire Modélisation, Information et Systèmes (MIS) d'Amiens, auprès de l'équipe Optimisation, Cryptographie et IA (OCIA), et encadré par Sorina Ionica. Le stage est accompagné d'un projet de thèse dans la continuité du sujet. 
+
+\subsection{Sujet}
+
+Les graphes d’isogénies sont des graphes dont les nœuds sont des courbes elliptiques, et les arêtes sont des isogénies. Ces objets sont employés pour construire des protocoles cryptographiques et pour en étudier la sécurité. Le problème de calculer un plus court chemin entre deux nœuds de ces graphes permet d’attaquer le problème du logarithme discret (DLP), fondamental en cryptographie classique à base de courbes elliptiques, mais aussi au cœur des méthodes de cryptanalyse des propositions de schémas d’échange de clé et signature basés sur les isogénies. Le stage consiste en une étude de l’état de l’art des différents algorithmes permettant de résoudre le problème du plus court chemin dans ces graphes.
+
+Certaines méthodes sont purement combinatoires mais de complexité en temps exponentielle. D'autres reposent sur des calculs dans le groupe de classes d’idéaux d’un certain corps quadratique associé à la courbe elliptique. L'une d'entre elles a été introduite par Broker, Charles et Lauter \cite{BrokerCharlesLauter} en 2008, et optimisée par Jao et Soukharev \cite{JaoSoukharev} en 2010 pour obtenir une complexité en temps sous-exponentielle.
+
+La méthode la plus récente de l'état de l'art, appelée Clapoti \cite{Clapoti}, s'inspire de l'attaque du cryptosystème SIDH en 2022. La redécouverte de résultats dû à Kani permet d'éviter certains calculs dans le groupe de classes d'idéaux, mais demande de résoudre certaines équations diophantiennes à la place. Si elles peuvent être résolue efficacement, alors la complexité théorique devient polynomiale. Deux articles \cite{KLaPoTi} puis \cite{Pegasis} ont proposé en 2024 et 2025 des idées permettant d'appliquer efficacement la méthode Clapoti au contexte du système de signature post-quantique CSIDH. 
+
+\subsection{Travaux effectués et objectifs}
+
+La section \ref{SECTION RappelNotations} présente les outils théoriques généraux utilisés, énoncés sans démonstrations, que j'ai découvert durant le stage. Les sections \ref{SECTION multiplicationComplexe} et \ref{SECTION courbeElliptiqueOrdinaire} ont pour but de définir une action de groupe sur des ensembles de courbes elliptiques, par des isogénies. Cette action est au cœur de tout les algorithmes étudiés. Elle est d'abord définie en caractéristique $0$ (section \ref{SECTION multiplicationComplexe}), puis généralisée sur les corps finis (section \ref{SECTION courbeElliptiqueOrdinaire}). Cependant la généralisation est présentée de manière succincte dans les articles de cryptographie. J'ai donc cherché à énoncer l'action utilisée en caractéristique non nulle, et démontrer la validité de la définition (proposition \ref{DefActionIdeauxSurCourbeOrdinaire}).
+
+Je me suis ensuite concentré sur la méthode de Broker, Charles et Lauter \cite{BrokerCharlesLauter}. J'ai proposé une implémentation en Sage, en suivant les idées d'optimisation de Jao et Soukharev \cite{JaoSoukharev} et en proposant des prises d'initiatives personnelles quand cela m'a semblé pertinent. L'algorithme est décrit dans la section \ref{SECTION friableEtBroker}. L'objectif est d'avoir une analyse de complexité de mon approche et de la comparer avec l'état de l'art, c'est à dire avec celle de \cite{JaoSoukharev}.
+
+Enfin, j'ai étudié la méthode Clapoti \cite{Clapoti}. L'objectif est de comprendre cette dernière pour l'appliquer aux courbes elliptiques ordinaires, qui sortent du contexte du protocole CSIDH où s'applique les idées de \cite{KLaPoTi} et \cite{Pegasis}. Ceci est présenté dans la section \ref{SECTION Clapoti}. On cherche notamment à obtenir une meilleure complexité que l'algorithme précédent. Le projet de thèse vise à appliquer Clapoti à la cryptanalyse de schémas pré-quantiques.
+
+
+\section{Rappels théoriques et notations}\label{SECTION RappelNotations}
 
 \subsection{Théorie des nombres}
 %pas/peu de preuves
@@ -1053,7 +1076,7 @@ La donnée d'un réseau associé à une courbe elliptique $E$ à multiplication 
 \end{Prop}
 
 
-\section{Introduction à la théorie de la multiplication complexe}
+\section{Introduction à la théorie de la multiplication complexe}\label{SECTION multiplicationComplexe}
 
 
 
@@ -1316,7 +1339,7 @@ On n'aura pas besoin de se placer sur le corps $\Qb$ tout entier, mais seulement
 \end{Rem}
 
 
-\section{Représentations d'isogénies de courbes elliptiques ordinaires}
+\section{Représentations d'isogénies de courbes elliptiques ordinaires}\label{SECTION courbeElliptiqueOrdinaire}
 
 Une partie conséquente du stage consistait à comprendre comment la théorie de la multiplication complexe s'applique aux courbes elliptiques ordinaires, définies sur des corps finis. Plusieurs problèmes se posent : l'absence d'équivalence de catégories avec les tores complexes, et l'absence de bijection entre les endomorphismes et leurs facteurs. Pour palier à cela, dans la section \ref{SECTION ReducRelev} on énonce des résultats de réduction et de relèvement de courbes elliptiques. On démontre la proposition \ref{DefActionIdeauxSurCourbeOrdinaire}, qui justifie la définition d'une action de groupes de classes sur des courbes elliptiques ordinaires. Cette proposition, admise dans les articles cités, est à l'origine de tout les algorithmes de calculs d'isogénies étudiés. La section \ref{SECTION RepFrobenius} s'interresse à la description explicite d'endomorphismes dans le but de les calculer et les évaluer. Enfin la section \ref{SECTION volcanIsogenie} explicite comment utiliser la théorie de la multiplication complexe pour décrire la majorité des isogénies. 
 
