@@ -110,7 +110,7 @@ La proposition précédente nous donne alors le degré de l'extension dans laque
 	
 	\item Soit $F_{h}$ le polynôme qui décrit le noyau de la $l$-isogénie $\phi: E\rightarrow E'$. Soit $\tilde{F}_{h}$ défini de la même façon à partir d'un relèvement de Deuring de $E$, $E'$ et $\phi$. On peut alors retrouver explicitement les coefficients de $\tilde{F}_{h}$. Si chaque terme a une bonne réduction modulo $p$, alors on obtient les coefficient de $F_{h}$. La bonne réduction n'est cependant pas garantie, il faut que $l$ vérifie
 	\begin{equation*}
-		l < 4(p+1).
+		p > 4(l+1).
 	\end{equation*}
 	Cette méthode a été proposé par Elkies, et amélioré dans \cite{Bostan_2008}. Les améliorations visent principalement à minimiser et optimiser des calculs de séries de Laurent nécessaires pour obtenir $\tilde{F}_{h}$. En suivant la convention utilisée par Sage, on appellera BMSS l'algorithme proposé dans \cite{Bostan_2008}(\S 4.3, fastElkies') calculant $F_{h}$ à partir de $E$, $E'$ et $l$.
 
@@ -135,7 +135,7 @@ La proposition précédente nous donne alors le degré de l'extension dans laque
 \end{Rem}
 
 \begin{Hyp}\label{HypothèseElkies}
-	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Un nombre premier $l$ vérifie l'hypothèse \ref{HypothèseElkies} si $l < \min (4(p+1), 4|\Delta|)$.
+	Soit $E\in Ell_{\F_{q}}(\OR_{\Delta})$. Un nombre premier $l$ vérifie l'hypothèse \ref{HypothèseElkies} si $l < 4|\Delta|$ et $p > 4(l+1)$.
 \end{Hyp}
 
 On en déduit l'algorithme \ref{ALGO BMSSCheckElkies} permettant de calculer le polynôme décrivant le sous-groupe de $\LR$ torsion d'un courbe $E\in Ell_{\F_{q}}(\OR_{\Delta})$. On suppose ici que le polynôme modulaire $\Psi_{l}$ est pré-calculé.  

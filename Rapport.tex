@@ -108,14 +108,60 @@
 
 \addbibresource{biblio.bib}
 
-
+\newcommand{\maketitlepage}{
+	\begin{titlepage}
+		\centering
+		% Logos
+		\includegraphics[width=0.3\textwidth]{Logo-UVSQ.png} \hfill
+		\includegraphics[width=0.2\textwidth]{Logo-UPJV.png} \\[1cm]
+		
+		% Noms des établissements
+		{\large \textbf{Université Versailles Saint-Quentin}}\\[0.1cm]
+		{\large \textbf{Université de Picardie Jules Verne}} \\[0.5cm]
+		
+		% Nom du Master
+		{\Large Master Algèbre Appliquée} \\[0.1cm]
+		{\large Cryptographie, algorithmique et géométrie algébrique} \\[1.5cm]
+		
+		% Titre entouré de lignes
+		\noindent\rule{\textwidth}{1pt} \\[0.4cm]
+		{\Huge \textbf{Calculs dans les graphes d'isogénies}} \\[0.4cm]
+		\noindent\rule{\textwidth}{1pt} \\[1.5cm]
+		
+		% Sous-titre
+		{\Large Rapport de stage de Master} \\[0.1cm]
+		{\large 2025} \\[1,5cm]
+		
+		% En bas de page, deux colonnes : auteur à gauche, encadrants à droite
+		\vfill
+		\begin{minipage}[t]{0.45\textwidth}
+			\raggedright
+			\textbf{Auteur:} \\
+			Maxime Louvet \\
+			Université Versailles Saint-Quentin, Université de Picardie Jules Verne \\
+			\texttt{maxime.louvet@ens.uvsq.fr}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.45\textwidth}
+			\raggedleft
+			\textbf{Encadrant:} \\
+			Sorina Ionica \\
+			Laboratoire MIS\\ Université de Picardie Jules Verne \\
+			\texttt{sorina.ionica@u-picardie.fr} \\[0.5cm]
+			\textbf{Représentant académique:} \\
+			Pierre-Guy Plamondon \\
+			Université Versailles Saint-Quentin \\
+			\texttt{pierre-guy.plamondon@uvsq.fr}
+		\end{minipage}
+	\end{titlepage}
+}
 
 
 \title{Calculs dans les graphes d'isogénies}
 \author{Maxime LOUVET}
 
 \begin{document}
-\maketitle
+\maketitlepage
 \tableofcontents
 
 \include{Section_1_theorie.tex}

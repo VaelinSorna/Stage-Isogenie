@@ -279,28 +279,29 @@ On énonce l'équation de normes à résoudre pour construire un diamant d'isog�
 L'intérêt de factoriser les idéaux $\bR$ et $\cR$ est de réduire la taille des paramètres du problème de pièce. On peut donc espérer trouver une solution avec un degré $d$ plus petit. On explique maintenant la méthode utilisé pour trouver une solution minimisant $N$ et $d$. On résume d'abord les étapes :
 
 \begin{enumerate}
-	\item (Algorithme \ref{ALGO listeIdeauxCandidats}) A partir d'une base de vecteurs court de $\aR$ (algorithme \ref{ALGO baseVecteurCourt} ), on établie une liste $L_{equivalents}$ d'idéaux équivalents de petites normes. On ne garde que des idéaux de norme premier avec $|E(\F_{q})|$. 
+	\item (Algorithme \ref{ALGO listeIdeauxCandidats}) A partir d'une base de vecteurs court de $\aR$ (corollaire \ref{baseMinimalIdealRéduit}), on établie une liste $L_{equivalents}$ d'idéaux équivalents de petites normes. On ne garde que des idéaux de norme premier avec $|E(\F_{q})|$. 
 	\item (Ligne 12 à 19 de l'algorithme \ref{ALGO listeIdeauxCandidats}) On fixe une borne $B_{premier}\in\N^*$, et on considère pré-calculés les polynômes modulaires $\Phi_l$ pour tout nombres premiers décomposés $l < B_{premier}$. On calcule la factorisation avec partie $B_{premier}$-friable $\bR_e\bR_k$ de chaque idéal $\bR$ de $L_{equivalents}$.
 	\item (Algorithme \ref{ALGO EtudeDeTorsions}) On calcule une suite $L_{torsions}$ de couple $(N_{max}, d)$, où $N_{max}$ est la torsion maximale incluse dans $E(\F_{q^{d}})$.
 	\item (Algorithme \ref{ALGO solEquation}) Pour chaque couple $(N_{max}, d)$, on considère toutes les paires d'idéaux $\bR$, $\cR$ de $L_{equivalents}$. Si $N_1 = N(\bR_k)$ et $N_2 = N(\cR_k)$ sont premier entre eux, on cherche $u$, $v\in\N^*$ pour former une solution à l'équation de normes. On parcourt les degrés dans l'ordre croissant. 
 \end{enumerate}
 
-On explicite les algorithmes utilisés, d'abord l'algorithme \ref{ALGO listeIdeauxCandidats} pour la recherche et la factorisation des idéaux équivalents qui seront utilisés. On suppose partir d'un idéal $\LR$ quelconque. On utilise une base de vecteurs courts (algorithme \ref{ALGO baseVecteurCourt}) pour calculer $\bR_1$, $\bR_2$ les deux idéaux équivalents de plus petites normes (proposition \ref{correspondanceIdeqElement}). On parcourt les idéaux de la forme $\bR = x\bR_1 + y\bR_2$, avec $|x|,|y|$ majoré par un entier $m_{id}$ choisit. Pour éviter de considérer des idéaux identiques, on suppose $y\geq0$. Étant donné $\bR$ sous forme standard $id(m,a,b)$, si sa norme $N = m^2a$ est première avec $|E(\F_q)|$, on calcule la partie friable $\bR_e$ en utilisant le théorème \ref{factorisationClasseIdéaux}. Cependant celui-ci ne s'applique qu'aux idéaux primitifs. Donc on pose $N_e$ la parie friable de $N$, et $N_e = dM_e$ avec $M_e = \gcd(a,M_e)$, pour pouvoir calculer la partie friable $\bR'_e$ de $id(1,a,b)$. Alors $d|m^2$, mais $N_e$ est une partie friable de $N$, donc chaque nombre premier divisant $N_e$ divise $N$ avec la même valuation. En particulier $d$ est un carré. On note $d = m_e^2$ et $N_e = m_e^2M_e$. Alors $\bR_e = m_e\bR'_e$.  
+On explicite les algorithmes utilisés, d'abord l'algorithme \ref{ALGO listeIdeauxCandidats} pour la recherche et la factorisation des idéaux équivalents qui seront utilisés. On suppose partir d'un idéal $\LR$ quelconque. On calcule la forme standard de l'idéal réduit équivalent $\aR$. On en déduit une base $\alpha$, $\beta$ de $\aR$, de normes minimales (corollaire \ref{baseMinimalIdealRéduit}). On parcourt les éléments de $\aR$ de la forme $\gamma = x\alpha + y\beta$, avec $|x|,|y|$ majoré par un entier $m_{id}$ choisit. Pour chacun, on calcule un idéal $\bR$ équivalent à $\aR$ (proposition \ref{correspondanceIdeqElement}). Pour éviter de considérer plusieurs fois un même idéal, on suppose $y\geq0$. Étant donné $\bR$ sous forme standard $id(m,a,b)$, si sa norme $N = m^2a$ est première avec $|E(\F_q)|$, on calcule la partie friable $\bR_e$ en utilisant le théorème \ref{factorisationClasseIdéaux}. Cependant celui-ci ne s'applique qu'aux idéaux primitifs. Donc on pose $N_e$ la parie friable de $N$, et $N_e = dM_e$ avec $M_e = \gcd(a,M_e)$, pour pouvoir calculer la partie friable $\bR'_e$ de $id(1,a,b)$. Alors $d|m^2$, mais $N_e$ est une partie friable de $N$, donc chaque nombre premier divisant $N_e$ divise $N$ avec la même valuation. En particulier $d$ est un carré. On note $d = m_e^2$ et $N_e = m_e^2M_e$. Alors $\bR_e = m_e\bR'_e$.  
 
 \begin{algorithm}[h]
 	\caption{Liste d'idéaux équivalents candidats}\label{ALGO listeIdeauxCandidats}
 	\begin{algorithmic}[1]
-		\Require $E\in Ell_{\F_{q}}(\OR_{\Delta})$, $\LR\in\OR_{\Delta})$ un idéal entier propre, $B_{premier}\in\N^*$ tel que les polynômes modulaires $\Phi_l$ pour $l<B_{premier}$ premier décomposé dans $\OR_{\Delta}$ soient pré-calculés, un entier $m_{id}\in\N^*$.
+		\Require $E\in Ell_{\F_{q}}(\OR_{\Delta})$, $\LR\in\OR_{\Delta}$ un idéal entier propre, $B_{premier}\in\N^*$ tel que les polynômes modulaires $\Phi_l$ pour $l<B_{premier}$ premier décomposé dans $\OR_{\Delta}$ soient pré-calculés, un entier $m_{id}\in\N^*$.
 		\Ensure Une liste $L_{equivalents}$ d'éléments $(\bR, \bR_e, N(\bR_k))$ tels que $\bR$ soit équivalent à $\LR$, et $\bR = \bR_e\bR_k$ où $\bR_e$ vérifie les conditions de l'étape $2$ précédente. 
-		\State $\alpha, \beta\gets$ Base courte de $\LR$ (algorithme \ref{ALGO baseVecteurCourt}).
-		\State$\bR_1\gets\frac{\bar{\alpha}}{N(\LR)}\LR$
-		\State$\bR_2\gets\frac{\bar{\beta}}{N(\LR)}\LR$
+		\State$f(a,b,c)\gets$ réduction de la forme quadratique $F(\LR)$ (algorithme \ref{ALGO reduction}).
+		\State$\aR\gets I(f(a,b,c))$
+		\State$\alpha\gets a$
+		\State$\beta\gets \frac{-b + \sqrt{\Delta}}{2}$
 		\State$L_{equivalents}\gets$\O
-		\State$\aR\gets$ idéal réduit de la classe de $\LR$ (algorithme \ref{ALGO reduction}).
 		\For{$-m_{id}\leq x\leq m_{id}$}
 		\For{$0\leq y\leq m_{id}$}
 		\If{$y\neq0$ ou $x>0$}
-		\State $\bR\gets x\bR_1 + y\bR_2$
+		\State $\gamma\gets x\alpha + y\beta$
+		\State $\bR\gets \frac{\bar{\gamma}}{a}\aR$
 		\State $N\gets N(\bR)$
 		\If{$N$ est premier avec $|E(\F_{q})|$}
 		\State $N_e\gets$ partie $B_{premier}$-friable de $N$ par des nombres premier décomposés.
@@ -460,6 +461,8 @@ L'expériences est faites pour chacune deux fois. La première avec $B_{premier}
 		\hline
 		$B_{premier} = 370$	& JaoSmall & BS1 & BS2 & S1 & S2 \\
 		\hline
+		Temps moyen	& 2,5s & 13,8s & 16,0s & 22,8s & 57,4s \\
+		\hline
 		Degré moyen	& 13,2 & 53,2 & 33,4 & 6 & 117,8 \\
 		\hline
 		Degré maximal	& 60 & 84 & 42 & 6 & 192 \\
@@ -474,6 +477,8 @@ L'expériences est faites pour chacune deux fois. La première avec $B_{premier}
 		\hline
 		\hline
 		$B_{premier} = 1000$	&  &  &  &  &  \\
+		\hline
+		Temps moyen	& 2,5s & 13,7s & 16,5s & 22,8s & 52,4s \\
 		\hline
 		Degré moyen	& 7,95 & 38,2 & 21 & 6 & 46,5 \\
 		\hline
@@ -495,7 +500,7 @@ L'expériences est faites pour chacune deux fois. La première avec $B_{premier}
 
 Une première remarque est que les probabilité des trouver des idéaux équivalents friables avec l'algorithme \ref{ALGO listeIdeauxCandidats} est non négligeable. Dès que l'on en trouve un, il suffit d'appliquer l'algorithme \ref{ALGO IsogenieEquivalenceFriable} pour conclure. 
 
-\subsection{Conclusion et pistes de réflexions}
+\subsection{Conclusion et pistes de recherches}
 
 
 Conclusions et questions.
