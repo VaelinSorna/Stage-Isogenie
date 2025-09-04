@@ -22,6 +22,7 @@ Je me suis ensuite concentré sur la méthode de Broker, Charles et Lauter \cite
 
 Enfin, j'ai étudié la méthode Clapoti \cite{Clapoti}. L'objectif est de la comprendre pour l'appliquer aux courbes elliptiques ordinaires, qui sortent du contexte du protocole CSIDH où s'applique les idées de \cite{KLaPoTi} et \cite{Pegasis}. Cela est présenté dans la section \ref{SECTION Clapoti}. J'ai notamment cherché à obtenir une meilleure complexité que l'algorithme précédent. Le projet de thèse vise à appliquer Clapoti à la cryptanalyse de schémas pré-quantiques.
 
+Les fichiers contenant mes implémentation sont disponibles sur un dépôt GitHub \cite{GITHUBRapportStage}, et utilisent la version 10.6 de Sagemath \cite{sage}. 
 
 \section{Rappels théoriques et notations}\label{SECTION RappelNotations}
 
@@ -33,7 +34,7 @@ Enfin, j'ai étudié la méthode Clapoti \cite{Clapoti}. L'objectif est de la co
 
 \begin{Def}
 	
-	Un corps $\K$ est appelé corps quadratique imaginaire si $\K = \Q(\sqrt{D})$ avec $D$ entier négatif sans facteur carré. Un ordre de $\K$ est un sous-anneaux unitaire de $\K$, de type fini comme $\Z$-module et contenant une $\Q$-base de $\K$. Un tel anneaux est appelé un ordre quadratique imaginaire. 
+	Un corps $\K$ est appelé corps quadratique imaginaire si $\K = \Q(\sqrt{D})$ avec $D$ entier négatif sans facteur carré. On note $N_\K$ la norme relative à l'extension $\K/\Q$. Un ordre de $\K$ est un sous-anneaux unitaire de $\K$, de type fini comme $\Z$-module et contenant une $\Q$-base de $\K$. Un tel anneaux est appelé un ordre quadratique imaginaire. 
 \end{Def}
 
 \begin{Prop}[\cite{Cox}(Prop 5.3, 7.2)]
@@ -209,7 +210,7 @@ On va maintenant définir une notion groupe de classes pour un ordre $\OR$ quelc
 	
 	Soit $\OR$ un ordre d'un corps quadratique imaginaire $\K$, et $\LR$, $\LR'\in I(\OR)$. On note $\bar{\LR}$ l'idéal conjugué de $\LR$ selon la conjugaison dans $\K$. Alors :
 	\begin{enumerate}
-		\item $\forall\alpha\in\OR,\; N(\alpha\OR) = N_{\Q}^{\K}(\alpha)$.
+		\item $\forall\alpha\in\OR,\; N(\alpha\OR) = N_{\K}(\alpha)$.
 		\item $N(\LR\LR') = N(\LR)N(\LR')$ pour tout idéal entier propre $\LR'$.
 		\item $\LR\bar{\LR} = N(\LR)\OR$, donc $\bar{\LR}$ est l'inverse de $\LR$ dans $Cl(\OR)$.
 		\item $\LR$ est un idéal principal si et seulement s'il existe un élément de $\LR$ de norme égale à $N(\LR)$.
@@ -572,15 +573,15 @@ On énonce plusieurs propriétés des coefficients d'une forme quadratique rédu
 On énonce une correspondance entre les éléments $\alpha$ d'un idéal $\LR\in I(\OR_{\Delta})$ et les idéaux entiers propres $\LR'$ équivalents à $\LR$. Les idéaux entiers équivalents de normes minimales correspondent alors aux éléments de $\LR$ de normes minimales. Cela sera utile par la suite pour parcourir les idéaux entiers de petites normes d'une classe donnée. 
 
 \begin{Prop}[\cite{Clapoti}(Prop 2.1)]\label{correspondanceIdeqElement}
-	Soit $\OR_\Delta$ un ordre quadratique imaginaire, et $\LR\in I(\OR_{\Delta})$. Soit $\alpha\in\LR$. Alors $\frac{\bar\alpha}{N(\LR)}\LR$ est un idéal entier propre de norme $N_{\Q}^{\K}(\alpha)$. De plus, pour tout $\LR\in I(\OR_{\Delta})$,
+	Soit $\OR_\Delta$ un ordre quadratique imaginaire, et $\LR\in I(\OR_{\Delta})$. Soit $\alpha\in\LR$. Alors $\frac{\bar\alpha}{N(\LR)}\LR$ est un idéal entier propre de norme $N_{\K}(\alpha)$. De plus, pour tout $\LR\in I(\OR_{\Delta})$,
 	\begin{equation*}
 		\LR'\sim\LR\iff\exists\alpha\in\LR,\;\bar{\LR}\LR' = \bar{\alpha}\OR_{\Delta}\iff\exists\alpha\in\LR,\;\LR' = \frac{\bar\alpha}{N(\LR)}\LR.
 	\end{equation*}
-	On a alors $N(\alpha) = N(\LR)N(\LR')$.
+	On a alors $N_{\K}(\alpha) = N(\LR)N(\LR')$.
 \end{Prop}
 
 \begin{Coro}\label{baseMinimalIdealRéduit}
-	Soit $\LR = id(m,a,b)\in I(\OR_{\Delta})$, $f = F(\LR) = f(a,b,c)$ et $f' = f(c,-b,a)$. Soit $\alpha = ma$ et $\beta = m\frac{-b + \sqrt{\Delta}}{2}$. Alors $N(\alpha) = aN(\LR)$ et $N(\beta) = cN(\LR)$.  De plus :
+	Soit $\LR = id(m,a,b)\in I(\OR_{\Delta})$, $f = F(\LR) = f(a,b,c)$ et $f' = f(c,-b,a)$. Soit $\alpha = ma$ et $\beta = m\frac{-b + \sqrt{\Delta}}{2}$. Alors $N_\K(\alpha) = aN(\LR)$ et $N_\K(\beta) = cN(\LR)$.  De plus :
 	\begin{enumerate}
 		\item $\frac{\bar\alpha}{N(\LR)}\LR = I(f)$ et $\frac{\bar\beta}{N(\LR)}\LR = I(f').$
 		\item Tous les idéaux entiers équivalents à $\LR$ sont de la forme
@@ -595,21 +596,18 @@ On énonce une correspondance entre les éléments $\alpha$ d'un idéal $\LR\in 
 	Certaines sources \cite{Pegasis} utilisent l'algorithme LLL pour trouver des bases réduites d'un réseau structuré quadratique. Dans le cas d'un idéal donné sous forme standard et associé à une forme quadratique réduite, une base de vecteurs courts est déjà donnée. 
 \end{Rem}
 
-On aura besoin par la suite de trouver des générateurs d'idéaux principaux à partir de leur forme standard. Soit $\LR = id(m,a,b)$ un idéal entier supposé principal (donc propre), et soit $\beta$ un générateur. D'après la proposition \ref{NormesId}, $N(\LR) = a = N_{\Q}^{\K}(\beta)$, donc étant donné la forme standard, on connaît la norme d'un générateur.  
+On aura besoin par la suite de trouver des générateurs d'idéaux principaux à partir de leur forme standard. Soit $\LR = id(m,a,b)$ un idéal entier supposé principal (donc propre), et soit $\beta$ un générateur. D'après la proposition \ref{NormesId}, $N(\LR) = am^2 = N_{\K}(\beta)$, donc étant donnée la forme standard, on connaît la norme d'un générateur.  
 
 \begin{Prop}
 	Soit $\LR = m[a , \frac{-b + \sqrt{\Delta}}{2}]\in I(\OR_{\Delta})$ sous forme standard. Soit $f = F(\LR) = f(a,b)$ sa forme quadratique binaire primitive associée. Alors 
 	\begin{equation*}
-		f(x,y) = N_{\Q}^{\K}\left( m\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) \right) / N(\LR)
+		f(x,y) = N_{\K}\left( m\left( ax - y\frac{-b + \sqrt{\Delta}}{2}\right) \right) / N(\LR)
 	\end{equation*}
 \end{Prop}
 
-\begin{proof}
-	Cette égalité découle de la définition de la norme d'extension $N_{\Q}^{\K}$.
-\end{proof}
 
 \begin{Coro}
-	Soit $\LR = id(m,a,b)\subset I(\OR_{\Delta})$ sous forme standard. Alors $\LR$ est principal si et seulement si $1$ est représenté par $f = F(\LR)$. De plus dans ce cas, si $f(s,t) = 1$ alors
+	Soit $\LR = id(m,a,b)\subset I(\OR_{\Delta})$ sous forme standard. Alors $\LR$ est principal si et seulement si $1$ est représenté par $f = F(\LR)$. De plus dans ce cas, si $f(s,t) = 1$, alors
 	\begin{equation*}
 		\LR = m\left( as - t\frac{-b + \sqrt{\Delta}}{2}\right) \OR_{\Delta}.
 	\end{equation*}
@@ -620,7 +618,7 @@ On aura besoin par la suite de trouver des générateurs d'idéaux principaux à
 	\begin{equation*}
 		\beta = m\left( as - t\frac{-b + \sqrt{\Delta}}{2}\right),\; s,t\in\Z.
 	\end{equation*}
-	Alors $N_{\Q}^{\K}(\beta) = N(\LR) \iff f(s,t) = 1$ d'après ce qui précède.
+	Alors $N_{\K}(\beta) = N(\LR) \iff f(s,t) = 1$ d'après ce qui précède.
 \end{proof}
 
 Soit $f$ une forme quadratique binaire primitive. On cherche $s, t\in\Z$ tels que $f(s,t) = 1$. D'après la proposition \ref{représentationEntierMinimaux}, si une solution existe, la forme réduite $r$ de la classe de $f$ s'écrit $r(x,y) = x^2 \pm xy + cy^2$, et $r(1,0) = 1$. En appliquant en sens inverse les changements de variables utilisés lors de la réduction, on peut calculer $s$ et $t$. On en déduit l'algorithme \ref{ALGO idealprincipal} permettant de trouver un générateur d'un idéal principal. Ceci est l'algorithme utilisé par défaut dans Sage pour la recherche de générateur.  
@@ -1224,7 +1222,7 @@ Lorsque $\LR\subset\OR_{\Delta}$ est plus précisément un idéal premier avec l
 	\begin{enumerate}
 		\item $E\left[\LR\right]$ est un $\OR_{\Delta}/\LR$-module libre de rang $1$.
 		\item $\phi_{\LR}$ est de degré $N\left( \LR\right)$.
-		\item Si $\alpha\in\OR_{\Delta}$, $[\alpha]$ est de degré $N_{\Q}^{\K}\left( \alpha\right) $.
+		\item Si $\alpha\in\OR_{\Delta}$, $[\alpha]$ est de degré $N_{\K}\left( \alpha\right) $.
 	\end{enumerate}
 \end{Prop}
 \begin{proof}
@@ -1235,7 +1233,7 @@ Lorsque $\LR\subset\OR_{\Delta}$ est plus précisément un idéal premier avec l
 		
 		\item En particulier si $\LR = \alpha\OR_{\Delta}$ est principal, $[\alpha]$ est l'endomorphisme de noyau $E\left[\alpha\OR_{\Delta}\right]$. Donc 
 		\begin{equation*}
-			\deg \left( \left[\alpha \right] \right) = N\left( \alpha\OR_{\Delta}\right) = N_{\Q}^{\K}\left( \alpha\right).
+			\deg \left( \left[\alpha \right] \right) = N\left( \alpha\OR_{\Delta}\right) = N_{\K}\left( \alpha\right).
 		\end{equation*}
 	\end{enumerate}
 \end{proof}

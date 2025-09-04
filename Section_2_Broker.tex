@@ -1,6 +1,6 @@
-\section{Algorithme de Broker Charles et Lauter}\label{SECTION friableEtBroker}
+\section{Algorithme de Broker, Charles et Lauter}\label{SECTION friableEtBroker}
 
-L'objectif de cette section est d'énoncer l'algorithme de Broker Charles et Lauter \cite{BrokerCharlesLauter}, optimisé par Jao et Soukharev \cite{JaoSoukharev}, et dont je propose une implémentation. Il prend en entrée une courbe elliptique ordinaire $E$ définie sur $\F_{q}$ de caractéristique $p$, son anneau d'endomorphismes $\OR_{\Delta}$, un point $P\in E(\F_{q^{n}})$ avec $n\geq1$ et un idéal $\LR$ de norme $l$ premier, et qui calcule la $l$-isogénie $\phi$ résultant de l'action de l'idéal $\LR$ sur $E$. L'entrée de l'algorithme doit vérifier l'hypothèse \ref{HypothèseInversion}, pour que l'isogénie $\phi$ soit horizontale, et pour que l'on puisse évaluer des endomorphismes sur des points de $E(\F_{q^{n}})$ (voir propositions \ref{evalEndoAvecDenom} et \ref{KohelStructureVolcan}). 
+L'objectif de cette section est d'énoncer l'algorithme de Broker, Charles et Lauter \cite{BrokerCharlesLauter}, optimisé par Jao et Soukharev \cite{JaoSoukharev}, et dont je propose une implémentation. Il prend en entrée une courbe elliptique ordinaire $E$ définie sur $\F_{q}$ de caractéristique $p$, son anneau d'endomorphismes $\OR_{\Delta}$, un point $P\in E(\F_{q^{n}})$ avec $n\geq1$ et un idéal $\LR$ de norme $l$ premier, et qui calcule la $l$-isogénie $\phi$ résultant de l'action de l'idéal $\LR$ sur $E$. L'entrée de l'algorithme doit vérifier l'hypothèse \ref{HypothèseInversion}, pour que l'isogénie $\phi$ soit horizontale, et pour que l'on puisse évaluer des endomorphismes sur des points de $E(\F_{q^{n}})$ (voir propositions \ref{evalEndoAvecDenom} et \ref{KohelStructureVolcan}). 
 
 \begin{Hyp}\label{HypothèseInversion}
 	Soit $f$ le conducteur de $E$, $f_m$ son conducteur maximal sur $\F_{q}$. On suppose que $E$, $l$ et $n$ sont choisis tel que $l$ ne divise pas $A = pf_m|E(\F_{q^{n}})|$, que $l$ est décomposé dans $End(E)$ et que $f_{m}$ et $|E(\F_{q^{n}})|$ sont premiers entre eux.
@@ -10,7 +10,7 @@ L'objectif de cette section est d'énoncer l'algorithme de Broker Charles et Lau
  
  Dans le fichier Broker.ipynb, je propose une implémentation prenant en compte l'optimisation de \cite{JaoSoukharev} ainsi que des initiatives personnelles. Mon approche est expliquée dans la section \ref{SECTION CalculfactoClasse}. J'analyse la complexité obtenue pour la comparer avec les résultats de \cite{JaoSoukharev} dans la section \ref{SECTION Broker}.   
 
-\subsection{Isogénies horizontales de petits degrés}
+\subsection{Isogénies horizontales de petit degré}
 \label{SECTION isogénieDegrésPetits}
 
 \subsubsection{Algorithme SquareVélu}\label{SECTION squareVélu}
@@ -654,7 +654,7 @@ L'analyse de complexité de \cite{JaoSoukharev}[\S 4.4], aboutit au même résul
 
 Cependant, l'utilisation de l'algorithme \ref{ALGO FactoClasse} amène à obtenir plus d'exposants non nuls, donc à calculer plus de polynômes modulaires distincts. Il est possible d'aller chercher ces derniers dans des bases de données publiques, mais en pratique pour des discriminants $|\Delta|\simeq 10^{16}$, il faudrait alors avoir accès aux polynômes $\Psi_{l}$ pour $l\simeq 3000$. La base de donnée la plus grande à ma connaissance est celle de Sutherland, et contient les polynômes $\Psi_{l}$ pour $l\simeq 1000$ premier. 
 
-On présente les résultats d'une expérience menée dans le but de tester sur deux valeurs de $|\Delta|$ laquelle des deux méthodes est la plus efficace. Le fichier TestCLO.ipynb regroupe les codes utilisés pour cette expérience.
+On présente les résultats d'une expérience menée dans le but de tester sur deux valeurs de $|\Delta|$ laquelle des deux méthodes est la plus efficace. Le fichier TestCLO.ipynb \cite{GITHUBRapportStage} regroupe les codes utilisés pour cette expérience.
 
 Soit $\Delta$ un entier négatif congru à $0$ ou $1$ modulo $4$. Pour $10^{20} < l < 10^{21}$ un nombre premier décomposé aléatoire, on calcule un idéal entier $\LR$ de $\OR_{\Delta}$ de norme $l$. Choisissant $N = \max(N_p, N_t)$, on cherche à calculer des exposants d'une écriture de $\CL$ d'abord avec la méthode de \cite{JaoSoukharev} (appelée méthode 1), puis avec l'approche de ce rapport (appelée méthode 2). On répète cela $30$ fois, avec une valeur de $l$ différente à chaque fois. Le tableau \ref{tableauexp} regroupe les moyennes des sommes des exposants, des temps de calculs, du nombre de tentatives de marches aléatoires, du nombre d'exposants non nuls et des normes maximales parmi les idéaux d'exposant non nul, le tout sur deux valeurs de $\Delta$ choisies au hasard d'ordre respectif $10^{16}$ et $10^{17}$.\\
 
@@ -688,7 +688,7 @@ La somme des exposants correspond au nombre de calculs d'isogénies nécessaires
 
 \subsubsection{Calculs d'isogénies}
 
-Le fichier Broker.ipynb regroupe mon implémentation des algorithmes \ref{ALGO BMSSCheckElkies}, \ref{ALGO IsogenieEquivalenceFriable}, \ref{ALGO FamilleGénératrice} et \ref{ALGO FactoClasse}, ainsi que mon implémentation des algorithmes décrits par Jao et Soukharev \cite{JaoSoukharev} pour les calculs dans le groupe de classes. On importe l'algorithme CheckElkies issu de l'implémentation Sage de l'article \cite{Pegasis} (voir section \ref{SECTION méthodeElkies}). Enfin, j'y ai aussi implémenté un algorithme de recherche de générateur d'un groupe de torsion (voir section \ref{SECTION generateurTorsion}), pour pouvoir calculer des isogénies directement avec l'algorithme SquareVélu de Sage. 
+Le fichier Broker.ipynb \cite{GITHUBRapportStage} regroupe mon implémentation des algorithmes \ref{ALGO BMSSCheckElkies}, \ref{ALGO IsogenieEquivalenceFriable}, \ref{ALGO FamilleGénératrice} et \ref{ALGO FactoClasse}, ainsi que mon implémentation des algorithmes décrits par Jao et Soukharev \cite{JaoSoukharev} pour les calculs dans le groupe de classes. On importe l'algorithme CheckElkies issu de l'implémentation Sage de l'article \cite{Pegasis} (voir section \ref{SECTION méthodeElkies}). Enfin, j'y ai aussi implémenté un algorithme de recherche de générateur d'un groupe de torsion (voir section \ref{SECTION generateurTorsion}), pour pouvoir calculer des isogénies directement avec l'algorithme SquareVélu de Sage. 
 
 D'abord, j'ai testé ces algorithmes sur les exemples "small" et "medium" de l'article de Broker, Charles et Lauter \cite{BrokerCharlesLauter}. En particulier, sur l'exemple "small", ils proposent une norme de départ $l = 31$. Mais après réduction de l'idéal $\LR$ de norme $l$ avec l'algorithme \ref{ALGO reduction}, on trouve directement un idéal de norme friable, et il n'y a pas besoin de mener de marche aléatoire. Pour éviter cela, on propose de tester cet exemple avec une norme de départ $l = 59$. On trouve que les algorithmes énoncés dans le rapport, ceux de Jao et Soukharev, et ceux utilisant SquareVélu donnent les mêmes résultats, et cela en choisissant un point aléatoire de la courbe de départ.    
 

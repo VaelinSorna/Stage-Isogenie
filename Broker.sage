@@ -94,8 +94,9 @@ def eval_fq(P,kq,E):
     else :
         frob = EllipticCurveHom_frobenius(E, kq)
         return frob(P)
+    
 
-def formes_generatrices (D,N,test_norm): #Trouver la borne : Analyse de Jao
+def formes_generatrices (D,N,test_norm): #Correspond à l'algorithme 5 du rapport.
 
 # Trouver une famille génératrice du groupes de classes, vu comme formes quadratiques réduites.
 # En n'utilisant que des idéaux de normes premiers autorisés pour le calcul d'isogénies horizontales.
@@ -191,10 +192,10 @@ def factor_ecm(a,Primes):
         
     return friable, factorisation
 
-
+# Calcul dans le groupe de classes
 # Version 1: Algorithme énoncé par Jao Soukarev. 
 
-def factorisation(L,D,N,Borne_z,test_norm):
+def factorisation(L,D,N,Borne_z,test_norm):     
 
     #On suppose L être un idéal de norme l premier décomposé.
     #On cherche à ramener la classe de L à une classe simplifiable en multipliant au hasard par des petits idéaux.
@@ -278,7 +279,7 @@ def factorisation(L,D,N,Borne_z,test_norm):
 
 
 
-# Version 2: avec une borne de pas de marche aléatoire dans un graphe expanseur.
+# Version 2: Algorithme 6 du rapport.
 
 def factorisation_2(L,D,N,Borne_t,test_norm):
     
@@ -467,7 +468,7 @@ def CheckElkies(E, ell, kernel_polynomial, lam):   #Implémentation de Pegasis, 
 
 
 
-def polynome_ker(E,l,L,f,fm,dk,tracef,j,j_prec,Psi_l):
+def polynome_ker(E,l,L,f,fm,dk,tracef,j,j_prec,Psi_l):  #Algorithme 3 du rapport.
 
     #Calcul du polynôme décrivant le noyau de la l-isogénie définie par l'action de L sur E. 
     #Si on enchaine les calculs pour un même idéal L, j_prec est le j_invariants du dépard précédent. 
@@ -531,7 +532,7 @@ def phi_from_L_polynome(E,L,l,q,kq,f,fm,dk,tracef,j,j_prec,Psi_l):
     return phi
 
 
-def composantes_de_phi_polynome(E_eval,q,n,kq,Exposant,Idéaux,f,fm,dk,tracef):
+def composantes_de_phi_polynome(E_eval,q,n,kq,Exposant,Idéaux,f,fm,dk,tracef): #Algorithme 4 du rapport, lignes 1 à 15.
 
     # On calcule une suite d'isogénies données par une listes d'idéaux, chacun affecté d'un exposant.
     
@@ -561,10 +562,10 @@ def composantes_de_phi_polynome(E_eval,q,n,kq,Exposant,Idéaux,f,fm,dk,tracef):
     return composantes
 
 
-#Prise en compte de l'équivalence d'idéaux.
+#Prise en compte de l'équivalence d'idéaux : Algorithme 4 du rapport, ligne 16 à 24.
 
 
-def Coef_equivalent_friable(L,Idéaux,Exposant,D):
+def Coef_equivalent_friable(L,Idéaux,Exposant,D):  
     
     #On cherche alpha tel que L = (alpha)*L_friable, où L_friable est décrit pas Idéaux et Exposant
     #On calcule alpha = beta/m, avec beta dans l'ordre de discriminant D, et m entier positif.
@@ -591,7 +592,7 @@ def Coef_equivalent_friable(L,Idéaux,Exposant,D):
     else:
         raise ValueError('Erreur de factorisation')
 
-def eval_phic(P,E_eval,Composantes):
+def eval_phic(P,E_eval,Composantes): 
     #On calcule l'image d'un point Q par la composé d'une suite d'isogénies.
     #Q appartient à E_eval, donc peut ne pas être rationnel (si n > 1). 
     dépard = E_eval
@@ -610,7 +611,7 @@ def isom_normalisation(Ec,x,y,m,fm):
     isom = WeierstrassIsomorphism(Ec, (u^(-1), 0, 0, 0))
     return isom
 
-def endo_alpha(Q,En,kq,x,y,m,fm,Cn):
+def endo_alpha(Q,En,kq,x,y,m,fm,Cn): 
     
     #On veut calculer l'image d'un point Q par l'endomorphisme [alpha].  
     #alpha = (x + y fq)/(mfm)
@@ -625,6 +626,8 @@ def endo_alpha(Q,En,kq,x,y,m,fm,Cn):
     return alphaQ
 
 def Broker_BMSS(E,p,q,kq,E_eval,P,n,K,O,l,N,Borne_z):
+
+    #Version de Jao et Soukharev.
 
     début = time.time()
     #Calcul des données du problème :
@@ -676,6 +679,8 @@ def Broker_BMSS(E,p,q,kq,E_eval,P,n,K,O,l,N,Borne_z):
 
 def Broker_BMSS2(E,p,q,kq,E_eval,P,n,K,O,l,N,Borne_t):
 
+    #Version du rapport de stage.
+    
     début = time.time()
     #Calcul des données du problème :
     dk = K.discriminant()
@@ -726,7 +731,7 @@ def Broker_BMSS2(E,p,q,kq,E_eval,P,n,K,O,l,N,Borne_t):
 
 
 
-#Exemple Jao small 
+#Exemple "small" de l'article de Jao et Soukharev. 
 
 p = 10^10 + 19
 kq = 1
@@ -744,17 +749,17 @@ D = O.discriminant()
 
 CE = E.cardinality_pari()
 tracef = E.trace_of_frobenius()
-Dm = tracef^2 - 4*p
+Dm = tracef^2 - 4*q
 fm = sqrt(Dm/(K.discriminant()))
 
 l = 5000000029 #exemple de calcul d'isogénie, cf article
 
-
 N = 2*int(log(-D,2))^2   #supérieur à 370 : trop grand pour les polynômes modulaires.
-N = 370
 Borne_t = int(log(-D)/log(log(-D)))
-z = 1/(2*sqrt(3))                        
-Borne_z = int(sqrt(log(-D/3,2))/z) 
+z = 1/(2*sqrt(3))                        #z théorique de Jao
+Borne_z = int(sqrt(log(-D/3,2))/z)     #Proposition de borne de Jao
+
+N = 370
 
 n = 1
 Fqn.<xn> = GF(q^n)
