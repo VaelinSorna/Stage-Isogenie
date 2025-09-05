@@ -4,7 +4,11 @@ from sage.rings.finite_rings.integer_mod import square_root_mod_prime_power
 from sage.rings.number_field.order_ideal import NumberFieldOrderIdeal
 import time
 
-def etude_torsions(E,p,O,K,Nk_max,Nk_min):
+def etude_torsion(E,p,O,K,Nk_max,Nk_min):  #Correspond à l'algorithme 7 du rapport. 
+
+    #On calcule tout les couples degré-torsion maximale de E, dans l'ordre croissant des degrés, 
+    # jusqu'à trouver une torsion supérieur à T_max = (Nk_max)^2.
+    #On ignore les couples degré-torsion maximale de E dont la torsion est inférieur à T_min = 2Nk_min.
     
     rK = K.gens()[0]
     dK = K.discriminant()
@@ -29,9 +33,9 @@ def etude_torsions(E,p,O,K,Nk_max,Nk_min):
         a = int(tracef/2)
     Nmax = gcd(a-1,fm/f)
 
-    torsions = []
+    torsion = []
     if Nmax > 2*Nk_min:             #solution à clapoti n'existe pas si N < N1 + N2
-        torsions.append([Nmax,1])
+        torsion.append([Nmax,1])
 
     #traces = [tracef]
     #cards = [CE]
@@ -61,33 +65,35 @@ def etude_torsions(E,p,O,K,Nk_max,Nk_min):
             
         Nmax = gcd(a-1,fm/f)
         if Nmax > 2*Nk_min:
-            torsions.append([Nmax,d])
+            torsion.append([Nmax,d])
         #traces.append(tracefd)
         #cards.append(q + 1 - tracefd)
     
-    return torsions, d
+    return torsion, d
 
 def ideal_de_norme(l,f,D):
 
-    #Trouver un idéal de norme l premier : Cf notes de cours Biasse
-    #On se place dans un ordre de discriminant D et de conducteur f
+    #Trouver un idéal de norme l premier.
+    #On se place dans un ordre de discriminant D et de conducteur f.
     
     if kronecker(D,l) == 1:
         D = Mod(D,l)
-        sq = square_root_mod_prime(D,l) #Lien avec Seysen ? Prendre le min des deux racines vu dans N ? (Optionnel)
+        sq = square_root_mod_prime(D,l)
         sm = Mod(-sq,l)
         sq = ZZ(sq)
         sm = ZZ(sm)
         sq = min(sm,sq)
         #print(sq)
-        return NumberFieldOrderIdeal(O,[l, -sq + f*rK]) #Forme donnée dans le cours de Biasse
+        return NumberFieldOrderIdeal(O,[l, -sq + f*rK]) 
     elif kronecker(D,l) == 0:
         return NumberFieldOrderIdeal(O,[l, f*rK])
     else:
         raise "l est inerte"
 
 def ideal_to_element(a,L,O):
-    #On suppose a equivalent à L. On cherche alpha dans L tel que a = (alphabar / N(L))L
+    
+    #On suppose a equivalent à L. On cherche alpha dans L tel que a = ( (alpha)bar / N(L))L.
+    
     assert a.is_equivalent(L)
     B = a*(L.conjugate())
     alphabar = (B.gens_reduced())[0]
@@ -97,7 +103,9 @@ def ideal_to_element(a,L,O):
     return alpha
 
 def element_to_ideal(alpha,L,O):
-    #On suppose alpha dans L et on lui asocie un idéal equivalent
+    
+    #On suppose alpha dans L et on calcule l'idéal équivalent associé a = ( (alpha)bar / N(L))L.
+    
     assert alpha in L
     alphabar = alpha.conjugate()
     B = NumberFieldOrderIdeal(O,alphabar)
@@ -107,19 +115,10 @@ def element_to_ideal(alpha,L,O):
     assert a.is_equivalent(L)
     return a
 
-def base_vecteurs_courts(L,O):    #N'utilise pas LLL. Mieux ?
-    f = O.conductor()
-    qL = L.quadratic_form()
-    rL = qL.reduced_form()
-    a = NumberFieldOrderIdeal(O,[rL[0], (-rL[1] + f*rK)/2])
-    b = NumberFieldOrderIdeal(O,[rL[2], (rL[1] + f*rK)/2])
-    alpha = ideal_to_element(a,L,O)
-    beta = ideal_to_element(b,L,O)
-    assert NumberFieldOrderIdeal(O,[alpha,beta]) == L  #alpha, beta de normes premier entre elles, donc libre
-    return alpha, beta
-
 def liste_premiers_splits(D,borne_B,fm,p):
-    #Borne_B: taille maximale des nombres premiers regardés
+
+    #On établit une liste de nombres premiers majorés par borne_B, décomposé dans O_D, premiers avec f_m et p. 
+    
     liste_B = []
     i = 2
     while i < borne_B :
@@ -128,26 +127,37 @@ def liste_premiers_splits(D,borne_B,fm,p):
         i = next_prime(i)
     return liste_B
 
-def make_liste_ideq(L,O,m,liste_B,CE):
-    # m nombre d'idéaux que l'on teste (2m^2)
-    # présence de CE : pour evaluer des endomorphismes, on veut des normes premieres avec le cardinal
-    # On suppose que l'on ne veut evaluer l'isogenie que sur des points du corps de base Fq.
+def make_liste_ideq(L,O,m,liste_B,CE):   #Correspond à l'algorithme 8 du rapport. On ne calcule pas les factorisations avec parties friables.
+    #Pour le calcul de parties friables d'idéaux, voir après les exemples.
+
+    # On établit une liste d'idéaux équivalent à L, de normes minimales, donc on calcule la partie liste_B-friable de la norme.  
+    # paramètre m : Le nombre d'idéaux que l'on teste 2m^2 + m. 
+    # On ne retient que les idéaux de normes premier avec CE.
+    # Si un idéal équivalent de norme friable est trouvé, on s'arrête.
+
+    qL = L.quadratic_form()
+    rL = qL.reduced_form()
+    RL = NumberFieldOrderIdeal(O,rL)
     
-    alpha, beta = base_vecteurs_courts(L,O)
+    rK = O.number_field().gens()[0]
+    f = O.conductor()
+    alpha = rL[0]
+    beta = (-rL[1] + f*rK)/2   #N'utilise pas LLL, contrairement à l'implémentation sage de Pegasis.
+    
     liste_ideq = []
     Nk_max = 1
     Nk_min = -(O.discriminant())
     ideal_friable = False
     
-    for x in [0 .. m]:   #on evite de creer gamma et -gamma
+    for x in [0 .. m]:   
         for y in [-m .. m]:
-            if (x != 0 or y > 0):   #on evite les cas x = 0 et y <= 0
-                gamma = x*alpha + y*beta
+            if (x != 0 or y > 0):   
+                gamma = x*alpha + y*beta    #Pour ne pas creer gamma et -gamma, on evite les cas x < 0, ou (x = 0 et y <= 0), 
                 
                 if gamma == 0:
-                    raise ValueError('erreur base courte liée') 
+                    raise ValueError('erreur base courte liée') #n'est pas censé arriver. 
                     
-                I = element_to_ideal(gamma,L,O)
+                I = element_to_ideal(gamma,RL,O)
                 NI = I.norm()
                 if NI.gcd(CE) != 1:
                     continue
@@ -165,9 +175,11 @@ def make_liste_ideq(L,O,m,liste_B,CE):
                         Ne_facto.append([p,exp])
                         
                 assert NI == Nk*Ne
+                
                 if Nk == 1:
-                    #print('Ideal equivalent friable', I)
                     ideal_friable = True
+                    return [[I,Nk,Ne,Ne_facto]], Nk, Nk, ideal_friable
+                    
                 liste_ideq.append([I,Nk,Ne,Ne_facto])
                 if Nk > Nk_max:
                     Nk_max = Nk
@@ -176,9 +188,9 @@ def make_liste_ideq(L,O,m,liste_B,CE):
                     
     return liste_ideq, Nk_max, Nk_min, ideal_friable
 
-def coin_equation(N1,N2,N):
+def coin_equation(N1,N2,N):   #Correspond à l'algorithme 10 du rapport. 
     
-    #On veut résoudre uN1 + vN2 == N dans NN, avec uN1 gcd vN2 == 1 et N divise Nmax
+    #On veut résoudre uN1 + vN2 = N dans NN, avec uN1 gcd vN2 == 1 et N divise Nmax
     
     d,u0,v0 = xgcd(N1,N2)
     assert d == 1
@@ -189,7 +201,7 @@ def coin_equation(N1,N2,N):
 
     #On suppose u0 <= 0
         
-    ku = int(((-u0)*N) // N2) + 1  #erreur de int, etrange ?
+    ku = int(((-u0)*N) // N2) + 1  
     kv = int((v0*N)//N1)
     u = u0*N + ku*N2
     v = v0*N - ku*N1
@@ -205,6 +217,7 @@ def coin_equation(N1,N2,N):
     while sol == False and nb_sols >= 0:
         duv = u.gcd(v)
         if N%duv != 0:
+            nb_sols = nb_sols - 1
             continue
         if ((u/duv)*N1).gcd((v/duv)*N2) == 1:
             u = u/duv
@@ -222,7 +235,7 @@ def coin_equation(N1,N2,N):
     return u, v, N, sol
 
 
-def clapoti_equation(torsions,liste_ideq):
+def clapoti_equation(torsions,liste_ideq):  #Correspond à l'algorithme 9 du rapport. 
     k_id = len(liste_ideq)
     sols = []
     sols_ext = []
@@ -264,11 +277,12 @@ def clapoti_equation(torsions,liste_ideq):
     return sols, sols_ext
 
 def first_solutions_clapoti(prime_max,m_id,l,E,K,O):
-    #deg-max : degré d'extension maximal regardé
-    #prime_max : taille maximal des nombres premiers considérés petit
-    #m_id : interval sur lequel on cherche des idéaux équivalent
 
-    #Renvoie la premiere solution trouvée (plus petite extension possible)
+    # On calcule L un idéal de O de norme l. 
+    # Renvoie une solution de l'équation de Clapoti-Pegasis (E,L,prime_max) de degré minimal.  
+    # De plus renvoie deg_max le degré maximale considéré lors de l'etude de la torsion.
+    # Enfin renvoie ideal_friable = True si un idéal équivalent friable a été trouvé.
+    
 
     rK = K.gens()[0]
     dK = K.discriminant()
@@ -285,9 +299,12 @@ def first_solutions_clapoti(prime_max,m_id,l,E,K,O):
     resultat = []
     liste_B = liste_premiers_splits(D,prime_max,fm,p)
     liste_ideq, Nk_max, Nk_min, ideal_friable = make_liste_ideq(L,O,m_id,liste_B,CE)
-    torsions_candidats, deg_max = etude_torsions(E,p,O,K,Nk_max,Nk_min)
-    
-    for torsion in torsions_candidats:
+
+    if ideal_friable:
+        return [], liste_ideq, 1, ideal_friable
+        
+    torsion_candidats, deg_max = etude_torsion(E,p,O,K,Nk_max,Nk_min)
+    for torsion in torsion_candidats:
         sols, sols_ext = clapoti_equation([torsion],liste_ideq)
         if len(sols)>0:
             resultat.append(torsion)
@@ -296,22 +313,23 @@ def first_solutions_clapoti(prime_max,m_id,l,E,K,O):
     return resultat, liste_ideq, deg_max, ideal_friable
 
 def test_solutions_clapoti(prime_max,m_id,l,E,K,O):
-    #prime_max : taille maximal des nombres premiers considérés petit
-    #m_id : interval sur lequel on cherche des idéaux équivalent
 
-    #Mesure l'efficacité d'augmenter prime_max
+    #Applique l'algorithme first_solution_clapoti en faisant varier la borne des nombres premiers entre 1 et prime_max.
     
     resultat = []
     Bp = 1
     while Bp <= prime_max:
         first, liste_ideq, deg_max, ideal_friable = first_solutions_clapoti(Bp,m_id,l,E,K,O)
-        resultat.append([Bp,deg_max,len(liste_ideq),first[0],len(first[1])])
+        if ideal_friable:
+            resultat.append([Bp,deg_max,len(liste_ideq),first[0],1])
+        else:
+            resultat.append([Bp,deg_max,len(liste_ideq),first[0],len(first[1])])
         Bp = next_prime(Bp)
     return resultat
 
-def stat_solutions_clapoti(prime_max, m_id, nb_essais,E,K,O): 
+def stat_solutions_clapoti(prime_max, m_id, nb_essais,E,K,O):  #Correspond à l'expérience de la section 6.4.3. 
 
-    #Applique l'algorithme first_solution_clapoti en faisant varier les normes l de dépard, un nombre de fois éale à nb_essais. 
+    #Applique l'algorithme first_solution_clapoti en faisant varier les normes l de dépard, un nombre de fois égale à nb_essais. 
     #l est pris au hasard entre 10^20 et 10^21.
 
     print('prime_max :', prime_max)
@@ -328,7 +346,7 @@ def stat_solutions_clapoti(prime_max, m_id, nb_essais,E,K,O):
 
     non_friable = 0
 
-    while non_friable < 20 and nb_id_friable < 200:  #valeurs arbitraires
+    while non_friable < nb_essais and nb_id_friable < 200: #valeur arbitraire
 
         l = next_prime(randint(10^20, 10^21))
         while kronecker(D,l) != 1:
@@ -409,7 +427,7 @@ Fp = GF(p)
 E = EllipticCurve(Fp,[-3,660897170071025494489036936911196131075522079970680898049528])
 
 K.<rK> = QuadraticField(-7)
-f = 524287   #trouver par algo de Sutherland
+f = 524287   
 O = K.order(f*(1 + rK)/2)
 
 
@@ -475,7 +493,7 @@ E = EllipticCurve(Fp,[-3,1543447875633467443701521535887672877093235835334854420
 K.<rK> = QuadraticField(-102197306669747)
 O = K.maximal_order()
 
-#Creer par CM. On a f = 1 automatique !
+#Creer par CM. On a f = 1.
 D = O.discriminant()
 
 print('Discriminant =', D)
@@ -505,6 +523,7 @@ E = EllipticCurve(Fp,[-3,1532525238488788222775742174810279431834951871270948738
 K.<rK> = QuadraticField(-10000006055889179)
 O = K.maximal_order()
 
+#Creer par CM. On a f = 1.
 D = O.discriminant()
 
 print('Discriminant =', D)
