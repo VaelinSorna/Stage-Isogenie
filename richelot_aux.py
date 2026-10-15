@@ -293,6 +293,7 @@ def FromJacToProd(G1, G2, G3):
     M = Matrix(G.padded_list(3) for G in (G1,G2,G3))
     # Find homography
     u, v, w = M.right_kernel().gen()
+    
     d = u/2
     (ad, _), (b, _) = (x**2 - v*x + w*d/2).roots()
     a = ad/d
@@ -332,6 +333,9 @@ def FromJacToProd(G1, G2, G3):
         # To map a divisor, perform the change of coordinates
         # on Mumford coordinates
         U, V = D
+
+        #ASSUME D ORDER IS NOT 2
+        
         # apply homography
         # y = v1 x + v0 =>
         U_ = U[0] * (x+d)**2 + U[1]*(a*x+b)*(x+d) + U[2]*(a*x+b)**2
@@ -344,15 +348,19 @@ def FromJacToProd(G1, G2, G3):
         # compute Mumford coordinates on E1
         # Points x1, x2 map to x1^2, x2^2
         U1 = x**2 - (s*s - 2*p)*x + p**2
+        
         # y = v1 x + v0 becomes (y - v0)^2 = v1^2 x^2
         # so 2v0 y-v0^2 = p1 - v1^2 xH^2 = p1 - v1^2 xE1
         V1 = (p1 - v1**2 * x + v0**2) / (2*v0)
+            
         # Reduce Mumford coordinates to get a E1 point
         V1 = V1 % U1
         U1red = (p1 - V1**2) // U1
         xP1 = -U1red[0] / U1red[1]
         yP1 = V1(xP1)
-        assert yP1**2 == p1(xP1)
+        assert yP1**2 == p1(xP1), (xP1, yP1, p1(xP1), yP1**2)
+        
+            
         # Same for E2
         # Points x1, x2 map to 1/x1^2, 1/x2^2
         U2 = x**2 - (s*s-2*p)/p**2*x + 1/p**2
@@ -370,9 +378,10 @@ def FromJacToProd(G1, G2, G3):
         U2red = (p2 - V2**2) // U2
         xP2 = -U2red[0] / U2red[1]
         yP2 = V2(xP2)
-        # assert yP2**2 == p2(xP2)
-
+        assert yP2**2 == p2(xP2), (xP2, yP2, p2(xP2), yP2**2)
+        
         return E1(morphE1(xP1, yP1)), E2(morphE2(xP2, yP2))
+            
 
     return isogeny, (E1, E2)
 
